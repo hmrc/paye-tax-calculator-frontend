@@ -16,17 +16,18 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
+import javax.inject.{Inject, Singleton}
+
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.Action
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import play.api.mvc._
-import scala.concurrent.Future
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.quick_calc_form
 
+@Singleton
+class QuickCalcController @Inject() (override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
 
-object HelloWorld extends HelloWorld
-
-trait HelloWorld extends FrontendController {
-  val helloWorld = Action.async { implicit request =>
-		Future.successful(Ok(uk.gov.hmrc.payetaxcalculatorfrontend.views.html.helloworld.hello_world()))
+  def showForm() = Action { implicit request =>
+    Ok(quick_calc_form())
   }
+
 }
