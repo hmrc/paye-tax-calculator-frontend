@@ -20,24 +20,11 @@ import play.api.data.Form
 import play.api.data.Forms._
 
 object Forms {
-
-  val QuickCalcUserInputForm : Form[QuickCalcUserInput] =
+  val taxCodeForm : Form[TaxCode] =
     Form(mapping(
-      "taxCode" -> nonEmptyText,
-      "isStatePensionAge" -> boolean,
-      "taxYear" -> nonEmptyText,
-      "grossPay" -> optional(bigDecimal),
-      "payPeriod" -> nonEmptyText,
-      "hourlyRate" -> optional(bigDecimal),
-      "hoursPerWeek" -> optional(number)
-    )(QuickCalcUserInput.apply)(QuickCalcUserInput.unapply))
-
+    "taxCode" -> nonEmptyText
+  )(TaxCode.apply)(TaxCode.unapply))
 }
 
-case class QuickCalcUserInput(taxCode: String,
-                              isStatePensionAge: Boolean,
-                              taxYear: String,
-                              grossPay: Option[BigDecimal],
-                              payPeriod: String,
-                              hourlyRate: Option[BigDecimal],
-                              hoursPerWeek: Option[Int])
+
+case class TaxCode(taxCode: String)

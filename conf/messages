@@ -4,7 +4,7 @@ quick_calc_form.title=Quick Calculation
 quick_calc_form.introduction=Use the quick calculation if you can answer 'yes' to the following:
 quick_calc_form.condition_one=you have employment income only.
 quick_calc_form.condition_two=you don't contribute to a workplace or personal pension through your employer.
-quick_calc_form.required_questions_info=You must answer all questions that are marked with an asterisk (*).
+quick_calc_form.taxCode=Do you know your Tax Code?
 quick_calc_form.estimate_header=The estimate
 quick_calc_form.estimate_body=Your estimate will be shown on screen and in a PDF (Portable Document Format) document. You can see a breakdown of how your money will be spent and find out how your estimate was calculated.
 

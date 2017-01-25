@@ -1,0 +1,50 @@
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+
+@(taxCodeForm: Form[uk.gov.hmrc.payetaxcalculatorfrontend.model.TaxCode])(implicit request: Request[_], messages: Messages)
+
+@main_template(title = Messages("quick_calc_form.taxCode")) {
+
+  <header class="page-header">
+    <h1>@Messages("quick_calc_form.taxCode")</h1>
+  </header>
+
+  @helper.form(uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.isOver65SecondPage) {
+
+    @taxCodeForm.globalError.map { error =>
+      <div class="flash error-summary error-summary--show">
+        @error.message
+      </div>
+    }
+
+    @helper.CSRF.formField
+
+    <fieldset class="inline">
+
+      <label class="block-label" for="radio-inline-1">
+        <input id="radio-inline-1" type="radio" name="radio-inline-group" value="Yes">
+        Yes
+      </label>
+      <label class="block-label" for="radio-inline-2">
+        <input id="radio-inline-2" type="radio" name="radio-inline-group" value="No">
+        No
+      </label>
+
+    </fieldset>
+
+    <fieldset class="form-field-group">
+      <label>
+        taxCode:
+        <input
+        type="text"
+        name="taxCode"
+        id="taxCode"
+        value="@taxCodeForm("taxCode").value"
+        class="form-control form-control--block"
+        required
+        >
+      </label>
+    </fieldset>
+
+  }
+
+}

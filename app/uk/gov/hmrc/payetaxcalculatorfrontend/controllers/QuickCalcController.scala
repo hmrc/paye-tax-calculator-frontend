@@ -21,34 +21,21 @@ import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Action
-import uk.gov.hmrc.payetaxcalculatorfrontend.model.{Forms, QuickCalcUserInput, TaxCalculatorService}
+import uk.gov.hmrc.payetaxcalculatorfrontend.model.{Forms, TaxCode}
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.hasTaxCodeFirstPage
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.quick_calc_form
-
-import scala.concurrent.Future
 
 @Singleton
 class QuickCalcController @Inject() (override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
 
-  val QuickCalcUserInputForm: Form[QuickCalcUserInput] = Forms.QuickCalcUserInputForm
-
-  def showForm() = Action { implicit request =>
-    Ok(quick_calc_form(QuickCalcUserInputForm,""))
+  def aboutTaxCodeFirstPage() = Action { implicit request =>
+    val taxCodeForm: Form[TaxCode] = Forms.taxCodeForm
+    Ok(hasTaxCodeFirstPage(taxCodeForm))
   }
 
-  val calculate = Action.async { implicit request =>
-
-    val userInput = QuickCalcUserInputForm.bindFromRequest()
-
-    val taxCode = userInput.data("taxCode")
-    val isStatePensionAge = userInput.data("isStatePensionAge")
-    val taxYear = userInput.data("taxYear").toInt
-    val grossPay = userInput.data("grossPay").toInt
-    val payPeriod = userInput.data("payPeriod")
-    val hourlyRate = userInput.data("hourlyRate").toInt
-    val hoursPerWeek = userInput.data("hoursPerWeek").toInt
-
-    val result = TaxCalculatorService.calculateTax(isStatePensionAge, taxYear, taxCode, grossPay, payPeriod, hourlyRate)
-    Future.successful(Ok(quick_calc_form(QuickCalcUserInputForm,result)))
+  def isOver65SecondPage() = Action { implicit request =>
+    val taxCodeForm: Form[TaxCode] = Forms.taxCodeForm
+    Ok(hasTaxCodeFirstPage(taxCodeForm))
   }
+
 }

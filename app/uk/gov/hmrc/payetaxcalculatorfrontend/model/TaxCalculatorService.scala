@@ -31,7 +31,7 @@ trait TaxCalculatorService {
 //    val updatedPayPeriod = if (hours.getOrElse(-1) > 0) "annual" else payPeriod
 
     val s = isStatePensionAge+taxYear+taxCode+grossPayPence+payPeriod+hoursIn
-    println(isStatePensionAge+taxYear+taxCode+grossPayPence+payPeriod+hoursIn)
+    println(s)
     s
   }
 }
