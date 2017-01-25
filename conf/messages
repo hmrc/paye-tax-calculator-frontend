@@ -1,10 +1,9 @@
 index.title=How much is your income, tax and National Insurance?
 index.introduction=The calculator is aimed at people who pay tax through Pay As You Earn (the system used by employers and pension providers to deduct tax from your wages or pension). It’s free and easy to use.
-quick_calc_form.title=Quick Calculation
-quick_calc_form.introduction=Use the quick calculation if you can answer 'yes' to the following:
-quick_calc_form.condition_one=you have employment income only.
-quick_calc_form.condition_two=you don't contribute to a workplace or personal pension through your employer.
-quick_calc_form.taxCode=Do you know your Tax Code?
-quick_calc_form.estimate_header=The estimate
-quick_calc_form.estimate_body=Your estimate will be shown on screen and in a PDF (Portable Document Format) document. You can see a breakdown of how your money will be spent and find out how your estimate was calculated.
+index.quick_calculation=Quick calculation
+index.use_the_quick_calc_if=Use the quick calculation if you can answer ’yes’ to the following:
+index.employment_only=you have employment income only
+index.dont_contribute_pension=you don’t contribute to a workplace or personal pension through your employer.
 
+quick_calc.you_have_told_us.header=You have told us:
+quick_calc.you_have_told_us.edit=Edit

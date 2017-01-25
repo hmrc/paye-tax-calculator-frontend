@@ -1,20 +1,56 @@
-
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.helpers.YouHaveToldUsItem
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.helpers.you_have_told_us
+
 
 @()(implicit request: Request[_], messages: Messages)
 
-@main_template(title = Messages("quick_calc_form.title")) {
+@main_template(title = Messages("quick_calc_form.title"), mainClass = Some("full-width")) {
 
-  <header class="page-header">
-    <h1>@Messages("quick_calc_form.title")</h1>
-  </header>
+  <div class="grid-layout">
 
-  <p>@Messages("quick_calc_form.introduction")</p>
+    <div class="grid-layout__column grid-layout__column--2-3">
 
-  <p>@Messages("quick_calc_form.required_questions_info")</p>
+      <header class="page-header">
+        <h1>Question</h1>
+      </header>
 
-  <h2>@Messages("quick_calc_form.estimate_header")</h2>
+      <fieldset class="form-field-group js-visible js-aria-show js-toggle"
+                id="us-number"
+                data-trigger="js-toggle-trigger">
+        <label class="block-label" for="us-phone-number-toggle-open">Yes
+          <input type="radio"
+                 id="us-phone-number-toggle-open"
+                 class="js-toggle-trigger"
+                 data-target="us-phone-number-open-target"
+                 value="yes"
+                 name="us-number"
+                 required />
+        </label>
+        <div id="us-phone-number-open-target" class="panel-indent hidden">
+          <h2>Open</h2>
+          <p>Example paragraph text</p>
+        </div>
+        <label class="block-label" for="us-phone-number-toggle-close">No
+          <input type="radio"
+                 id="us-phone-number-toggle-close"
+                 class="js-toggle-trigger"
+                 data-target="us-phone-number-close-target"
+                 value="no"
+                 name="us-number"
+                 required/>
+        </label>
+        <div id="us-phone-number-close-target" class="panel-indent hidden">
+          <h2>Close</h2>
+          <p>Example paragraph text</p>
+        </div>
+      </fieldset>
+    </div>
 
-  <p>@Messages("quick_calc_form.estimate_body")</p>
+    <div class="grid-layout__column grid-layout__column--1-3">
+      @you_have_told_us(List(YouHaveToldUsItem(value = "1100L", label = "Tax Code", url = "/foo/bar")))
+    </div>
+
+  </div>
 
 }

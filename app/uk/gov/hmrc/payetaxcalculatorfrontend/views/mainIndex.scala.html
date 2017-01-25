@@ -3,29 +3,30 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(title = Messages("index.title")) {
+<div class="grid-row">
 
-    <main id="content" role="main">
+  <div class="column-two-thirds">
+    <header class="page-header">
+      <h1>@Messages("index.title")</h1>
+    </header>
 
-        <div class="grid-row">
+    <p>@Messages("index.introduction")</p>
+  </div>
 
-            <div class="column-two-thirds">
-                <header class="page-header">
-                    <h1>@Messages("index.title")</h1>
-                </header>
+  <br>
 
-                <p>@Messages("index.introduction")</p>
-            </div>
+  <div class="column-one-half">
+    <h2 class="heading-large">
+      <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.showForm()/">
+        @Messages("index.quick_calculation")
+      </a>
+    </h2>
+    <p>@Messages("index.use_the_quick_calc_if")</p>
+    <ul class="list list-bullet">
+      <li>@Messages("index.employment_only")</li>
+      <li>@Messages("index.dont_contribute_pension")</li>
+    </ul>
+  </div>
 
-
-            <div class="column-one-half">
-                <h2 class="heading-large"><a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.IndexController.index()/">Quick calculation</a></h2>
-                <p>@Messages("quick_calc_form.introduction")</p>
-                    <ul class="list list-bullet">
-                        <li>@Messages("quick_calc_form.condition_one")</li>
-                        <li>@Messages("quick_calc_form.condition_two")</li>
-                    </ul>
-            </div>
-
-        </div>
-    </main>
+</div>
 }

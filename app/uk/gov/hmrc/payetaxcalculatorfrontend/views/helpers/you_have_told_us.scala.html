@@ -1,0 +1,26 @@
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.helpers.YouHaveToldUsItem
+
+@(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+
+@if(items.nonEmpty) {
+  <table>
+    <thead>
+    <tr>
+      <th colspan="2">@Messages("quick_calc.you_have_told_us.header")</th>
+    </tr>
+    </thead>
+    <tbody>
+    @items.map { item =>
+      <tr>
+        <td>
+          <div class="data">
+            <span class="data-item bold-medium">@item.value</span>
+            <span class="data-item bold-xsmall">@item.label</span>
+          </div>
+        </td>
+        <td><a href="@item.url">@Messages("quick_calc.you_have_told_us.edit")</a></td>
+      </tr>
+    }
+    </tbody>
+  </table>
+}
