@@ -1,0 +1,31 @@
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+
+@()(implicit request: Request[_], messages: Messages)
+
+@main_template(title = Messages("index.title")) {
+
+    <main id="content" role="main">
+
+        <div class="grid-row">
+
+            <div class="column-two-thirds">
+                <header class="page-header">
+                    <h1>@Messages("index.title")</h1>
+                </header>
+
+                <p>@Messages("index.introduction")</p>
+            </div>
+
+
+            <div class="column-one-half">
+                <h2 class="heading-large"><a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.showForm()/">Quick calculation</a></h2>
+                <p>@Messages("quick_calc_form.introduction")</p>
+                    <ul class="list list-bullet">
+                        <li>@Messages("quick_calc_form.condition_one")</li>
+                        <li>@Messages("quick_calc_form.condition_two")</li>
+                    </ul>
+            </div>
+
+        </div>
+    </main>
+}
