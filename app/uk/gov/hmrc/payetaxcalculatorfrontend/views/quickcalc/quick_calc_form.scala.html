@@ -1,0 +1,20 @@
+
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+
+@()(implicit request: Request[_], messages: Messages)
+
+@main_template(title = Messages("quick_calc_form.title")) {
+
+  <header class="page-header">
+    <h1>@Messages("quick_calc_form.title")</h1>
+  </header>
+
+  <p>@Messages("quick_calc_form.introduction")</p>
+
+  <p>@Messages("quick_calc_form.required_questions_info")</p>
+
+  <h2>@Messages("quick_calc_form.estimate_header")</h2>
+
+  <p>@Messages("quick_calc_form.estimate_body")</p>
+
+}
