@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.views.helpers
+package uk.gov.hmrc.payetaxcalculatorfrontend.views.quickcalc
 
 case class YouHaveToldUsItem(value: String, label: String, url: String)
