@@ -17,20 +17,21 @@
 
             <div class="form-group">
                 <fieldset
-                class="inline js-visible js-aria-show js-toggle"
+                class="inline form-field-group js-visible js-aria-show js-toggle"
+                id="tax-code"
+                data-target="tax-code-yes-target"
                 data-trigger="js-toggle-trigger"
+                data-open="tax-code-yes"
+                data-close="tax-code-no"
                 >
-
                     <label class="block-label" for="tax-code-yes">@Messages("yes")
                         <input
                         type="radio"
                         id="tax-code-yes"
                         class="js-toggle-trigger"
-                        data-target="tax-code-yes-target"
                         name="tax-code"
                         value="yes"
                         required />
-
                     </label>
                     <label class="block-label" for="tax-code-no">@Messages("no")
                         <input
@@ -39,12 +40,12 @@
                         class="js-toggle-trigger"
                         name="tax-code"
                         value="no"
-                        required />
-
+                        required
+                        aria-controls="uk-phone-number-toggle-target"/>
                     </label>
                     <div class="panel-indent hidden" id="tax-code-yes-target">
                         <label class="form-label" for="code-input">@Messages("quick_calc.about_tax_code.has_tax_code")</label>
-                        <textarea name="code-input" cols="10" rows="1" maxLength="10" id="tax-code"></textarea>
+                        <input name="code-input" type="text">
                     </div>
 
                 </fieldset>
