@@ -7,59 +7,62 @@
 
 @main_template(title = Messages("quick_calc_form.title"), mainClass = Some("full-width")) {
 
-    <div class="grid-layout">
+  <div class="grid-layout">
 
-        <div class="grid-layout__column grid-layout__column--2-3">
+    <div class="grid-layout__column grid-layout__column--2-3">
 
-            <header class="page-header">
-                <h1>@Messages("quick_calc.about_tax_code.header")</h1>
-            </header>
+      <header class="page-header">
+        <h1>@Messages("quick_calc.about_tax_code.header")</h1>
+      </header>
 
-            <div class="form-group">
-                <fieldset
-                class="inline form-field-group js-visible js-aria-show js-toggle"
-                id="tax-code"
-                data-target="tax-code-yes-target"
-                data-trigger="js-toggle-trigger"
-                data-open="tax-code-yes"
-                data-close="tax-code-no"
-                >
-                    <label class="block-label" for="tax-code-yes">@Messages("yes")
-                        <input
-                        type="radio"
-                        id="tax-code-yes"
-                        class="js-toggle-trigger"
-                        name="tax-code"
-                        value="yes"
-                        required />
-                    </label>
-                    <label class="block-label" for="tax-code-no">@Messages("no")
-                        <input
-                        type="radio"
-                        id="tax-code-no"
-                        class="js-toggle-trigger"
-                        name="tax-code"
-                        value="no"
-                        required
-                        aria-controls="uk-phone-number-toggle-target"/>
-                    </label>
-                    <div class="panel-indent hidden" id="tax-code-yes-target">
-                        <label class="form-label" for="code-input">@Messages("quick_calc.about_tax_code.has_tax_code")</label>
-                        <input name="code-input" type="text">
-                    </div>
+      <div class="form-group">
 
-                </fieldset>
-            </div>
+        <fieldset class="inline form-field-group js-visible js-aria-show js-toggle"
+          id="tax-code"
+          data-target="tax-code-yes-target"
+          data-trigger="js-toggle-trigger"
+          data-open="tax-code-yes"
+          data-close="tax-code-no">
 
-            <div class="form-group">
-                <input type="submit" class="button" value="Continue">
-            </div>
+          <label class="block-label" for="tax-code-yes">@Messages("quick_calc.about_tax_code.has_tax_code_yes")
+            <input
+              type="radio"
+              id="tax-code-yes"
+              class="js-toggle-trigger"
+              name="tax-code"
+              value="yes"
+              required />
+          </label>
 
-        </div>
+          <label class="block-label" for="tax-code-no">@Messages("quick_calc.about_tax_code.has_tax_code_no")
+            <input
+              type="radio"
+              id="tax-code-no"
+              class="js-toggle-trigger"
+              name="tax-code"
+              value="no"
+              required
+              aria-controls="uk-phone-number-toggle-target"/>
+          </label>
 
-        <div class="grid-layout__column grid-layout__column--1-3">
-        @you_have_told_us(List(YouHaveToldUsItem(value = "1100L", label = "Tax Code", url = "/foo/bar")))
-        </div>
+          <div class="panel-indent hidden" id="tax-code-yes-target">
+            <label class="form-label" for="code-input">@Messages("quick_calc.about_tax_code.has_tax_code")</label>
+            <input name="code-input" type="text">
+          </div>
+
+        </fieldset>
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="button" value="Continue">
+      </div>
+
     </div>
+
+    <div class="grid-layout__column grid-layout__column--1-3">
+        @you_have_told_us(List(YouHaveToldUsItem(value = "1100L", label = "Tax Code", url = "/foo/bar")))
+    </div>
+
+  </div>
 
 }
