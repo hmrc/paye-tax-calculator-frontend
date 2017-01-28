@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.views.quickcalc
+package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
-case class YouHaveToldUsItem(value: String, label: String, url: String)
+case class Over65(value: Boolean) extends AnyVal

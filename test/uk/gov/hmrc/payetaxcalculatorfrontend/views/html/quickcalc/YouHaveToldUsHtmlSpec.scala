@@ -20,10 +20,10 @@ import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.quickcalc.YouHaveToldUsItem
+import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem
 import uk.gov.hmrc.play.test.UnitSpec
 
-class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
+class YouHaveToldUsHtmlSpec extends UnitSpec with OneAppPerSuite {
 
   implicit val request = FakeRequest()
 
