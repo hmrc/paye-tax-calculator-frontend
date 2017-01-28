@@ -28,7 +28,7 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
   implicit val request = FakeRequest()
 
   "Html snippet for the `You Have Told Us` section" should {
-    "not appear if there are not items" in {
+    "not appear if there are no items" in {
       val html = you_have_told_us(Nil)
 
       val parsedHtml = Jsoup.parse(html.body)
@@ -44,7 +44,7 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
       val html = you_have_told_us(items)
 
       val parsedHtml = Jsoup.parse(html.body)
-      val expectedNumberOfRows = 1 + items.size // header + row plus for each item
+      val expectedNumberOfRows = 1 + items.size // header + 1 row for each item
       parsedHtml.getElementsByTag("tr").size shouldBe expectedNumberOfRows
     }
   }
