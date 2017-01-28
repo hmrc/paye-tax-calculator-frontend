@@ -18,9 +18,10 @@ object FrontendBuild extends Build with MicroService {
     "uk.gov.hmrc" %% "govuk-template" % "5.0.0",
     "uk.gov.hmrc" %% "play-health" % "2.0.0",
     "uk.gov.hmrc" %% "play-ui" % "5.4.0",
-    "uk.gov.hmrc" %% "paye-estimator_sjs0.6" % "1.5.0"
-
+    "uk.gov.hmrc" %% "paye-estimator_sjs0.6" % "1.5.0",
+    "uk.gov.hmrc" %% "http-caching-client" % "6.1.0"
   )
+
 
   def test(scope: String = "test") = Seq(
     "uk.gov.hmrc" %% "hmrctest" % "2.2.0" % scope,

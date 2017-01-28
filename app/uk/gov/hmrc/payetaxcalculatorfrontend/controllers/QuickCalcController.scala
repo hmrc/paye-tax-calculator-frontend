@@ -19,14 +19,14 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Action
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.quick_calc_form
+import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 @Singleton
 class QuickCalcController @Inject() (override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
 
-  def showForm() = Action { implicit request =>
+  def showForm() = ActionWithSessionId { implicit request =>
     Ok(quick_calc_form())
   }
 
