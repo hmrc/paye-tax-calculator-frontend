@@ -19,15 +19,46 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
+import uk.gov.hmrc.payetaxcalculatorfrontend.model.{QuickCalcAggregateInput, Salary}
+import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.quick_calc_form
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.{quick_calc_form, salary}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 @Singleton
-class QuickCalcController @Inject() (override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
+class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
+                                     cache: QuickCalcCache) extends FrontendController with I18nSupport {
 
   def showForm() = ActionWithSessionId { implicit request =>
     Ok(quick_calc_form())
+  }
+
+  def showSalaryForm() = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        val form = aggregate.salary.map(Salary.form.fill).getOrElse(Salary.form)
+        Ok(salary(form, aggregate.youHaveToldUsItems))
+      case None =>
+        // TODO if aggregate unavailable here user bypassed tax-code selection which is wrong
+        Ok(salary(Salary.form, Nil))
+    }
+  }
+
+  def submitSalaryForm() = ActionWithSessionId.async { implicit request =>
+    Salary.form.bindFromRequest.fold(
+      formWithErrors => cache.fetchAndGetEntry.map {
+        case Some(aggregate) => BadRequest(salary(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(salary(formWithErrors, Nil))
+      },
+      newSalary => cache.fetchAndGetEntry.flatMap {
+        case Some(aggregate) => cache.save(aggregate.copy(salary = Some(newSalary))).map {
+          _ => Ok("next page goes here")
+        }
+        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(newSalary))).map {
+          _ => Ok("next page goes here")
+        }
+      }
+    )
   }
 
 }

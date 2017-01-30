@@ -17,6 +17,7 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import play.api.i18n.Messages
+import play.api.libs.json.Json
 
 case class QuickCalcAggregateInput(// tax calc
                                    isOver65: Option[Over65],
@@ -30,6 +31,11 @@ case class QuickCalcAggregateInput(// tax calc
     ).flatten
   }
 
+}
+
+object QuickCalcAggregateInput {
+  def newInstance = QuickCalcAggregateInput(None, None)
+  implicit val format = Json.format[QuickCalcAggregateInput]
 }
 
 

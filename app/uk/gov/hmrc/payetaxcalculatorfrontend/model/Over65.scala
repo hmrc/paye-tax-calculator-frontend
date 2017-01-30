@@ -16,4 +16,10 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
+import play.api.libs.json.Json
+
 case class Over65(value: Boolean) extends AnyVal
+
+object Over65 {
+  implicit val format = Json.format[Over65]
+}

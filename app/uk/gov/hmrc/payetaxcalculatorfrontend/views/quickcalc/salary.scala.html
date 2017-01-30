@@ -1,0 +1,100 @@
+@import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem
+@import uk.gov.hmrc.payetaxcalculatorfrontend.model.Salary
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
+@import play.api.i18n._
+@import views.html.helper._
+
+@(form: Form[Salary], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+
+@radioButtonsElements = @{ new FieldElements(form("salaryType").id, form("salaryType"), null, Map.empty, messages) }
+
+
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+
+  <div class="grid-layout">
+
+    <div class="grid-layout__column grid-layout__column--2-3">
+
+      <header class="page-header">
+        <h1>XX Your gross salary </h1>
+      </header>
+
+      @helpers.form(action = controllers.routes.QuickCalcController.submitSalaryForm) {
+        <div class="form-group">
+
+          <fieldset class="form-field-group js-visible js-aria-show"
+                    id="us-number"
+                    data-trigger="js-toggle-trigger">
+
+
+            <label class="block-label" for="us-phone-number-toggle-open">Yearly
+              <input type="radio"
+                     id="us-phone-number-toggle-open"
+                     class="js-toggle-trigger"
+                     data-target="us-phone-number-open-target"
+                     value="yearly"
+                     name="salaryType"
+                     required />
+            </label>
+            <div id="us-phone-number-open-target" class="panel-indent">
+              <p>How much do you earn a year</p>
+              <input type="text" name="amount-yearly"/>
+            </div>
+
+
+
+
+            <label class="block-label" for="us-phone-number-toggle-close">Monthly
+              <input type="radio"
+                     id="us-phone-number-toggle-close"
+                     class="js-toggle-trigger"
+                     data-target="us-phone-number-close-target"
+                     value="monthly"
+                     name="salaryType"
+                     required/>
+            </label>
+            <div id="us-phone-number-close-target" class="panel-indent">
+              <p>How much do you earn a month</p>
+              <input type="text" name="salayr" />
+            </div>
+
+
+
+
+            <label class="block-label" for="us-phone-number-2-toggle-close">Weekly
+              <input type="radio"
+                     id="us-phone-number-2-toggle-close"
+                     class="js-toggle-trigger"
+                     data-target="us-phone-number-2-close-target"
+                     value="weekly"
+                     name="salaryType"
+                     required/>
+            </label>
+            <div id="us-phone-number-2-close-target" class="panel-indent">
+              <p>How much do you earn a week</p>
+              <input/>
+            </div>
+
+
+          </fieldset>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" class="button" value="Continue">
+        </div>
+      }
+
+
+    </div>
+
+    <div class="grid-layout__column grid-layout__column--1-3">
+        @you_have_told_us(youHaveToldUsItems)
+    </div>
+
+  </div>
+
+}
+
