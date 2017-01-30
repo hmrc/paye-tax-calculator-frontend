@@ -14,27 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.models
+package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
+import play.api.libs.json.Json
 
-import play.api.data.Forms._
-import play.api.data.Form
-import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
+case class Over65(value: Boolean) extends AnyVal
 
-object AllForms extends TaxCalculatorHelper {
-
-  val userTaxCodeForm = Form(
-    mapping(
-      "hasTaxCode" -> boolean,
-      "code" -> optional(text)
-    )(UserTaxCode.apply)(UserTaxCode.unapply).verifying(
-      aboutTaxCode =>
-        if (aboutTaxCode.hasTaxCode) {
-          isValidTaxCode(aboutTaxCode.taxCode.getOrElse("").trim)
-        } else {
-          true
-        }
-    ))
-
+object Over65 {
+  implicit val format = Json.format[Over65]
 }
-

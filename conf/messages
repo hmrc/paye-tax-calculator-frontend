@@ -9,6 +9,12 @@ quick_calc.title=Do you know your Tax Code?
 
 quick_calc.you_have_told_us.header=You have told us:
 quick_calc.you_have_told_us.edit=Edit
+quick_calc.you_have_told_us.over_65.label=Over 65
+quick_calc.you_have_told_us.salary.yearly.label=Per year
+quick_calc.you_have_told_us.salary.monthly.label=Per month
+quick_calc.you_have_told_us.salary.weekly.label=Per week
+quick_calc.you_have_told_us.salary.daily.label=Per day
+quick_calc.you_have_told_us.salary.hourly.label=Per hour
 
 quick_calc.about_tax_code.header=Do you know your Tax Code?
 quick_calc.about_tax_code.has_tax_code=Enter your Tax Code

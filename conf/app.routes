@@ -5,5 +5,7 @@ GET       /                                               uk.gov.hmrc.payetaxcal
 GET       /quick-calculation                              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showForm
 POST      /quick-calculation/tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.passTaxCode(url: String)
 
+GET       /quick-calculation/salary                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showSalaryForm
+POST      /quick-calculation/salary                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitSalaryForm
 
 
