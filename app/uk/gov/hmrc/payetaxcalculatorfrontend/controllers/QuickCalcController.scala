@@ -45,15 +45,20 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
 
     UserTaxCode.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
-        case Some(aggregate) => BadRequest(quick_calc_form(formWithErrors, aggregate.youHaveToldUsItems))
+        case Some(aggregate) => BadRequest(quick_calc_form(UserTaxCode.form.withGlobalError(
+          Messages("quick_calc.about_tax_code.wrong_tax_code")), aggregate.youHaveToldUsItems))
         case None => BadRequest(quick_calc_form(formWithErrors, Nil))
       },
       newTaxCode => cache.fetchAndGetEntry.flatMap {
-        case Some(aggregate) => cache.save(aggregate.copy(taxCode = Some(newTaxCode))).map {
-          _ => Ok(age(Over65.form, aggregate.youHaveToldUsItems))
+        case Some(aggregate) =>
+          val newAggregate = aggregate.copy(taxCode = Some(newTaxCode))
+          cache.save(newAggregate).map {
+          _ => Ok(age(Over65.form, newAggregate.youHaveToldUsItems))
         }
-        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))).map {
-          _ => Ok(age(Over65.form, List.empty))
+        case None =>
+          val aggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))
+          cache.save(aggregate).map {
+          _ => Ok(age(Over65.form, aggregate.youHaveToldUsItems))
         }
       }
     )
@@ -79,8 +84,10 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
         case None => BadRequest(age(formWithErrors, Nil))
       },
       userAge => cache.fetchAndGetEntry.flatMap {
-        case Some(aggregate) => cache.save(aggregate.copy(isOver65 = Some(userAge))).map {
-          _ => Ok(salary(Salary.form, aggregate.youHaveToldUsItems))
+        case Some(aggregate) =>
+          val updatedAggregate = aggregate.copy(isOver65 = Some(userAge))
+          cache.save(updatedAggregate).map {
+          _ => Ok(salary(Salary.form, updatedAggregate.youHaveToldUsItems))
         }
         case None => cache.save(QuickCalcAggregateInput.newInstance.copy(isOver65 = Some(userAge))).map {
           _ => Ok(salary(Salary.form, List.empty))
