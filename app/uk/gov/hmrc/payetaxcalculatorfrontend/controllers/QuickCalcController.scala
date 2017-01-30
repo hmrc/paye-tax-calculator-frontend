@@ -18,60 +18,78 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
-import uk.gov.hmrc.payetaxcalculatorfrontend.model.{QuickCalcAggregateInput, Salary, UserTaxCode, YouHaveToldUsItem}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.payetaxcalculatorfrontend.model._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.{quick_calc_form, salary}
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.{age, quick_calc_form, salary}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+
 
 @Singleton
 class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
                                      cache: QuickCalcCache) extends FrontendController with I18nSupport {
 
-  def showForm() = ActionWithSessionId { implicit request =>
-    Ok(quick_calc_form(UserTaxCode.form, List.empty))
+  def showTaxCodeForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        val form = aggregate.taxCode.map(UserTaxCode.form.fill).getOrElse(UserTaxCode.form)
+        Ok(quick_calc_form(form, aggregate.youHaveToldUsItems))
+      case None =>
+        Ok(quick_calc_form(UserTaxCode.form, Nil))
+    }
   }
 
-  def passTaxCode(url: String) = ActionWithSessionId { implicit request =>
+  def submitTaxCodeForm(url: String): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
 
-    val userTaxCode = UserTaxCode.form.bindFromRequest
-
-    def userToldUsAboutTaxCode2(userTaxCode: Form[UserTaxCode], url: String): List[YouHaveToldUsItem] = {
-
-      val userToldUsAboutTaxCode = userTaxCode.fold(
-        hasErrors = {
-          _ =>
-            println("======================Error")
-            List.empty
-        },
-        success = {
-          theUser =>
-            if (!theUser.hasTaxCode) {
-              List(YouHaveToldUsItem("1100L", "Tax Code", url))
-            } else {
-              List(YouHaveToldUsItem(userTaxCode.data("code"), "Tax Code", url))
-            }
+    UserTaxCode.form.bindFromRequest.fold(
+      formWithErrors => cache.fetchAndGetEntry.map {
+        case Some(aggregate) => BadRequest(quick_calc_form(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(quick_calc_form(formWithErrors, Nil))
+      },
+      newTaxCode => cache.fetchAndGetEntry.flatMap {
+        case Some(aggregate) => cache.save(aggregate.copy(taxCode = Some(newTaxCode))).map {
+          _ => Ok(age(Over65.form, aggregate.youHaveToldUsItems))
         }
-      )
-
-      userToldUsAboutTaxCode
-    }
-
-    val userToldUsAboutTaxCode = userToldUsAboutTaxCode2(userTaxCode, url)
-
-    if (userToldUsAboutTaxCode.isEmpty) {
-      val formWithError = UserTaxCode.form.withGlobalError("Please check and re-enter your tax code")
-      Ok(quick_calc_form(formWithError, userToldUsAboutTaxCode))
-    } else {
-      Ok(quick_calc_form(UserTaxCode.form, userToldUsAboutTaxCode))
-    }
-
+        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))).map {
+          _ => Ok(age(Over65.form, List.empty))
+        }
+      }
+    )
 
   }
 
-  def showSalaryForm() = ActionWithSessionId.async { implicit request =>
+  def showAgeForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        val form = aggregate.isOver65.map(Over65.form.fill).getOrElse(Over65.form)
+        Ok(age(form, aggregate.youHaveToldUsItems))
+      case None =>
+        // TODO if aggregate unavailable here user bypassed tax-code selection which is wrong
+        Ok(age(Over65.form, Nil))
+    }
+  }
+
+  def submitAgeForm(url: String): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+
+    Over65.form.bindFromRequest.fold(
+      formWithErrors => cache.fetchAndGetEntry.map {
+        case Some(aggregate) => BadRequest(age(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(age(formWithErrors, Nil))
+      },
+      userAge => cache.fetchAndGetEntry.flatMap {
+        case Some(aggregate) => cache.save(aggregate.copy(isOver65 = Some(userAge))).map {
+          _ => Ok(salary(Salary.form, aggregate.youHaveToldUsItems))
+        }
+        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(isOver65 = Some(userAge))).map {
+          _ => Ok(salary(Salary.form, List.empty))
+        }
+      }
+    )
+  }
+
+  def showSalaryForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
         val form = aggregate.salary.map(Salary.form.fill).getOrElse(Salary.form)
@@ -82,7 +100,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     }
   }
 
-  def submitSalaryForm() = ActionWithSessionId.async { implicit request =>
+  def submitSalaryForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     Salary.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
         case Some(aggregate) => BadRequest(salary(formWithErrors, aggregate.youHaveToldUsItems))

@@ -27,10 +27,18 @@ trait YouHaveToldUs[A] {
 object YouHaveToldUs {
   def apply[A : YouHaveToldUs](a: A) = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
+  implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
+    def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
+      val label = Messages("quick_calc.about_tax_code.label")
+      val url = "/paye-tax-calculator-frontend/quick-calculation/tax-code"
+      YouHaveToldUsItem(if (t.hasTaxCode) t.taxCode.get else "1100L", label, url)
+    }
+  }
+
   implicit def over65Format(implicit messages: Messages): YouHaveToldUs[Over65] = new YouHaveToldUs[Over65] {
     def toYouHaveToldUsItem(over65: Over65): YouHaveToldUsItem = {
       val label = Messages("quick_calc.you_have_told_us.over_65.label")
-      val url = "/over65" // TODO use correct URL
+      val url = "/paye-tax-calculator-frontend/quick-calculation/age"
       YouHaveToldUsItem(if(over65.value) "Yes" else "No", label, url)
     }
   }
@@ -47,7 +55,7 @@ object YouHaveToldUs {
 
   implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
-      val url = "/salary" // TODO use correct URL
+      val url = "/paye-tax-calculator-frontend/quick-calculation/salary" // TODO use correct URL
       def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
       s match {
         case Yearly(value) => YouHaveToldUsItem(value.toString, labelFor(Salary.YEARLY), url)

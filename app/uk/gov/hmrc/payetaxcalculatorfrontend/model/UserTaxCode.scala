@@ -18,12 +18,17 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json._
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 
 
 case class UserTaxCode(hasTaxCode: Boolean, taxCode: Option[String])
 
-object UserTaxCode extends TaxCalculatorHelper{
+object UserTaxCode extends TaxCalculatorHelper {
+
+  implicit val format = Json.format[UserTaxCode]
+
+
   val form = Form(
     mapping(
       "hasTaxCode" -> boolean,
