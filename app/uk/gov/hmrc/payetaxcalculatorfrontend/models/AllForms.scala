@@ -14,6 +14,27 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.views.quickcalc
+package uk.gov.hmrc.payetaxcalculatorfrontend.models
 
-case class YouHaveToldUsItem(value: String, label: String, url: String)
+
+import play.api.data.Forms._
+import play.api.data.Form
+import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
+
+object AllForms extends TaxCalculatorHelper {
+
+  val userTaxCodeForm = Form(
+    mapping(
+      "hasTaxCode" -> boolean,
+      "code" -> optional(text)
+    )(UserTaxCode.apply)(UserTaxCode.unapply).verifying(
+      aboutTaxCode =>
+        if (aboutTaxCode.hasTaxCode) {
+          isValidTaxCode(aboutTaxCode.taxCode.getOrElse("").trim)
+        } else {
+          true
+        }
+    ))
+
+}
+

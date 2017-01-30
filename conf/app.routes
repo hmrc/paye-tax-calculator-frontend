@@ -1,6 +1,9 @@
 # microservice specific routes
 
-GET       /quick-calculation                              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showForm
+GET       /                                               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.index()
 
-GET       /                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.index()
+GET       /quick-calculation                              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showForm
+POST      /quick-calculation/tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.passTaxCode(url: String)
+
+
 
