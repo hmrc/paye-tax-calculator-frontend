@@ -18,8 +18,10 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.i18n.{I18nSupport, MessagesApi}
-import uk.gov.hmrc.payetaxcalculatorfrontend.models._
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.mvc.Flash
+import uk.gov.hmrc.payetaxcalculatorfrontend.models.{UserTaxCode, _}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.quick_calc_form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -27,16 +29,25 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 @Singleton
 class QuickCalcController @Inject() (override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
 
+  val userTaxCodeForm = AllForms.userTaxCodeForm
 
   def showForm() = ActionWithSessionId { implicit request =>
-    Ok(quick_calc_form(List.empty))
+    Ok(quick_calc_form(userTaxCodeForm, List.empty))
   }
 
   def passTaxCode(url: String) = ActionWithSessionId { implicit request =>
 
     val userTaxCode = AllForms.userTaxCodeForm.bindFromRequest
 
-    Ok(quick_calc_form(UserToldUsAboutDetail.userToldUsAboutTaxCode(userTaxCode, url)))
+    val userToldUsAboutTaxCode = UserToldUsAboutDetail.userToldUsAboutTaxCode(userTaxCode, url)
+
+    if (userToldUsAboutTaxCode.isEmpty) {
+      val formWithError = userTaxCodeForm.withGlobalError("Please check and re-enter your tax code")
+      Ok(quick_calc_form(formWithError, userToldUsAboutTaxCode))
+    } else {
+      Ok(quick_calc_form(userTaxCodeForm, userToldUsAboutTaxCode))
+    }
+
 
   }
 
