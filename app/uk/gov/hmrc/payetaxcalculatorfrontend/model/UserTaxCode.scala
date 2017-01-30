@@ -28,17 +28,12 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   implicit val format = Json.format[UserTaxCode]
 
-
   val form = Form(
     mapping(
       "hasTaxCode" -> boolean,
       "code" -> optional(text)
     )(UserTaxCode.apply)(UserTaxCode.unapply).verifying(
       aboutTaxCode =>
-        if (aboutTaxCode.hasTaxCode) {
-          isValidTaxCode(aboutTaxCode.taxCode.getOrElse("").trim)
-        } else {
-          true
-        }
+        if (aboutTaxCode.hasTaxCode) isValidTaxCode(aboutTaxCode.taxCode.getOrElse("").trim) else true
     ))
 }

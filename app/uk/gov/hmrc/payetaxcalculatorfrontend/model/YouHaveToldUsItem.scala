@@ -31,7 +31,7 @@ object YouHaveToldUs {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
       val label = Messages("quick_calc.about_tax_code.label")
       val url = "/paye-tax-calculator-frontend/quick-calculation/tax-code"
-      YouHaveToldUsItem(if (t.hasTaxCode) t.taxCode.get else "1100L", label, url)
+      YouHaveToldUsItem(t.taxCode.getOrElse("1100L"), label, url)
     }
   }
 

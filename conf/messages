@@ -5,7 +5,7 @@ index.use_the_quick_calc_if=Use the quick calculation if you can answer ’yes�
 index.employment_only=you have employment income only
 index.dont_contribute_pension=you don’t contribute to a workplace or personal pension through your employer.
 
-quick_calc.title=Do you know your Tax Code?
+quick_calc.title=HMRC Quick calculator
 
 quick_calc.you_have_told_us.header=You have told us:
 quick_calc.you_have_told_us.edit=Edit

@@ -31,7 +31,7 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
                                      cache: QuickCalcCache) extends FrontendController with I18nSupport {
 
-  def showTaxCodeForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def showTaxCodeForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
         val form = aggregate.taxCode.map(UserTaxCode.form.fill).getOrElse(UserTaxCode.form)
@@ -41,7 +41,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     }
   }
 
-  def submitTaxCodeForm(url: String): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def submitTaxCodeForm(url: String) = ActionWithSessionId.async { implicit request =>
 
     UserTaxCode.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
@@ -65,7 +65,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
 
   }
 
-  def showAgeForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def showAgeForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
         val form = aggregate.isOver65.map(Over65.form.fill).getOrElse(Over65.form)
@@ -76,7 +76,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     }
   }
 
-  def submitAgeForm(url: String): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def submitAgeForm(url: String) = ActionWithSessionId.async { implicit request =>
 
     Over65.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
@@ -96,7 +96,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     )
   }
 
-  def showSalaryForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def showSalaryForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
         val form = aggregate.salary.map(Salary.form.fill).getOrElse(Salary.form)
@@ -107,7 +107,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     }
   }
 
-  def submitSalaryForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def submitSalaryForm() = ActionWithSessionId.async { implicit request =>
     Salary.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
         case Some(aggregate) => BadRequest(salary(formWithErrors, aggregate.youHaveToldUsItems))
