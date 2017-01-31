@@ -28,6 +28,8 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   implicit val format = Json.format[UserTaxCode]
 
+  val defaultTaxCode = "1150L"
+
   val form = Form(
     mapping(
       "hasTaxCode" -> boolean,
@@ -36,4 +38,23 @@ object UserTaxCode extends TaxCalculatorHelper {
       aboutTaxCode =>
         if (aboutTaxCode.hasTaxCode) isValidTaxCode(aboutTaxCode.taxCode.getOrElse("").trim) else true
     ))
+
+  def recordCheck(selection: Boolean, taxCode: Form[UserTaxCode]): String ={
+    selection match {
+      case true => taxCode.value match {
+        case Some(code) => if (code.hasTaxCode) "checked" else ""
+        case _ => ""
+      }
+      case false => taxCode.value match {
+        case Some(code) => if (!code.hasTaxCode) "checked" else ""
+        case _ => ""
+      }
+    }
+  }
+
+  def recordHidden(taxCode: Form[UserTaxCode]): String ={
+    taxCode.value match {
+      case Some(v) => if (v.hasTaxCode) "" else "hidden"
+      case _ => "hidden"}
+  }
 }

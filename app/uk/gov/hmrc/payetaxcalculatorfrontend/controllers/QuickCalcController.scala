@@ -21,6 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.payetaxcalculatorfrontend.model._
+import uk.gov.hmrc.payetaxcalculatorfrontend.model.UserTaxCode._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.{age, quick_calc_form, salary}
@@ -52,8 +53,8 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
       },
       newTaxCode => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
-          val updateTaxCode = if (newTaxCode.hasTaxCode) newTaxCode else UserTaxCode(false, Some("1100L"))
-          val newAggregate = aggregate.copy(taxCode = Some(updateTaxCode))
+          val updatedTaxCode = if (newTaxCode.hasTaxCode) newTaxCode else UserTaxCode(hasTaxCode = false, Some(defaultTaxCode))
+          val newAggregate = aggregate.copy(taxCode = Some(updatedTaxCode))
           cache.save(newAggregate).map {
           _ => Ok(age(Over65.form, newAggregate.youHaveToldUsItems))
         }

@@ -10,7 +10,7 @@ quick_calc.title=HMRC Quick calculator
 quick_calc.you_have_told_us.header=You have told us:
 quick_calc.you_have_told_us.edit=Edit
 
-quick_calc.you_have_told_us.over_65.label=Over 65 ?
+quick_calc.you_have_told_us.over_65.label=Over 65?
 quick_calc.about_tax_code.over_65_yes=Yes
 quick_calc.about_tax_code.over_65_no=No
 
