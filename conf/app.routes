@@ -1,6 +1,7 @@
 # microservice specific routes
 
-GET       /                                               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.index()
+GET       /                                               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.legacy()
+GET       /new                                            uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.index()
 
 GET       /quick-calculation/                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
 
@@ -12,5 +13,3 @@ POST      /quick-calculation/age                          uk.gov.hmrc.payetaxcal
 
 GET       /quick-calculation/salary                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showSalaryForm
 POST      /quick-calculation/salary                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitSalaryForm
-
-
