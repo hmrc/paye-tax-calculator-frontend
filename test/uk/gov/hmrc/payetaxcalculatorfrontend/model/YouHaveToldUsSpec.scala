@@ -47,8 +47,8 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
     val label = Messages("quick_calc.you_have_told_us.over_65.label")
     val url = routes.QuickCalcController.showAgeForm().url
 
-    YouHaveToldUs(Over65(true)) shouldBe YouHaveToldUsItem("Yes", label, url)
-    YouHaveToldUs(Over65(false)) shouldBe YouHaveToldUsItem("No", label, url)
+    YouHaveToldUs(Over65(true)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_65_yes"), label, url)
+    YouHaveToldUs(Over65(false)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_65_no"), label, url)
   }
 
 }
