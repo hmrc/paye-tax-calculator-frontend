@@ -30,9 +30,9 @@ object YouHaveToldUs {
 
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
-      val label = Messages("quick_calc.about_tax_code.label")
+      val label = Messages("quick_calc.you_have_told_us.about_tax_code.label")
       val url = routes.QuickCalcController.showTaxCodeForm().url
-      YouHaveToldUsItem(t.taxCode.getOrElse("1100L"), label, url)
+      YouHaveToldUsItem(t.taxCode.getOrElse(UserTaxCode.defaultTaxCode), label, url)
     }
   }
 
@@ -40,7 +40,9 @@ object YouHaveToldUs {
     def toYouHaveToldUsItem(over65: Over65): YouHaveToldUsItem = {
       val label = Messages("quick_calc.you_have_told_us.over_65.label")
       val url = routes.QuickCalcController.showAgeForm().url
-      YouHaveToldUsItem(if(over65.value) "Yes" else "No", label, url)
+      YouHaveToldUsItem(
+        if(over65.value) Messages("quick_calc.you_have_told_us.over_65_yes")
+        else Messages("quick_calc.you_have_told_us.over_65_no"), label, url)
     }
   }
 

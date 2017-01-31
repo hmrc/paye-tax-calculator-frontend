@@ -1,4 +1,5 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.model.{UserTaxCode, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.model.UserTaxCode._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
 
@@ -20,7 +21,7 @@
         </div>
       }
 
-      @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitTaxCodeForm(request.path)) {
+      @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitTaxCodeForm) {
         @helper.CSRF.formField
 
         <div class="form-group">
@@ -31,29 +32,30 @@
           data-open="tax-code-yes"
           data-close="tax-code-no">
 
-              <label class="block-label" for="tax-code-yes">@Messages("quick_calc.about_tax_code.has_tax_code_yes")
-                  <input type="radio"
-                  id="tax-code-yes"
-                  class="js-toggle-trigger"
-                  name="hasTaxCode"
-                  value="true"
-                  checked
-                  required />
-              </label>
+            <label class="block-label" for="tax-code-yes">@Messages("quick_calc.about_tax_code.has_tax_code_yes")
+              <input type="radio"
+              id="tax-code-yes"
+              class="js-toggle-trigger"
+              name="hasTaxCode"
+              value="true"
+              @recordCheck(selection = true, userTaxCodeForm)
+              required />
+            </label>
 
-              <label class="block-label" for="tax-code-no">@Messages("quick_calc.about_tax_code.has_tax_code_no")
-                  <input type="radio"
-                  id="tax-code-no"
-                  class="js-toggle-trigger"
-                  name="hasTaxCode"
-                  value="false"
-                  required/>
-              </label>
+            <label class="block-label" for="tax-code-no">@Messages("quick_calc.about_tax_code.has_tax_code_no")
+              <input type="radio"
+              id="tax-code-no"
+              class="js-toggle-trigger"
+              name="hasTaxCode"
+              value="false"
+              @recordCheck(selection = false, userTaxCodeForm)
+              required />
+            </label>
 
-              <div class="panel-indent hidden" id="tax-code-yes-target">
-                  <label class="form-label" for="code-input">@Messages("quick_calc.about_tax_code.has_tax_code")</label>
-                  @helper.inputText(userTaxCodeForm("code"))
-              </div>
+            <div class="panel-indent @recordHidden(userTaxCodeForm)" id="tax-code-yes-target">
+              <label class="form-label" for="code-input">@Messages("quick_calc.about_tax_code.has_tax_code")</label>
+              @helper.inputText(userTaxCodeForm("code"))
+            </div>
 
           </fieldset>
         </div>

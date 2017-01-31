@@ -20,8 +20,9 @@
     <div class="grid-layout__column grid-layout__column--2-3">
 
       <header class="page-header">
-        <h1>XX Your gross salary </h1>
+          <h1>@Messages("quick_calc.salary.header")</h1>
       </header>
+      <h2 class="heading-medium">@Messages("quick_calc.salary.question.How_you_paid")</h2>
 
       @helpers.form(action = controllers.routes.QuickCalcController.submitSalaryForm) {
         <div class="form-group">
@@ -32,7 +33,7 @@
 
             @radioElements.errors.map { error => <span class="error-notification">@Messages(error)</span> }
 
-            <label class="block-label" for="us-phone-number-toggle-open">Yearly
+            <label class="block-label" for="us-phone-number-toggle-open">@Messages("quick_calc.salary.year")
               <input type="radio"
                      id="us-phone-number-toggle-open"
                      class="js-toggle-trigger"
@@ -42,9 +43,9 @@
                      @if(radioField.value.contains("yearly")) { checked="checked" }
                       required/>
             </label>
-            @salary_amount_input(form("amount-yearly"), "How much do you earn a year?")
+            @salary_amount_input(form("amount-yearly"), Messages("quick_calc.salary.question.earn_a_year"))
 
-            <label class="block-label" for="us-phone-number-toggle-close">Monthly
+            <label class="block-label" for="us-phone-number-toggle-close">@Messages("quick_calc.salary.month")
               <input type="radio"
                      id="us-phone-number-toggle-close"
                      class="js-toggle-trigger"
@@ -54,10 +55,10 @@
                       @if(radioField.value.contains("monthly")) { checked="checked" }
                       required/>
             </label>
-            @salary_amount_input(form("amount-monthly"), "How much do you earn a month?")
+            @salary_amount_input(form("amount-monthly"), Messages("quick_calc.salary.question.earn_a_month"))
 
 
-            <label class="block-label" for="us-phone-number-2-toggle-close">Weekly
+            <label class="block-label" for="us-phone-number-2-toggle-close">@Messages("quick_calc.salary.week")
               <input type="radio"
                      id="us-phone-number-2-toggle-close"
                      class="js-toggle-trigger"
@@ -67,9 +68,9 @@
                       @if(radioField.value.contains("weekly")) { checked="checked" }
                       required/>
             </label>
-            @salary_amount_input(form("amount-weekly"), "How much do you earn a week?")
+            @salary_amount_input(form("amount-weekly"), Messages("quick_calc.salary.question.earn_a_week"))
 
-            <label class="block-label" for="us-phone-number-3-toggle-close">Daily
+            <label class="block-label" for="us-phone-number-3-toggle-close">@Messages("quick_calc.salary.day")
               <input type="radio"
                      id="us-phone-number-3-toggle-close"
                      class="js-toggle-trigger"
@@ -81,13 +82,13 @@
             </label>
             @salary_amount_input(
               form("amount-daily"),
-              "How much do you earn a day?",
-              Some("How many days a week do you work?"),
+              Messages("quick_calc.salary.question.earn_a_day"),
+              Some(Messages("quick_calc.salary.question.days_a_week")),
               Some(form("howManyAWeek-daily"))
             )
 
 
-            <label class="block-label" for="us-phone-number-4-toggle-close">Hourly
+            <label class="block-label" for="us-phone-number-4-toggle-close">@Messages("quick_calc.salary.hour")
               <input type="radio"
                      id="us-phone-number-4-toggle-close"
                      class="js-toggle-trigger"
@@ -99,8 +100,8 @@
             </label>
             @salary_amount_input(
               form("amount-hourly"),
-              "How much do you earn an hour?",
-              Some("How many hours a week do you work?"),
+              Messages("quick_calc.salary.question.earn_a_hour"),
+              Some(Messages("quick_calc.salary.question.hours_a_week")),
               Some(form("howManyAWeek-hourly"))
             )
 
