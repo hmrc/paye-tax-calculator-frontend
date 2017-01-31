@@ -10,9 +10,11 @@ quick_calc.title=HMRC Quick calculator
 quick_calc.you_have_told_us.header=You have told us:
 quick_calc.you_have_told_us.edit=Edit
 
-quick_calc.you_have_told_us.over_65.label=Over 65?
-quick_calc.about_tax_code.over_65_yes=Yes
-quick_calc.about_tax_code.over_65_no=No
+quick_calc.you_have_told_us.about_tax_code.label=Tax Code
+
+quick_calc.you_have_told_us.over_65.label=Over 65
+quick_calc.you_have_told_us.over_65_yes=YES
+quick_calc.you_have_told_us.over_65_no=NOT
 
 quick_calc.you_have_told_us.salary.yearly.label=Per year
 quick_calc.you_have_told_us.salary.monthly.label=Per month
@@ -20,8 +22,26 @@ quick_calc.you_have_told_us.salary.weekly.label=Per week
 quick_calc.you_have_told_us.salary.daily.label=Per day
 quick_calc.you_have_told_us.salary.hourly.label=Per hour
 
+quick_calc.salary.header=Your gross salary
+quick_calc.salary.year=Yearly
+quick_calc.salary.month=Monthly
+quick_calc.salary.week=Weekly
+quick_calc.salary.day=Daily
+quick_calc.salary.hour=Hourly
+quick_calc.salary.question.How_you_paid=How are you paid?
+quick_calc.salary.question.earn_a_year=How much do you earn a year?
+quick_calc.salary.question.earn_a_month=How much do you earn a month?
+quick_calc.salary.question.earn_a_week=How much do you earn a week?
+quick_calc.salary.question.earn_a_day=How much do you earn a day?
+quick_calc.salary.question.days_a_week=How many days a week do you work?
+quick_calc.salary.question.earn_a_hour=How much do you earn a hour?
+quick_calc.salary.question.hours_a_week=How many hours a week do you work?
+
+quick_calc.over_65.header=Are you over 65 years old?
+quick_calc.over_65.yes=Yes
+quick_calc.over_65.no=No
+
 quick_calc.about_tax_code.header=Do you know your Tax Code?
-quick_calc.about_tax_code.label=Tax Code
 quick_calc.about_tax_code.has_tax_code=Enter your Tax Code
 quick_calc.about_tax_code.wrong_tax_code=Please check and re-enter your tax code
 quick_calc.about_tax_code.has_tax_code_yes=Yes

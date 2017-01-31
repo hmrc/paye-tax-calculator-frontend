@@ -12,7 +12,7 @@
     <div class="grid-layout__column grid-layout__column--2-3">
 
       <header class="page-header">
-        <h1>@Messages("quick_calc.you_have_told_us.over_65.label")</h1>
+        <h1>@Messages("quick_calc.over_65.header")</h1>
       </header>
 
       <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitAgeForm(request.path)" method="post">
@@ -22,7 +22,7 @@
           <fieldset class="inline form-field-group"
           id="over65">
 
-            <label class="block-label" for="over65-yes">@Messages("quick_calc.about_tax_code.over_65_yes")
+            <label class="block-label" for="over65-yes">@Messages("quick_calc.over_65.yes")
               <input type="radio"
               id="over65-yes"
               name="over65"
@@ -31,7 +31,7 @@
               required />
             </label>
 
-            <label class="block-label" for="over65-no">@Messages("quick_calc.about_tax_code.over_65_no")
+            <label class="block-label" for="over65-no">@Messages("quick_calc.over_65.no")
               <input type="radio"
               id="over65-no"
               name="over65"
