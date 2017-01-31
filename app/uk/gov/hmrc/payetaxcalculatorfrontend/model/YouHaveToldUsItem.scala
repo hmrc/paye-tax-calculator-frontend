@@ -17,6 +17,7 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import play.api.i18n.Messages
+import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
 
 case class YouHaveToldUsItem(value: String, label: String, url: String)
 
@@ -30,7 +31,7 @@ object YouHaveToldUs {
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
       val label = Messages("quick_calc.about_tax_code.label")
-      val url = "/paye-tax-calculator-frontend/quick-calculation/tax-code"
+      val url = routes.QuickCalcController.showTaxCodeForm().url
       YouHaveToldUsItem(t.taxCode.getOrElse("1100L"), label, url)
     }
   }
@@ -38,7 +39,7 @@ object YouHaveToldUs {
   implicit def over65Format(implicit messages: Messages): YouHaveToldUs[Over65] = new YouHaveToldUs[Over65] {
     def toYouHaveToldUsItem(over65: Over65): YouHaveToldUsItem = {
       val label = Messages("quick_calc.you_have_told_us.over_65.label")
-      val url = "/paye-tax-calculator-frontend/quick-calculation/age"
+      val url = routes.QuickCalcController.showAgeForm().url
       YouHaveToldUsItem(if(over65.value) "Yes" else "No", label, url)
     }
   }
@@ -55,14 +56,15 @@ object YouHaveToldUs {
 
   implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
-      val url = "/paye-tax-calculator-frontend/quick-calculation/salary" // TODO use correct URL
+      val url = routes.QuickCalcController.showSalaryForm().url
       def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
+      def asPounds(v: BigDecimal) = "£" + v
       s match {
-        case Yearly(value) => YouHaveToldUsItem(value.toString, labelFor(Salary.YEARLY), url)
-        case Monthly(value) => YouHaveToldUsItem(value.toString, labelFor(Salary.MONTHLY), url)
-        case Weekly(value) => YouHaveToldUsItem(value.toString, labelFor(Salary.WEEKLY), url)
-        case Daily(value, howManyAWeek) => YouHaveToldUsItem(value.toString, labelFor(Salary.DAILY), url)
-        case Hourly(value, howManyAWeek) => YouHaveToldUsItem(value.toString, labelFor(Salary.HOURLY), url)
+        case Yearly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.YEARLY), url)
+        case Monthly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.MONTHLY), url)
+        case Weekly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.WEEKLY), url)
+        case Daily(v, _) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.DAILY), url)
+        case Hourly(v, _) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.HOURLY), url)
       }
     }
   }
