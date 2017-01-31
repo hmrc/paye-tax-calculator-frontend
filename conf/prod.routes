@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /paye-tax-calculator-frontend              app.Routes
+->         /paye-tax-calculator       app.Routes
 ->         /                          health.Routes
 ->     	   /template                  template.Routes
 
