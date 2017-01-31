@@ -19,13 +19,13 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 
-case class QuickCalcAggregateInput(// tax calc
+case class QuickCalcAggregateInput(taxCode: Option[UserTaxCode],
                                    isOver65: Option[Over65],
                                    salary: Option[Salary]) {
 
   def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] = {
     List(
-      // add tax code here
+      taxCode.map { YouHaveToldUs(_) },
       isOver65.map { YouHaveToldUs(_) },
       salary.map { YouHaveToldUs(_ ) }
     ).flatten
@@ -34,7 +34,7 @@ case class QuickCalcAggregateInput(// tax calc
 }
 
 object QuickCalcAggregateInput {
-  def newInstance = QuickCalcAggregateInput(None, None)
+  def newInstance = QuickCalcAggregateInput(None, None, None)
   implicit val format = Json.format[QuickCalcAggregateInput]
 }
 
