@@ -15,7 +15,7 @@
         <h1>@Messages("quick_calc.over_65.header")</h1>
       </header>
 
-      <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitAgeForm(request.path)" method="post">
+      <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitAgeForm" method="post">
         @helper.CSRF.formField
 
         <div class="form-group">

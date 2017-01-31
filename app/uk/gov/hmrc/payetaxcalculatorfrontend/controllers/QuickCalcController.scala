@@ -19,7 +19,6 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.payetaxcalculatorfrontend.model._
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.UserTaxCode._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
@@ -42,7 +41,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     }
   }
 
-  def submitTaxCodeForm(url: String) = ActionWithSessionId.async { implicit request =>
+  def submitTaxCodeForm() = ActionWithSessionId.async { implicit request =>
 
     UserTaxCode.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
@@ -79,7 +78,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     }
   }
 
-  def submitAgeForm(url: String) = ActionWithSessionId.async { implicit request =>
+  def submitAgeForm() = ActionWithSessionId.async { implicit request =>
 
     Over65.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {

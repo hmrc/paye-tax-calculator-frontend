@@ -21,7 +21,7 @@
         </div>
       }
 
-      @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitTaxCodeForm(request.path)) {
+      @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitTaxCodeForm) {
         @helper.CSRF.formField
 
         <div class="form-group">

@@ -5,10 +5,10 @@ GET       /                                               uk.gov.hmrc.payetaxcal
 GET       /quick-calculation/                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
 
 GET       /quick-calculation/tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
-POST      /quick-calculation/tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitTaxCodeForm(url: String)
+POST      /quick-calculation/tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitTaxCodeForm
 
 GET       /quick-calculation/age                          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showAgeForm
-POST      /quick-calculation/age                          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitAgeForm(url: String)
+POST      /quick-calculation/age                          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitAgeForm
 
 GET       /quick-calculation/salary                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showSalaryForm
 POST      /quick-calculation/salary                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitSalaryForm
