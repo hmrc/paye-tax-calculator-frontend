@@ -47,11 +47,13 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
       formWithErrors => cache.fetchAndGetEntry.map {
         case Some(aggregate) => BadRequest(quick_calc_form(UserTaxCode.form.withGlobalError(
           Messages("quick_calc.about_tax_code.wrong_tax_code")), aggregate.youHaveToldUsItems))
-        case None => BadRequest(quick_calc_form(formWithErrors, Nil))
+        case None => BadRequest(quick_calc_form(UserTaxCode.form.withGlobalError(
+          Messages("quick_calc.about_tax_code.wrong_tax_code")), Nil))
       },
       newTaxCode => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
-          val newAggregate = aggregate.copy(taxCode = Some(newTaxCode))
+          val updateTaxCode = if (newTaxCode.hasTaxCode) newTaxCode else UserTaxCode(false, Some("1100L"))
+          val newAggregate = aggregate.copy(taxCode = Some(updateTaxCode))
           cache.save(newAggregate).map {
           _ => Ok(age(Over65.form, newAggregate.youHaveToldUsItems))
         }

@@ -3,6 +3,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
 @(over65Form: Form[Over65], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@radioField = @{ over65Form("over65") }
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
@@ -26,6 +27,7 @@
               id="over65-yes"
               name="over65"
               value="true"
+              @if(radioField.value.contains("true")) { checked="checked" }
               required />
             </label>
 
@@ -34,6 +36,7 @@
               id="over65-no"
               name="over65"
               value="false"
+              @if(radioField.value.contains("false")) { checked="checked" }
               required/>
             </label>
 
