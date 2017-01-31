@@ -3,6 +3,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.salary_amount_input
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.salary_radio_box
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 @import play.api.i18n._
@@ -13,7 +14,11 @@
 @radioField = @{ form("salaryType") }
 @radioElements = @{ FieldElements(radioField.id, radioField, null, Map.empty, messages) }
 
-@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+@scriptProvidingTogglingOfRadioButtons = {
+    <script src='@routes.Assets.at("javascripts/shame.js")' type="text/javascript"></script>
+}
+
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width"), scriptElem = Some(scriptProvidingTogglingOfRadioButtons)) {
 
   <div class="grid-layout">
 
@@ -22,85 +27,41 @@
       <header class="page-header">
           <h1>@Messages("quick_calc.salary.header")</h1>
       </header>
+
       <h2 class="heading-medium">@Messages("quick_calc.salary.question.How_you_paid")</h2>
 
       @helpers.form(action = controllers.routes.QuickCalcController.submitSalaryForm) {
         <div class="form-group">
 
-          <fieldset class="form-field-group js-visible js-aria-show @if(radioElements.hasErrors){ form-field-error } "
+          <fieldset class="form-field-group js-visible js-aria-show @if(radioElements.hasErrors){ form-field-error } js-toggle-shame"
                     id="us-number"
                     data-trigger="js-toggle-trigger">
 
             @radioElements.errors.map { error => <span class="error-notification">@Messages(error)</span> }
 
-            <label class="block-label" for="us-phone-number-toggle-open">@Messages("quick_calc.salary.year")
-              <input type="radio"
-                     id="us-phone-number-toggle-open"
-                     class="js-toggle-trigger"
-                     data-target="us-phone-number-open-target"
-                     value="yearly"
-                     name="@radioElements.field.name"
-                     @if(radioField.value.contains("yearly")) { checked="checked" }
-                      required/>
-            </label>
-            @salary_amount_input(form("amount-yearly"), Messages("quick_calc.salary.question.earn_a_year"))
+            @salary_radio_box(radioElements, Messages("quick_calc.salary.year"), "yearly")
+            @salary_amount_input(form("amount-yearly"), Messages("quick_calc.salary.question.earn_a_year"), visible = radioField.value.contains("yearly"))
 
-            <label class="block-label" for="us-phone-number-toggle-close">@Messages("quick_calc.salary.month")
-              <input type="radio"
-                     id="us-phone-number-toggle-close"
-                     class="js-toggle-trigger"
-                     data-target="us-phone-number-close-target"
-                     value="monthly"
-                      name="@radioElements.field.name"
-                      @if(radioField.value.contains("monthly")) { checked="checked" }
-                      required/>
-            </label>
-            @salary_amount_input(form("amount-monthly"), Messages("quick_calc.salary.question.earn_a_month"))
+            @salary_radio_box(radioElements, Messages("quick_calc.salary.month"), "monthly")
+            @salary_amount_input(form("amount-monthly"), Messages("quick_calc.salary.question.earn_a_month"), visible = radioField.value.contains("monthly"))
 
+            @salary_radio_box(radioElements, Messages("quick_calc.salary.week"), "weekly")
+            @salary_amount_input(form("amount-weekly"), Messages("quick_calc.salary.question.earn_a_week"), visible = radioField.value.contains("weekly"))
 
-            <label class="block-label" for="us-phone-number-2-toggle-close">@Messages("quick_calc.salary.week")
-              <input type="radio"
-                     id="us-phone-number-2-toggle-close"
-                     class="js-toggle-trigger"
-                     data-target="us-phone-number-2-close-target"
-                     value="weekly"
-                     name="@radioElements.field.name"
-                      @if(radioField.value.contains("weekly")) { checked="checked" }
-                      required/>
-            </label>
-            @salary_amount_input(form("amount-weekly"), Messages("quick_calc.salary.question.earn_a_week"))
-
-            <label class="block-label" for="us-phone-number-3-toggle-close">@Messages("quick_calc.salary.day")
-              <input type="radio"
-                     id="us-phone-number-3-toggle-close"
-                     class="js-toggle-trigger"
-                     data-target="us-phone-number-2-close-target"
-                     value="daily"
-                     name="@radioElements.field.name"
-                      @if(radioField.value.contains("daily")) { checked="checked" }
-                      required/>
-            </label>
+            @salary_radio_box(radioElements, Messages("quick_calc.salary.day"), "daily")
             @salary_amount_input(
               form("amount-daily"),
               Messages("quick_calc.salary.question.earn_a_day"),
+              radioField.value.contains("daily"),
               Some(Messages("quick_calc.salary.question.days_a_week")),
               Some(form("howManyAWeek-daily"))
             )
 
-
-            <label class="block-label" for="us-phone-number-4-toggle-close">@Messages("quick_calc.salary.hour")
-              <input type="radio"
-                     id="us-phone-number-4-toggle-close"
-                     class="js-toggle-trigger"
-                     data-target="us-phone-number-4-close-target"
-                     value="hourly"
-                     name="@radioElements.field.name"
-                      @if(radioField.value.contains("hourly")) { checked="checked" }
-                      required/>
-            </label>
+            @salary_radio_box(radioElements, Messages("quick_calc.salary.hour"), "hourly")
             @salary_amount_input(
               form("amount-hourly"),
               Messages("quick_calc.salary.question.earn_a_hour"),
+              radioField.value.contains("hourly"),
               Some(Messages("quick_calc.salary.question.hours_a_week")),
               Some(form("howManyAWeek-hourly"))
             )
