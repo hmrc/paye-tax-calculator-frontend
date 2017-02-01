@@ -1,11 +1,11 @@
 @import play.api.i18n._
 @import views.html.helper._
 
-@(amountField: Field, amountLabel: String, maybeHowManyLabel: Option[String] = None, maybeHowManyField: Option[Field] = None)(implicit messages: Messages)
+@(amountField: Field, amountLabel: String, visible: Boolean, maybeHowManyLabel: Option[String] = None, maybeHowManyField: Option[Field] = None)(implicit messages: Messages)
 
 @elementsFor(f: Field) = @{ FieldElements(f.id, f, null, Map.empty, messages) }
 
-<div id="parent-@{amountField.id}" class="panel-indent">
+<div id="parent-@{amountField.id}" class="panel-indent @if(!visible){ hidden }" aria-expanded="@visible" aria-visible="@visible">
   <label class="@if(elementsFor(amountField).hasErrors){form-field--error}" for="@amountField.name">
     @elementsFor(amountField).errors.map { error => <span class="error-notification"> @Messages(error) </span> }
     @amountLabel

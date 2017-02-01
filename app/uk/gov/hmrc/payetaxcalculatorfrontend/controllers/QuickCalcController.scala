@@ -19,6 +19,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.mvc.Flash
 import uk.gov.hmrc.payetaxcalculatorfrontend.model._
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.UserTaxCode._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
@@ -45,10 +46,10 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
 
     UserTaxCode.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
-        case Some(aggregate) => BadRequest(quick_calc_form(UserTaxCode.form.withGlobalError(
-          Messages("quick_calc.about_tax_code.wrong_tax_code")), aggregate.youHaveToldUsItems))
-        case None => BadRequest(quick_calc_form(UserTaxCode.form.withGlobalError(
-          Messages("quick_calc.about_tax_code.wrong_tax_code")), Nil))
+        case Some(aggregate) => Redirect(routes.QuickCalcController.showTaxCodeForm()).flashing(Flash(UserTaxCode.form.data) +
+          ("error" -> Messages("quick_calc.about_tax_code.wrong_tax_code")))
+        case None => Redirect(routes.QuickCalcController.showTaxCodeForm()).flashing(Flash(UserTaxCode.form.data) +
+          ("error" -> Messages("quick_calc.about_tax_code.wrong_tax_code")))
       },
       newTaxCode => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>

@@ -3,7 +3,8 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
 
-@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages, flash: Flash)
+@errorMessage = @{userTaxCodeForm.globalError.map { error => error.message }}
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
@@ -14,12 +15,6 @@
       <header class="page-header">
         <h1>@Messages("quick_calc.about_tax_code.header")</h1>
       </header>
-
-      @userTaxCodeForm.globalError.map { error =>
-        <div class="flash error-summary error-summary--show">
-          @error.message
-        </div>
-      }
 
       @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitTaxCodeForm) {
         @helper.CSRF.formField
@@ -38,7 +33,7 @@
               class="js-toggle-trigger"
               name="hasTaxCode"
               value="true"
-              @recordCheck(selection = true, userTaxCodeForm)
+              @checkUserSelection(selection = true, userTaxCodeForm, flash)
               required />
             </label>
 
@@ -48,13 +43,19 @@
               class="js-toggle-trigger"
               name="hasTaxCode"
               value="false"
-              @recordCheck(selection = false, userTaxCodeForm)
+              @checkUserSelection(selection = false, userTaxCodeForm, flash)
               required />
             </label>
 
-            <div class="panel-indent @recordHidden(userTaxCodeForm)" id="tax-code-yes-target">
-              <label class="form-label" for="code-input">@Messages("quick_calc.about_tax_code.has_tax_code")</label>
-              @helper.inputText(userTaxCodeForm("code"))
+            <div class="form-field-group form-field--error panel-indent @hideTextField(userTaxCodeForm, flash)" id="tax-code-yes-target">
+              @if(flash.get("error").isDefined){
+                <div class=" error-notification">
+                  @flash.get("error")
+                </div>
+              }
+              @Messages("quick_calc.about_tax_code.has_tax_code")<br>
+              <input type="text" id="code" name="code" value="">
+
             </div>
 
           </fieldset>
