@@ -1,9 +1,10 @@
 @import play.api.i18n._
-@import uk.gov.hmrc.payetaxcalculatorfrontend.model.{YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.result
 @import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
+
 @(youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {

@@ -32,6 +32,10 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
                                      cache: QuickCalcCache) extends FrontendController with I18nSupport {
 
+  def redirectToTexCodeForm() = ActionWithSessionId { implicit request =>
+    Redirect(routes.QuickCalcController.showTaxCodeForm())
+  }
+
   def showTaxCodeForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
@@ -117,9 +121,13 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
         case None => BadRequest(salary(formWithErrors, Nil))
       },
       newSalary => cache.fetchAndGetEntry.flatMap {
-        case Some(aggregate) => cache.save(aggregate.copy(salary = Some(newSalary))).map {
-          _ => Redirect(routes.QuickCalcController.showResult())
-        }
+        case Some(aggregate) =>
+          val updatedAggregate = aggregate.copy(salary = Some(newSalary))
+          cache.save(updatedAggregate).map {
+            _ => {
+              Redirect(routes.QuickCalcController.showResult())
+            }
+          }
         case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(newSalary))).map {
           _ => Redirect(routes.QuickCalcController.showResult())
         }
@@ -127,9 +135,14 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     )
   }
 
-  def showResult() = ActionWithSessionId { implicit request =>
-    Ok(result(Nil))
-
+  def showResult() = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        Ok(result(aggregate.youHaveToldUsItems))
+      case None =>
+        // TODO if aggregate unavailable here user bypassed tax-code selection which is wrong
+        Ok(result(Nil))
+    }
   }
 
 }
