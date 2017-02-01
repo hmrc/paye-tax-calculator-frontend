@@ -23,7 +23,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.model._
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.UserTaxCode._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.{age, quick_calc_form, salary}
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.{age, quick_calc_form, result, salary}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 
@@ -117,13 +117,18 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
       },
       newSalary => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) => cache.save(aggregate.copy(salary = Some(newSalary))).map {
-          _ => Ok("next page goes here")
+          _ => Ok(result(aggregate.youHaveToldUsItems))
         }
         case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(newSalary))).map {
-          _ => Ok("next page goes here")
+          _ => Ok(result(Nil))
         }
       }
     )
+  }
+
+  def showResult() = ActionWithSessionId { implicit request =>
+    Ok(result(Nil))
+
   }
 
 }

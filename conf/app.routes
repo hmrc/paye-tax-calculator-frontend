@@ -2,7 +2,7 @@
 
 GET       /                                               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.index()
 
-GET       /quick-calculation/                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
+GET       /quick-calculation                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
 
 GET       /quick-calculation/tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
 POST      /quick-calculation/tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitTaxCodeForm
@@ -15,3 +15,5 @@ POST      /quick-calculation/salary                       uk.gov.hmrc.payetaxcal
 
 # Map static resources from the /public folder to the /assets URL path
 GET       /assets/*file                                 controllers.Assets.at(path="/public", file)
+
+GET       /quick-calculation/result                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult()
