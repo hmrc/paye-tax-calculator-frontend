@@ -3,63 +3,76 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(title = Messages("index.title")) {
-<div>
 
-  <div>
+<div class="alpha-banner">
+  <p>
+    <strong class="phase-tag">ALPHA</strong>
+    <span>This is a trial service. Help us improve it - send your
+    <a href="">feedback</a>.</span>
+  </p>
+</div>
+
+<div class="grid-row">
+
+  <div class="column-two-thirds">
     <header class="page-header">
-      <h1>@Messages("legacy.title")</h1>
+      <h1>@Messages("index.title")</h1>
     </header>
 
-    <p>@Messages("legacy.introduction")</p>
+    <p>@Messages("index.introduction")</p>
   </div>
 
   <br/>
-
-  <div>
+</div>
+<div class="grid-layout">
+  <div class="grid-layout__column grid-layout__column--1-2">
     <h2 class="heading-large">
-      @Messages("legacy.which_calc_header")
+      <a href="http://tools.hmrc.gov.uk/hmrctaxcalculator/investigate/Personal+Tax+Calculator/en-GB/Attribute~b2%40Rules_GlobalProceduralRules_doc~global~global">
+        @Messages("index.quick_calculation")
+      </a>
     </h2>
-    <p>@Messages("legacy.which_calc.intro_options")</p>
-    <p>@Messages("legacy.which_calc.use_quick_calc_if")</p>
+    <p>@Messages("index.use_the_quick_calc_if")</p>
     <ul class="list list-bullet">
-      <li>@Messages("legacy.employment_only")</li>
-      <li>@Messages("legacy.dont_contribute_pension")</li>
+      <li>@Messages("index.employment_only")</li>
+      <li>@Messages("index.dont_contribute_pension")</li>
     </ul>
+  </div>
+
+  <div class="grid-layout__column grid-layout__column--1-2">
+    <h2 class="heading-large">
+      <a href="http://tools.hmrc.gov.uk/hmrctaxcalculator/investigate/Personal+Tax+Calculator/en-GB/Attribute~b3%40Rules_GlobalProceduralRules_doc~global~global">
+        @Messages("index.detailed_calculation")
+      </a>
+    </h2>
+    <p>@Messages("index.use_the_detailed_calc_if")</p>
+      <ul class="list list-bullet">
+        <li>@Messages("index.detailed_calc_under_age")</li>
+      </ul>    
+  </div>
+</div>
+
+<div class="grid-row">
+
+  <div class="column-two-thirds">
+    <p>@Messages("index.detailed_calc_ENI_estimate") <a href="http://nicecalculator.hmrc.gov.uk/">@Messages("legacy.detailed_calc.ni_contributions_calculator")</a></p>
+
     <br/>
+
     <p>@Messages("legacy.scottish_taxpayer_intro")
       <a href="https://www.gov.uk/scottish-rate-income-tax/how-it-works/">@Messages("legacy.scottish_income_tax")</a>
     </p>
-    <p>@Messages("legacy.detailed_calc.employer_ni_intro")
-      <a href="http://nicecalculator.hmrc.gov.uk/">@Messages("legacy.detailed_calc.ni_contributions_calculator")</a>
-    </p>
-    <h3 class="heading">
-      <a href="http://tools.hmrc.gov.uk/hmrctaxcalculator/investigate/Personal+Tax+Calculator/en-GB/Attribute~b2%40Rules_GlobalProceduralRules_doc~global~global?user=guest">
-        @Messages("index.quick_calculation")
-      </a>
-    </h3>
-    <h3 class="heading">
-      <a href="http://tools.hmrc.gov.uk/hmrctaxcalculator/investigate/Personal+Tax+Calculator/en-GB/Attribute~b3%40Rules_GlobalProceduralRules_doc~global~global?user=guest">
-        @Messages("index.detailed_calculation")
-      </a>
-    </h3>
-    <br/>
   </div>
 
-  <div>
-    <h2 class="heading-large">
-      @Messages("index.welsh_version")
-    </h2>
-    <p>@Messages("index.welsh_version_description")</p>
-    <p><a href="http://tools.hmrc.gov.uk/hmrctaxcalculator/startsession/Personal+Tax+Calculator/cy-GB?user=guest">@Messages("index.welsh_version_link")</a></p>
-  </div>
-  <div>
-    <h2 class="heading-large">
-      @Messages("index.feedback")
-    </h2>
-    <p>@Messages("index.feedback_description")</p>
-    <p><a href="http://www.hmrc.gov.uk/comment/wcp-feedback.htm">@Messages("index.feedback_link")</a></p>
+  <div class="column-two-thirds">
+    <header class="page-header">
+      <h1>@Messages("index.welsh_version")</h1>
+    </header>
+
+    <p><a href="http://tools.hmrc.gov.uk/hmrctaxcalculator/startsession/Personal+Tax+Calculator/cy-GB">@Messages("label.click_here")</a> @Messages("index.welsh_version_use")</p>
     
+    </p>
   </div>
 
+  <br/>
 </div>
 }

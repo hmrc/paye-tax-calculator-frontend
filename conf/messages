@@ -8,6 +8,9 @@ legacy.dont_contribute_pension=you don’t contribute to a workplace or personal
 legacy.scottish_taxpayer_intro=If you are a Scottish taxpayer insert your Scottish tax code, this should begin with an “S”. For further information on the Scottish rate of Income Tax go to 
 legacy.scottish_income_tax=Scottish Income Tax
 legacy.detailed_calc.employer_ni_intro=If you use the detailed calculation and you are under the age of 21 or you are an apprentice under the age of 25, select National Insurance category letter A if your category letter is either H or M. Select National Insurance category letter D if your category letter is I. Selecting the alternative category letter will not affect the amount of 'National Insurance' estimated. The 'Employer National Insurance' estimation will not reflect the position for employees under the age of 21 or for apprentices under the age of 25. If you want to know the correct amount of 'Employer National Insurance' use the
+index.use_the_detailed_calc_if=Use the detailed calculation if you can answer ’yes’ to the following:
+index.detailed_calc_under_age=you are under the age of 21 or you are an apprentice under the age of 25
+index.detailed_calc_ENI_estimate=The 'Employer National Insurance' estimation will not reflect the position for employees under the age of 21 or for apprentices under the age of 25. If you want to know the correct amount of 'Employer National Insurance' use the
 legacy.detailed_calc.ni_contributions_calculator=National Insurance contributions calculator
 
 index.title=How much is your income, tax and National Insurance?
@@ -16,6 +19,7 @@ index.quick_calculation=Quick calculation
 index.detailed_calculation=Detailed calculation
 index.welsh_version=Welsh version
 index.welsh_version_description=Follow the link below to use the Welsh language version of the online calculator.
+index.welsh_version_use=to use the Welsh language version of the online calculator.
 index.welsh_version_link=Cyfrifiannell Treth CThEM
 index.feedback=Feedback
 index.feedback_description=Send us feedback by following the link below. 
@@ -23,6 +27,8 @@ index.feedback_link=Give us feedback
 index.use_the_quick_calc_if=Use the quick calculation if you can answer ’yes’ to the following:
 index.employment_only=you have employment income only
 index.dont_contribute_pension=you don’t contribute to a workplace or personal pension through your employer.
+
+label.click_here=Click here
 
 quick_calc.title=HMRC Quick calculator
 
