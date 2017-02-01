@@ -55,12 +55,12 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
           val updatedTaxCode = if (newTaxCode.hasTaxCode) newTaxCode else UserTaxCode(hasTaxCode = false, Some(defaultTaxCode))
           val newAggregate = aggregate.copy(taxCode = Some(updatedTaxCode))
           cache.save(newAggregate).map {
-          _ => Ok(age(Over65.form, newAggregate.youHaveToldUsItems))
+          _ => Redirect(routes.QuickCalcController.showAgeForm())
         }
         case None =>
           val aggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))
           cache.save(aggregate).map {
-          _ => Ok(age(Over65.form, aggregate.youHaveToldUsItems))
+          _ => Redirect(routes.QuickCalcController.showAgeForm())
         }
       }
     )
@@ -89,10 +89,10 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
         case Some(aggregate) =>
           val updatedAggregate = aggregate.copy(isOver65 = Some(userAge))
           cache.save(updatedAggregate).map {
-          _ => Ok(salary(Salary.form, updatedAggregate.youHaveToldUsItems))
+          _ => Redirect(routes.QuickCalcController.showSalaryForm())
         }
         case None => cache.save(QuickCalcAggregateInput.newInstance.copy(isOver65 = Some(userAge))).map {
-          _ => Ok(salary(Salary.form, List.empty))
+          _ => Redirect(routes.QuickCalcController.showSalaryForm())
         }
       }
     )
@@ -117,10 +117,10 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
       },
       newSalary => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) => cache.save(aggregate.copy(salary = Some(newSalary))).map {
-          _ => Ok(result(aggregate.youHaveToldUsItems))
+          _ => Redirect(routes.QuickCalcController.showResult())
         }
         case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(newSalary))).map {
-          _ => Ok(result(Nil))
+          _ => Redirect(routes.QuickCalcController.showResult())
         }
       }
     )
