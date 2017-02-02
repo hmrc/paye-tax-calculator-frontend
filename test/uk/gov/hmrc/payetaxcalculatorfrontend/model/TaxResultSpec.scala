@@ -86,7 +86,7 @@ class TaxResultSpec extends UnitSpec {
     }
   }
 
-  "Extracting Hours from user repsonse" should {
+  "Extracting Hours from user response" should {
 
     "return if response is hours in a Daily" in {
       extractHours(QuickCalcAggregateInput(None, None, Some(Daily(0,40)))) shouldBe 40
