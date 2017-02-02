@@ -1,5 +1,6 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
+import uk.gov.hmrc.payeestimator.domain.TaxCalc
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.TaxResult._
 
@@ -29,7 +30,7 @@ class TaxResultSpec extends UnitSpec {
       extractOver65(QuickCalcAggregateInput(None, Some(Over65(false)), None)) shouldBe "false"
     }
 
-    //Todo is this really needed?
+    //Todo unsure about this?
     "return empty string if no response" in {
       extractOver65(QuickCalcAggregateInput(None, None, None)) shouldBe ""
     }
@@ -64,7 +65,7 @@ class TaxResultSpec extends UnitSpec {
 
   "Extracting Pay Period from user response" should {
 
-    "return if response provided is Yearly" in {
+    "return  if response provided is Yearly" in {
       extractPayPeriod(QuickCalcAggregateInput(None, None, Some(Yearly(0)))) shouldBe "annual"
     }
 
@@ -76,8 +77,12 @@ class TaxResultSpec extends UnitSpec {
       extractPayPeriod(QuickCalcAggregateInput(None, None, Some(Weekly(0)))) shouldBe "weekly"
     }
 
-    "return empty string if response is not Yearly, Monthly or Weekly" in {
+    "return empty string if response is Daily" in {
       extractPayPeriod(QuickCalcAggregateInput(None, None, Some(Daily(0,0)))) shouldBe ""
+    }
+
+    "return empty string if response is Hourly" in {
+      extractPayPeriod(QuickCalcAggregateInput(None, None, Some(Hourly(0,0)))) shouldBe ""
     }
   }
 
@@ -89,6 +94,10 @@ class TaxResultSpec extends UnitSpec {
 
     "return if response is hours in a Hourly" in {
       extractHours(QuickCalcAggregateInput(None, None, Some(Hourly(0,20)))) shouldBe 20
+    }
+
+    "return if response is not Daily or Hourly" in {
+      extractHours(QuickCalcAggregateInput(None, None, Some(Weekly(0)))) shouldBe -1
     }
   }
 
