@@ -22,23 +22,21 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class UserTaxCodeSpec extends UnitSpec {
 
-  val flash = Flash.emptyCookie
-
   "The checkUserSelection function" should {
 
     "not set yes or no options as checked, if user did not select neither" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.checkUserSelection(true, userTaxCodeForm, flash) shouldBe ""
+      UserTaxCode.checkUserSelection(true, userTaxCodeForm) shouldBe ""
     }
 
     "set the yes option as checked, if user has checked yes in earlier operation" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.checkUserSelection(true, userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode))), flash) shouldBe "checked"
+      UserTaxCode.checkUserSelection(true, userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode)))) shouldBe "checked"
     }
 
     "set the no option as checked, if user has checked no in earlier operation" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.checkUserSelection(false, userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode))), flash) shouldBe "checked"
+      UserTaxCode.checkUserSelection(false, userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode)))) shouldBe "checked"
     }
 
   }
@@ -46,12 +44,12 @@ class UserTaxCodeSpec extends UnitSpec {
   "The hideTextField function" should {
     "keep the text field for tax code hidden when the user selects the no option" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode))), flash) shouldBe "hidden"
+      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode)))) shouldBe "hidden"
     }
 
     "show the text field when user selects the yes option" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode))), flash) shouldBe ""
+      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode))).withGlobalError("")) shouldBe ""
     }
   }
 }

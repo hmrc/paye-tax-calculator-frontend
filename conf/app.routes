@@ -2,7 +2,7 @@
 
 GET       /                                               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.index()
 
-GET       /quick-calculation                              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.redirectToTexCodeForm
+GET       /quick-calculation                              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.redirectToTaxCodeForm
 
 GET       /quick-calculation/tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
 POST      /quick-calculation/tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitTaxCodeForm

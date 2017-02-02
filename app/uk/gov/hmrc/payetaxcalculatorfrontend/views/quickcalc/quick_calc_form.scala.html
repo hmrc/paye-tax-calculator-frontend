@@ -32,7 +32,7 @@
               class="js-toggle-trigger"
               name="hasTaxCode"
               value="true"
-              @checkUserSelection(selection = true, userTaxCodeForm, flash)
+              @checkUserSelection(selection = true, userTaxCodeForm)
               required />
             </label>
 
@@ -42,15 +42,17 @@
               class="js-toggle-trigger"
               name="hasTaxCode"
               value="false"
-              @checkUserSelection(selection = false, userTaxCodeForm, flash)
+              @checkUserSelection(selection = false, userTaxCodeForm)
               required />
             </label>
 
-            <div class="form-field-group form-field--error panel-indent @hideTextField(userTaxCodeForm, flash)" id="tax-code-yes-target">
-              @if(flash.get("error").isDefined){
-                <div class=" error-notification">
-                  @flash.get("error")
-                </div>
+            <div class="form-field-group form-field--error panel-indent @hideTextField(userTaxCodeForm)" id="tax-code-yes-target">
+              @if(userTaxCodeForm.hasGlobalErrors){
+                @userTaxCodeForm.globalError.map { error =>
+                  <div class="error-notification">
+                    @error.message
+                  </div>
+                }
               }
               @Messages("quick_calc.about_tax_code.has_tax_code")<br>
               <input type="text" id="code" name="code" value="">
@@ -68,7 +70,7 @@
     </div>
 
     <div class="grid-layout__column grid-layout__column--1-3">
-      @you_have_told_us(youHaveToldUsItems)
+    @you_have_told_us(youHaveToldUsItems)
     </div>
   </div>
 

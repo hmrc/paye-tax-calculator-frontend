@@ -32,7 +32,8 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
                                      cache: QuickCalcCache) extends FrontendController with I18nSupport {
 
-  def redirectToTexCodeForm() = ActionWithSessionId { implicit request =>
+
+  def redirectToTaxCodeForm() = ActionWithSessionId { implicit request =>
     Redirect(routes.QuickCalcController.showTaxCodeForm())
   }
 
@@ -48,12 +49,12 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
 
   def submitTaxCodeForm() = ActionWithSessionId.async { implicit request =>
 
+    val formWithErrorMessages = UserTaxCode.form.withGlobalError(Messages("quick_calc.about_tax_code.wrong_tax_code"))
+
     UserTaxCode.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
-        case Some(aggregate) => Redirect(routes.QuickCalcController.showTaxCodeForm()).flashing(Flash(UserTaxCode.form.data) +
-          ("error" -> Messages("quick_calc.about_tax_code.wrong_tax_code")))
-        case None => Redirect(routes.QuickCalcController.showTaxCodeForm()).flashing(Flash(UserTaxCode.form.data) +
-          ("error" -> Messages("quick_calc.about_tax_code.wrong_tax_code")))
+        case Some(aggregate) => BadRequest(quick_calc_form(formWithErrorMessages, aggregate.youHaveToldUsItems))
+        case None => BadRequest(quick_calc_form(formWithErrorMessages, Nil))
       },
       newTaxCode => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>

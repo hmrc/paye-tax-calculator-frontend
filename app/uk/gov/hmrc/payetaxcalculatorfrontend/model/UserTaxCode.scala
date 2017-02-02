@@ -40,8 +40,8 @@ object UserTaxCode extends TaxCalculatorHelper {
         if (aboutTaxCode.hasTaxCode) isValidTaxCode(aboutTaxCode.taxCode.getOrElse("").trim) else true
     ))
 
-  def checkUserSelection(selection: Boolean, taxCode: Form[UserTaxCode], flash: Flash): String ={
-    if (flash.get("error").isDefined && selection) "checked"
+  def checkUserSelection(selection: Boolean, taxCode: Form[UserTaxCode]): String ={
+    if (taxCode.hasGlobalErrors && selection) "checked"
     else if (selection) {
       taxCode.value match {
         case Some(code) => if (code.hasTaxCode) "checked" else ""
@@ -50,14 +50,14 @@ object UserTaxCode extends TaxCalculatorHelper {
     }
     else {
       taxCode.value match {
-        case Some(code) => if (!code.hasTaxCode && flash.get("error").isEmpty) "checked" else ""
+        case Some(code) => if (!code.hasTaxCode && !taxCode.hasGlobalErrors) "checked" else ""
         case _ => ""
       }
     }
   }
 
-  def hideTextField(taxCode: Form[UserTaxCode], flash: Flash): String ={
-    if (flash.get("error").isDefined) ""
+  def hideTextField(taxCode: Form[UserTaxCode]): String ={
+    if (taxCode.hasGlobalErrors) ""
     else {
       taxCode.value match {
         case Some(v) => if (v.hasTaxCode) "" else "hidden"
