@@ -47,6 +47,7 @@ object TaxResult {
     case None => 0
   }
 
+
   def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
     case Some(s) => s match {
       case s: Yearly => "annual"
@@ -69,7 +70,7 @@ object TaxResult {
       extractOver65(quickCalcAggregateInput),
       2016,
       extractTaxCode(quickCalcAggregateInput),
-      extractSalary(quickCalcAggregateInput),
+      extractSalary(quickCalcAggregateInput)*100,
       extractPayPeriod(quickCalcAggregateInput),
       extractHours(quickCalcAggregateInput))
   }
