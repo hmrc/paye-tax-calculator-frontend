@@ -32,7 +32,6 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
                                      cache: QuickCalcCache) extends FrontendController with I18nSupport {
 
-
   def redirectToTaxCodeForm() = ActionWithSessionId { implicit request =>
     Redirect(routes.QuickCalcController.showTaxCodeForm())
   }
