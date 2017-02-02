@@ -7,116 +7,113 @@
 
 @(quickCalcAggregateInput: QuickCalcAggregateInput,youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 @summery = @{taxCalculation(quickCalcAggregateInput)}
+@label = @{List("Year", "Month", "Week")}
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
-    <div class="grid-layout">
-        <div class="grid-layout__column grid-layout__column--2-3">
-            <header class="page-header">
-                <h1>Your income-tax calculation</h1>
-            </header>
+  <div class="grid-layout">
+    <div class="grid-layout__column grid-layout__column--2-3">
+      <header class="page-header">
+        <h1>@Messages("quick_calc.result.header")</h1>
+      </header>
 
-            <div data-tabs>
-                <ul class="tabs-nav" role="tablist">
-                @for(breakdown <- summery.taxBreakdown) {
-                    <li
-                    id=@{breakdown.period}
-                    role="tab"
-                    data-tab-link=@{breakdown.period}
-                    aria-selected="true"
-                    aria-controls=@{"tabContent"+breakdown.period}>
-                        <span class="tabs-nav__tab tabs-nav__tab--active"
-                        href="#">@{breakdown.period}</span>
-                    </li>
-                }
+      <div data-tabs>
+        <ul class="tabs-nav" role="tablist">
+          @for(breakdown <- summery.taxBreakdown.zip(label)) {
+            <li
+            id=@{breakdown._1.period}
+            role="tab"
+            data-tab-link=@{breakdown._1.period}
+            aria-selected="true"
+            aria-controls=@{"tabContent"+breakdown._1.period}>
+              <span class="tabs-nav__tab tabs-nav__tab--active"
+              href="#">@{breakdown._2}</span>
+            </li>
+          }
+        </ul>
 
-                </ul>
-
-                <ul>
-                @for(breakdown <- summery.taxBreakdown) {
-                    <li id=@{"tabContent"+breakdown.period}
-                    data-tab-content=@{breakdown.period}
-                        class="tab-content"
-                        role="tabpanel"
-                        aria-labelledby=@{breakdown.period}>
-                    <p class="tab-content__first">
+        <ul>
+          @for(breakdown <- summery.taxBreakdown) {
+            <li id=@{"tabContent"+breakdown.period}
+            data-tab-content=@{breakdown.period}
+              class="tab-content"
+              role="tabpanel"
+              aria-labelledby=@{breakdown.period}>
+              <p class="tab-content__first">
                 <div class="data">
-                    <span class="data-item bold-xxlarge">£@{breakdown.takeHomePay}</span><br/>
-                    <span class="data-item bold-xsmall">You take home</span>
+                  <span class="data-item bold-xxlarge">£@{breakdown.takeHomePay}</span><br/>
+                  <span class="data-item bold-xsmall">@Messages("quick_calc.result.you_take_home")</span>
                 </div>
-                    <br>
-
-                    <div class="data">
-                        <span class="data-item bold-xlarge" id="grossPay">£@{breakdown.grossPay}</span><br>
-                        <span class="data-item bold-xsmall" id="">Gross Pay</span>
-                    </div>
-                    <br>
-                    <div class="data">
-                        <span class="data-item bold-xlarge">£@{breakdown.totalDeductions}</span><br/>
-                        <span class="data-item bold-xsmall">Total deductions</span>
-                    </div><br/>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th colspan="2">Income</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Gross pay</td>
-                                <td>£@{breakdown.grossPay}</td>
-                            </tr>
-                            <tr>
-                                <td>Tax free allowance</td>
-                                <td>£@{breakdown.taxFreePay}</td>
-                            </tr>
-                            <tr>
-                                <td>Taxable pay</td>
-                                <td>£@{breakdown.taxablePay}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th colspan="2">Deductions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Income tax</td>
-                                <td>£@{breakdown.taxCategories.head.total}</td>
-                            </tr>
-                            <tr>
-                                <td>Your National Insurance</td>
-                                <td>£@{breakdown.taxCategories(1).total}</td>
-                            </tr>
-                            <tr>
-                                <td>Your employer National Insurance</td>
-                                <td>£@{breakdown.taxCategories(2).total}</td>
-                            </tr>
-                            <tr>
-                                <td>Your average rate is</td>
-                                <td>@{summery.averageAnnualTaxRate}%</td>
-                            </tr>
-                            <tr>
-                                <td>Your marginal rate is</td>
-                                <td>@{summery.marginalTaxRate}%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    </p>
-                    </li>
-
-                }
-                </ul>
-            </div>
-
-        </div>
-        <div class="grid-layout__column grid-layout__column--1-3">
-        @you_have_told_us(youHaveToldUsItems)
-        </div>
-
+                  <br>
+                <div class="data">
+                  <span class="data-item bold-xlarge" id="grossPay">£@{breakdown.grossPay}</span><br>
+                  <span class="data-item bold-xsmall" id="">@Messages("quick_calc.result.gross_pay")</span>
+                </div>
+                <br>
+                <div class="data">
+                  <span class="data-item bold-xlarge">£@{breakdown.totalDeductions}</span><br/>
+                  <span class="data-item bold-xsmall">@Messages("quick_calc.result.total_deductions")</span>
+                </div><br/>
+                <table>
+                  <thead>
+                    <tr>
+                      <th colspan="2">@Messages("quick_calc.result.income")</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>@Messages("quick_calc.result.gross_pay")</td>
+                      <td>£@{breakdown.grossPay}</td>
+                    </tr>
+                    <tr>
+                      <td>@Messages("quick_calc.result.tax_free_allowance")</td>
+                      <td>£@{breakdown.taxFreePay}</td>
+                    </tr>
+                    <tr>
+                      <td>@Messages("quick_calc.result.taxable_pay")</td>
+                      <td>£@{breakdown.taxablePay}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table>
+                  <thead>
+                    <tr>
+                      <th colspan="2">@Messages("quick_calc.result.deductions")</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>@Messages("quick_calc.result.income_tax")</td>
+                      <td>£@{breakdown.taxCategories.head.total}</td>
+                    </tr>
+                    <tr>
+                      <td>@Messages("quick_calc.result.your_national_insurance")</td>
+                      <td>£@{breakdown.taxCategories(1).total}</td>
+                    </tr>
+                    <tr>
+                      <td>@Messages("quick_calc.result.your_employer_national_insurance")</td>
+                      <td>£@{breakdown.taxCategories(2).total}</td>
+                    </tr>
+                    <tr>
+                      <td>@Messages("quick_calc.result.your_average_rate_is")</td>
+                      <td>@{summery.averageAnnualTaxRate}%</td>
+                    </tr>
+                    <tr>
+                      <td>@Messages("quick_calc.result.your_marginal_rate_is")</td>
+                      <td>@{summery.marginalTaxRate}%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </p>
+            </li>
+          }
+        </ul>
+      </div>
 
     </div>
+    <div class="grid-layout__column grid-layout__column--1-3">
+      @you_have_told_us(youHaveToldUsItems)
+    </div>
+
+  </div>
+
 }
