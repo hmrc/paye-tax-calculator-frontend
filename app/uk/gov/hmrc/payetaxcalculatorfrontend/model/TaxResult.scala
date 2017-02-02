@@ -47,7 +47,6 @@ object TaxResult {
     case None => 0
   }
 
-
   def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
     case Some(s) => s match {
       case s: Yearly => "annual"
