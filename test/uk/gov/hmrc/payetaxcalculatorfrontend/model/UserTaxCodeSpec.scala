@@ -21,31 +21,34 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class UserTaxCodeSpec extends UnitSpec {
 
-  "UserTaxCode check user selection" should {
+  "The checkUserSelection function" should {
 
-    "select nothing if user have not selected anything" in {
+    "not set yes or no options as checked, if user did not select neither" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.recordCheck(true, userTaxCodeForm) shouldBe ""
+      UserTaxCode.checkUserSelection(true, userTaxCodeForm) shouldBe ""
     }
 
-    "user has tax code" in {
+    "set the yes option as checked, if user has checked yes in earlier operation" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.recordCheck(true, userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode)))) shouldBe "checked"
+      UserTaxCode.checkUserSelection(true, userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode)))) shouldBe "checked"
     }
 
-    "user has no tax code" in {
+    "set the no option as checked, if user has checked no in earlier operation" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.recordCheck(false, userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode)))) shouldBe "checked"
+      UserTaxCode.checkUserSelection(false, userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode)))) shouldBe "checked"
     }
 
-    "some field should Hidden if user did not check has tax code" in {
+  }
+
+  "The hideTextField function" should {
+    "keep the text field for tax code hidden when the user selects the no option" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.recordHidden(userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode)))) shouldBe "hidden"
+      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode)))) shouldBe "hidden"
     }
 
-    "some field should not Hidden if user did check has tax code" in {
+    "show the text field when user selects the yes option" in {
       val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
-      UserTaxCode.recordHidden(userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode)))) shouldBe ""
+      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode))).withGlobalError("")) shouldBe ""
     }
   }
 }

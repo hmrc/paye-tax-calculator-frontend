@@ -1,0 +1,80 @@
+@import play.api.i18n._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.result
+@import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
+
+@(youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+    <div class="grid-layout">
+        <div class="grid-layout__column grid-layout__column--2-3">
+            <header class="page-header">
+                <h1>Your income-tax calculation</h1>
+            </header>
+            <div class="data">
+                <span class="data-item bold-xxlarge">£10000</span><br/>
+                <span class="data-item bold-xsmall">You take home</span>
+            </div>
+            <br>
+
+            <div class="data">
+                <span class="data-item bold-xlarge" id="grossPay">£1000</span><br>
+                <span class="data-item bold-xsmall" id="">Gross Pay</span>
+            </div>
+            <br>
+            <div class="data">
+                <span class="data-item bold-xlarge">£1000</span><br/>
+                <span class="data-item bold-xsmall">Total deductions</span>
+            </div><br/>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">Income</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gross pay</td>
+                        <td>£100,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>Tax free allowance</td>
+                        <td>£11,009.00</td>
+                    </tr>
+                    <tr>
+                        <td>Taxable pay</td>
+                        <td>£88,991.00</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">Deductions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Income tax</td>
+                        <td>£100,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>Your National Insurance</td>
+                        <td>£11,009.00</td>
+                    </tr>
+                    <tr>
+                        <td>Your average rate is 31%</td>
+                        <td>£88,991.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="grid-layout__column grid-layout__column--1-3">
+        @you_have_told_us(youHaveToldUsItems)
+        </div>
+
+
+    </div>
+}

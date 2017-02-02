@@ -19,6 +19,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json._
+import play.api.mvc.Flash
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 
 
@@ -39,22 +40,28 @@ object UserTaxCode extends TaxCalculatorHelper {
         if (aboutTaxCode.hasTaxCode) isValidTaxCode(aboutTaxCode.taxCode.getOrElse("").trim) else true
     ))
 
-  def recordCheck(selection: Boolean, taxCode: Form[UserTaxCode]): String ={
-    selection match {
-      case true => taxCode.value match {
+  def checkUserSelection(selection: Boolean, taxCode: Form[UserTaxCode]): String ={
+    if (taxCode.hasGlobalErrors && selection) "checked"
+    else if (selection) {
+      taxCode.value match {
         case Some(code) => if (code.hasTaxCode) "checked" else ""
         case _ => ""
       }
-      case false => taxCode.value match {
-        case Some(code) => if (!code.hasTaxCode) "checked" else ""
+    }
+    else {
+      taxCode.value match {
+        case Some(code) => if (!code.hasTaxCode && !taxCode.hasGlobalErrors) "checked" else ""
         case _ => ""
       }
     }
   }
 
-  def recordHidden(taxCode: Form[UserTaxCode]): String ={
-    taxCode.value match {
-      case Some(v) => if (v.hasTaxCode) "" else "hidden"
-      case _ => "hidden"}
+  def hideTextField(taxCode: Form[UserTaxCode]): String ={
+    if (taxCode.hasGlobalErrors) ""
+    else {
+      taxCode.value match {
+        case Some(v) => if (v.hasTaxCode) "" else "hidden"
+        case _ => "hidden"}
+    }
   }
 }
