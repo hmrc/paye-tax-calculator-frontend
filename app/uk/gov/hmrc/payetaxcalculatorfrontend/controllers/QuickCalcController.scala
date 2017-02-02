@@ -138,10 +138,10 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
   def showResult() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
-        Ok(result(aggregate.youHaveToldUsItems))
+        Ok(result(aggregate,aggregate.youHaveToldUsItems))
       case None =>
         // TODO if aggregate unavailable here user bypassed tax-code selection which is wrong
-        Ok(result(Nil))
+        Ok(result(QuickCalcAggregateInput(None,None,None),Nil))
     }
   }
 
