@@ -34,7 +34,7 @@ object TaxResult {
       case true => "true"
       case false => "false"
     }
-    case None => ""
+    case None => throw new Exception("No answer has been provided for the question: Are you Over 65?")
   }
 
   def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
@@ -45,7 +45,7 @@ object TaxResult {
       case s: Daily => s.value.toInt
       case s: Hourly => s.value.toInt
     }
-    case None => 0
+    case None => throw new Exception("No Salary has been provided.")
   }
 
   def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
