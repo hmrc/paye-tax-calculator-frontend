@@ -17,6 +17,7 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
+import uk.gov.hmrc.time.TaxYearResolver
 
 object TaxResult {
 
@@ -67,7 +68,7 @@ object TaxResult {
   def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput) = {
     buildTaxCalc(
       extractOver65(quickCalcAggregateInput),
-      2016,
+      TaxYearResolver.currentTaxYear,
       extractTaxCode(quickCalcAggregateInput),
       extractSalary(quickCalcAggregateInput)*100,
       extractPayPeriod(quickCalcAggregateInput),
