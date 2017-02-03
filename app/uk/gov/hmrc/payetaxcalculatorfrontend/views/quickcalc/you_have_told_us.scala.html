@@ -3,7 +3,7 @@
 @(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
 @if(items.nonEmpty) {
-  <table>
+  <table style="margin-left: 15px">
     <thead>
     <tr>
       <th colspan="2">@Messages("quick_calc.you_have_told_us.header")</th>
