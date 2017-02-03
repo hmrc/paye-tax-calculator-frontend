@@ -16,13 +16,9 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
-import uk.gov.hmrc.payeestimator.domain.TaxCalc
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.TaxResult._
 
-/**
-  * Created by paul on 02/02/17.
-  */
 class TaxResultSpec extends UnitSpec {
 
   "Extracting Tax Code from user response" should {
@@ -46,9 +42,11 @@ class TaxResultSpec extends UnitSpec {
       extractOver65(QuickCalcAggregateInput(None, Some(Over65(false)), None)) shouldBe "false"
     }
 
-    //Todo unsure about this?
-    "return empty string if no response" in {
-      extractOver65(QuickCalcAggregateInput(None, None, None)) shouldBe ""
+    "return an error with message with \"No answer has been provided for the question: Are you Over 65?\" if no response" in {
+      val thrown = intercept[Exception]{
+        extractOver65(QuickCalcAggregateInput(None, None, None))
+      }
+      thrown.getMessage shouldBe "No answer has been provided for the question: Are you Over 65?"
     }
   }
 
@@ -74,8 +72,12 @@ class TaxResultSpec extends UnitSpec {
       extractSalary(QuickCalcAggregateInput(None, None, Some(Hourly(2, 0)))) shouldBe 2
     }
 
-    "return 0 if no response is provided" in {
-      extractSalary(QuickCalcAggregateInput(None, None, None)) shouldBe 0
+    "return an error with message \"No Salary has been provided\" if no response" in {
+      val thrown = intercept[Exception]{
+        extractSalary(QuickCalcAggregateInput(None, None, None))
+      }
+      thrown.getMessage shouldBe "No Salary has been provided."
+
     }
   }
 
@@ -104,11 +106,11 @@ class TaxResultSpec extends UnitSpec {
 
   "Extracting Hours from user response" should {
 
-    "return if response is hours in a Daily" in {
+    "return if response is hours in Daily" in {
       extractHours(QuickCalcAggregateInput(None, None, Some(Daily(0,40)))) shouldBe 40
     }
 
-    "return if response is hours in a Hourly" in {
+    "return if response is hours in Hourly" in {
       extractHours(QuickCalcAggregateInput(None, None, Some(Hourly(0,20)))) shouldBe 20
     }
 
