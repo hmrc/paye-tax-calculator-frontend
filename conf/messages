@@ -22,6 +22,23 @@ quick_calc.you_have_told_us.salary.weekly.label=Per week
 quick_calc.you_have_told_us.salary.daily.label=Per day
 quick_calc.you_have_told_us.salary.hourly.label=Per hour
 
+quick_calc.result.header=Your income-tax calculation
+quick_calc.result.you_take_home=You take home
+quick_calc.result.gross_pay=Gross Pay
+quick_calc.result.total_deductions=Total deductions
+quick_calc.result.income=Income
+quick_calc.result.tax_free_allowance=Tax free allowance
+quick_calc.result.taxable_pay=Taxable pay
+quick_calc.result.deductions=Deductions
+quick_calc.result.income_tax=Income tax
+quick_calc.result.your_national_insurance=Your National Insurance
+quick_calc.result.your_employer_national_insurance=Your Employer National Insurance
+quick_calc.result.your_average_rate_is=Your average rate is
+quick_calc.result.your_marginal_rate_is=Your marginal rate is
+quick_calc.result.tabLabels.year=Year
+quick_calc.result.tabLabels.month=Month
+quick_calc.result.tabLabels.week=Week
+
 quick_calc.salary.header=Your gross salary
 quick_calc.salary.year=Yearly
 quick_calc.salary.month=Monthly
