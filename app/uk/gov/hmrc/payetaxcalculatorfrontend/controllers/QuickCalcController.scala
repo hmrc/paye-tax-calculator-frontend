@@ -106,8 +106,6 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     )
   }
 
-  def foo(implicit request: Request[_]) = routes.QuickCalcController.showSalaryForm()
-
   def showSalaryForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
