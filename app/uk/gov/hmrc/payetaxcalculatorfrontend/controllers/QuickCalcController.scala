@@ -17,9 +17,8 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Result
+import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.UserTaxCode._
 import uk.gov.hmrc.payetaxcalculatorfrontend.model._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
@@ -57,9 +56,11 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
         case Some(aggregate) =>
           val updatedTaxCode = if (newTaxCode.hasTaxCode) newTaxCode else UserTaxCode(hasTaxCode = false, Some(defaultTaxCode))
           val newAggregate = aggregate.copy(taxCode = Some(updatedTaxCode))
-          cache.save(newAggregate).map {
-          _ => Redirect(routes.QuickCalcController.showAgeForm())
-        }
+          cache.save(newAggregate).map { _ =>
+            nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
+              Redirect(routes.QuickCalcController.showAgeForm())
+            }
+          }
         case None =>
           val aggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))
           cache.save(aggregate).map {
@@ -69,6 +70,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     )
 
   }
+
 
   def showAgeForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
@@ -89,9 +91,11 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
       userAge => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
           val updatedAggregate = aggregate.copy(isOver65 = Some(userAge))
-          cache.save(updatedAggregate).map {
-          _ => Redirect(routes.QuickCalcController.showSalaryForm())
-        }
+          cache.save(updatedAggregate).map { _ =>
+            nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
+              Redirect(routes.QuickCalcController.showSalaryForm())
+            }
+          }
         case None => cache.save(QuickCalcAggregateInput.newInstance.copy(isOver65 = Some(userAge))).map {
           _ => Redirect(routes.QuickCalcController.showSalaryForm())
         }
@@ -136,6 +140,16 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
           redirectToNotYetDonePage(aggregate)
         }
       case None => Redirect(routes.QuickCalcController.showTaxCodeForm())
+    }
+  }
+
+  private def nextPageOrSummaryIfAllQuestionsAnswered(aggregate: QuickCalcAggregateInput)
+                                                     (next: Result)
+                                                     (implicit request: Request[_]): Result = {
+    if (aggregate.allQuestionsAnswered) {
+      Redirect(routes.QuickCalcController.showResult())
+    } else {
+      next
     }
   }
 
