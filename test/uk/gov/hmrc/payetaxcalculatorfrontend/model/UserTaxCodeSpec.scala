@@ -18,8 +18,11 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import play.api.data.Form
 import uk.gov.hmrc.play.test.UnitSpec
+import play.api.i18n.{Lang, Messages}
 
 class UserTaxCodeSpec extends UnitSpec {
+
+  implicit val messages = new Messages(Lang.defaultLang, null)
 
   "The checkUserSelection function" should {
 

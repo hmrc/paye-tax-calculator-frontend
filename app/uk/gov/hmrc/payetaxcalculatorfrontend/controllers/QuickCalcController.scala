@@ -46,7 +46,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     }
   }
 
-  def submitTaxCodeForm() = ActionWithSessionId.async { implicit request =>
+  def submitTaxCodeForm() = ActionWithSessionId.async { implicit request=>
 
     UserTaxCode.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
