@@ -47,15 +47,18 @@
             </label>
 
             <div class="form-field-group form-field--error panel-indent @hideTextField(userTaxCodeForm)" id="tax-code-yes-target">
-              @if(userTaxCodeForm.hasGlobalErrors){
-                @userTaxCodeForm.globalError.map { error =>
+              @if(userTaxCodeForm.hasErrors){
                   <div class="error-notification">
-                    @error.message
+                    @userTaxCodeForm.errors.head.message
                   </div>
-                }
               }
               @Messages("quick_calc.about_tax_code.has_tax_code")<br>
-              <input type="text" id="code" name="code" value="">
+              <input type="text" id="code" name="code" value=@{
+                userTaxCodeForm.value match {
+                  case Some(userTaxCode) => userTaxCode.taxCode.getOrElse("")
+                  case _ => ""
+                }
+              }>
 
             </div>
 

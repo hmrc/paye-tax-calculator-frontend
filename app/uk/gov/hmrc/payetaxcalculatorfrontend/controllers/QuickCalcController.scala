@@ -18,13 +18,13 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Result
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.UserTaxCode._
 import uk.gov.hmrc.payetaxcalculatorfrontend.model._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.{age, quick_calc_form, result, salary}
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.{age, tax_code, result, salary}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 
@@ -40,20 +40,18 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
         val form = aggregate.taxCode.map(UserTaxCode.form.fill).getOrElse(UserTaxCode.form)
-        Ok(quick_calc_form(form, aggregate.youHaveToldUsItems))
+        Ok(tax_code(form, aggregate.youHaveToldUsItems))
       case None =>
-        Ok(quick_calc_form(UserTaxCode.form, Nil))
+        Ok(tax_code(UserTaxCode.form, Nil))
     }
   }
 
   def submitTaxCodeForm() = ActionWithSessionId.async { implicit request =>
 
-    val formWithErrorMessages = UserTaxCode.form.withGlobalError(Messages("quick_calc.about_tax_code.wrong_tax_code"))
-
     UserTaxCode.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
-        case Some(aggregate) => BadRequest(quick_calc_form(formWithErrorMessages, aggregate.youHaveToldUsItems))
-        case None => BadRequest(quick_calc_form(formWithErrorMessages, Nil))
+        case Some(aggregate) => BadRequest(tax_code(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(tax_code(formWithErrors, Nil))
       },
       newTaxCode => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
