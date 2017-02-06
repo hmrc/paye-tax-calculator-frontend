@@ -19,9 +19,9 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.Flash
-import uk.gov.hmrc.payetaxcalculatorfrontend.model._
+import play.api.mvc.Result
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.UserTaxCode._
+import uk.gov.hmrc.payetaxcalculatorfrontend.model._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.{age, quick_calc_form, result, salary}
@@ -78,13 +78,11 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
         val form = aggregate.isOver65.map(Over65.form.fill).getOrElse(Over65.form)
         Ok(age(form, aggregate.youHaveToldUsItems))
       case None =>
-        // TODO if aggregate unavailable here user bypassed tax-code selection which is wrong
         Ok(age(Over65.form, Nil))
     }
   }
 
   def submitAgeForm() = ActionWithSessionId.async { implicit request =>
-
     Over65.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
         case Some(aggregate) => BadRequest(age(formWithErrors, aggregate.youHaveToldUsItems))
@@ -109,7 +107,6 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
         val form = aggregate.salary.map(Salary.form.fill).getOrElse(Salary.form)
         Ok(salary(form, aggregate.youHaveToldUsItems))
       case None =>
-        // TODO if aggregate unavailable here user bypassed tax-code selection which is wrong
         Ok(salary(Salary.form, Nil))
     }
   }
@@ -121,13 +118,10 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
         case None => BadRequest(salary(formWithErrors, Nil))
       },
       newSalary => cache.fetchAndGetEntry.flatMap {
-        case Some(aggregate) =>
+        case Some(aggregate) => {
           val updatedAggregate = aggregate.copy(salary = Some(newSalary))
-          cache.save(updatedAggregate).map {
-            _ => {
-              Redirect(routes.QuickCalcController.showResult())
-            }
-          }
+          cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.showResult()) }
+        }
         case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(newSalary))).map {
           _ => Redirect(routes.QuickCalcController.showResult())
         }
@@ -138,10 +132,22 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
   def showResult() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
-        Ok(result(aggregate,aggregate.youHaveToldUsItems))
-      case None =>
-        // TODO if aggregate unavailable here user bypassed tax-code selection which is wrong
-        Ok(result(QuickCalcAggregateInput(None,None,None),Nil))
+        if (aggregate.allQuestionsAnswered) {
+          Ok(result(aggregate))
+        } else {
+          redirectToNotYetDonePage(aggregate)
+        }
+      case None => Redirect(routes.QuickCalcController.showTaxCodeForm())
+    }
+  }
+
+  private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result = {
+    if (aggregate.taxCode.isEmpty) {
+      Redirect(routes.QuickCalcController.showTaxCodeForm())
+    } else if(aggregate.isOver65.isEmpty) {
+      Redirect(routes.QuickCalcController.showAgeForm())
+    } else {
+      Redirect(routes.QuickCalcController.showSalaryForm())
     }
   }
 
