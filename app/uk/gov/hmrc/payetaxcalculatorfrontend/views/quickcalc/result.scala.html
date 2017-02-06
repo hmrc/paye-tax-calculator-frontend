@@ -1,11 +1,10 @@
 @import play.api.i18n._
-@import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
 @import uk.gov.hmrc.payetaxcalculatorfrontend.model.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.model.QuickCalcAggregateInput
 
-@(quickCalcAggregateInput: QuickCalcAggregateInput,youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@(quickCalcAggregateInput: QuickCalcAggregateInput)(implicit request: Request[_], messages: Messages)
 @summary = @{taxCalculation(quickCalcAggregateInput)}
 @tabLabels = @{List(Messages("quick_calc.result.tabLabels.year"),
                     Messages("quick_calc.result.tabLabels.month"),
@@ -113,7 +112,7 @@
 
     </div>
     <div class="grid-layout__column grid-layout__column--1-3">
-      @you_have_told_us(youHaveToldUsItems)
+      @you_have_told_us(quickCalcAggregateInput.youHaveToldUsItems)
     </div>
 
   </div>
