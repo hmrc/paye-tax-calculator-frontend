@@ -1,4 +1,6 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+@import uk.gov.hmrc.urls.Link
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.{ routes => taxCalcRoutes }
 
 @()(implicit request: Request[_], messages: Messages)
 
@@ -17,7 +19,7 @@
 
   <div class="column-one-half">
     <h2 class="heading-large">
-      <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.showTaxCodeForm()/">
+      <a href="@taxCalcRoutes.QuickCalcController.showTaxCodeForm()/">
         @Messages("index.quick_calculation")
       </a>
     </h2>
@@ -27,6 +29,17 @@
       <li>@Messages("index.dont_contribute_pension")</li>
     </ul>
   </div>
+
+  <br>
+
+  <h2>@Messages("index.language_version.header")</h2>
+  <p>
+    @Link.toInternalPage(
+      url = taxCalcRoutes.WelshLanguageController.switchToLanguage(Messages("index.language_version.target_language")).url,
+      value = Some(Messages("index.language_version.click_here"))
+    ).toHtml
+    @Messages("index.language_version.paragraph")
+  </p>
 
 </div>
 }

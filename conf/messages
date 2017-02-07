@@ -4,6 +4,12 @@ index.quick_calculation=Quick calculation
 index.use_the_quick_calc_if=Use the quick calculation if you can answer ’yes’ to the following:
 index.employment_only=you have employment income only
 index.dont_contribute_pension=you don’t contribute to a workplace or personal pension through your employer.
+index.language_version.header=Welsh version
+index.language_version.click_here=Click here
+index.language_version.paragraph=to use the Welsh language version of the online calculator.
+index.language_version.target_language=welsh
+
+continue=Continue
 
 quick_calc.title=HMRC Quick calculator
 
