@@ -44,7 +44,7 @@ GET       /quick-calculation/summary-result
 | Responses    | Status    | Description |
 | --------|---------|-------|
 | Ok  | 200   | Successfully into a responding page, and information posted. |
-| Bad Request | 400   |  when wrong input were haven, such as tax-code is invalid. |  
+| Bad Request | 400   |  when wrong input were gaven, such as tax-code is invalid. |  
 | Redirect  | 303   | if input were valid, redirect to next page. |
 
 ### License

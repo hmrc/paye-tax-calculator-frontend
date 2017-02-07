@@ -59,8 +59,8 @@ object TaxResult {
 
   def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
     case Some(s) => s match {
-      case s: Daily => s.howManyAWeek
-      case s: Hourly => s.howManyAWeek
+      case s: Daily => s.howManyDaysAWeek
+      case s: Hourly => s.howManyHoursAWeek
       case _ => -1
     }
   }
