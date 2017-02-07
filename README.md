@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/hmrc/paye-tax-calculator-frontend.svg)](https://travis-ci.org/hmrc/paye-tax-calculator-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/paye-tax-calculator-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/paye-tax-calculator-frontend/_latestVersion)
 
-This is a placeholder README.md for a new repository
-
 
 ## Software Requirements
 *   MongoDB 3.2 or later version
@@ -45,9 +43,9 @@ GET       /quick-calculation/summary-result
 
 | Responses    | Status    | Description |
 | --------|---------|-------|
-| Ok  | 200   | Successfully into a responding page, when the user use app started from the index page or first page. |
-| Bad Request | 400   |  When the user try to jump pages. |  
-| Redirect  | 303   | To the responding Ok or Bad Request page, follow the Ok and Bad Request rule. |
+| Ok  | 200   | Successfully into a responding page, and information posted. |
+| Bad Request | 400   |  when wrong input were haven, such as tax-code is invalid. |  
+| Redirect  | 303   | if input were valid, redirect to next page. |
 
 ### License
 

@@ -39,11 +39,11 @@ object TaxResult {
 
   def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
     case Some(s) => s match {
-      case s: Yearly => s.value.toInt
-      case s: Monthly => s.value.toInt
-      case s: Weekly => s.value.toInt
-      case s: Daily => s.value.toInt
-      case s: Hourly => s.value.toInt
+      case s: Yearly => s.value.toDouble*100
+      case s: Monthly => s.value.toDouble*100
+      case s: Weekly => s.value.toDouble*100
+      case s: Daily => s.value.toDouble*100
+      case s: Hourly => s.value.toDouble*100
     }
     case None => throw new Exception("No Salary has been provided.")
   }
@@ -70,7 +70,7 @@ object TaxResult {
       extractOver65(quickCalcAggregateInput),
       TaxYearResolver.currentTaxYear,
       extractTaxCode(quickCalcAggregateInput),
-      extractSalary(quickCalcAggregateInput)*100,
+      extractSalary(quickCalcAggregateInput).toInt,
       extractPayPeriod(quickCalcAggregateInput),
       extractHours(quickCalcAggregateInput))
   }
