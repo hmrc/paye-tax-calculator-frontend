@@ -39,11 +39,11 @@ object TaxResult {
 
   def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
     case Some(s) => s match {
-      case s: Yearly => s.value.toDouble*100
-      case s: Monthly => s.value.toDouble*100
-      case s: Weekly => s.value.toDouble*100
-      case s: Daily => s.value.toDouble*100
-      case s: Hourly => s.value.toDouble*100
+      case s: Yearly => s.value * 100
+      case s: Monthly => s.value * 100
+      case s: Weekly => s.value * 100
+      case s: Daily => s.value * 100
+      case s: Hourly => s.value * 100
     }
     case None => throw new Exception("No Salary has been provided.")
   }
@@ -57,6 +57,11 @@ object TaxResult {
     }
   }
 
+  /**
+    * This function is called "extractHours" because in "buildTaxCalc" function, the last parameter is called "hoursIn".
+    * "hoursIn" does not only means hours but can also mean days.
+    * buildTaxCalc will use the number returned to calculate the weekly gross pay from Daily or Hourly via those case classes.
+   **/
   def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
     case Some(s) => s match {
       case s: Daily => s.howManyDaysAWeek
