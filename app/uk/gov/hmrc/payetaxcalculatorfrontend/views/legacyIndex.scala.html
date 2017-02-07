@@ -16,10 +16,10 @@
 
   <div class="column-two-thirds">
     <header class="page-header">
-      <h1>@Messages("index.title")</h1>
+      <h1>@Messages("legacy.title")</h1>
     </header>
 
-    <p>@Messages("index.introduction")</p>
+    <p>@Messages("legacy.introduction")</p>
   </div>
 
   <br/>
@@ -45,17 +45,22 @@
       </a>
     </h2>
     <p>@Messages("index.use_the_detailed_calc_if")</p>
-      <ul class="list list-bullet">
-        <li>@Messages("index.detailed_calc_under_age")</li>
-      </ul>    
+      <ol class="list">
+        <li>@Messages("index.use_the_detailed_calc_NI_select")</li>
+        <ul class="list list-bullet">
+          <li>@Messages("index.use_the_detailed_calc_NI_select_A")</li>
+          <li>@Messages("index.use_the_detailed_calc_NI_select_D")</li>
+        </ul>
+        <p>@Messages("index.use_the_detailed_calc_NI_select_Other")</p>
+        <li>@Messages("index.use_the_detailed_calc_ENI") <a href="http://nicecalculator.hmrc.gov.uk/">@Messages("index.use_the_detailed_calc_NIC_link")</a></li>
+      </ol>    
   </div>
 </div>
 
 <div class="grid-row">
 
   <div class="column-two-thirds">
-    <p>@Messages("index.detailed_calc_ENI_estimate") <a href="http://nicecalculator.hmrc.gov.uk/">@Messages("legacy.detailed_calc.ni_contributions_calculator")</a></p>
-
+    
     <br/>
 
     <p>@Messages("legacy.scottish_taxpayer_intro")
@@ -68,7 +73,9 @@
       <h1>@Messages("index.welsh_version")</h1>
     </header>
 
-    <p><a href="http://tools.hmrc.gov.uk/hmrctaxcalculator/startsession/Personal+Tax+Calculator/cy-GB">@Messages("label.click_here")</a> @Messages("index.welsh_version_use")</p>
+    <p>@Messages("index.welsh_version_description")</p>
+
+    <a href="http://tools.hmrc.gov.uk/hmrctaxcalculator/startsession/Personal+Tax+Calculator/cy-GB">@Messages("index.welsh_version_link")</a>
     
     </p>
   </div>
