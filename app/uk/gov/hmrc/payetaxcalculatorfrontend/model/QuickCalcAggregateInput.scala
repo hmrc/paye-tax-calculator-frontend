@@ -23,6 +23,8 @@ case class QuickCalcAggregateInput(taxCode: Option[UserTaxCode],
                                    isOver65: Option[Over65],
                                    salary: Option[Salary]) {
 
+  def allQuestionsAnswered: Boolean = List(taxCode,isOver65,salary).forall(_.isDefined)
+
   def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] = {
     List(
       taxCode.map { YouHaveToldUs(_) },

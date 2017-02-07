@@ -13,7 +13,9 @@ POST      /quick-calculation/age                          uk.gov.hmrc.payetaxcal
 GET       /quick-calculation/salary                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showSalaryForm
 POST      /quick-calculation/salary                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitSalaryForm
 
-GET       /quick-calculation/summary-result                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult
+GET       /quick-calculation/summary-result               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult
+
+GET       /language/:lang                                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.WelshLanguageController.switchToLanguage(lang: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET       /assets/*file                                 controllers.Assets.at(path="/public", file)
