@@ -16,68 +16,23 @@ sbt run
 
 ## Endpoints <a name="endpoints"></a>
 
-#### View Index Page
+#### View landing Page
 ```
 GET   	/paye-tax-calculator/
 ```
 
-#### Redirect to first page of the form aka Tax Code Page
+#### Redirect to first page of the form of quick-calculation Tax Code Page
 ```
 GET   	/paye-tax-calculator/quick-calculation/
 ```
 If user decides to manually change the url to the above.
 
-#### View Tax Code Page
-```
-GET       /quick-calculation/tax-code
-```
-
-
-#### View Is Over 65 Page
-```
-GET       /quick-calculation/age
-```
-
-#### View Salary Page
-```
-GET       /quick-calculation/age
-```
-
-### The following endpoints CANNOT BE CALLED DIRECTLY. PLEASE DO NOT USE!
-
-#### Submit Tax Code
-```
-POST      /quick-calculation/tax-code
-```
-
-#### Submit Is Over 65
-```
-POST      /quick-calculation/age
-```
-
-#### Submit Salary
-```
-POST      /quick-calculation/salary
-```
-
-#### View Results
-```
-GET       /quick-calculation/summary-result    
-```
-Can only be viewed when all questions from the pages mentioned are submitted.
 
 #### Change Language
 ```
 GET      /language/:lang  
 ```
 Currently the app supports English and Welsh
-
-#### Responses From Requests
-| Responses    | Status    | Description |
-| --------|---------|-------|
-| Ok  | 200   | Successfully view page and along with any valid user input. |
-| Bad Request | 400   |  Invalid Form Input |
-| Redirect  | 303   |  Redirect to next page and along with any valid user input. |
 
 ### License
 
