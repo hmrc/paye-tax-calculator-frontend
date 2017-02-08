@@ -54,7 +54,7 @@
               Messages("quick_calc.salary.question.earn_a_day"),
               radioField.value.contains("daily"),
               Some(Messages("quick_calc.salary.question.days_a_week")),
-              Some(form("howManyAWeek-daily"))
+              Some(form("howManyDaysAWeek-daily"))
             )
 
             @salary_radio_box(radioElements, Messages("quick_calc.salary.hour"), "hourly")
@@ -63,7 +63,7 @@
               Messages("quick_calc.salary.question.earn_a_hour"),
               radioField.value.contains("hourly"),
               Some(Messages("quick_calc.salary.question.hours_a_week")),
-              Some(form("howManyAWeek-hourly"))
+              Some(form("howManyHoursAWeek-hourly"))
             )
 
 
