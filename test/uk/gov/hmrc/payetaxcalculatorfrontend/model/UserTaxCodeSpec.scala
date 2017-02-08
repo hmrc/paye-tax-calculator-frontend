@@ -29,8 +29,7 @@ class UserTaxCodeSpec extends UnitSpec with OneAppPerSuite {
   "The form function can create and verify the form for tax-code, and" should {
     "return true if all input is valid such as the tax-code etc, otherwise false." in {
       val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "code" -> "K475"))
-      val hasNoError = !form.hasErrors
-      hasNoError shouldBe true
+      form.hasErrors shouldBe false
     }
     "return error message if some input is invalid such as the tax-code etc." in {
       val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "code" -> "foo"))

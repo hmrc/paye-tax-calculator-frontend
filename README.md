@@ -25,14 +25,12 @@ GET   	/paye-tax-calculator/
 ```
 GET   	/paye-tax-calculator/quick-calculation/
 ```
-If user decides to manually change the url to the above.
-
 
 #### Change Language
 ```
-GET      /language/:lang  
+GET      /paye-tax-calculator/language/:lang  
 ```
-Currently the app supports English and Welsh
+Currently the app supports English(:lang = english) and Welsh(:lang = welsh)
 
 ### License
 
