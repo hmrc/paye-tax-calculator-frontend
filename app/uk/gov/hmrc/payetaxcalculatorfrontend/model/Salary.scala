@@ -108,8 +108,8 @@ object Salary {
       s"amount-$WEEKLY" -> mandatoryIf(isEqual("salaryType", WEEKLY), bigDecimal),
       s"amount-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), bigDecimal),
       s"amount-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), bigDecimal),
-      s"howManyDaiAWeek-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), number),
-      s"howManyDaiAWeek-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), number)
+      s"howManyDaysAWeek-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), number),
+      s"howManyHoursAWeek-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), number)
     )(formToSalary)(salaryToForm)
   )
 
