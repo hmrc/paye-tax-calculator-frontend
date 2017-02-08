@@ -62,10 +62,18 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
             }
           }
         case None =>
-          val aggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))
-          cache.save(aggregate).map {
-          _ => Redirect(routes.QuickCalcController.showAgeForm())
-        }
+          if (newTaxCode.hasTaxCode){
+            val aggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))
+            cache.save(aggregate).map {
+              _ => Redirect(routes.QuickCalcController.showAgeForm())
+            }
+          }
+          else {
+            val aggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(UserTaxCode(false,Some(defaultTaxCode))))
+            cache.save(aggregate).map {
+              _ => Redirect(routes.QuickCalcController.showAgeForm())
+            }
+          }
       }
     )
 
