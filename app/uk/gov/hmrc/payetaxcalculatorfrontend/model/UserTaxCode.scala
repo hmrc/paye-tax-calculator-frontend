@@ -18,8 +18,8 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.i18n.Messages
 import play.api.libs.json._
-import play.api.mvc.Flash
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 
 
@@ -31,32 +31,30 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   val defaultTaxCode = "1150L"
 
-  val form = Form(
+  def form(implicit messages: Messages) = Form(
     mapping(
       "hasTaxCode" -> boolean,
       "code" -> optional(text)
-    )(UserTaxCode.apply)(UserTaxCode.unapply).verifying(
+    )(UserTaxCode.apply)(UserTaxCode.unapply).verifying(Messages("quick_calc.about_tax_code.wrong_tax_code"),
       aboutTaxCode =>
         if (aboutTaxCode.hasTaxCode) isValidTaxCode(aboutTaxCode.taxCode.getOrElse("").trim) else true
     ))
 
-  def checkUserSelection(selection: Boolean, taxCode: Form[UserTaxCode]): String ={
-    if (taxCode.hasGlobalErrors && selection) "checked"
-    else if (selection) {
+  def checkUserSelection(selection: Boolean, taxCode: Form[UserTaxCode]): String = {
+    if (taxCode.hasErrors && selection) "checked"
+    else if (selection)
       taxCode.value match {
         case Some(code) => if (code.hasTaxCode) "checked" else ""
         case _ => ""
       }
-    }
-    else {
+    else
       taxCode.value match {
-        case Some(code) => if (!code.hasTaxCode && !taxCode.hasGlobalErrors) "checked" else ""
+        case Some(code) => if (!code.hasTaxCode && !taxCode.hasErrors) "checked" else ""
         case _ => ""
       }
-    }
   }
 
-  def hideTextField(taxCode: Form[UserTaxCode]): String ={
+  def hideTextField(taxCode: Form[UserTaxCode]): String = {
     if (taxCode.hasGlobalErrors) ""
     else {
       taxCode.value match {

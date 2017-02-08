@@ -53,23 +53,23 @@ class TaxResultSpec extends UnitSpec {
   "Extracting Salary from user response" should {
 
     "return if response provided is the Yearly Salary" in {
-      extractSalary(QuickCalcAggregateInput(None, None, Some(Yearly(20000)))) shouldBe 20000
+      extractSalary(QuickCalcAggregateInput(None, None, Some(Yearly(20000)))) shouldBe 2000000
     }
 
     "return if response provided is the Monthly Salary" in {
-      extractSalary(QuickCalcAggregateInput(None, None, Some(Monthly(2000)))) shouldBe 2000
+      extractSalary(QuickCalcAggregateInput(None, None, Some(Monthly(2000)))) shouldBe 200000
     }
 
     "return if response provided is the Weekly Salary" in {
-      extractSalary(QuickCalcAggregateInput(None, None, Some(Weekly(200)))) shouldBe 200
+      extractSalary(QuickCalcAggregateInput(None, None, Some(Weekly(200)))) shouldBe 20000
     }
 
     "return if response provided is the Daily Salary" in {
-      extractSalary(QuickCalcAggregateInput(None, None, Some(Daily(20,0)))) shouldBe 20
+      extractSalary(QuickCalcAggregateInput(None, None, Some(Daily(20,0)))) shouldBe 2000
     }
 
     "return if response provided is the Hourly Salary" in {
-      extractSalary(QuickCalcAggregateInput(None, None, Some(Hourly(2, 0)))) shouldBe 2
+      extractSalary(QuickCalcAggregateInput(None, None, Some(Hourly(2, 0)))) shouldBe 200
     }
 
     "return an error with message \"No Salary has been provided\" if no response" in {
@@ -77,7 +77,6 @@ class TaxResultSpec extends UnitSpec {
         extractSalary(QuickCalcAggregateInput(None, None, None))
       }
       thrown.getMessage shouldBe "No Salary has been provided."
-
     }
   }
 

@@ -18,37 +18,47 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import play.api.data.Form
 import uk.gov.hmrc.play.test.UnitSpec
+import play.api.i18n.Messages.Implicits._
+import org.scalatestplus.play.OneAppPerSuite
 
-class UserTaxCodeSpec extends UnitSpec {
+
+class UserTaxCodeSpec extends UnitSpec with OneAppPerSuite {
+
+  val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
+
+  "The form function can create and verify the form for tax-code, and" should {
+    "return true if all input is valid such as the tax-code etc, otherwise false." in {
+      val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "code" -> "K475"))
+      form.hasErrors shouldBe false
+    }
+    "return error message if some input is invalid such as the tax-code etc." in {
+      val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "code" -> "foo"))
+      val hasError = form.hasErrors
+      val errorMessage = "Please check and re-enter your tax code"
+      hasError shouldBe true
+      errorMessage shouldBe form.errors.head.message
+    }
+  }
 
   "The checkUserSelection function" should {
-
     "not set yes or no options as checked, if user did not select neither" in {
-      val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
       UserTaxCode.checkUserSelection(true, userTaxCodeForm) shouldBe ""
     }
-
     "set the yes option as checked, if user has checked yes in earlier operation" in {
-      val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
       UserTaxCode.checkUserSelection(true, userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode)))) shouldBe "checked"
     }
-
     "set the no option as checked, if user has checked no in earlier operation" in {
-      val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
       UserTaxCode.checkUserSelection(false, userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode)))) shouldBe "checked"
     }
-
   }
 
   "The hideTextField function" should {
     "keep the text field for tax code hidden when the user selects the no option" in {
-      val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
       UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode)))) shouldBe "hidden"
     }
-
     "show the text field when user selects the yes option" in {
-      val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
       UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode))).withGlobalError("")) shouldBe ""
     }
   }
+
 }

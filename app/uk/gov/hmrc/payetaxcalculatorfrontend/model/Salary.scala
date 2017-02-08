@@ -26,8 +26,8 @@ sealed trait Salary
 case class Yearly(value: BigDecimal) extends Salary
 case class Weekly(value: BigDecimal) extends Salary
 case class Monthly(value: BigDecimal) extends Salary
-case class Daily(value: BigDecimal, howManyAWeek: Int) extends Salary
-case class Hourly(value: BigDecimal, howManyAWeek: Int) extends Salary
+case class Daily(value: BigDecimal, howManyDaysAWeek: Int) extends Salary
+case class Hourly(value: BigDecimal, howManyHoursAWeek: Int) extends Salary
 
 object Salary {
   val YEARLY = "yearly"
@@ -95,8 +95,8 @@ object Salary {
       case s: Yearly => Some((Salary.YEARLY, Some(s.value), noneM, noneW, noneD, noneH, countDaily, countHourly))
       case s: Monthly => Some((Salary.MONTHLY, noneY, Some(s.value), noneW, noneD, noneH, countDaily, countHourly))
       case s: Weekly => Some((Salary.WEEKLY, noneY, noneM, Some(s.value), noneD, noneH, countDaily, countHourly))
-      case s: Daily => Some((Salary.DAILY, noneY, noneM, noneW, Some(s.value), noneH, Some(s.howManyAWeek), countHourly))
-      case s: Hourly => Some((Salary.HOURLY, noneY, noneM, noneW, noneD, Some(s.value), countDaily, Some(s.howManyAWeek)))
+      case s: Daily => Some((Salary.DAILY, noneY, noneM, noneW, Some(s.value), noneH, Some(s.howManyDaysAWeek), countHourly))
+      case s: Hourly => Some((Salary.HOURLY, noneY, noneM, noneW, noneD, Some(s.value), countDaily, Some(s.howManyHoursAWeek)))
     }
   }
 
@@ -108,8 +108,8 @@ object Salary {
       s"amount-$WEEKLY" -> mandatoryIf(isEqual("salaryType", WEEKLY), bigDecimal),
       s"amount-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), bigDecimal),
       s"amount-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), bigDecimal),
-      s"howManyAWeek-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), number),
-      s"howManyAWeek-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), number)
+      s"howManyDaiAWeek-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), number),
+      s"howManyDaiAWeek-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), number)
     )(formToSalary)(salaryToForm)
   )
 
