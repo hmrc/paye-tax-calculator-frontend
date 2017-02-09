@@ -20,12 +20,12 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.Json
 
-case class Over65(value: Boolean) extends AnyVal
+case class OverStatePensionAge(value: Boolean) extends AnyVal
 
-object Over65 {
-  implicit val format = Json.format[Over65]
+object OverStatePensionAge {
+  implicit val format = Json.format[OverStatePensionAge]
   val form = Form(
     mapping(
-      "over65" -> boolean
-    )(Over65.apply)(Over65.unapply))
+      "overStatePensionAge" -> boolean
+    )(OverStatePensionAge.apply)(OverStatePensionAge.unapply))
 }

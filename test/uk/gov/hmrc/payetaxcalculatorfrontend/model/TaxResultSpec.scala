@@ -32,21 +32,21 @@ class TaxResultSpec extends UnitSpec {
     }
   }
 
-  "Extracting Over65 answer from user response" should {
+  "Extracting OverStatePensionAge answer from user response" should {
 
-    "return true if the response is user is over 65" in {
-      extractOver65(QuickCalcAggregateInput(None, Some(Over65(true)), None)) shouldBe "true"
+    "return true if the response is user is over state pension age" in {
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, Some(OverStatePensionAge(true)), None)) shouldBe "true"
     }
 
-    "return false if the reponse is user is not over 65" in {
-      extractOver65(QuickCalcAggregateInput(None, Some(Over65(false)), None)) shouldBe "false"
+    "return false if the reponse is user is not over state pension age" in {
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, Some(OverStatePensionAge(false)), None)) shouldBe "false"
     }
 
-    "return an error with message with \"No answer has been provided for the question: Are you Over 65?\" if no response" in {
+    "return an error with message with \"No answer has been provided for the question: Are you over state pension age?\" if no response" in {
       val thrown = intercept[Exception]{
-        extractOver65(QuickCalcAggregateInput(None, None, None))
+        extractOverStatePensionAge(QuickCalcAggregateInput(None, None, None))
       }
-      thrown.getMessage shouldBe "No answer has been provided for the question: Are you Over 65?"
+      thrown.getMessage shouldBe "No answer has been provided for the question: Are you over state pension age?"
     }
   }
 

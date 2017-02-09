@@ -36,13 +36,13 @@ object YouHaveToldUs {
     }
   }
 
-  implicit def over65Format(implicit messages: Messages): YouHaveToldUs[Over65] = new YouHaveToldUs[Over65] {
-    def toYouHaveToldUsItem(over65: Over65): YouHaveToldUsItem = {
-      val label = Messages("quick_calc.you_have_told_us.over_65.label")
+  implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[OverStatePensionAge] {
+    def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {
+      val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
       val url = routes.QuickCalcController.showAgeForm().url
       YouHaveToldUsItem(
-        if(over65.value) Messages("quick_calc.you_have_told_us.over_65_yes")
-        else Messages("quick_calc.you_have_told_us.over_65_no"), label, url)
+        if(overStatePensionAge.value) Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
+        else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url)
     }
   }
 
