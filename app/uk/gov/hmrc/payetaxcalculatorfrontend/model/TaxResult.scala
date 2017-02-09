@@ -29,12 +29,12 @@ object TaxResult {
     case None => UserTaxCode.defaultTaxCode
   }
 
-  def extractOver65(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.isOver65 match {
+  def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.isOverStatePensionAge match {
     case Some(s) => s.value match {
       case true => "true"
       case false => "false"
     }
-    case None => throw new Exception("No answer has been provided for the question: Are you Over 65?")
+    case None => throw new Exception("No answer has been provided for the question: Are you over state pension age?")
   }
 
   def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
@@ -72,7 +72,7 @@ object TaxResult {
 
   def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput) = {
     buildTaxCalc(
-      extractOver65(quickCalcAggregateInput),
+      extractOverStatePensionAge(quickCalcAggregateInput),
       TaxYearResolver.currentTaxYear,
       extractTaxCode(quickCalcAggregateInput),
       extractSalary(quickCalcAggregateInput).toInt,

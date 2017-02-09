@@ -38,7 +38,7 @@ class YouHaveToldUsHtmlSpec extends UnitSpec with OneAppPerSuite {
     "show a row for each item + a table header" in {
       val items = List(
         YouHaveToldUsItem("1150L", "Tax Code", "/foo"),
-        YouHaveToldUsItem("Yes", "Over 65", "/bar")
+        YouHaveToldUsItem("Yes", "Over state pension age", "/bar")
       )
 
       val html = you_have_told_us(items)
