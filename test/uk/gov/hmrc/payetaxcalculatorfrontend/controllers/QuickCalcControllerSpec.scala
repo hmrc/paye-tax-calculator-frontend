@@ -27,7 +27,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
   implicit val messages = Messages(Lang.defaultLang, appInjector.instanceOf[MessagesApi])
 
 
-  "Redirect to the Tax Code Form" should {
+  "Redirect to Tax Code Form" should {
     "return 303" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val result = controller.redirectToTaxCodeForm().apply(request)
@@ -37,7 +37,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
     }
   }
 
-  "Show the Tax Code Form" should {
+  "Show Tax Code Form" should {
     "return 200 and an empty list of aggregate data if no aggregate data is present" in {
 
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
@@ -130,7 +130,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       actualRedirectUri shouldBe expectedRedirectUri
     }
 
-    "return 303, with the new Tax Code added to a new list of aggregate data" in {
+    "return 303, with Tax Code Form submission, new list of aggregate and redirect to Is Over State Pension Page" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("K425")))
       val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -168,7 +168,6 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
   }
 
   "Show Age Form" should {
-
     "return 200, with current list of aggregate data containing Tax Code: 1150L and \"YES\" for is not Over65" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeAndIsOverStatePension)
       val action = csrfAddToken(controller.showTaxCodeForm())
@@ -209,7 +208,6 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
   }
 
   "Submit Age Form" should {
-
     "return 400, with current list of aggregate data and an error message for invalid answer" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val postAction = await(csrfAddToken(controller.submitAgeForm()))
@@ -241,7 +239,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val status = postResult.header.status
     }
 
-    "return 303, with an answer \"No\" for not being Over 65 saved on the current list of aggregate data without Salary" in {
+    "return 303, with an answer \"No\" for not being State Pension Age saved on the current list of aggregate data without Salary and redirect to Salary Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val postAction = await(csrfAddToken(controller.submitAgeForm()))
@@ -259,7 +257,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       actualRedirectUri shouldBe expectedRedirectUri
     }
 
-    "return 303, with an answer \"Yes\" for being Over 65 saved on a new list of aggregate data" in {
+    "return 303, with an answer \"Yes\" for being Over 65 saved on a new list of aggregate data and redirect Salary Page" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(true))
       val postAction = await(csrfAddToken(controller.submitAgeForm()))
@@ -277,7 +275,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       actualRedirectUri shouldBe expectedRedirectUri
     }
 
-    "return 303, with an answer \"No\" for being Over 65 saved on the current list of aggregate data which contains all answered questions" in {
+    "return 303, with an answer \"No\" for being Over 65 saved on the current list of aggregate data which contains all answered questions and redirect to Salary Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeIsOverStatePensionAndSalary)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val postAction = await(csrfAddToken(controller.submitAgeForm()))
@@ -372,7 +370,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
 
     }
 
-    "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on the current list of aggregate data without Over 65 answer" in {
+    "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on the current list of aggregate data without Over 65 answer and redirect to Over State Pension Age" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formSalary = Salary.form.fill(Yearly(20000))
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
@@ -382,10 +380,14 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
 
       val status = postResult.header.status
 
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/tax-code"
+      val actualRedirect = redirectLocation(postResult).get
+
+
       status shouldBe 303
     }
 
-    "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on a new list of aggregate data" in {
+    "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on a new list of aggregate data and redirect to Tax Code Page" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Yearly(20000))
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
@@ -401,7 +403,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       status shouldBe 303
     }
 
-    "return 303, with new Salary data \"Yearly Salary £20000\" saved on the current list of aggregate data which contains all answered questions" in {
+    "return 303, with new Salary data \"Yearly Salary £20000\" saved on the complete list of aggregate data and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeIsOverStatePensionAndSalary)
       val formSalary = Salary.form.fill(Yearly(20000))
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
