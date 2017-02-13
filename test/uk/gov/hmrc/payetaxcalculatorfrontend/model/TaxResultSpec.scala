@@ -114,7 +114,7 @@ class TaxResultSpec extends UnitSpec {
     }
 
     "return if response is not Daily or Hourly" in {
-      extractHours(QuickCalcAggregateInput(None, None, Some(Weekly(0)))) shouldBe -1
+      extractHours(QuickCalcAggregateInput(None, None, Some(Weekly(0)))) shouldBe 0
     }
   }
 
