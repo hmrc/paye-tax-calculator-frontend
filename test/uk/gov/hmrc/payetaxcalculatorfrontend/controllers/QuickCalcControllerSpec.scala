@@ -38,7 +38,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
   }
 
   "Show Tax Code Form" should {
-    "return 200 and an empty list of aggregate data if no aggregate data is present" in {
+    "return 200 and an empty list of aggregate data" in {
 
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val action = csrfAddToken(controller.showTaxCodeForm())
@@ -72,7 +72,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
   }
 
   "Submit Tax Code Form" should {
-    "return 400, current valid aggregate data and an error message if Tax Code provided is invalid" in {
+    "return 400, current list of aggregate data and an error message for invalid Tax Code" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("110")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -93,7 +93,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       actualTableSize shouldBe expectedTableSize
     }
 
-    "return 400, empty list of aggregate data and an error message if Tax Code provided is invalid" in {
+    "return 400, empty list of aggregate data and an error message for invalid Tax Code" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("110")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -110,6 +110,25 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       status shouldBe 400
       actualErrorMessage shouldBe expectedErrorMessage
       actualTableSize shouldBe 0
+    }
+
+    "return 400, with empty Tax Code Form submission" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formTax = UserTaxCode.form
+      val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formTax.data.toSeq: _*))
+        .withSession(SessionKeys.sessionId -> "test-tax")
+
+      val status = postResult.header.status
+      val expectedErrorMessage = "Please select one of these options."
+
+      val parseResult = Jsoup.parse(contentAsString(postResult))
+      val actualErrorMessage = parseResult.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualErrorMessage shouldBe expectedErrorMessage
     }
 
     "return 303, with Tax Code Form submission, current list of aggregate and redirect to Is Over State Pension Page" in {
@@ -208,27 +227,28 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
   }
 
   "Submit Age Form" should {
-    "return 400, with current list of aggregate data and an error message for invalid answer" in {
+    "return 400 for invalid form answer and current list of aggregate data" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
+      val formAge = OverStatePensionAge.form
       val postAction = await(csrfAddToken(controller.submitAgeForm()))
 
       val postResult = postAction(request
+        .withFormUrlEncodedBody(formAge.data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-age"))
 
       val status = postResult.header.status
 
-      val responseBody = contentAsString(postResult)
-      val parseHtml = Jsoup.parse(responseBody)
+      val parseHTML = Jsoup.parse(contentAsString(postResult))
 
-      val actualTableSize = parseHtml.getElementsByTag("tr").size()
-      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+      val actualTableSize = parseHTML.getElementsByTag("tr").size
 
       status shouldBe 400
+      actualTableSize shouldBe 2
 
     }
 
-    "return 400, with empty list of aggregate data and an error message for invalid answer" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
+    "return 400 for invalid form answer and empty list of aggregate data" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formAge = OverStatePensionAge.form
       val postAction = await(csrfAddToken(controller.submitAgeForm()))
 
@@ -237,6 +257,13 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
         .withSession(SessionKeys.sessionId -> "test-age")
 
       val status = postResult.header.status
+
+      val parseHTML = Jsoup.parse(contentAsString(postResult))
+
+      val actualTableSize = parseHTML.getElementsByTag("tr").size
+
+      status shouldBe 400
+      actualTableSize shouldBe 0
     }
 
     "return 303, with an answer \"No\" for not being State Pension Age saved on the current list of aggregate data without Salary and redirect to Salary Page" in {
@@ -353,11 +380,16 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
 
       val status = postResult.header.status
 
+      val parseHTML = Jsoup.parse(contentAsString(postResult))
+
+      val actualTableSize = parseHTML.getElementsByTag("tr").size
+
       status shouldBe 400
+      actualTableSize shouldBe 3
     }
 
     "return 400, with empty list of aggregate data and an error message for invalid Salary" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeAndIsOverStatePension)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
 
@@ -365,12 +397,16 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
       val status = postResult.header.status
+      val parseHTML = Jsoup.parse(contentAsString(postResult))
+
+      val actualTableSize = parseHTML.getElementsByTag("tr").size
 
       status shouldBe 400
+      actualTableSize shouldBe 0
 
     }
 
-    "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on the current list of aggregate data without Over 65 answer and redirect to Over State Pension Age" in {
+    "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on the current list of aggregate data without State Pension answer and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formSalary = Salary.form.fill(Yearly(20000))
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
@@ -380,14 +416,15 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
 
       val status = postResult.header.status
 
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/tax-code"
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/summary-result"
       val actualRedirect = redirectLocation(postResult).get
 
 
       status shouldBe 303
+      actualRedirect shouldBe expectedRedirect
     }
 
-    "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on a new list of aggregate data and redirect to Tax Code Page" in {
+    "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on a new list of aggregate data and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Yearly(20000))
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
@@ -397,10 +434,11 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
 
       val status = postResult.header.status
 
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/tax-code"
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/summary-result"
       val actualRedirect = redirectLocation(postResult).get
 
       status shouldBe 303
+      actualRedirect shouldBe expectedRedirect
     }
 
     "return 303, with new Salary data \"Yearly Salary £20000\" saved on the complete list of aggregate data and redirect to Summary Result Page" in {

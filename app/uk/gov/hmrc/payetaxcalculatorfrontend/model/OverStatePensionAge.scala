@@ -18,14 +18,18 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.i18n.Messages
 import play.api.libs.json.Json
+import uk.gov.hmrc.payetaxcalculatorfrontend.model.CustomFormatters._
 
 case class OverStatePensionAge(value: Boolean) extends AnyVal
 
 object OverStatePensionAge {
+
   implicit val format = Json.format[OverStatePensionAge]
-  val form = Form(
+  def form(implicit messages: Messages) = Form(
     mapping(
-      "overStatePensionAge" -> boolean
+      "overStatePensionAge" -> requiredBoolean
     )(OverStatePensionAge.apply)(OverStatePensionAge.unapply))
 }
+

@@ -20,6 +20,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.libs.json._
+import uk.gov.hmrc.payetaxcalculatorfrontend.model.CustomFormatters._
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 
 
@@ -33,7 +34,7 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   def form(implicit messages: Messages) = Form(
     mapping(
-      "hasTaxCode" -> boolean,
+      "hasTaxCode" -> requiredBoolean,
       "code" -> optional(text)
     )(UserTaxCode.apply)(UserTaxCode.unapply).verifying(Messages("quick_calc.about_tax_code.wrong_tax_code"),
       aboutTaxCode =>
