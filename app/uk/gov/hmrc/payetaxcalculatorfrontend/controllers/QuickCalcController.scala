@@ -64,8 +64,8 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
         case None =>
           val aggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))
           cache.save(aggregate).map {
-          _ => Redirect(routes.QuickCalcController.showAgeForm())
-        }
+            _ => Redirect(routes.QuickCalcController.showAgeForm())
+          }
       }
     )
 
