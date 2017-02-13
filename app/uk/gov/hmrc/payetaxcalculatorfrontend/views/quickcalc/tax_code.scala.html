@@ -47,13 +47,14 @@
             </label>
 
             <div class="form-field-group form-field--error panel-indent @hideTextField(userTaxCodeForm)" id="tax-code-yes-target">
-              @if(userTaxCodeForm.hasErrors){
+
+              @if(userTaxCodeForm("taxCode").errors){
                   <div class="error-notification">
-                    @userTaxCodeForm.errors.head.message
+                    @userTaxCodeForm("taxCode").errors.head.message
                   </div>
               }
               @Messages("quick_calc.about_tax_code.has_tax_code")<br>
-              <input type="text" id="code" name="code" value=@{
+              <input type="text" id="taxCode" name="taxCode" value=@{
                 userTaxCodeForm.value match {
                   case Some(userTaxCode) => userTaxCode.taxCode.getOrElse("")
                   case _ => ""
