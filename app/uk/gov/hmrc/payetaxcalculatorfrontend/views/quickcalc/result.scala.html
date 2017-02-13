@@ -33,7 +33,7 @@
         </ul>
 
         <ul>
-          @for(breakdown <- summary.taxBreakdown) {
+          @for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
             <li id=@{"tabContent"+breakdown.period}
             data-tab-content=@{breakdown.period}
               class="tab-content"
@@ -46,7 +46,7 @@
                 </div>
                   <br>
                 <div class="data">
-                  <span class="data-item bold-xlarge" id="grossPay">£@{breakdown.grossPay}</span><br>
+                  <span class="data-item bold-xlarge" id="grossPay-@tabLabels">£@{breakdown.grossPay}</span><br>
                   <span class="data-item bold-xsmall" id="">@Messages("quick_calc.result.gross_pay")</span>
                 </div>
                 <br>
