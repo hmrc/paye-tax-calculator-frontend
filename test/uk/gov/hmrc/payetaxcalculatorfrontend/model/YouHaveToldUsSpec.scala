@@ -43,12 +43,12 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
     YouHaveToldUs(Hourly(2, 3)) shouldBe YouHaveToldUsItem("£2", hourlyLabel, salaryUrl)
   }
 
-  "Converting Over65 to YouHaveToldUsItem" in {
-    val label = Messages("quick_calc.you_have_told_us.over_65.label")
+  "Converting OverStatePensionAge to YouHaveToldUsItem" in {
+    val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
     val url = routes.QuickCalcController.showAgeForm().url
 
-    YouHaveToldUs(Over65(true)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_65_yes"), label, url)
-    YouHaveToldUs(Over65(false)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_65_no"), label, url)
+    YouHaveToldUs(OverStatePensionAge(true)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_state_pension_age.yes"), label, url)
+    YouHaveToldUs(OverStatePensionAge(false)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url)
   }
 
 }

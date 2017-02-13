@@ -1,9 +1,11 @@
 @import play.api.i18n._
-@import uk.gov.hmrc.payetaxcalculatorfrontend.model.{Over65, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.model.{OverStatePensionAge, YouHaveToldUsItem}
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
-@(over65Form: Form[Over65], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
-@radioField = @{ over65Form("over65") }
+
+@(overStatePensionAgeForm: Form[OverStatePensionAge], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+
+@radioField = @{ overStatePensionAgeForm("overStatePensionAge") }
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
@@ -12,7 +14,7 @@
     <div class="grid-layout__column grid-layout__column--2-3">
 
       <header class="page-header">
-        <h1>@Messages("quick_calc.over_65.header")</h1>
+        <h1>@Messages("quick_calc.over_state_pension_age.header")</h1>
       </header>
 
       <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitAgeForm" method="post">
@@ -20,21 +22,21 @@
 
         <div class="form-group">
           <fieldset class="inline form-field-group"
-          id="over65">
+          id="overStatePensionAge">
 
-            <label class="block-label" for="over65-yes">@Messages("quick_calc.over_65.yes")
+            <label class="block-label" for="overStatePensionAge-yes">@Messages("quick_calc.over_state_pension_age.yes")
               <input type="radio"
-              id="over65-yes"
-              name="over65"
+              id="overStatePensionAge-yes"
+              name="overStatePensionAge"
               value="true"
               @if(radioField.value.contains("true")) { checked="checked" }
               required />
             </label>
 
-            <label class="block-label" for="over65-no">@Messages("quick_calc.over_65.no")
+            <label class="block-label" for="overStatePensionAge-no">@Messages("quick_calc.over_state_pension_age.no")
               <input type="radio"
-              id="over65-no"
-              name="over65"
+              id="overStatePensionAge-no"
+              name="overStatePensionAge"
               value="false"
               @if(radioField.value.contains("false")) { checked="checked" }
               required/>

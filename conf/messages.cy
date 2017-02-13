@@ -18,9 +18,9 @@ quick_calc.you_have_told_us.edit = Golygu
 
 quick_calc.you_have_told_us.about_tax_code.label = Cod Treth
 
-quick_calc.you_have_told_us.over_65.label = dros 65
-quick_calc.you_have_told_us.over_65_yes = YDW
-quick_calc.you_have_told_us.over_65_no = NID
+quick_calc.you_have_told_us.over_state_pension_age.label = dros 65
+quick_calc.you_have_told_us.over_state_pension_age.yes = YDW
+quick_calc.you_have_told_us.over_state_pension_age.no = NID
 
 quick_calc.you_have_told_us.salary.yearly.label = Fesul blwyddyn
 quick_calc.you_have_told_us.salary.monthly.label = Fesul mis
@@ -60,9 +60,9 @@ quick_calc.salary.question.days_a_week = Sawl diwrnod yr wythnos ydych chi'n gwe
 quick_calc.salary.question.earn_a_hour = Faint ydych chi'n ei ennill awr?
 quick_calc.salary.question.hours_a_week = Sawl awr yr wythnos ydych chi'n gweithio?
 
-quick_calc.over_65.header = Ydych chi dros 65 oed?
-quick_calc.over_65.yes = Do
-quick_calc.over_65.no = Naddo
+quick_calc.over_state_pension_age.header = Ydych chi dros 65 oed?
+quick_calc.over_state_pension_age.yes = Do
+quick_calc.over_state_pension_age.no = Naddo
 
 quick_calc.about_tax_code.header = A ydych chi'n adnabod eich Côd Treth?
 quick_calc.about_tax_code.has_tax_code = Rhowch eich Côd Treth

@@ -83,28 +83,28 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
   def showAgeForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
-        val form = aggregate.isOver65.map(Over65.form.fill).getOrElse(Over65.form)
+        val form = aggregate.isOverStatePensionAge.map(OverStatePensionAge.form.fill).getOrElse(OverStatePensionAge.form)
         Ok(age(form, aggregate.youHaveToldUsItems))
       case None =>
-        Ok(age(Over65.form, Nil))
+        Ok(age(OverStatePensionAge.form, Nil))
     }
   }
 
   def submitAgeForm() = ActionWithSessionId.async { implicit request =>
-    Over65.form.bindFromRequest.fold(
+    OverStatePensionAge.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
         case Some(aggregate) => BadRequest(age(formWithErrors, aggregate.youHaveToldUsItems))
         case None => BadRequest(age(formWithErrors, Nil))
       },
       userAge => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
-          val updatedAggregate = aggregate.copy(isOver65 = Some(userAge))
+          val updatedAggregate = aggregate.copy(isOverStatePensionAge = Some(userAge))
           cache.save(updatedAggregate).map { _ =>
             nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
               Redirect(routes.QuickCalcController.showSalaryForm())
             }
           }
-        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(isOver65 = Some(userAge))).map {
+        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(isOverStatePensionAge = Some(userAge))).map {
           _ => Redirect(routes.QuickCalcController.showSalaryForm())
         }
       }
@@ -164,7 +164,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
   private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result = {
     if (aggregate.taxCode.isEmpty) {
       Redirect(routes.QuickCalcController.showTaxCodeForm())
-    } else if(aggregate.isOver65.isEmpty) {
+    } else if(aggregate.isOverStatePensionAge.isEmpty) {
       Redirect(routes.QuickCalcController.showAgeForm())
     } else {
       Redirect(routes.QuickCalcController.showSalaryForm())
