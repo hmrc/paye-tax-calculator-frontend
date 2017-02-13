@@ -19,7 +19,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 import play.api.i18n.Messages
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
 
-case class YouHaveToldUsItem(value: String, label: String, url: String)
+case class YouHaveToldUsItem(value: String, label: String, url: String, idSuffix: String)
 
 trait YouHaveToldUs[A] {
   def toYouHaveToldUsItem(t: A): YouHaveToldUsItem
@@ -31,18 +31,20 @@ object YouHaveToldUs {
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
       val label = Messages("quick_calc.you_have_told_us.about_tax_code.label")
+      val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.tax_code")
       val url = routes.QuickCalcController.showTaxCodeForm().url
-      YouHaveToldUsItem(t.taxCode.getOrElse(UserTaxCode.defaultTaxCode), label, url)
+      YouHaveToldUsItem(t.taxCode.getOrElse(UserTaxCode.defaultTaxCode), label, url, idSuffix)
     }
   }
 
   implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[OverStatePensionAge] {
     def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {
       val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
+      val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.pension_state")
       val url = routes.QuickCalcController.showAgeForm().url
       YouHaveToldUsItem(
         if(overStatePensionAge.value) Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
-        else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url)
+        else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url, idSuffix)
     }
   }
 
@@ -60,13 +62,14 @@ object YouHaveToldUs {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
       val url = routes.QuickCalcController.showSalaryForm().url
       def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
+      val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.income")
       def asPounds(v: BigDecimal) = "£" + v
       s match {
-        case Yearly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.YEARLY), url)
-        case Monthly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.MONTHLY), url)
-        case Weekly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.WEEKLY), url)
-        case Daily(v, _) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.DAILY), url)
-        case Hourly(v, _) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.HOURLY), url)
+        case Yearly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.YEARLY), url, idSuffix)
+        case Monthly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.MONTHLY), url, idSuffix)
+        case Weekly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.WEEKLY), url, idSuffix)
+        case Daily(v, _) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.DAILY), url, idSuffix)
+        case Hourly(v, _) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.HOURLY), url, idSuffix)
       }
     }
   }

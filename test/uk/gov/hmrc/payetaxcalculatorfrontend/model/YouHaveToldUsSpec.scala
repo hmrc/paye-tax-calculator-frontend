@@ -26,29 +26,31 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
 
   "Converting Salary to YouHaveToldUsItem" in {
     val salaryUrl =  routes.QuickCalcController.showSalaryForm().url
+    val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.income")
 
     val yearlyLabel = Messages("quick_calc.you_have_told_us.salary.yearly.label")
-    YouHaveToldUs(Yearly(2)) shouldBe YouHaveToldUsItem("£2", yearlyLabel, salaryUrl)
+    YouHaveToldUs(Yearly(2)) shouldBe YouHaveToldUsItem("£2", yearlyLabel, salaryUrl, idSuffix)
 
     val monthlyLabel = Messages("quick_calc.you_have_told_us.salary.monthly.label")
-    YouHaveToldUs(Monthly(3)) shouldBe YouHaveToldUsItem("£3", monthlyLabel, salaryUrl)
+    YouHaveToldUs(Monthly(3)) shouldBe YouHaveToldUsItem("£3", monthlyLabel, salaryUrl, idSuffix)
 
     val weeklyLabel = Messages("quick_calc.you_have_told_us.salary.weekly.label")
-    YouHaveToldUs(Weekly(1)) shouldBe YouHaveToldUsItem("£1", weeklyLabel, salaryUrl)
+    YouHaveToldUs(Weekly(1)) shouldBe YouHaveToldUsItem("£1", weeklyLabel, salaryUrl, idSuffix)
 
     val dailyLabel = Messages("quick_calc.you_have_told_us.salary.daily.label")
-    YouHaveToldUs(Daily(1, 2)) shouldBe YouHaveToldUsItem("£1", dailyLabel,salaryUrl)
+    YouHaveToldUs(Daily(1, 2)) shouldBe YouHaveToldUsItem("£1", dailyLabel,salaryUrl, idSuffix)
 
     val hourlyLabel = Messages("quick_calc.you_have_told_us.salary.hourly.label")
-    YouHaveToldUs(Hourly(2, 3)) shouldBe YouHaveToldUsItem("£2", hourlyLabel, salaryUrl)
+    YouHaveToldUs(Hourly(2, 3)) shouldBe YouHaveToldUsItem("£2", hourlyLabel, salaryUrl, idSuffix)
   }
 
   "Converting OverStatePensionAge to YouHaveToldUsItem" in {
     val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
+    val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.pension_state")
     val url = routes.QuickCalcController.showAgeForm().url
 
-    YouHaveToldUs(OverStatePensionAge(true)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_state_pension_age.yes"), label, url)
-    YouHaveToldUs(OverStatePensionAge(false)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url)
+    YouHaveToldUs(OverStatePensionAge(true)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_state_pension_age.yes"), label, url, idSuffix)
+    YouHaveToldUs(OverStatePensionAge(false)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url, idSuffix)
   }
 
 }
