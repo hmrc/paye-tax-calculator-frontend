@@ -31,7 +31,7 @@ object YouHaveToldUs {
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
       val label = Messages("quick_calc.you_have_told_us.about_tax_code.label")
-      val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.tax_code")
+      val idSuffix = "tax-code"
       val url = routes.QuickCalcController.showTaxCodeForm().url
       YouHaveToldUsItem(t.taxCode.getOrElse(UserTaxCode.defaultTaxCode), label, url, idSuffix)
     }
@@ -40,7 +40,7 @@ object YouHaveToldUs {
   implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[OverStatePensionAge] {
     def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {
       val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
-      val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.pension_state")
+      val idSuffix = "pension-state"
       val url = routes.QuickCalcController.showAgeForm().url
       YouHaveToldUsItem(
         if(overStatePensionAge.value) Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
@@ -62,7 +62,7 @@ object YouHaveToldUs {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
       val url = routes.QuickCalcController.showSalaryForm().url
       def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
-      val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.income")
+      val idSuffix = "income"
       def asPounds(v: BigDecimal) = "£" + v
       s match {
         case Yearly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.YEARLY), url, idSuffix)

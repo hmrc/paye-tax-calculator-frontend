@@ -26,7 +26,7 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
 
   "Converting Salary to YouHaveToldUsItem" in {
     val salaryUrl =  routes.QuickCalcController.showSalaryForm().url
-    val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.income")
+    val idSuffix = "income"
 
     val yearlyLabel = Messages("quick_calc.you_have_told_us.salary.yearly.label")
     YouHaveToldUs(Yearly(2)) shouldBe YouHaveToldUsItem("£2", yearlyLabel, salaryUrl, idSuffix)
@@ -46,7 +46,7 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
 
   "Converting OverStatePensionAge to YouHaveToldUsItem" in {
     val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
-    val idSuffix = Messages("quick_calc.you_have_told_us.edit.label.pension_state")
+    val idSuffix = "pension-state"
     val url = routes.QuickCalcController.showAgeForm().url
 
     YouHaveToldUs(OverStatePensionAge(true)) shouldBe YouHaveToldUsItem(Messages("quick_calc.you_have_told_us.over_state_pension_age.yes"), label, url, idSuffix)
