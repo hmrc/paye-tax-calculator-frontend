@@ -28,11 +28,11 @@ class UserTaxCodeSpec extends UnitSpec with OneAppPerSuite {
 
   "The form function can create and verify the form for tax-code, and" should {
     "return true if all input is valid such as the tax-code etc, otherwise false." in {
-      val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "code" -> "K475"))
+      val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "taxCode" -> "K475"))
       form.hasErrors shouldBe false
     }
     "return error message if some input is invalid such as the tax-code etc." in {
-      val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "code" -> "foo"))
+      val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "taxCode" -> "foo"))
       val hasError = form.hasErrors
       val errorMessage = "Please check and re-enter your tax code"
       hasError shouldBe true
@@ -57,7 +57,7 @@ class UserTaxCodeSpec extends UnitSpec with OneAppPerSuite {
       UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode)))) shouldBe "hidden"
     }
     "show the text field when user selects the yes option" in {
-      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode))).withGlobalError("")) shouldBe ""
+      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultTaxCode)))) shouldBe ""
     }
   }
 
