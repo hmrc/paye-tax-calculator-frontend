@@ -29,7 +29,7 @@ object OverStatePensionAge {
   implicit val format = Json.format[OverStatePensionAge]
   def form(implicit messages: Messages) = Form(
     mapping(
-      "overStatePensionAge" -> requiredBoolean
+      "overStatePensionAge" -> of(requiredBooleanFormatter)
     )(OverStatePensionAge.apply)(OverStatePensionAge.unapply))
 }
 

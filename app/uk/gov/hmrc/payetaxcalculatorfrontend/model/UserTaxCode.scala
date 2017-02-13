@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
-import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.format.Formatter
+import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.libs.json._
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.CustomFormatters._
@@ -31,15 +32,26 @@ object UserTaxCode extends TaxCalculatorHelper {
   implicit val format = Json.format[UserTaxCode]
 
   val defaultTaxCode = "1150L"
+  val hasTaxCode = "hasTaxCode"
+  val taxCode = "taxCode"
+
+  def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
+      if (data.getOrElse(hasTaxCode, "false") == "true") {
+        if (isValidTaxCode(data.getOrElse(taxCode, ""))) Right(Some(data.getOrElse(taxCode, "")))
+        else Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
+      }
+      else Right(Some(defaultTaxCode))
+    }
+    override def unbind(key: String, value: Option[String]): Map[String, String] = Map(key -> value.getOrElse(""))
+  }
 
   def form(implicit messages: Messages) = Form(
     mapping(
-      "hasTaxCode" -> requiredBoolean,
-      "code" -> optional(text)
-    )(UserTaxCode.apply)(UserTaxCode.unapply).verifying(Messages("quick_calc.about_tax_code.wrong_tax_code"),
-      aboutTaxCode =>
-        if (aboutTaxCode.hasTaxCode) isValidTaxCode(aboutTaxCode.taxCode.getOrElse("").trim) else true
-    ))
+      hasTaxCode -> of(requiredBooleanFormatter),
+      taxCode -> of(taxCodeFormatter)
+    )(UserTaxCode.apply)(UserTaxCode.unapply)
+  )
 
   def checkUserSelection(selection: Boolean, taxCode: Form[UserTaxCode]): String = {
     if (taxCode.hasErrors && selection) "checked"
@@ -56,11 +68,12 @@ object UserTaxCode extends TaxCalculatorHelper {
   }
 
   def hideTextField(taxCode: Form[UserTaxCode]): String = {
-    if (taxCode.hasGlobalErrors) ""
+    if (taxCode("taxCode").hasErrors) ""
     else {
       taxCode.value match {
         case Some(v) => if (v.hasTaxCode) "" else "hidden"
         case _ => "hidden"}
     }
   }
+
 }

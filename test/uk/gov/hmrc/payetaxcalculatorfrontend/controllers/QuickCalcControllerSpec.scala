@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import akka.stream.Materializer
@@ -112,7 +128,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       actualTableSize shouldBe 0
     }
 
-    "return 400, with empty Tax Code Form submission" in {
+    "return 400 when Tax Code Form submission is empty" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form
       val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -122,16 +138,10 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
         .withSession(SessionKeys.sessionId -> "test-tax")
 
       val status = postResult.header.status
-      val expectedErrorMessage = "Please select one of these options."
-
-      val parseResult = Jsoup.parse(contentAsString(postResult))
-      val actualErrorMessage = parseResult.getElementsByClass("error-notification").text()
-
       status shouldBe 400
-      actualErrorMessage shouldBe expectedErrorMessage
     }
 
-    "return 303, with Tax Code Form submission, current list of aggregate and redirect to Is Over State Pension Page" in {
+    "return 303, when Tax Code Form submission, current list of aggregate and redirect to Is Over State Pension Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeAndIsOverStatePension)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("K425")))
       val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -149,7 +159,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       actualRedirectUri shouldBe expectedRedirectUri
     }
 
-    "return 303, with Tax Code Form submission, new list of aggregate and redirect to Is Over State Pension Page" in {
+    "return 303, when Tax Code Form submission, new list of aggregate and redirect to Is Over State Pension Page" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("K425")))
       val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -167,7 +177,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       actualRedirectUri shouldBe expectedRedirectUri
     }
 
-    "return 303, with Tax Code form submission, the complete list of aggregate data and redirect to Summary Result Page" in {
+    "return 303, when Tax Code form submission, the complete list of aggregate data and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeIsOverStatePensionAndSalary)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("K425")))
       val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))

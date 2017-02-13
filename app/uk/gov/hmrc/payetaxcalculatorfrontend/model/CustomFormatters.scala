@@ -16,26 +16,19 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
-import play.api.data.{FormError, Forms, Mapping}
+import play.api.data.{FormError}
 import play.api.data.format.Formatter
 
 object CustomFormatters {
 
-  implicit def requiredBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
-
-    override val format = Some(("format.boolean", Nil))
-
+  def requiredBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
     override def bind(key: String, data: Map[String, String]) = {
       Right(data.get(key).getOrElse("")).right.flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
-        case _ => Left(Seq(FormError(key,"Please select one of these options.", Nil)))
+        case _ => Left(Seq(FormError(key,"Please select one of these options.")))
       }
     }
-
     override def unbind(key: String, value: Boolean): Map[String, String] = Map(key -> value.toString)
   }
-
-  val requiredBoolean: Mapping[Boolean] = Forms.of[Boolean](requiredBooleanFormatter)
-
 }
