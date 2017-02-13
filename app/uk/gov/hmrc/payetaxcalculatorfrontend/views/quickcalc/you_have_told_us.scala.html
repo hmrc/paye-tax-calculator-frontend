@@ -1,6 +1,8 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem
-
 @(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@itemsLabels = @{List(Messages("quick_calc.you_have_told_us.edit.label.tax_code"),
+                      Messages("quick_calc.you_have_told_us.edit.label.pension_state"),
+                      Messages("quick_calc.you_have_told_us.edit.label.income"))}
 
 @if(items.nonEmpty) {
   <table style="margin-left: 15px">
@@ -10,15 +12,15 @@
     </tr>
     </thead>
     <tbody>
-    @items.map { item =>
+    @items.zip(itemsLabels).map { item =>
       <tr>
         <td>
           <div class="data">
-            <span class="data-item bold-medium">@item.value</span>
-            <span class="data-item bold-xsmall">@item.label</span>
+            <span class="data-item bold-medium">@item._1.value</span>
+            <span class="data-item bold-xsmall">@item._1.label</span>
           </div>
         </td>
-        <td><a href="@item.url">@Messages("quick_calc.you_have_told_us.edit")</a></td>
+        <td id="edit-@item._2"><a href="@item._1.url">@Messages("quick_calc.you_have_told_us.edit")</a></td>
       </tr>
     }
     </tbody>

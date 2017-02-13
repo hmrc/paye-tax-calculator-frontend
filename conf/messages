@@ -70,6 +70,10 @@ quick_calc.you_have_told_us.salary.weekly.label=Per week
 quick_calc.you_have_told_us.salary.daily.label=Per day
 quick_calc.you_have_told_us.salary.hourly.label=Per hour
 
+quick_calc.you_have_told_us.edit.label.tax_code=tax-code
+quick_calc.you_have_told_us.edit.label.pension_state=pension-state
+quick_calc.you_have_told_us.edit.label.income=income
+
 quick_calc.result.header=Your income-tax calculation
 quick_calc.result.you_take_home=You take home
 quick_calc.result.gross_pay=Gross Pay
