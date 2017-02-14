@@ -207,15 +207,6 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val actualAgeAnswer = parseHtml.getElementsByTag("tr").get(2).getElementsByTag("span").get(0).text()
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
 
-
-      println()
-      println()
-      println(parseHtml)
-      println()
-      println()
-      println()
-
-
       status shouldBe 200
       actualNumberOfRows shouldBe expectedNumberOfRows
       actualTaxCode shouldBe expectedTaxCode
