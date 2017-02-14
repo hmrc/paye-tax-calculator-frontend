@@ -16,14 +16,10 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.setup
 
-import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.libs.json.{JsBoolean, JsString}
-import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
-import uk.gov.hmrc.payetaxcalculatorfrontend.WSHttp
-import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
-import uk.gov.hmrc.payetaxcalculatorfrontend.model.{OverStatePensionAge, QuickCalcAggregateInput, UserTaxCode, Yearly}
+import uk.gov.hmrc.http.cache.client.{CacheMap}
+
+import uk.gov.hmrc.payetaxcalculatorfrontend.model._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
-import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -43,6 +39,26 @@ object QuickCalcCacheSetup {
       Future.successful(CacheMap("test-empty", Map.empty))
     }
   }
+
+  val aggregateListOnlyTaxCode = List(YouHaveToldUsItem("1150L", "Tax Code", "/foo","tax-code"))
+
+  val aggregateListOnlyTaxCodeAndStatePension = List(
+    YouHaveToldUsItem("1150L", "Tax Code", "/foo","tax-code"),
+    YouHaveToldUsItem("YES", "Over 65", "/foo", "age")
+  )
+
+  val aggregateListTaxCodeStatePensionAndSalary = List(
+    YouHaveToldUsItem("1150L", "Tax Code", "/foo","tax-code"),
+    YouHaveToldUsItem("YES", "Over 65", "/foo", "age"),
+    YouHaveToldUsItem("20000", "Per year", "/foo", "salary")
+  )
+
+  val expectedTaxCode = "1150L"
+  val expectedAgeAnswer = "YES"
+
+  val expectedSalary = "£20000"
+  val expectedSalaryType = "Per year"
+
 
   val cacheEmpty = cache(None)
 
