@@ -21,6 +21,7 @@ import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.libs.json._
+import uk.gov.hmrc.payetaxcalculatorfrontend.model.CustomFormatters._
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 
 
@@ -47,11 +48,10 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   def form(implicit messages: Messages) = Form(
     mapping(
-      hasTaxCode -> boolean,
+      hasTaxCode -> of(requiredBooleanFormatter),
       taxCode -> of(taxCodeFormatter)
     )(UserTaxCode.apply)(UserTaxCode.unapply)
   )
-
 
   def checkUserSelection(selection: Boolean, taxCode: Form[UserTaxCode]): String = {
     if (taxCode.hasErrors && selection) "checked"
