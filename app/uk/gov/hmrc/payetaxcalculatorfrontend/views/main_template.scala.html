@@ -5,10 +5,17 @@
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None)(mainContent: Html)(implicit request : Request[_], messages: Messages)
 
+@import uk.gov.hmrc.payetaxcalculatorfrontend.FrontendAppConfig
 @import uk.gov.hmrc.play.views.html.layouts
 
-
-@serviceInfoContent = {}
+@serviceInfoContent = {
+  <div class="phase-banner beta-banner--borderless">
+    <p>
+      <strong class="phase-tag">ALPHA</strong>
+      <span>This is a new service – your <a href="@FrontendAppConfig.betaFeedbackUrl">feedback</a> will help us to improve it.</span>
+    </p>
+  </div>
+}
 
 @sidebar = {
     @if(sidebarLinks.isDefined) {
@@ -17,7 +24,7 @@
 }
 
 
-@govuk_wrapper(appConfig = uk.gov.hmrc.payetaxcalculatorfrontend.FrontendAppConfig,
+@govuk_wrapper(appConfig = FrontendAppConfig,
                title = title,
                mainClass = mainClass,
                bodyClasses = bodyClasses,
