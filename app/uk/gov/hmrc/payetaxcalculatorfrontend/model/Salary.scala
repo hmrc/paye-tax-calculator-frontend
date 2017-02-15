@@ -18,6 +18,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.i18n.Messages
 import play.api.libs.json._
 import uk.gov.voa.play.form.ConditionalMappings._
 
@@ -100,17 +101,33 @@ object Salary {
     }
   }
 
-  val form = Form(
+  def form(implicit messages: Messages) = Form(
     mapping(
       "salaryType" -> nonEmptyText,
-      s"amount-$YEARLY" -> mandatoryIf(isEqual("salaryType", YEARLY), bigDecimal),
-      s"amount-$MONTHLY" -> mandatoryIf(isEqual("salaryType", MONTHLY), bigDecimal),
-      s"amount-$WEEKLY" -> mandatoryIf(isEqual("salaryType", WEEKLY), bigDecimal),
-      s"amount-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), bigDecimal),
-      s"amount-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), bigDecimal),
-      s"howManyDaysAWeek-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), number),
-      s"howManyHoursAWeek-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), number)
+      s"amount-$YEARLY" -> mandatoryIf(isEqual("salaryType", YEARLY), bigDecimal.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), _ > 0)),
+      s"amount-$MONTHLY" -> mandatoryIf(isEqual("salaryType", MONTHLY), bigDecimal.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), _ > 0)),
+      s"amount-$WEEKLY" -> mandatoryIf(isEqual("salaryType", WEEKLY), bigDecimal.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), _ > 0)),
+      s"amount-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), bigDecimal.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), _ > 0)),
+      s"amount-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), bigDecimal.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), _ > 0)),
+      s"howManyDaysAWeek-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), number.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), n => n > 0 && n < 8)),
+      s"howManyHoursAWeek-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), number.verifying(cc, n => dd(n)))
     )(formToSalary)(salaryToForm)
   )
 
+
+
+  def dd(n:Int) = {
+    if (n < 1) false
+    else if (n > 7) false
+    else true
+  }
+
+  def cc(implicit messages: Messages, int: Int) = {
+    dd(int) match {
+      case false => "messages"
+      case _ => "messages111"
+
+    }
+
+  }
 }
