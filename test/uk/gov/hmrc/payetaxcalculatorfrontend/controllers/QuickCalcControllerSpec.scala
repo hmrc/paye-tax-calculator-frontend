@@ -75,14 +75,12 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val items = List(YouHaveToldUsItem("1150L", "Tax Code", "/foo"))
-      val expectedTaxCode = "1150L"
-
-      val expectedNumberOfRows = 1 + items.size //Including header
+      val expectedNumberOfRows = 1 + aggregateListOnlyTaxCode.size //Including header
       val actualTaxCode = parseHtml.getElementsByTag("tr").get(1).getElementsByTag("span").get(0).text()
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
 
       status shouldBe 200
-      parseHtml.getElementsByTag("tr").size shouldBe expectedNumberOfRows
+      actualNumberOfRows shouldBe expectedNumberOfRows
       actualTaxCode shouldBe expectedTaxCode
     }
   }
@@ -98,8 +96,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val parseHtml = Jsoup.parse(responseBody)
 
       val expectedErrorMessage = "Please check and re-enter your tax code"
-      val list = List(YouHaveToldUsItem("1150L", "Tax Code", "/foo"))
-      val expectedTableSize = 1 + list.size // include header
+      val expectedTableSize = 1 + aggregateListOnlyTaxCode.size // include header
 
       val actualTableSize = parseHtml.getElementsByTag("tr").size()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -197,7 +194,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
   }
 
   "Show Age Form" should {
-    "return 200, with current list of aggregate data containing Tax Code: 1150L and \"YES\" for is not Over65" in {
+    "return 200, with current list of aggregate data containing Tax Code: 1150L and \"YES\" is they are Over State Pension Age" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeAndIsOverStatePension)
       val action = csrfAddToken(controller.showTaxCodeForm())
       val result = action.apply(request)
@@ -205,20 +202,13 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val items = List(
-        YouHaveToldUsItem("1150L", "Tax Code", "/foo"),
-        YouHaveToldUsItem("YES", "Over 65", "/foo")
-      )
-
-      val expectedTaxCode = "1150L"
-      val expectedAgeAnswer = "YES"
-
-      val expectedNumberOfRows = 1 + items.size //Including header
+      val expectedNumberOfRows = 1 + aggregateListOnlyTaxCodeAndStatePension.size //Including header
       val actualTaxCode = parseHtml.getElementsByTag("tr").get(1).getElementsByTag("span").get(0).text()
       val actualAgeAnswer = parseHtml.getElementsByTag("tr").get(2).getElementsByTag("span").get(0).text()
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
 
       status shouldBe 200
-      parseHtml.getElementsByTag("tr").size shouldBe expectedNumberOfRows
+      actualNumberOfRows shouldBe expectedNumberOfRows
       actualTaxCode shouldBe expectedTaxCode
       actualAgeAnswer shouldBe expectedAgeAnswer
     }
@@ -231,8 +221,10 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+
       status shouldBe 200
-      parseHtml.getElementsByTag("tr").size shouldBe 0
+      actualNumberOfRows shouldBe 0
     }
   }
 
@@ -247,14 +239,12 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
         .withSession(SessionKeys.sessionId -> "test-age"))
 
       val status = postResult.header.status
-
       val parseHTML = Jsoup.parse(contentAsString(postResult))
-
-      val actualTableSize = parseHTML.getElementsByTag("tr").size
+      val expectedNumberOfRows = 1 + aggregateListOnlyTaxCode.size //Including header
+      val actualNumberOfRows = parseHTML.getElementsByTag("tr").size
 
       status shouldBe 400
-      actualTableSize shouldBe 2
-
+      actualNumberOfRows shouldBe expectedNumberOfRows
     }
 
     "return 400 for invalid form answer and empty list of aggregate data" in {
@@ -267,13 +257,11 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
         .withSession(SessionKeys.sessionId -> "test-age")
 
       val status = postResult.header.status
-
       val parseHTML = Jsoup.parse(contentAsString(postResult))
-
-      val actualTableSize = parseHTML.getElementsByTag("tr").size
+      val actualNumberOfRows = parseHTML.getElementsByTag("tr").size
 
       status shouldBe 400
-      actualTableSize shouldBe 0
+      actualNumberOfRows shouldBe 0
     }
 
     "return 303, with an answer \"No\" for not being State Pension Age saved on the current list of aggregate data without Salary and redirect to Salary Page" in {
@@ -341,25 +329,16 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val items = List(
-        YouHaveToldUsItem("1150L", "Tax Code", "/foo"),
-        YouHaveToldUsItem("YES", "Over 65", "/foo"),
-        YouHaveToldUsItem("20000", "Per year", "/foo")
-      )
+      val expectedNumberOfRows = 1 + aggregateListTaxCodeStatePensionAndSalary.size //Including header
 
-      val expectedTaxCode = "1150L"
-      val expectedAgeAnswer = "YES"
-      val expectedSalary = "£20000"
-      val expectedSalaryType = "Per year"
-
-      val expectedNumberOfRows = 1 + items.size //Including header
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualTaxCode = parseHtml.getElementsByTag("tr").get(1).getElementsByTag("span").get(0).text()
       val actualAgeAnswer = parseHtml.getElementsByTag("tr").get(2).getElementsByTag("span").get(0).text()
       val actualSalary = parseHtml.getElementsByTag("tr").get(3).getElementsByTag("span").get(0).text()
       val actualySalaryType = parseHtml.getElementsByTag("tr").get(3).getElementsByTag("span").get(1).text()
 
       status shouldBe 200
-      parseHtml.getElementsByTag("tr").size shouldBe expectedNumberOfRows
+      actualNumberOfRows shouldBe expectedNumberOfRows
       actualTaxCode shouldBe expectedTaxCode
       actualAgeAnswer shouldBe expectedAgeAnswer
       actualSalary shouldBe expectedSalary
@@ -374,8 +353,10 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+
       status shouldBe 200
-      parseHtml.getElementsByTag("tr").size shouldBe 0
+      actualNumberOfRows shouldBe 0
     }
   }
 
@@ -389,13 +370,13 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
       val status = postResult.header.status
-
       val parseHTML = Jsoup.parse(contentAsString(postResult))
+      val actualNumberOfRows = parseHTML.getElementsByTag("tr").size
 
-      val actualTableSize = parseHTML.getElementsByTag("tr").size
+      val expectedNumberOfRows = 1 + aggregateListOnlyTaxCodeAndStatePension.size //Including header
 
       status shouldBe 400
-      actualTableSize shouldBe 3
+      actualNumberOfRows shouldBe expectedNumberOfRows
     }
 
     "return 400, with empty list of aggregate data and an error message for invalid Salary" in {
@@ -404,15 +385,16 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
 
       val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
       val status = postResult.header.status
       val parseHTML = Jsoup.parse(contentAsString(postResult))
 
-      val actualTableSize = parseHTML.getElementsByTag("tr").size
+      val actualNumberOfRows = parseHTML.getElementsByTag("tr").size
 
       status shouldBe 400
-      actualTableSize shouldBe 0
+      actualNumberOfRows shouldBe 0
 
     }
 
@@ -428,7 +410,6 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
 
       val expectedRedirect = "/paye-tax-calculator/quick-calculation/summary-result"
       val actualRedirect = redirectLocation(postResult).get
-
 
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
@@ -477,26 +458,20 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val items = List(
-        YouHaveToldUsItem("1150L", "Tax Code", "/foo"),
-        YouHaveToldUsItem("YES", "Over 65", "/foo"),
-        YouHaveToldUsItem("20000", "Per year", "/foo")
-      )
-
       val expectedTaxCode = "1150L"
       val expectedAgeAnswer = "YES"
       val expectedSalary = "£20000"
       val expectedSalaryType = "Per year"
 
-      val expectedNumberOfRows = 1 + items.size //Including header
-      val actualTableSize = parseHtml.getElementsByTag("table").get(6).getElementsByTag("tr").size()
+      val expectedNumberOfRows = 1 + aggregateListTaxCodeStatePensionAndSalary.size //Including header
+      val actualNumberOfRows = parseHtml.getElementsByTag("table").get(6).getElementsByTag("tr").size()
       val actualTaxCode = parseHtml.getElementsByTag("table").get(6).getElementsByTag("tr").get(1).getElementsByTag("span").get(0).text()
       val actualAgeAnswer = parseHtml.getElementsByTag("table").get(6).getElementsByTag("tr").get(2).getElementsByTag("span").get(0).text()
       val actualSalary = parseHtml.getElementsByTag("table").get(6).getElementsByTag("tr").get(3).getElementsByTag("span").get(0).text()
       val actualySalaryType = parseHtml.getElementsByTag("table").get(6).getElementsByTag("tr").get(3).getElementsByTag("span").get(1).text()
 
       status shouldBe 200
-      actualTableSize shouldBe expectedNumberOfRows
+      actualNumberOfRows shouldBe expectedNumberOfRows
       actualTaxCode shouldBe expectedTaxCode
       actualAgeAnswer shouldBe expectedAgeAnswer
       actualSalary shouldBe expectedSalary
