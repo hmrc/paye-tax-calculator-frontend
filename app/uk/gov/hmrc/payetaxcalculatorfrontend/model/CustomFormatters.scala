@@ -48,7 +48,7 @@ object CustomFormatters {
             }
           }
           catch {
-            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_daily"))))
+            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_number_daily"))))
           }
         case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_daily"))))
       }
@@ -72,7 +72,7 @@ object CustomFormatters {
             }
           }
           catch {
-            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_hourly"))))
+            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_number_hourly"))))
           }
         case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_hourly"))))
       }
@@ -82,28 +82,73 @@ object CustomFormatters {
 
   }
 
-  def salaryValidation(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
+  def salaryValidation(salaryType:String)(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
     override def bind(key: String, data: Map[String, String]) = {
-      Right(data.getOrElse(key,"")).right.flatMap {
-        case s if s.nonEmpty =>
-          try{
-            val salary = BigDecimal(s).setScale(2)
-            if(salary < 0.01) {
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_salary_input"))))
-            } else if(salary > 9999999.99) {
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
-            } else {
-              Right(salary)
+      salaryType match{
+        case "hourly" => hourlySalaryValidation(key, data)
+        case "daily" => dailySalaryValidation(key, data)
+        case _ =>
+          Right(data.getOrElse(key,"")).right.flatMap {
+          case s if s.nonEmpty =>
+            try{
+              val salary = BigDecimal(s).setScale(2)
+              if(salary < 0.01) {
+                Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_salary_input"))))
+              } else if(salary > 9999999.99) {
+                Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
+              } else {
+                Right(salary)
+              }
+            } catch {
+              case _:Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_salary"))))
             }
-          } catch {
-            case _:Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_salary"))))
-          }
 
-        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_salary_input"))))
+          case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_salary_input"))))
+        }
       }
     }
 
     override def unbind(key: String, value: BigDecimal): Map[String, String] = Map(key -> value.toString)
-
   }
+
+  def hourlySalaryValidation(key:String, data:Map[String,String])(implicit messages: Messages) = {
+    Right(data.getOrElse(key,"")).right.flatMap {
+      case s if s.nonEmpty =>
+        try{
+          val salary = BigDecimal(s).setScale(2)
+          if(salary < 0.01) {
+            Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_hourly_salary_input"))))
+          } else if(salary > 9999999.99) {
+            Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
+          } else {
+            Right(salary)
+          }
+        } catch {
+          case _:Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_salary"))))
+        }
+
+      case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_hourly_salary_input"))))
+    }
+  }
+
+  def dailySalaryValidation(key: String, data:Map[String,String])(implicit messages: Messages) = {
+    Right(data.getOrElse(key,"")).right.flatMap {
+      case s if s.nonEmpty =>
+        try{
+          val salary = BigDecimal(s).setScale(2)
+          if(salary < 0.01) {
+            Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_daily_salary_input"))))
+          } else if(salary > 9999999.99) {
+            Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
+          } else {
+            Right(salary)
+          }
+        } catch {
+          case _:Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_salary"))))
+        }
+
+      case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_daily_salary_input"))))
+    }
+  }
+
 }
