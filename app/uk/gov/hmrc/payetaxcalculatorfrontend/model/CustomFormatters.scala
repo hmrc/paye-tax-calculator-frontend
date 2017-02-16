@@ -48,9 +48,9 @@ object CustomFormatters {
             }
           }
           catch {
-            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.need_number"))))
+            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_daily"))))
           }
-        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number"))))
+        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_daily"))))
       }
     }
 
@@ -72,9 +72,9 @@ object CustomFormatters {
             }
           }
           catch {
-            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.need_number"))))
+            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_hourly"))))
           }
-        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number"))))
+        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_hourly"))))
       }
     }
 
@@ -82,19 +82,24 @@ object CustomFormatters {
 
   }
 
-  def salaryValidation(salaryType:String): Formatter[BigDecimal] = new Formatter[BigDecimal] {
+  def salaryValidation(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
     override def bind(key: String, data: Map[String, String]) = {
       Right(data.getOrElse(key,"")).right.flatMap {
-        case s =>
-          val salary = BigDecimal(s.toInt)
-          if(salary < 0.01) {
-            Left(Seq(FormError(key, "The gross pay must be more than zero")))
-          } else if(salary > 9999999.99) {
-            Left(Seq(FormError(key, "Maximum value for gross pay is £9,999,999.99")))
-          } else {
-            Right(salary)
+        case s if s.nonEmpty =>
+          try{
+            val salary = BigDecimal(s).setScale(2)
+            if(salary < 0.01) {
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_salary_input"))))
+            } else if(salary > 9999999.99) {
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
+            } else {
+              Right(salary)
+            }
+          } catch {
+            case _:Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_salary"))))
           }
-        case _ => Left(Seq(FormError(key, "Please enter your " + s"$salaryType" + " gross pay")))
+
+        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_salary_input"))))
       }
     }
 

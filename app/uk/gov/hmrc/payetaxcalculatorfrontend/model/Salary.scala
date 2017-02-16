@@ -105,11 +105,11 @@ object Salary {
   def form(implicit messages: Messages) = Form(
     mapping(
       "salaryType" -> nonEmptyText,
-      s"amount-$YEARLY" -> mandatoryIf(isEqual("salaryType", YEARLY), of(salaryValidation(YEARLY))),
-      s"amount-$MONTHLY" -> mandatoryIf(isEqual("salaryType", MONTHLY), bigDecimal.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), _ > 0)),
-      s"amount-$WEEKLY" -> mandatoryIf(isEqual("salaryType", WEEKLY), bigDecimal.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), _ > 0)),
-      s"amount-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), bigDecimal.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), _ > 0)),
-      s"amount-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), bigDecimal.verifying(Messages("quick_calc.salary.question.error_less_than_zero"), _ > 0)),
+      s"amount-$YEARLY" -> mandatoryIf(isEqual("salaryType", YEARLY), of(salaryValidation)),
+      s"amount-$MONTHLY" -> mandatoryIf(isEqual("salaryType", MONTHLY), of(salaryValidation)),
+      s"amount-$WEEKLY" -> mandatoryIf(isEqual("salaryType", WEEKLY), of(salaryValidation)),
+      s"amount-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), of(salaryValidation)),
+      s"amount-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), of(salaryValidation)),
       s"howManyDaysAWeek-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), of(dayValidation)),
       s"howManyHoursAWeek-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), of(hoursValidation))
     )(formToSalary)(salaryToForm)

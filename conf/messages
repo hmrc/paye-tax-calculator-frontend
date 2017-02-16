@@ -101,14 +101,16 @@ quick_calc.salary.question.earn_a_day=How much do you earn a day?
 quick_calc.salary.question.days_a_week=How many days a week do you work?
 quick_calc.salary.question.earn_a_hour=How much do you earn a hour?
 quick_calc.salary.question.hours_a_week=How many hours a week do you work?
-quick_calc.salary.question.error_less_than_zero=The gross pay must be more than zero
 quick_calc.salary.question.error.number_of_days.less_than_zero=Number of Days cannot be less than 0
 quick_calc.salary.question.error.number_of_days.more_than_seven=Number of Days cannot be more than 7
 quick_calc.salary.question.error.number_of_hours.less_than_one=Hours per week must be at least 1
 quick_calc.salary.question.error.number_of_hours.more_than_168=Maximum hours per week is 168
-quick_calc.salary.question.error.need_number=Real number value expected
-quick_calc.salary.question.error.empty_number=Please Enter a number
-
+quick_calc.salary.question.error.empty_number_daily=Days per week must be a whole number
+quick_calc.salary.question.error.empty_number_hourly=Hours per week must be a whole number
+quick_calc.salary.question.error.invalid_salary=Please enter numbers and "." only
+quick_calc.salary.question.error.maximum_salary_input=Maximum value for gross pay is £9,999,999.99
+quick_calc.salary.question.error.minimum_salary_input=The gross pay must be more than zero
+quick_calc.salary.question.error.empty_salary_input=Please enter your gross pay
 
 quick_calc.over_state_pension_age.header=Are you over state pension age?
 quick_calc.over_state_pension_age.yes=Yes
