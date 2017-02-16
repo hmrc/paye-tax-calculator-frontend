@@ -95,7 +95,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val expectedErrorMessage = "Please check and re-enter your tax code"
+      val expectedErrorMessage = "The tax code you have entered is not valid - it must end with the letter L, ‘M, ‘N, or T"
       val expectedTableSize = 1 + aggregateListOnlyTaxCode.size // include header
 
       val actualTableSize = parseHtml.getElementsByTag("tr").size()
@@ -115,7 +115,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val expectedErrorMessage = "Please check and re-enter your tax code"
+      val expectedErrorMessage = "The tax code you have entered is not valid - it must end with the letter L, ‘M, ‘N, or T"
 
       val actualTableSize = parseHtml.getElementsByTag("tr").size()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()

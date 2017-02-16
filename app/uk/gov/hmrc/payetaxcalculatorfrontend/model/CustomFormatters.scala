@@ -98,7 +98,7 @@ object CustomFormatters {
       }
     }
 
-    override def unbind(key: String, value: BigDecimal): Map[String, String] = ???
+    override def unbind(key: String, value: BigDecimal): Map[String, String] = Map(key -> value.toString)
 
   }
 }
