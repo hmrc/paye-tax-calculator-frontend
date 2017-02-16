@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
-import play.api.data.{FormError}
+import play.api.data.FormError
 import play.api.data.format.Formatter
+import play.api.i18n.Messages
 
 object CustomFormatters {
 
@@ -32,38 +33,48 @@ object CustomFormatters {
     override def unbind(key: String, value: Boolean): Map[String, String] = Map(key -> value.toString)
   }
 
-  def dayValidation: Formatter[Int] = new Formatter[Int] {
+  def dayValidation(implicit messages: Messages): Formatter[Int] = new Formatter[Int] {
     override def bind(key: String, data: Map[String, String]) = {
       Right(data.getOrElse(key,"")).right.flatMap {
-        case s =>
-          val days = s.toInt
-          if(days < 0) {
-            Left(Seq(FormError(key, "Number of Days cannot be less than 0")))
-          } else if(days > 7) {
-            Left(Seq(FormError(key, "Number of Days cannot be more than 7 days")))
-          } else {
-            Right(days)
+        case s if s.nonEmpty =>
+          try {
+            val days = s.toInt
+            if(days < 0) {
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_days.less_than_zero"))))
+            } else if(days > 7) {
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_days.more_than_seven"))))
+            } else {
+              Right(days)
+            }
           }
-        case _ => Left(Seq(FormError(key, "Please Enter a number of Days")))
+          catch {
+            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.need_number"))))
+          }
+        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number"))))
       }
     }
 
     override def unbind(key: String, value: Int): Map[String, String] = Map(key -> value.toString)
   }
 
-  def hoursValidation: Formatter[Int] = new Formatter[Int] {
+  def hoursValidation(implicit messages: Messages): Formatter[Int] = new Formatter[Int] {
     override def bind(key: String, data: Map[String, String]) = {
       Right(data.getOrElse(key,"")).right.flatMap {
-        case s =>
-          val hours = s.toInt
-          if(hours < 1) {
-            Left(Seq(FormError(key, "Hours per week must be at least 1")))
-          } else if(hours > 168) {
-            Left(Seq(FormError(key, "Maximum hours per week is 168")))
-          } else {
-            Right(hours)
+        case s if s.nonEmpty  =>
+          try {
+            val hours = s.toInt
+            if(hours < 1) {
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.less_than_one"))))
+            } else if(hours > 168) {
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.more_than_168"))))
+            } else {
+              Right(hours)
+            }
           }
-        case _ => Left(Seq(FormError(key, "Hours per week must be at least 1")))
+          catch {
+            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.need_number"))))
+          }
+        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number"))))
       }
     }
 
