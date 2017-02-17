@@ -59,6 +59,21 @@ object QuickCalcCacheSetup {
   val expectedSalary = "£20000"
   val expectedSalaryType = "Per year"
 
+  val expectedFieldErrorMessage = "This field is required"
+  val expectedSuffixTaxCodeErrorMessage = "The tax code you have entered is not valid - it must end with the letter L, M, N, or T"
+  val expectedInvalidTaxCodeErrorMessage = "The tax code you have entered is not valid. A tax code is usually made up of several numbers and a letter, e.g. 117L or K497 or S117L or SK497"
+
+  val expectedEmptyErrorMessage = "Please enter numbers and \".\" only"
+  val expectedNegativeNumberErrorMessage = "The gross pay must be more than zero"
+  val expectedInvalidSalaryErrorMessage = "Please enter amount in pounds and pence e.g. 123.45"
+  val expectedMinHourlyRateErrorMessage = "Hourly rate must be at least 0.01"
+  val expectedMinHoursAWeekErrorMessage = "Hours per week must be at least 1"
+  val expectedMinDailyRateErrorMessage = "Daily rate must be at least 0.01"
+  val expectedMinDaysAWeekErrorMessage = "Days per week must be at least 1"
+  val expectedMaxHoursAWeekErrorMessage= "Maximum hours per week is 168"
+  val expectedMaxDaysAWeekErrorMessage = "Maximum days per week is 7"
+  val expectedMaxGrossPayErrorMessage = "Maximum value for gross pay is £9,999,999.99"
+  val expectedMaxHourlyRateErrorMessage = "Maximum value for hourly rate is £999,9999.99"
 
   val cacheEmpty = cache(None)
 

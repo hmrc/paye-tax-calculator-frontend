@@ -101,6 +101,28 @@ quick_calc.salary.question.earn_a_day=How much do you earn a day?
 quick_calc.salary.question.days_a_week=How many days a week do you work?
 quick_calc.salary.question.earn_a_hour=How much do you earn a hour?
 quick_calc.salary.question.hours_a_week=How many hours a week do you work?
+quick_calc.salary.question.error.number_of_days.less_than_zero=Days per week must be at least 1
+quick_calc.salary.question.error.number_of_days.more_than_seven=Maximum days per week is 7
+quick_calc.salary.question.error.number_of_hours.less_than_one=Hours per week must be at least 1
+quick_calc.salary.question.error.number_of_hours.more_than_168=Maximum hours per week is 168
+
+quick_calc.salary.question.error.invalid_number_daily=Days per week must be a whole number
+quick_calc.salary.question.error.empty_number_daily=Please enter hours worked
+
+quick_calc.salary.question.error.invalid_number_hourly=Hours per week must be a whole number
+quick_calc.salary.question.error.empty_number_hourly=Please enter hours worked
+quick_calc.salary.question.error.invalid_salary=Please enter amount in pounds and pence e.g. 123.45
+
+quick_calc.salary.question.error.maximum_salary_input=Maximum value for gross pay is £9,999,999.99
+quick_calc.salary.question.error.minimum_salary_input=The gross pay must be more than zero
+
+quick_calc.salary.question.error.empty_salary_input=Please enter your gross pay
+
+quick_calc.salary.question.error.empty_daily_salary_input=Please enter your daily rate
+quick_calc.salary.question.error.empty_hourly_salary_input=Please enter your hourly rate
+
+quick_calc.salary.question.error.minimum_hourly_salary_input=Hourly rate must be at least 0.01
+quick_calc.salary.question.error.minimum_daily_salary_input=Daily rate must be at least 0.01
 
 quick_calc.over_state_pension_age.header=Are you over state pension age?
 quick_calc.over_state_pension_age.yes=Yes
@@ -108,6 +130,7 @@ quick_calc.over_state_pension_age.no=No
 
 quick_calc.about_tax_code.header=Do you know your Tax Code?
 quick_calc.about_tax_code.has_tax_code=Enter your Tax Code
-quick_calc.about_tax_code.wrong_tax_code=Please check and re-enter your tax code
+quick_calc.about_tax_code.wrong_tax_code_suffix=The tax code you have entered is not valid - it must end with the letter L, M, N, or T
+quick_calc.about_tax_code.wrong_tax_code=The tax code you have entered is not valid. A tax code is usually made up of several numbers and a letter, e.g. 117L or K497 or S117L or SK497
 quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No

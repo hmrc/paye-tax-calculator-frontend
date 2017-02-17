@@ -39,10 +39,19 @@ object UserTaxCode extends TaxCalculatorHelper {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
       if (data.getOrElse(hasTaxCode, "false") == "true") {
         if (isValidTaxCode(data.getOrElse(taxCode, ""))) Right(Some(data.getOrElse(taxCode, "")))
-        else Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
+        else {
+          data.getOrElse(taxCode, "") match {
+            case code if code.isEmpty => Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
+            case code if code.nonEmpty => {
+              if (data.getOrElse(taxCode, "").charAt(0).isDigit) Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code_suffix"))))
+              else Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
+            }
+          }
+        }
       }
       else Right(Some(defaultTaxCode))
     }
+
     override def unbind(key: String, value: Option[String]): Map[String, String] = Map(key -> value.getOrElse(""))
   }
 
@@ -72,7 +81,8 @@ object UserTaxCode extends TaxCalculatorHelper {
     else {
       taxCode.value match {
         case Some(v) => if (v.hasTaxCode) "" else "hidden"
-        case _ => "hidden"}
+        case _ => "hidden"
+      }
     }
   }
 

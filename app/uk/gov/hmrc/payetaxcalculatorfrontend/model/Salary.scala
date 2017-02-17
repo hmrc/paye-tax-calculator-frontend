@@ -18,8 +18,10 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.i18n.Messages
 import play.api.libs.json._
 import uk.gov.voa.play.form.ConditionalMappings._
+import uk.gov.hmrc.payetaxcalculatorfrontend.model.CustomFormatters._
 
 
 sealed trait Salary
@@ -100,17 +102,33 @@ object Salary {
     }
   }
 
-  val form = Form(
+  def form(implicit messages: Messages) = Form(
     mapping(
       "salaryType" -> nonEmptyText,
-      s"amount-$YEARLY" -> mandatoryIf(isEqual("salaryType", YEARLY), bigDecimal),
-      s"amount-$MONTHLY" -> mandatoryIf(isEqual("salaryType", MONTHLY), bigDecimal),
-      s"amount-$WEEKLY" -> mandatoryIf(isEqual("salaryType", WEEKLY), bigDecimal),
-      s"amount-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), bigDecimal),
-      s"amount-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), bigDecimal),
-      s"howManyDaysAWeek-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), number),
-      s"howManyHoursAWeek-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), number)
+      s"amount-$YEARLY" -> mandatoryIf(isEqual("salaryType", YEARLY), of(salaryValidation(YEARLY))),
+      s"amount-$MONTHLY" -> mandatoryIf(isEqual("salaryType", MONTHLY), of(salaryValidation(MONTHLY))),
+      s"amount-$WEEKLY" -> mandatoryIf(isEqual("salaryType", WEEKLY), of(salaryValidation(WEEKLY))),
+      s"amount-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), of(salaryValidation(DAILY))),
+      s"amount-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), of(salaryValidation(HOURLY))),
+      s"howManyDaysAWeek-$DAILY" -> mandatoryIf(isEqual("salaryType", DAILY), of(dayValidation)),
+      s"howManyHoursAWeek-$HOURLY" -> mandatoryIf(isEqual("salaryType", HOURLY), of(hoursValidation))
     )(formToSalary)(salaryToForm)
   )
 
+
+
+  def dd(n:Int) = {
+    if (n < 1) false
+    else if (n > 7) false
+    else true
+  }
+
+  def cc(implicit messages: Messages, int: Int) = {
+    dd(int) match {
+      case false => "messages"
+      case _ => "messages111"
+
+    }
+
+  }
 }

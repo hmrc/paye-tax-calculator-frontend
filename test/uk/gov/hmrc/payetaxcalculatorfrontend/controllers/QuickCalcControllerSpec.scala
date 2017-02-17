@@ -32,16 +32,11 @@ import uk.gov.hmrc.play.test.UnitSpec
 class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuite {
 
   val appInjector = app.injector
-
   val csrfAddToken = appInjector.instanceOf[CSRFAddToken]
-
   implicit val materializer = appInjector.instanceOf[Materializer]
-
   implicit val request = FakeRequest()
     .withHeaders(HeaderNames.xSessionId -> "test")
-
   implicit val messages = Messages(Lang.defaultLang, appInjector.instanceOf[MessagesApi])
-
 
   "Redirect to Tax Code Form" should {
     "return 303" in {
@@ -95,14 +90,14 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val expectedErrorMessage = "Please check and re-enter your tax code"
+      val expectedErrorMessage = "The tax code you have entered is not valid - it must end with the letter L, ‘M, ‘N, or T"
       val expectedTableSize = 1 + aggregateListOnlyTaxCode.size // include header
 
       val actualTableSize = parseHtml.getElementsByTag("tr").size()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedErrorMessage
+      actualErrorMessage shouldBe expectedSuffixTaxCodeErrorMessage
       actualTableSize shouldBe expectedTableSize
     }
 
@@ -115,13 +110,30 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val expectedErrorMessage = "Please check and re-enter your tax code"
+      val expectedErrorMessage = "The tax code you have entered is not valid - it must end with the letter L, ‘M, ‘N, or T"
 
       val actualTableSize = parseHtml.getElementsByTag("tr").size()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedErrorMessage
+      actualErrorMessage shouldBe expectedSuffixTaxCodeErrorMessage
+      actualTableSize shouldBe 0
+    }
+
+    "return 400, empty list of aggregate data and an error message when user selects \"Yes\" but did not enter Tax code" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formTax = UserTaxCode.form.fill(UserTaxCode(true, None))
+      val action = await(csrfAddToken(controller.submitTaxCodeForm()))
+      val result = action(request.withFormUrlEncodedBody(formTax.data.toSeq: _*)).withSession(request.session + (SessionKeys.sessionId -> "test-tax"))
+      val status = result.header.status
+      val responseBody = contentAsString(result)
+      val parseHtml = Jsoup.parse(responseBody)
+
+      val actualTableSize = parseHtml.getElementsByTag("tr").size()
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualErrorMessage shouldBe expectedInvalidTaxCodeErrorMessage
       actualTableSize shouldBe 0
     }
 
@@ -239,9 +251,9 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
         .withSession(SessionKeys.sessionId -> "test-age"))
 
       val status = postResult.header.status
-      val parseHTML = Jsoup.parse(contentAsString(postResult))
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
       val expectedNumberOfRows = 1 + aggregateListOnlyTaxCode.size //Including header
-      val actualNumberOfRows = parseHTML.getElementsByTag("tr").size
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
 
       status shouldBe 400
       actualNumberOfRows shouldBe expectedNumberOfRows
@@ -264,7 +276,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       actualNumberOfRows shouldBe 0
     }
 
-    "return 303, with an answer \"No\" for not being State Pension Age saved on the current list of aggregate data without Salary and redirect to Salary Page" in {
+    "return 303, with an answer \"No\" saved on the current list of aggregate data without Salary and redirect to Salary Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val postAction = await(csrfAddToken(controller.submitAgeForm()))
@@ -300,7 +312,7 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       actualRedirectUri shouldBe expectedRedirectUri
     }
 
-    "return 303, with an answer \"No\" for being Over 65 saved on the current list of aggregate data which contains all answered questions and redirect to Salary Page" in {
+    "return 303, with an answer \"No\" saved on the current list of aggregate data of all answered questions and redirect to Salary Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeIsOverStatePensionAndSalary)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val postAction = await(csrfAddToken(controller.submitAgeForm()))
@@ -366,17 +378,20 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val formSalary = Salary.form
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val postResult = postAction(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
       val status = postResult.header.status
-      val parseHTML = Jsoup.parse(contentAsString(postResult))
-      val actualNumberOfRows = parseHTML.getElementsByTag("tr").size
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
 
       val expectedNumberOfRows = 1 + aggregateListOnlyTaxCodeAndStatePension.size //Including header
 
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
       status shouldBe 400
       actualNumberOfRows shouldBe expectedNumberOfRows
+      actualErrorMessage shouldBe expectedFieldErrorMessage
     }
 
     "return 400, with empty list of aggregate data and an error message for invalid Salary" in {
@@ -385,20 +400,201 @@ class QuickCalcControllerSpec() extends UnitSpec with Results with OneAppPerSuit
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
 
       val postResult = postAction(request
-        .withFormUrlEncodedBody(formSalary.data.toSeq:_*)
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
       val status = postResult.header.status
-      val parseHTML = Jsoup.parse(contentAsString(postResult))
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
 
-      val actualNumberOfRows = parseHTML.getElementsByTag("tr").size
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
       actualNumberOfRows shouldBe 0
-
+      actualErrorMessage shouldBe expectedFieldErrorMessage
     }
 
-    "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on the current list of aggregate data without State Pension answer and redirect to Summary Result Page" in {
+    "return 400 and error message when Salary submitted is \"9.999\" " in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form.fill(Yearly(9.999))
+      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = postResult.header.status
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedInvalidSalaryErrorMessage
+    }
+
+    "return 400 and error message when Salary submitted is \"-1\" " in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form.fill(Yearly(-1))
+      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = postResult.header.status
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedNegativeNumberErrorMessage
+    }
+
+    "return 400 and error message when Salary submitted is \"10,000,000.00\"" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form.fill(Yearly(10000000.00))
+      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = postResult.header.status
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedMaxGrossPayErrorMessage
+    }
+
+    "return 400 and error message when Hourly Salary submitted is -1" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form.fill(Hourly(0,1))
+      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = postResult.header.status
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedMinHourlyRateErrorMessage
+    }
+
+    "return 400 and error message when Daily Salary submitted is -1" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form.fill(Daily(0,1))
+      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = postResult.header.status
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedMinDailyRateErrorMessage
+    }
+
+    "return 400 and error message when Days in a Week is -1" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form.fill(Daily(1,-1))
+      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = postResult.header.status
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedMinDaysAWeekErrorMessage
+    }
+
+    "return 400 and error message when Hours in a Week is -1" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form.fill(Hourly(1,-1))
+      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = postResult.header.status
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedMinHoursAWeekErrorMessage
+    }
+
+    "return 400 and error message when Days in a Week is 8" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form.fill(Daily(1,8))
+      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = postResult.header.status
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedMaxDaysAWeekErrorMessage
+    }
+
+    "return 400 and error message when Hours in a Week is 169" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form.fill(Hourly(1,169))
+      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val postResult = postAction(request
+        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = postResult.header.status
+      val parseHtml = Jsoup.parse(contentAsString(postResult))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedMaxHoursAWeekErrorMessage
+    }
+
+    "return 303, with new Salary \"Yearly Salary £20000\" saved on the current list of aggregate data without State Pension answer and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formSalary = Salary.form.fill(Yearly(20000))
       val postAction = await(csrfAddToken(controller.submitSalaryForm()))
