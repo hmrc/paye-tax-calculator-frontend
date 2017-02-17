@@ -22,37 +22,40 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-class ShowTaxCodeGenerator extends AppUnitGenerator {
+class ShowAgeSpec extends AppUnitGenerator{
 
-  "Show Tax Code Form" should {
-    "return 200 and an empty list of aggregate data" in {
-
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+  "Show Age Form" should {
+    "return 200, with current list of aggregate data containing Tax Code: 1150L and \"YES\" is they are Over State Pension Age" in {
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeAndIsOverStatePension)
       val action = csrfAddToken(controller.showTaxCodeForm())
       val result = action.apply(request)
       val status = result.header.status
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      status shouldBe 200
-      parseHtml.getElementsByTag("tr").size shouldBe 0
-    }
-
-    "return 200 and a list of current aggregate data containing Tax Code: 1150L" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
-      val action = csrfAddToken(controller.showTaxCodeForm())
-      val result = action.apply(request)
-      val status = result.header.status
-      val responseBody = contentAsString(result)
-      val parseHtml = Jsoup.parse(responseBody)
-
-      val expectedNumberOfRows = 1 + aggregateListOnlyTaxCode.size //Including header
+      val expectedNumberOfRows = 1 + aggregateListOnlyTaxCodeAndStatePension.size //Including header
       val actualTaxCode = parseHtml.getElementsByTag("tr").get(1).getElementsByTag("span").get(0).text()
+      val actualAgeAnswer = parseHtml.getElementsByTag("tr").get(2).getElementsByTag("span").get(0).text()
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
 
       status shouldBe 200
       actualNumberOfRows shouldBe expectedNumberOfRows
       actualTaxCode shouldBe expectedTaxCode
+      actualAgeAnswer shouldBe expectedAgeAnswer
+    }
+
+    "return 200, with emtpy list of aggregate data" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val action = csrfAddToken(controller.showAgeForm())
+      val result = action.apply(request)
+      val status = result.header.status
+      val responseBody = contentAsString(result)
+      val parseHtml = Jsoup.parse(responseBody)
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+
+      status shouldBe 200
+      actualNumberOfRows shouldBe 0
     }
   }
 

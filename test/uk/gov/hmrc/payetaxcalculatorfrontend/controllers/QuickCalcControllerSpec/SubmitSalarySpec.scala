@@ -24,7 +24,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.play.http.SessionKeys
 
-class SubmitSalaryGenerator extends AppUnitGenerator {
+class SubmitSalarySpec extends AppUnitGenerator {
 
   "Submit Salary Form" should {
     "return 400, with current list of aggregate data and an error message for invalid Salary" in {

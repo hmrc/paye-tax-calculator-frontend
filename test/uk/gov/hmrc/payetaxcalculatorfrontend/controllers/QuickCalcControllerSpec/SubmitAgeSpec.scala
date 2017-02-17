@@ -24,7 +24,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.play.http.SessionKeys
 
-class SubmitAgeGenerator extends AppUnitGenerator {
+class SubmitAgeSpec extends AppUnitGenerator {
 
   "Submit Age Form" should {
     "return 400 for invalid form answer and current list of aggregate data" in {

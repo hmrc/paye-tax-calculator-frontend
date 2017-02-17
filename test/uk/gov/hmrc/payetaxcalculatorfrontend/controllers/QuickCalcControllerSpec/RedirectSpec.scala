@@ -21,15 +21,19 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-class RedirectGenerator extends AppUnitGenerator {
+class RedirectSpec extends AppUnitGenerator {
 
   "Redirect to Tax Code Form" should {
     "return 303" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val result = controller.redirectToTaxCodeForm().apply(request)
       val status = result.header.status
-      val responseBody = contentAsString(result)
+
+      val actualRedirect = redirectLocation(result).get
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/tax-code"
+
       status shouldBe 303
+      actualRedirect shouldBe expectedRedirect
     }
   }
 

@@ -22,7 +22,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-class ShowResultGenerator extends AppUnitGenerator {
+class ShowResultSpec extends AppUnitGenerator {
 
   "Show Result Page" should {
     "return 200, with current list of aggregate which contains all answers from previous questions" in {
@@ -58,14 +58,11 @@ class ShowResultGenerator extends AppUnitGenerator {
       val action = csrfAddToken(controller.showResult())
       val result = action.apply(request)
       val status = result.header.status
-      val responseBody = contentAsString(result)
-      val parseHtml = Jsoup.parse(responseBody)
 
       val actualRedirect = redirectLocation(result).get
-
       val expectedRedirect = "/paye-tax-calculator/quick-calculation/tax-code"
-
       status shouldBe 303
+      actualRedirect shouldBe expectedRedirect
     }
 
     "return 303, with current list of aggregate data and redirect to Age Form if no answer is provided for \"Are you Over 65?\"" in {
@@ -73,13 +70,9 @@ class ShowResultGenerator extends AppUnitGenerator {
       val action = csrfAddToken(controller.showResult())
       val result = action.apply(request)
       val status = result.header.status
-      val responseBody = contentAsString(result)
-      val parseHtml = Jsoup.parse(responseBody)
 
       val actualRedirect = redirectLocation(result).get
-
       val expectedRedirect = "/paye-tax-calculator/quick-calculation/age"
-
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
@@ -89,12 +82,9 @@ class ShowResultGenerator extends AppUnitGenerator {
       val action = csrfAddToken(controller.showResult())
       val result = action.apply(request)
       val status = result.header.status
-      val responseBody = contentAsString(result)
-      val parseHtml = Jsoup.parse(responseBody)
 
       val actualRedirect = redirectLocation(result).get
       val expectedRedirect = "/paye-tax-calculator/quick-calculation/salary"
-
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
@@ -104,13 +94,9 @@ class ShowResultGenerator extends AppUnitGenerator {
       val action = csrfAddToken(controller.showResult())
       val result = action.apply(request)
       val status = result.header.status
-      val responseBody = contentAsString(result)
-      val parseHtml = Jsoup.parse(responseBody)
 
       val expectedRedirect = "/paye-tax-calculator/quick-calculation/tax-code"
-
       val actualRedirect = redirectLocation(result).get
-
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }

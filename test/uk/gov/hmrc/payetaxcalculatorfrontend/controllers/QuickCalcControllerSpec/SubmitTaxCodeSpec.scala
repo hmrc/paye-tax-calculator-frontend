@@ -24,7 +24,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.play.http.SessionKeys
 
-class SubmitTaxCodeGenerator extends AppUnitGenerator {
+class SubmitTaxCodeSpec extends AppUnitGenerator {
 
   "Submit Tax Code Form" should {
     "return 400, current list of aggregate data and an error message for invalid Tax Code" in {
@@ -86,13 +86,13 @@ class SubmitTaxCodeGenerator extends AppUnitGenerator {
     "return 400 when Tax Code Form submission is empty" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form
-      val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))
+      val action = await(csrfAddToken(controller.submitTaxCodeForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formTax.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-tax")
 
-      val status = postResult.header.status
+      val status = result.header.status
       status shouldBe 400
     }
 

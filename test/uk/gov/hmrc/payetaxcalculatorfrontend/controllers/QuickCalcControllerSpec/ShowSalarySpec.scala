@@ -22,29 +22,34 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-class ShowAgeGenerator extends AppUnitGenerator{
+class ShowSalarySpec extends AppUnitGenerator {
 
-  "Show Age Form" should {
-    "return 200, with current list of aggregate data containing Tax Code: 1150L and \"YES\" is they are Over State Pension Age" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeAndIsOverStatePension)
+  "Show Salary Form" should {
+    "return 200, with current list of aggregate data containing Tax Code: 1150L, \"YES\" for is not Over65, 20000 a Year for Salary" in {
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeIsOverStatePensionAndSalary)
       val action = csrfAddToken(controller.showTaxCodeForm())
       val result = action.apply(request)
       val status = result.header.status
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val expectedNumberOfRows = 1 + aggregateListOnlyTaxCodeAndStatePension.size //Including header
+      val expectedNumberOfRows = 1 + aggregateListTaxCodeStatePensionAndSalary.size //Including header
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualTaxCode = parseHtml.getElementsByTag("tr").get(1).getElementsByTag("span").get(0).text()
       val actualAgeAnswer = parseHtml.getElementsByTag("tr").get(2).getElementsByTag("span").get(0).text()
-      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualSalary = parseHtml.getElementsByTag("tr").get(3).getElementsByTag("span").get(0).text()
+      val actualySalaryType = parseHtml.getElementsByTag("tr").get(3).getElementsByTag("span").get(1).text()
 
       status shouldBe 200
       actualNumberOfRows shouldBe expectedNumberOfRows
       actualTaxCode shouldBe expectedTaxCode
       actualAgeAnswer shouldBe expectedAgeAnswer
+      actualSalary shouldBe expectedSalary
+      actualySalaryType shouldBe expectedSalaryType
     }
 
-    "return 200, with emtpy list of aggregate data" in {
+    "return 200, with empty list of aggregate data" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val action = csrfAddToken(controller.showAgeForm())
       val result = action.apply(request)
