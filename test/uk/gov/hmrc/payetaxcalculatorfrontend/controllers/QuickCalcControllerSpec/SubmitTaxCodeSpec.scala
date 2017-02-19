@@ -99,14 +99,14 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     "return 303, when Tax Code Form submission, current list of aggregate and redirect to Is Over State Pension Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeAndIsOverStatePension)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("K425")))
-      val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))
+      val action = await(csrfAddToken(controller.submitTaxCodeForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formTax.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-tax")
 
-      val status = postResult.header.status
-      val actualRedirectUri = redirectLocation(postResult).get
+      val status = result.header.status
+      val actualRedirectUri = redirectLocation(result).get
 
       val expectedRedirectUri = "/paye-tax-calculator/quick-calculation/age"
 
@@ -117,14 +117,14 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     "return 303, when Tax Code Form submission, new list of aggregate and redirect to Is Over State Pension Page" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("K425")))
-      val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))
+      val action = await(csrfAddToken(controller.submitTaxCodeForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formTax.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-tax")
 
-      val status = postResult.header.status
-      val actualRedirectUri = redirectLocation(postResult).get
+      val status = result.header.status
+      val actualRedirectUri = redirectLocation(result).get
 
       val expectedRedirectUri = "/paye-tax-calculator/quick-calculation/age"
 
@@ -135,14 +135,14 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     "return 303, when Tax Code form submission, the complete list of aggregate data and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeIsOverStatePensionAndSalary)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("K425")))
-      val postAction = await(csrfAddToken(controller.submitTaxCodeForm()))
+      val action = await(csrfAddToken(controller.submitTaxCodeForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formTax.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-tax")
 
-      val status = postResult.header.status
-      val actualRedirectUri = redirectLocation(postResult).get
+      val status = result.header.status
+      val actualRedirectUri = redirectLocation(result).get
 
       val expectedRedirectUri = "/paye-tax-calculator/quick-calculation/summary-result"
 

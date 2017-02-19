@@ -30,13 +30,13 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400, with current list of aggregate data and an error message for invalid Salary" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeAndIsOverStatePension)
       val formSalary = Salary.form
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
+      val result = action(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
 
       val expectedNumberOfRows = 1 + aggregateListOnlyTaxCodeAndStatePension.size //Including header
@@ -51,14 +51,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400, with empty list of aggregate data and an error message for invalid Salary" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -71,14 +71,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400 and error message when Salary submitted is \"9.999\" " in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Yearly(9.999))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -91,14 +91,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400 and error message when Salary submitted is \"-1\" " in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Yearly(-1))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -111,14 +111,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400 and error message when Salary submitted is \"10,000,000.00\"" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Yearly(10000000.00))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -131,14 +131,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400 and error message when Hourly Salary submitted is -1" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Hourly(0,1))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -151,14 +151,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400 and error message when Daily Salary submitted is -1" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Daily(0,1))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -171,14 +171,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400 and error message when Days in a Week is -1" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Daily(1,-1))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -191,14 +191,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400 and error message when Hours in a Week is -1" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Hourly(1,-1))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -211,14 +211,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400 and error message when Days in a Week is 8" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Daily(1,8))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -275,14 +275,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 400 and error message when Hours in a Week is 169" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Hourly(1,169))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
@@ -295,15 +295,15 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 303, with new Salary \"Yearly Salary £20000\" saved on the current list of aggregate data without State Pension answer and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formSalary = Salary.form.fill(Yearly(20000))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
+      val result = action(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
+      val status = result.header.status
 
       val expectedRedirect = "/paye-tax-calculator/quick-calculation/summary-result"
-      val actualRedirect = redirectLocation(postResult).get
+      val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
@@ -312,15 +312,15 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 303, with new Salary data e.g. \"Yearly Salary £20000\" saved on a new list of aggregate data and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Yearly(20000))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
 
-      val postResult = postAction(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
+      val result = action(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
+      val status = result.header.status
 
       val expectedRedirect = "/paye-tax-calculator/quick-calculation/summary-result"
-      val actualRedirect = redirectLocation(postResult).get
+      val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
@@ -329,14 +329,14 @@ class SubmitSalarySpec extends AppUnitGenerator {
     "return 303, with new Salary data \"Yearly Salary £20000\" saved on the complete list of aggregate data and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeIsOverStatePensionAndSalary)
       val formSalary = Salary.form.fill(Yearly(20000))
-      val postAction = await(csrfAddToken(controller.submitSalaryForm()))
-      val postResult = postAction(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
+      val result = action(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
-      val status = postResult.header.status
+      val status = result.header.status
 
       val expectedRedirect = "/paye-tax-calculator/quick-calculation/summary-result"
-      val actualRedirect = redirectLocation(postResult).get
+      val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect

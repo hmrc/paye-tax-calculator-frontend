@@ -30,14 +30,14 @@ class SubmitAgeSpec extends AppUnitGenerator {
     "return 400 for invalid form answer and current list of aggregate data" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formAge = OverStatePensionAge.form
-      val postAction = await(csrfAddToken(controller.submitAgeForm()))
+      val action = await(csrfAddToken(controller.submitAgeForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-age"))
 
-      val status = postResult.header.status
-      val parseHtml = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
       val expectedNumberOfRows = 1 + aggregateListOnlyTaxCode.size //Including header
       val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
 
@@ -48,14 +48,14 @@ class SubmitAgeSpec extends AppUnitGenerator {
     "return 400 for invalid form answer and empty list of aggregate data" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formAge = OverStatePensionAge.form
-      val postAction = await(csrfAddToken(controller.submitAgeForm()))
+      val action = await(csrfAddToken(controller.submitAgeForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-age")
 
-      val status = postResult.header.status
-      val parseHTML = Jsoup.parse(contentAsString(postResult))
+      val status = result.header.status
+      val parseHTML = Jsoup.parse(contentAsString(result))
       val actualNumberOfRows = parseHTML.getElementsByTag("tr").size
 
       status shouldBe 400
@@ -65,14 +65,14 @@ class SubmitAgeSpec extends AppUnitGenerator {
     "return 303, with an answer \"No\" saved on the current list of aggregate data without Salary and redirect to Salary Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
-      val postAction = await(csrfAddToken(controller.submitAgeForm()))
+      val action = await(csrfAddToken(controller.submitAgeForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-age")
 
-      val status = postResult.header.status
-      val actualRedirectUri = redirectLocation(postResult).get
+      val status = result.header.status
+      val actualRedirectUri = redirectLocation(result).get
 
       val expectedRedirectUri = "/paye-tax-calculator/quick-calculation/salary"
 
@@ -83,14 +83,14 @@ class SubmitAgeSpec extends AppUnitGenerator {
     "return 303, with an answer \"Yes\" for being Over 65 saved on a new list of aggregate data and redirect Salary Page" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(true))
-      val postAction = await(csrfAddToken(controller.submitAgeForm()))
+      val action = await(csrfAddToken(controller.submitAgeForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-age")
 
-      val status = postResult.header.status
-      val actualRedirectUri = redirectLocation(postResult).get
+      val status = result.header.status
+      val actualRedirectUri = redirectLocation(result).get
 
       val expectedRedirectUri = "/paye-tax-calculator/quick-calculation/salary"
 
@@ -98,17 +98,17 @@ class SubmitAgeSpec extends AppUnitGenerator {
       actualRedirectUri shouldBe expectedRedirectUri
     }
 
-    "return 303, with an answer \"No\" saved on the current list of aggregate data of all answered questions and redirect to Salary Page" in {
+    "return 303, with an answer \"No\" saved on the current list of aggregate data of all answered questions and redirect to Summary-Result" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeIsOverStatePensionAndSalary)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
-      val postAction = await(csrfAddToken(controller.submitAgeForm()))
+      val action = await(csrfAddToken(controller.submitAgeForm()))
 
-      val postResult = postAction(request
+      val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-age")
 
-      val status = postResult.header.status
-      val actualRedirectUri = redirectLocation(postResult).get
+      val status = result.header.status
+      val actualRedirectUri = redirectLocation(result).get
 
       val expectedRedirectUri = "/paye-tax-calculator/quick-calculation/summary-result"
 
