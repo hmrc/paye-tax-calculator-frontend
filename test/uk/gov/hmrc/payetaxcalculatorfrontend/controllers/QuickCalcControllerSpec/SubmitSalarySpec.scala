@@ -228,6 +228,50 @@ class SubmitSalarySpec extends AppUnitGenerator {
       actualErrorMessage shouldBe expectedMaxDaysAWeekErrorMessage
     }
 
+    "return 400 and error message when Days in a Week is 1.5" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val daily = Map("salaryType"->"daily", "amount-daily" -> "1", "howManyDaysAWeek-daily" -> "1.5")
+
+      val result = action(request
+        .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedWholeNumberDailyErrorMessage
+    }
+
+    "return 400 and error message when Hours in a Week is 1.5" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.form
+      val action = await(csrfAddToken(controller.submitSalaryForm()))
+
+      val hours = Map("salaryType"->"hourly", "amount-hourly" -> "1", "howManyHoursAWeek-hourly" -> "1.5")
+
+      val result = action(request
+        .withFormUrlEncodedBody(formSalary.bind(hours).data.toSeq:_*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
+
+      val actualNumberOfRows = parseHtml.getElementsByTag("tr").size
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualNumberOfRows shouldBe 0
+      actualErrorMessage shouldBe expectedWholeNumberHourlyErrorMessage
+    }
+
     "return 400 and error message when Hours in a Week is 169" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.form.fill(Hourly(1,169))
