@@ -70,6 +70,8 @@ object QuickCalcCacheSetup {
   val expectedMinHoursAWeekErrorMessage = "Hours per week must be at least 1"
   val expectedMinDailyRateErrorMessage = "Daily rate must be at least 0.01"
   val expectedMinDaysAWeekErrorMessage = "Days per week must be at least 1"
+  val expectedWholeNumberDailyErrorMessage = "Days per week must be a whole number"
+  val expectedWholeNumberHourlyErrorMessage ="Hours per week must be a whole number"
   val expectedMaxHoursAWeekErrorMessage= "Maximum hours per week is 168"
   val expectedMaxDaysAWeekErrorMessage = "Maximum days per week is 7"
   val expectedMaxGrossPayErrorMessage = "Maximum value for gross pay is £9,999,999.99"
