@@ -21,7 +21,8 @@ object FrontendBuild extends Build with MicroService {
     "uk.gov.hmrc" %% "paye-estimator_sjs0.6" % "1.5.0",
     "uk.gov.hmrc" %% "http-caching-client" % "6.1.0",
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0",
-    "uk.gov.hmrc" %% "url-builder" % "2.0.0"
+    "uk.gov.hmrc" %% "url-builder" % "2.0.0",
+    "uk.gov.hmrc" %% "tax-year" % "0.3.0"
   )
 
 
