@@ -43,8 +43,6 @@ trait TaxRefData {
   def defaultPersonalAllowance(implicit taxYear: TaxYear): Int =
     config.getInt(s"${taxYear.currentYear}.personalAllowance")
 
-  // todo add tests for 🡫
-
   def taperedAllowanceLimit(implicit taxYear: TaxYear): Int =
     config.getInt(s"${taxYear.currentYear}.taperedAllowanceLimit")
 
