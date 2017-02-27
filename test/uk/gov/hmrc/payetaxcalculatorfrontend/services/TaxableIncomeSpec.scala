@@ -23,9 +23,9 @@ import uk.gov.hmrc.play.test.UnitSpec
 class TaxableIncomeSpec extends UnitSpec with Matchers with PropertyChecks {
 
   "Taxable income" should {
-    "be equal to earnings if earnings < default personal allowance" in {
+    "be 0 if earnings < default personal allowance" in {
       val earnings = defaultPersonalAllowance - 10
-      calcTaxableIncome(earnings) shouldBe earnings
+      calcTaxableIncome(earnings) shouldBe 0
     }
     "be equal to earnings - personal allowance if earnings <= tapered allowance limit" in {
       val earnings =

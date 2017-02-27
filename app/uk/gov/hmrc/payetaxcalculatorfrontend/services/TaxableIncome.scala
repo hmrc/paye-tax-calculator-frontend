@@ -19,19 +19,10 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.services
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.BigDecimalUtils.max
 
 object TaxableIncome {
-  def calculate(taperedAllowanceLimit: Int, defaultPersonalAllowance: Int)
-               (earnings: BigDecimal): BigDecimal = {
-    def adjustedPersonalAllowance(earnings: BigDecimal): BigDecimal = {
-      val taperedAllowanceDeduction = max((earnings - taperedAllowanceLimit) / 2, 0)
-      max(defaultPersonalAllowance - taperedAllowanceDeduction, 0)
-    }
-
-    val a = adjustedPersonalAllowance(earnings)
-    if (earnings >= a) {
-      earnings - a
-    } else {
-      earnings
-    }
+  def calculate(taperedAllowanceLimit: Int, defaultPersonalAllowance: Int)(earnings: BigDecimal): BigDecimal = {
+    val taperedAllowanceDeduction = max((earnings - taperedAllowanceLimit) / 2, 0)
+    val adjustedPersonalAllowance = max(defaultPersonalAllowance - taperedAllowanceDeduction, 0)
+    max(earnings - adjustedPersonalAllowance, 0)
   }
 }
 

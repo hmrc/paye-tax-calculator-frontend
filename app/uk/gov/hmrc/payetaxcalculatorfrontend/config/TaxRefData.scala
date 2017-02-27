@@ -24,25 +24,38 @@ case object Scotland extends Region
 case object EnglandWalesNI extends Region
 
 trait TaxRefData {
-  def basicRate(implicit region: Region, taxYear: TaxYear): Int
-  def higherRateUk(implicit region: Region, taxYear: TaxYear): Int
-  def additionalRate(implicit region: Region, taxYear: TaxYear): Int
+  protected val config = ConfigFactory.load("tax-reference-data")
 
-  def personalAllowance(implicit taxYear: TaxYear): Int
-}
+  def basicRate(implicit region: Region, taxYear: TaxYear): BigDecimal = asPercentage {
+    config.getInt(s"${ taxYear.currentYear }.rates.$region.basic")
+  }
 
-class TaxRefDataImpl extends TaxRefData {
-  private val config = ConfigFactory.load("tax-reference-data")
+  def higherRate(implicit region: Region, taxYear: TaxYear): BigDecimal = asPercentage {
+    config.getInt(s"${ taxYear.currentYear }.rates.$region.higher")
+  }
 
-  def basicRate(implicit region: Region, taxYear: TaxYear): Int =
-    config.getInt(s"${taxYear.currentYear}.rates.$region.basic")
+  def additionalRate(implicit region: Region, taxYear: TaxYear): BigDecimal = asPercentage {
+    config.getInt(s"${ taxYear.currentYear }.rates.$region.additional")
+  }
 
-  def higherRateUk(implicit region: Region, taxYear: TaxYear): Int =
-    config.getInt(s"${taxYear.currentYear}.rates.$region.higher")
+  private def asPercentage(i: Int): BigDecimal = BigDecimal(i) / 100
 
-  def additionalRate(implicit region: Region, taxYear: TaxYear): Int =
-    config.getInt(s"${taxYear.currentYear}.rates.$region.additional")
-
-  def personalAllowance(implicit taxYear: TaxYear): Int =
+  def defaultPersonalAllowance(implicit taxYear: TaxYear): Int =
     config.getInt(s"${taxYear.currentYear}.personalAllowance")
+
+  // todo add tests for 🡫
+
+  def taperedAllowanceLimit(implicit taxYear: TaxYear): Int =
+    config.getInt(s"${taxYear.currentYear}.taperedAllowanceLimit")
+
+  def basicRateBand(implicit region: Region, taxYear: TaxYear): Int =
+    config.getInt(s"${taxYear.currentYear}.bands.$region.basic")
+
+  def higherRateBand(implicit region: Region, taxYear: TaxYear): Int =
+    additionalRateBand - basicRateBand
+
+  def additionalRateBand(implicit region: Region, taxYear: TaxYear): Int =
+    config.getInt(s"${taxYear.currentYear}.bands.$region.additional")
+
+
 }

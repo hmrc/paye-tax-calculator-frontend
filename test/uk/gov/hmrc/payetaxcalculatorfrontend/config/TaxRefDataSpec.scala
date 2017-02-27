@@ -23,7 +23,7 @@ import uk.gov.hmrc.time.TaxYear
 class TaxRefDataSpec extends UnitSpec with Matchers {
   "Config for 2017/2018" should {
 
-    val taxRefData = new TaxRefDataImpl()
+    val taxRefData = new TaxRefData { }
     val taxYear2017 = TaxYear(2017)
 
     "include basic rate for Scotland" in {
@@ -33,10 +33,10 @@ class TaxRefDataSpec extends UnitSpec with Matchers {
       noException shouldBe thrownBy { taxRefData.basicRate(EnglandWalesNI, taxYear2017) }
     }
     "include higher rate for Scotland" in {
-      noException shouldBe thrownBy { taxRefData.higherRateUk(Scotland, taxYear2017) }
+      noException shouldBe thrownBy { taxRefData.higherRate(Scotland, taxYear2017) }
     }
     "include higher rate for England, Wales, NI" in {
-      noException shouldBe thrownBy { taxRefData.higherRateUk(EnglandWalesNI, taxYear2017) }
+      noException shouldBe thrownBy { taxRefData.higherRate(EnglandWalesNI, taxYear2017) }
     }
     "include additional rate for Scotland" in {
       noException shouldBe thrownBy { taxRefData.additionalRate(Scotland, taxYear2017) }
@@ -45,7 +45,7 @@ class TaxRefDataSpec extends UnitSpec with Matchers {
       noException shouldBe thrownBy { taxRefData.additionalRate(EnglandWalesNI, taxYear2017) }
     }
     "include personal allowance" in {
-      noException shouldBe thrownBy { taxRefData.personalAllowance(taxYear2017) }
+      noException shouldBe thrownBy { taxRefData.defaultPersonalAllowance(taxYear2017) }
     }
   }
 }
