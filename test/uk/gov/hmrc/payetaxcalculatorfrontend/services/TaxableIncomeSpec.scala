@@ -47,10 +47,10 @@ class TaxableIncomeSpec extends UnitSpec with Matchers with PropertyChecks {
         Table(
           "earnings"      -> "expected taxable income",
           //==========================================
-          lim + 10        -> ((lim + 10) - dpa + (10 / 2)),
-          lim + dpa       -> ((lim + dpa) - dpa + (dpa / 2)),
-          lim + 2 * dpa   -> ((lim + 2 * dpa) - dpa + ( 2 * dpa / 2)),
-          lim + 3 * dpa   -> ((lim + 3 * dpa) - dpa + dpa) // reducing allowance only up to default personal allowance
+          lim + 10        -> ((lim + 10) - (dpa - (10 / 2))),
+          lim + dpa       -> ((lim + dpa) - (dpa - (dpa / 2))),
+          lim + 2 * dpa   -> ((lim + 2 * dpa) - (dpa - ( 2 * dpa / 2))), // allowance reduced to 0
+          lim + 3 * dpa   -> ((lim + 3 * dpa) - (dpa - ( 2 * dpa / 2))) // allowance doesn't become negative
         )
 
       forAll(data) { (earnings, expectedTaxableIncome) =>

@@ -30,54 +30,54 @@ class DetailedCalcEngineSpec extends FreeSpec with Matchers {
     "be 0 for earnings < personal allowance" in {
       implicit val region = EnglandWalesNI
       val earnings = Engine.defaultPersonalAllowance - 100
-      Engine.calculateTax(earnings) shouldBe 0
+      Engine.calculateTax(earnings).totalIncomeTax shouldBe 0
     }
     "include basic rate element for earnings > personal allowance && < (basic rate band + allowance)" - {
       "for Scotland" in {
         implicit val region = Scotland
         val earnings = 32000
-        Engine.calculateTax(earnings) shouldBe 4098.20
+        Engine.calculateTax(earnings).totalIncomeTax shouldBe 4098.20
       }
       "for England, Wales, NI" in {
         implicit val region = EnglandWalesNI
         val earnings = 32000
-        Engine.calculateTax(earnings) shouldBe 4098.20
+        Engine.calculateTax(earnings).totalIncomeTax shouldBe 4098.20
       }
     }
     "include higher rate element for earnings > (basic rate band + allowance) && < additional rate" - {
       "for Scotland" in {
         implicit val region = Scotland
         val earnings = 80000
-        Engine.calculateTax(earnings) shouldBe 21010.40
+        Engine.calculateTax(earnings).totalIncomeTax shouldBe 21010.40
       }
       "for England, Wales, NI" in {
         implicit val region = EnglandWalesNI
         val earnings = 80000
-        Engine.calculateTax(earnings) shouldBe 20696.40
+        Engine.calculateTax(earnings).totalIncomeTax shouldBe 20696.40
       }
     }
     "consider diminishing personal allowance if earnings > tapered allowance limit" - {
       "for Scotland" in {
         implicit val region = Scotland
         val earnings = 135000
-        Engine.calculateTax(earnings) shouldBe 47614
+        Engine.calculateTax(earnings).totalIncomeTax shouldBe 47614
       }
       "for England, Wales, NI" in {
         implicit val region = EnglandWalesNI
         val earnings = 135000
-        Engine.calculateTax(earnings) shouldBe 47300
+        Engine.calculateTax(earnings).totalIncomeTax shouldBe 47300
       }
     }
     "include additional rate element for earnings > additional rate band" - {
       "for Scotland" in {
         implicit val region = Scotland
         val earnings = 160000
-        Engine.calculateTax(earnings) shouldBe 58114
+        Engine.calculateTax(earnings).totalIncomeTax shouldBe 58114
       }
       "for England, Wales, NI" in {
         implicit val region = EnglandWalesNI
         val earnings = 160000
-        Engine.calculateTax(earnings) shouldBe 57800
+        Engine.calculateTax(earnings).totalIncomeTax shouldBe 57800
       }
     }
   }

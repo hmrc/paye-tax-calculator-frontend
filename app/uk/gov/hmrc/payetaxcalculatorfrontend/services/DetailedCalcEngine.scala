@@ -32,12 +32,19 @@ trait DetailedCalcEngine extends TaxRefData {
   def additionalRateElement(taxableIncome: BigDecimal)(implicit region: Region, taxYear: TaxYear): BigDecimal =
     max(taxableIncome - basicRateBand - higherRateBand, 0)
 
-  def calculateTax(earnings: BigDecimal)(implicit region: Region, taxYear: TaxYear): BigDecimal = {
+  def calculateTax(earnings: BigDecimal)(implicit region: Region, taxYear: TaxYear): CalculationResult = {
     val taxableIncome = TaxableIncome.calculate(taperedAllowanceLimit, defaultPersonalAllowance)(earnings)
-    val bre = basicRateElement(taxableIncome)
-    val hre = higherRateElement(taxableIncome)
-    val are = additionalRateElement(taxableIncome)
 
-    (bre * basicRate) + (hre * higherRate) + (are * additionalRate)
+    CalculationResult(
+      basicRateTax = basicRateElement(taxableIncome) * basicRate,
+      higherRateTax = higherRateElement(taxableIncome) * higherRate,
+      additionalRateTax = additionalRateElement(taxableIncome) * additionalRate
+    )
   }
+}
+
+case class CalculationResult(basicRateTax: BigDecimal,
+                             higherRateTax: BigDecimal,
+                             additionalRateTax: BigDecimal) {
+  def totalIncomeTax = basicRateTax + higherRateTax + additionalRateTax
 }

@@ -55,5 +55,4 @@ trait TaxRefData {
   def additionalRateBand(implicit region: Region, taxYear: TaxYear): Int =
     config.getInt(s"${taxYear.currentYear}.bands.$region.additional")
 
-
 }
