@@ -16,13 +16,17 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.services
 
+import org.scalacheck.Gen
 import org.scalatest.{FreeSpec, Matchers}
 import uk.gov.hmrc.payetaxcalculatorfrontend.config.{EnglandWalesNI, Scotland}
 import uk.gov.hmrc.time.TaxYear
+import org.scalacheck.Gen.choose
+import org.scalatest.prop.PropertyChecks
 
-class DetailedCalcEngineSpec extends FreeSpec with Matchers {
+class DetailedCalcEngineSpec extends FreeSpec with Matchers with PropertyChecks {
 
   object Engine extends DetailedCalcEngine
+  import Engine.calculateTax
   implicit val taxYear2017 = TaxYear(2017)
 
   // values for this spec reflect AC in: https://jira.tools.tax.service.gov.uk/browse/PAYEC-82
@@ -30,55 +34,78 @@ class DetailedCalcEngineSpec extends FreeSpec with Matchers {
     "be 0 for earnings < personal allowance" in {
       implicit val region = EnglandWalesNI
       val earnings = Engine.defaultPersonalAllowance - 100
-      Engine.calculateTax(earnings).totalIncomeTax shouldBe 0
+      calculateTax(earnings).totalIncomeTax shouldBe 0
     }
     "include basic rate element for earnings > personal allowance && < (basic rate band + allowance)" - {
       "for Scotland" in {
         implicit val region = Scotland
         val earnings = 32000
-        Engine.calculateTax(earnings).totalIncomeTax shouldBe 4098.20
+        calculateTax(earnings).totalIncomeTax shouldBe 4098.20
       }
       "for England, Wales, NI" in {
         implicit val region = EnglandWalesNI
         val earnings = 32000
-        Engine.calculateTax(earnings).totalIncomeTax shouldBe 4098.20
+        calculateTax(earnings).totalIncomeTax shouldBe 4098.20
       }
     }
     "include higher rate element for earnings > (basic rate band + allowance) && < additional rate" - {
       "for Scotland" in {
         implicit val region = Scotland
         val earnings = 80000
-        Engine.calculateTax(earnings).totalIncomeTax shouldBe 21010.40
+        calculateTax(earnings).totalIncomeTax shouldBe 21010.40
       }
       "for England, Wales, NI" in {
         implicit val region = EnglandWalesNI
         val earnings = 80000
-        Engine.calculateTax(earnings).totalIncomeTax shouldBe 20696.40
+        calculateTax(earnings).totalIncomeTax shouldBe 20696.40
       }
     }
     "consider diminishing personal allowance if earnings > tapered allowance limit" - {
       "for Scotland" in {
         implicit val region = Scotland
         val earnings = 135000
-        Engine.calculateTax(earnings).totalIncomeTax shouldBe 47614
+        calculateTax(earnings).totalIncomeTax shouldBe 47614
       }
       "for England, Wales, NI" in {
         implicit val region = EnglandWalesNI
         val earnings = 135000
-        Engine.calculateTax(earnings).totalIncomeTax shouldBe 47300
+        calculateTax(earnings).totalIncomeTax shouldBe 47300
       }
     }
     "include additional rate element for earnings > additional rate band" - {
       "for Scotland" in {
         implicit val region = Scotland
         val earnings = 160000
-        Engine.calculateTax(earnings).totalIncomeTax shouldBe 58114
+        calculateTax(earnings).totalIncomeTax shouldBe 58114
       }
       "for England, Wales, NI" in {
         implicit val region = EnglandWalesNI
         val earnings = 160000
-        Engine.calculateTax(earnings).totalIncomeTax shouldBe 57800
+        calculateTax(earnings).totalIncomeTax shouldBe 57800
       }
     }
   }
+
+  val positiveEarningsGen: Gen[BigDecimal] = {
+    val veryLargeEarnings = 999999999L
+    choose(0, veryLargeEarnings).map(BigDecimal.valueOf)
+  }
+
+  "For multiple jobs" - {
+    "earnings should be summed and calculated as if it was a single source of income" - {
+      "for Scotland" in {
+        implicit val region = Scotland
+        forAll(Gen.listOf(positiveEarningsGen)) { multipleEarnings =>
+          calculateTax(multipleEarnings: _*) shouldBe calculateTax(multipleEarnings.sum)
+        }
+      }
+      "for England, Wales, NI" in {
+        implicit val region = EnglandWalesNI
+        forAll(Gen.listOf(positiveEarningsGen)) { multipleEarnings =>
+          calculateTax(multipleEarnings: _*) shouldBe calculateTax(multipleEarnings.sum)
+        }
+      }
+    }
+  }
+
 }
