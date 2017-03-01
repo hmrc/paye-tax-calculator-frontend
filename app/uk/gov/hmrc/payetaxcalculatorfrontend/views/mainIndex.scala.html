@@ -36,7 +36,8 @@
   <p>
     @Link.toInternalPage(
       url = taxCalcRoutes.WelshLanguageController.switchToLanguage(Messages("index.language_version.target_language")).url,
-      value = Some(Messages("index.language_version.click_here"))
+      value = Some(Messages("index.language_version.click_here")),
+      cssClasses = Some("welshSwitch")
     ).toHtml
     @Messages("index.language_version.paragraph")
   </p>
