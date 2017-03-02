@@ -28,11 +28,6 @@
     @if(scriptElem.isDefined){@scriptElem}
 }
 
-@scriptElemAgg = {
-    @scriptElem
-    @scriptElems
-}
-
 @govuk_wrapper(appConfig = FrontendAppConfig,
                title = title,
                mainClass = mainClass,
@@ -40,6 +35,6 @@
                sidebar = sidebar,
                contentHeader = contentHeader,
                mainContent = layouts.article(mainContent),
-               scriptElem = Some(scriptElemAgg),
+               scriptElem = Some(scriptElems),
                serviceInfoContent = serviceInfoContent
 )
