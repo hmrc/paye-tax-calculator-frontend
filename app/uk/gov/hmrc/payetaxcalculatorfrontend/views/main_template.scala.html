@@ -23,6 +23,10 @@
     }
 }
 
+@scriptElems = {
+    <script src="@routes.Assets.at("javascripts/ga-events-emit.js")" type="text/javascript"></script>
+    @if(scriptElem.isDefined){@scriptElem}
+}
 
 @govuk_wrapper(appConfig = FrontendAppConfig,
                title = title,
@@ -31,6 +35,6 @@
                sidebar = sidebar,
                contentHeader = contentHeader,
                mainContent = layouts.article(mainContent),
-               serviceInfoContent = serviceInfoContent,
-               scriptElem = scriptElem
+               scriptElem = Some(scriptElems),
+               serviceInfoContent = serviceInfoContent
 )
