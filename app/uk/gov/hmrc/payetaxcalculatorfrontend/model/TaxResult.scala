@@ -55,6 +55,7 @@ object TaxResult {
       case s: Weekly => "weekly"
       case _ => ""
     }
+    case _ => ""
   }
 
   /**
@@ -68,6 +69,7 @@ object TaxResult {
       case s: Hourly => s.howManyHoursAWeek
       case _ => -1
     }
+    case _ => -1
   }
 
   def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput) = {
