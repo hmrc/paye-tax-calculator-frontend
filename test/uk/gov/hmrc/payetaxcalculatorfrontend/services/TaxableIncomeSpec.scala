@@ -39,6 +39,8 @@ class TaxableIncomeSpec extends UnitSpec with Matchers with PropertyChecks {
         calcTaxableIncome(e) shouldBe e - defaultPersonalAllowance
       }
     }
+
+
     // for every £2 above limit personal allowance decreases by £1
     "be equal to earnings - allowance where allowance diminishes above limit" in {
       val lim = taperedAllowanceLimit
@@ -57,10 +59,24 @@ class TaxableIncomeSpec extends UnitSpec with Matchers with PropertyChecks {
         calcTaxableIncome(earnings) shouldBe expectedTaxableIncome
       }
     }
+    def taperedAllowanceLimit = 1000
+    def defaultPersonalAllowance = 100
+    def calcTaxableIncome = TaxableIncome.calculate(taperedAllowanceLimit, defaultPersonalAllowance) _
   }
+  "Taxable income examples should pass for" should {
+    def taperedAllowanceLimit = 100000
+    def defaultPersonalAllowance = 11509
 
-  def calcTaxableIncome = TaxableIncome.calculate(taperedAllowanceLimit, defaultPersonalAllowance) _
-  def taperedAllowanceLimit = 1000
-  def defaultPersonalAllowance = 100
+    //https://jira.tools.tax.service.gov.uk/browse/PAYEC-82
+    "User Information1.0" in {
+      TaxableIncome.calculate(taperedAllowanceLimit, defaultPersonalAllowance)(32000) shouldBe 20491
+    }
+    "User Information3.0" in {
+      TaxableIncome.calculate(taperedAllowanceLimit, defaultPersonalAllowance)(135000) shouldBe 135000
+    }
+    "Extra test for partial personal allowance" in {
+      TaxableIncome.calculate(taperedAllowanceLimit, defaultPersonalAllowance)(111000) shouldBe 104991
+    }
+  }
 
 }
