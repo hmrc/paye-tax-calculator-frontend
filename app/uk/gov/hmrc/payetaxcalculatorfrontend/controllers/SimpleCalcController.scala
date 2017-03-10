@@ -23,8 +23,6 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.salary
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.Salary
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-
-
 import scala.concurrent.Future
 
 @Singleton
