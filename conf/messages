@@ -48,10 +48,8 @@ index.language_version.paragraph=to use the Welsh language version of the online
 index.language_version.target_language=welsh
 
 continue=Continue
-
 label.click_here=Click here
 
-label.click_here=Click here
 
 quick_calc.title=HMRC Quick calculator
 
@@ -134,3 +132,16 @@ quick_calc.about_tax_code.wrong_tax_code_suffix=The tax code you have entered is
 quick_calc.about_tax_code.wrong_tax_code=The tax code you have entered is not valid. A tax code is usually made up of several numbers and a letter, e.g. 117L or K497 or S117L or SK497
 quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
+
+#Simple Calc
+simple_calc.salary.header = How much do you earn before tax?
+simple_calc.salary.info = This information will help us to give you the most accurate income tax results. Use the figure before tax or National Insurance are deducted - for example, £7.20 an hour or £26,500 a year
+
+#Both Calc
+calc.salary.enter_salary = Enter the amount you earn:
+calc.salary.select_option_salary = Select the option the amount refers to:
+calc.salary.yearly = Yearly
+calc.salary.monthly = Monthly
+calc.salary.weekly = Weekly
+calc.salary.daily = Daily
+calc.salary.hourly = Hourly

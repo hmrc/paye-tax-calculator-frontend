@@ -20,12 +20,21 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
-import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.hours_a_week
 import play.api.mvc.{Action, Request, Result}
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.salary
+import uk.gov.hmrc.payetaxcalculatorfrontend.model.Salary
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+
+
+import scala.concurrent.Future
 
 @Singleton
 class SimpleCalcController @Inject() (override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
+
+  def showSalary() = ActionWithSessionId.async { implicit request =>
+    Future.successful(Ok(salary(Salary.form)))
+  }
 
   def hoursAWeek() = Action { implicit request =>
     Ok(hours_a_week())

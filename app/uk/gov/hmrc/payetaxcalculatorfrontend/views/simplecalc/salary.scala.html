@@ -1,0 +1,60 @@
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+@import play.api.i18n._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.salary_radio_box
+@import uk.gov.hmrc.payetaxcalculatorfrontend.model.Salary
+@import views.html.helper._
+
+@(form: Form[Salary])(implicit request: Request[_], messages: Messages)
+
+@radioField = @{ form("salaryType") }
+@radioElements = @{ FieldElements(radioField.id, radioField, null, Map.empty, messages) }
+
+
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+
+  <div class="grid-layout--stacked">
+
+    <div class="grid-layout__column grid-layout__column--2-3">
+
+      <header class="page-header">
+        <h1>@Messages("simple_calc.salary.header")</h1>
+      </header>
+      <p>@Messages("simple_calc.salary.info")</p>
+
+      <div class="form-group">
+        <fieldset class="form-field-group">
+          <label>
+          @Messages("calc.salary.enter_salary")
+          </label>
+          £ <input type="text">
+        </fieldset>
+
+      </div>
+
+      <div class="form-group">
+        <label>
+        @Messages("calc.salary.select_option_salary")
+        </label>
+
+        <fieldset>
+          @radioElements.errors.map{ error => <span class="error-notification">@Messages(error)</span> }
+          @salary_radio_box(radioElements, Messages("calc.salary.yearly"), "yearly")
+          @salary_radio_box(radioElements, Messages("calc.salary.monthly"), "monthly")
+          @salary_radio_box(radioElements, Messages("calc.salary.weekly"), "weekly")
+          @salary_radio_box(radioElements, Messages("calc.salary.daily"), "daily")
+          @salary_radio_box(radioElements, Messages("calc.salary.hourly"), "hourly")
+
+        </fieldset>
+
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="button" value="@Messages("continue")">
+      </div>
+      <a href="">Back</a>
+
+    </div>
+
+  </div>
+
+}
