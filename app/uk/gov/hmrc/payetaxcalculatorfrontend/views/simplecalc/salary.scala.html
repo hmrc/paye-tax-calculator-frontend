@@ -2,6 +2,7 @@
 @import play.api.i18n._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.salary_radio_box
 @import uk.gov.hmrc.payetaxcalculatorfrontend.model.Salary
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 @import views.html.helper._
 
 @(form: Form[Salary])(implicit request: Request[_], messages: Messages)
@@ -51,7 +52,7 @@
       <div class="form-group">
         <input type="submit" class="button" value="@Messages("continue")">
       </div>
-      <a href="">Back</a>
+      <a href="@controllers.routes.IndexController.index()">Back</a>
 
     </div>
 
