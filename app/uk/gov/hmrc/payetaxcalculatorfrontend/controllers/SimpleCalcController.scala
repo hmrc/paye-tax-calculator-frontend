@@ -31,7 +31,7 @@ import scala.concurrent.Future
 @Singleton
 class SimpleCalcController @Inject()(override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
 
-  def showSalary() = ActionWithSessionId.async { implicit request =>
+  def showSalaryForm() = ActionWithSessionId.async { implicit request =>
     Future.successful(Ok(salary(Salary.form)))
   }
 

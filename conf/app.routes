@@ -19,7 +19,7 @@ GET         /quick-calculation/summary-result        uk.gov.hmrc.payetaxcalculat
 GET         /language/:lang                          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.WelshLanguageController.switchToLanguage(lang: String)
 
 # SimpleCalc Routes
-GET         /simple-calculation/salary               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.showSalary()
+GET         /simple-calculation/salary               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.showSalaryForm()
 
 POST        /simple-calculation/salary               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.submitSalaryAmount()
 
