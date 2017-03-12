@@ -130,10 +130,6 @@ object Salary {
     )(Hours.apply)(Hours.unapply)
   )
 
-//  def formDaily(implicit messages: Messages) = Form(
-//    s"howManyDaysAWeek-$DAILY" -> of(dayValidation)
-//  )
-
   def checkUserSelection(fieldElements: FieldElements, frequency: String): String = {
     if(fieldElements.field.value.contains(frequency)){
       "checked"
