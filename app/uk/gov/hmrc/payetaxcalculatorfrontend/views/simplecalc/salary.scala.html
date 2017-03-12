@@ -1,17 +1,28 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import play.api.i18n._
-@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.salary_radio_box
-@import uk.gov.hmrc.payetaxcalculatorfrontend.model.Salary
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.salary_radio_box
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.salary_amount_input
+@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.Salary
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 @import views.html.helper._
+@import uk.gov.hmrc.play.views.html._
 
 @(form: Form[Salary])(implicit request: Request[_], messages: Messages)
 
-@radioField = @{ form("salaryType") }
-@radioElements = @{ FieldElements(radioField.id, radioField, null, Map.empty, messages) }
+@radioField = @{
+  form("salaryType")
+}
 
+@radioElements = @{
+  FieldElements(radioField.id, radioField, null, Map.empty, messages)
+}
 
-@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+@scriptToLinkRadioToTextBox = {
+  <script src='@routes.Assets.at("javascripts/salary_amount.js")' type="text/javascript"></script>
+}
+
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width"), scriptElem = Some(scriptToLinkRadioToTextBox)) {
+
 
   <div class="grid-layout--stacked">
 
@@ -22,38 +33,41 @@
       </header>
       <p>@Messages("simple_calc.salary.info")</p>
 
-      <div class="form-group">
-        <fieldset class="form-field-group">
+      @helpers.form(action = controllers.routes.SimpleCalcController.submitSalaryAmount()) {
+        @helper.CSRF.formField
+
+        <div class="form-group">
+          <fieldset class="form-field-group">
+            <label>
+            @Messages("calc.salary.enter_salary")
+            </label>
+            @salary_amount_input(form("amount-salary"))
+          </fieldset>
+
+        </div>
+
+        <div class="form-group">
           <label>
-          @Messages("calc.salary.enter_salary")
+          @Messages("calc.salary.select_option_salary")
           </label>
-          £ <input type="text">
-        </fieldset>
 
-      </div>
+          <fieldset>
+            @radioElements.errors.map { error => <span class="error-notification">@Messages(error)</span> }
+            @salary_radio_box(radioElements, Messages("calc.salary.yearly"), "yearly")
+            @salary_radio_box(radioElements, Messages("calc.salary.monthly"), "monthly")
+            @salary_radio_box(radioElements, Messages("calc.salary.weekly"), "weekly")
+            @salary_radio_box(radioElements, Messages("calc.salary.daily"), "daily")
+            @salary_radio_box(radioElements, Messages("calc.salary.hourly"), "hourly")
 
-      <div class="form-group">
-        <label>
-        @Messages("calc.salary.select_option_salary")
-        </label>
+          </fieldset>
 
-        <fieldset>
-          @radioElements.errors.map{ error => <span class="error-notification">@Messages(error)</span> }
-          @salary_radio_box(radioElements, Messages("calc.salary.yearly"), "yearly")
-          @salary_radio_box(radioElements, Messages("calc.salary.monthly"), "monthly")
-          @salary_radio_box(radioElements, Messages("calc.salary.weekly"), "weekly")
-          @salary_radio_box(radioElements, Messages("calc.salary.daily"), "daily")
-          @salary_radio_box(radioElements, Messages("calc.salary.hourly"), "hourly")
+        </div>
 
-        </fieldset>
-
-      </div>
-
-      <div class="form-group">
-        <input type="submit" class="button" value="@Messages("continue")">
-      </div>
+        <div class="form-group">
+          <input type="submit" class="button" value="@Messages("continue")">
+        </div>
+      }
       <a href="@controllers.routes.IndexController.index()">Back</a>
-
     </div>
 
   </div>

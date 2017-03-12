@@ -1,0 +1,24 @@
+@import play.api.i18n._
+@import views.html.helper._
+
+@(amountField: Field)(implicit messages: Messages)
+
+@elementsFor(f: Field) = @{
+  FieldElements(f.id, f, null, Map.empty, messages)
+}
+
+<div id="parent-@{
+  amountField.id
+}">
+  <label class="@if(elementsFor(amountField).hasErrors) {form-field--error}" for="@amountField.name">
+    @elementsFor(amountField).errors.map { error => <span class="error-notification"> @Messages(error) </span> }
+    <div class="inline">
+      £ <input id="@amountField.id"
+      type="text"
+      class="form-control--block"
+      name="@amountField.name"
+      value="@amountField.value"
+      />
+    </div>
+  </label>
+</div>

@@ -1,7 +1,12 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import play.api.i18n._
+@import views.html.helper._
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
-@()(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.Hours
+
+@(hoursForm: Form[Hours])(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
   <div class="grid-layout grid-layout--stacked">
@@ -11,18 +16,22 @@
     </header>
     <p>If you don't know, an approximate number is fine</p>
 
-    <div class="form-group" style="width: 6%; display: inline-block">
-      <input type="text" id="hoursAWeek" name="hoursAWeek" maxlength="3" size="3">
-    </div>
+    @helpers.form(action = controllers.routes.SimpleCalcController.submitHoursAWeek()) {
+      @helper.CSRF.formField
+      <div class="form-group" style="width: 6%;
+        display: inline-block">
+        <input type="text" id="howManyHoursAWeek-hourly" name="howManyHoursAWeek-hourly" maxlength="3" size="3">
+      </div>
 
-    <div style="width: 20%; display: inline-block">
-      <label>hours a week</label>
-    </div>
+      <div style="width: 20%;
+        display: inline-block">
+        <label>hours a week</label>
+      </div>
 
-    <div class="form-group">
-      <input type="submit" class="button" value="Continue">
-    </div>
-
+      <div class="form-group">
+        <input type="submit" class="button" value="Continue">
+      </div>
+    }
     <div>
       <a href="">back</a>
     </div>
