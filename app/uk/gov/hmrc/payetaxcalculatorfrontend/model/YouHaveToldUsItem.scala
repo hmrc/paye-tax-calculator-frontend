@@ -33,7 +33,7 @@ object YouHaveToldUs {
       val label = Messages("quick_calc.you_have_told_us.about_tax_code.label")
       val idSuffix = "tax-code"
       val url = routes.QuickCalcController.showTaxCodeForm().url
-      YouHaveToldUsItem(t.taxCode.getOrElse(UserTaxCode.defaultTaxCode), label, url, idSuffix)
+      YouHaveToldUsItem(t.taxCode.getOrElse(UserTaxCode.DEFAULT_TAX_CODE), label, url, idSuffix)
     }
   }
 
