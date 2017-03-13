@@ -27,9 +27,9 @@ case class SimpleCalcAggregateInput(salary: Option[Salary],
 
   def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] = {
     List(
-      salary.map { YouHaveToldUs(_ ) },
-      isOverStatePensionAge.map { YouHaveToldUs(_) },
-      taxCode.map { YouHaveToldUs(_) }
+//      salary.map { YouHaveToldUs(_ ) },
+//      isOverStatePensionAge.map { YouHaveToldUs(_) },
+//      taxCode.map { YouHaveToldUs(_) }
     ).flatten
   }
 

@@ -21,8 +21,6 @@
 
       <br>
 
-
-
       <p class="heading-medium">@Messages("quick_calc.salary.question.how_much_you_earn")</p>
 
       @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.SimpleCalcController.submitSalaryAmount) {
@@ -31,14 +29,12 @@
         <div class="form-group">
 
           <fieldset class="form-field-group js-toggle"
-          id="hasTaxCode"
           data-trigger="js-toggle-trigger">
 
-            <label>
-              @if(form.hasErrors){
+            <label class="form-field-group form-field--error panel-indent">
+              @if(form("value").hasErrors){
                 <div class="error-notification">
-                @form.errors
-                @form.h
+                @form("value").errors.head.message
                 </div>
               }
               <span>£</span>
