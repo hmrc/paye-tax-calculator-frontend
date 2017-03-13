@@ -28,6 +28,8 @@ case class Days(value: BigDecimal, howManyAWeek: Int)
 object Salary {
 
   implicit val format = Json.format[Salary]
+  implicit val hoursFormat = Json.format[Hours]
+  implicit val daysFormat = Json.format[Days]
 
   def salaryBaseForm(implicit messages: Messages) = Form(
     mapping(

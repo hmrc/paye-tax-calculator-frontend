@@ -16,17 +16,19 @@
     </header>
     <p>If you don't know, an approximate number is fine</p>
 
-    @helpers.form(action = controllers.routes.SimpleCalcController.submitHoursAWeek(valueInPence)) {
+    @helper.form(action = controllers.routes.SimpleCalcController.submitHoursAWeek(valueInPence)) {
       @helper.CSRF.formField
       <div class="form-group" style="width: 6%;
         display: inline-block">
-        <input type="text" id="howManyHoursAWeek-hourly" name="howManyHoursAWeek-hourly" maxlength="3" size="3">
+        <input type="text" id="howManyAWeek"  name="howManyAWeek" maxlength="3" size="3">
       </div>
 
       <div style="width: 20%;
         display: inline-block">
         <label>hours a week</label>
       </div>
+
+      <input type="hidden" name="value" value=@valueInPence>
 
       <div class="form-group">
         <input type="submit" class="button" value="Continue">

@@ -110,15 +110,14 @@ class SimpleCalcController @Inject()(override val messagesApi: MessagesApi,
         case Some(aggregate) => BadRequest(hours_a_week(valueInPence, formWithErrors, aggregate.youHaveToldUsItems))
         case None => BadRequest(hours_a_week(valueInPence, formWithErrors, Nil))
       },
-      hours => //cache.fetchAndGetEntry.flatMap {
-//        case Some(aggregate) =>
-//          val updatedAggregate = aggregate.copy(Salary = Some(userAge))
-//          cache.save(updatedAggregate).map { _ => Redirect(routes.SimpleCalcController.showAgeForm())}
-//        case None => cache.save(SimpleCalcAggregateInput.newInstance.copy(isOverStatePensionAge = Some(userAge))).map {
-//          _ =>  Redirect(routes.SimpleCalcController.showAgeForm())
-//        }
-        Future.successful(Redirect(routes.IndexController.index()))
-      //}
+      hours => cache.fetchAndGetEntry.flatMap {
+        case Some(aggregate) =>
+          val updatedAggregate = aggregate.copy(salary = Some(Salary(valueInPence, "hourly")))
+          cache.save(updatedAggregate).map { _ => Redirect(routes.SimpleCalcController.showAgeForm())}
+        case None => cache.save(SimpleCalcAggregateInput.newInstance.copy(salary = Some(Salary(valueInPence, "hourly")))).map {
+          _ =>  Redirect(routes.SimpleCalcController.showAgeForm())
+        }
+      }
     )
   }
 
@@ -132,12 +131,18 @@ class SimpleCalcController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def submitDaysAWeek(valueInPence: Int) = ActionWithSessionId.async { implicit request =>
-    Salary.salaryInHoursForm.bindFromRequest.fold(
-      formWithErrors => {
-        Future.successful(Redirect(routes.IndexController.index()))
+    Salary.salaryInDaysForm.bindFromRequest.fold(
+      formWithErrors => cache.fetchAndGetEntry.map {
+        case Some(aggregate) => BadRequest(days_a_week(valueInPence, formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(days_a_week(valueInPence, formWithErrors, Nil))
       },
-      days => {
-        Future.successful(Redirect(routes.IndexController.index()))
+      days => cache.fetchAndGetEntry.flatMap {
+        case Some(aggregate) =>
+          val updatedAggregate = aggregate.copy(salary = Some(Salary(valueInPence, "daily")))
+          cache.save(updatedAggregate).map { _ => Redirect(routes.SimpleCalcController.showAgeForm())}
+        case None => cache.save(SimpleCalcAggregateInput.newInstance.copy(salary = Some(Salary(valueInPence, "daily")))).map {
+          _ =>  Redirect(routes.SimpleCalcController.showAgeForm())
+        }
       }
     )
   }
