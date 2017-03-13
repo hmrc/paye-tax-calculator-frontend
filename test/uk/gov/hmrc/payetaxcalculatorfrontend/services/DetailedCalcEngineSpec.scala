@@ -106,6 +106,36 @@ class DetailedCalcEngineSpec extends FreeSpec with Matchers with PropertyChecks 
         }
       }
     }
-  }
+    val job1Earnings = 6000
+    val job2Earnings = 10000
+    val job3Earnings = 80000
+    val job4Earnings = 15000
+    //https://jira.tools.tax.service.gov.uk/browse/PAYEC-83
+    "pass the examples for English/Welsh" - {
+      implicit val region = EnglandWalesNI
 
+      "2) done when total income tax can be calculated for job1 & job2 only" in {
+        calculateTax(job1Earnings, job2Earnings).totalIncomeTax shouldBe 898.20
+      }
+      "3) done when total income tax can be calculated for job1 & job2 & job3 only" in {
+        calculateTax(job1Earnings, job2Earnings, job3Earnings).totalIncomeTax shouldBe 27096.40
+      }
+      "4) done when total income tax can be calculated for job1 & job2 & job3 & job4 only" in {
+        calculateTax(job1Earnings, job2Earnings, job3Earnings, job4Earnings).totalIncomeTax shouldBe 35296.40
+      }
+    }
+    "pass the examples for Scottish" - {
+      implicit val region = Scotland
+
+      "2) done when total income tax can be calculated for job1 & job2 only" in {
+        calculateTax(job1Earnings, job2Earnings).totalIncomeTax shouldBe 898.20
+      }
+      "3) done when total income tax can be calculated for job1 & job2 & job3 only" in {
+        calculateTax(job1Earnings, job2Earnings, job3Earnings).totalIncomeTax shouldBe 27410.40
+      }
+      "4) done when total income tax can be calculated for job1 & job2 & job3 & job4 only" in {
+        calculateTax(job1Earnings, job2Earnings, job3Earnings, job4Earnings).totalIncomeTax shouldBe 35610.40
+      }
+    }
+  }
 }
