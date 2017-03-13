@@ -4,9 +4,9 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
-@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.{Hours, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.{Days, YouHaveToldUsItem}
 
-@(valueInPence:Int, hoursForm: Form[Hours], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@(valueInPence:Int, hoursForm: Form[Days], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
   <div class="grid-layout grid-layout--stacked">

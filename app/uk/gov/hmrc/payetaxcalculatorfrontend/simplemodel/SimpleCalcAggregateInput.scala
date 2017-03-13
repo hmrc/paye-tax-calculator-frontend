@@ -16,20 +16,28 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel
 
-import play.api.data.Form
-import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.CustomFormatters._
 
-case class OverStatePensionAge(value: Boolean) extends AnyVal
+case class SimpleCalcAggregateInput(salary: Option[Salary],
+                                   isOverStatePensionAge: Option[OverStatePensionAge],
+                                   taxCode: Option[UserTaxCode]){
 
-object OverStatePensionAge {
+  def allQuestionsAnswered: Boolean = List(salary, isOverStatePensionAge, taxCode).forall(_.isDefined)
 
-  implicit val format = Json.format[OverStatePensionAge]
-  def form(implicit messages: Messages) = Form(
-    mapping(
-      "overStatePensionAge" -> of(requiredBooleanFormatter)
-    )(OverStatePensionAge.apply)(OverStatePensionAge.unapply))
+  def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] = {
+    List(
+      salary.map { YouHaveToldUs(_ ) },
+      isOverStatePensionAge.map { YouHaveToldUs(_) },
+      taxCode.map { YouHaveToldUs(_) }
+    ).flatten
+  }
+
 }
+
+object SimpleCalcAggregateInput {
+  def newInstance = SimpleCalcAggregateInput(None, None, None)
+  implicit val format = Json.format[SimpleCalcAggregateInput]
+}
+
 

@@ -85,13 +85,24 @@ quick_calc.result.tabLabels.year=Year
 quick_calc.result.tabLabels.month=Month
 quick_calc.result.tabLabels.week=Week
 
-quick_calc.salary.header=Your gross salary
-quick_calc.salary.year=Yearly
-quick_calc.salary.month=Monthly
-quick_calc.salary.week=Weekly
-quick_calc.salary.day=Daily
-quick_calc.salary.hour=Hourly
-quick_calc.salary.question.How_you_paid=How are you paid?
+#quick_calc.salary.header=Your gross salary
+#quick_calc.salary.year=Yearly
+#quick_calc.salary.month=Monthly
+#quick_calc.salary.week=Weekly
+#quick_calc.salary.day=Daily
+#quick_calc.salary.hour=Hourly
+#quick_calc.salary.question.How_you_paid=How are you paid?
+
+quick_calc.salary.header=How much do you earn before tax?
+quick_calc.salary.description=This information will help us to give you the most accurate income tax results. Use the figure before tax or National Insurance are deducted - for example, £7.20 and hour or £26,500 a year.
+quick_calc.salary.yearly=a year
+quick_calc.salary.monthly=a month
+quick_calc.salary.weekly=a week
+quick_calc.salary.daily=a day
+quick_calc.salary.hourly=an hour
+quick_calc.salary.question.how_much_you_earn=Enter the amount you earn
+quick_calc.salary.question.how_much_you_earn.period_selection=Select the option the amount refers to
+
 quick_calc.salary.question.earn_a_year=How much do you earn a year?
 quick_calc.salary.question.earn_a_month=How much do you earn a month?
 quick_calc.salary.question.earn_a_week=How much do you earn a week?

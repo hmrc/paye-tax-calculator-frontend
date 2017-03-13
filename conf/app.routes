@@ -19,13 +19,19 @@ GET         /quick-calculation/summary-result        uk.gov.hmrc.payetaxcalculat
 GET         /language/:lang                          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.WelshLanguageController.switchToLanguage(lang: String)
 
 # SimpleCalc Routes
-GET         /simple-calculation/salary               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.showSalaryForm()
 
-POST        /simple-calculation/salary               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.submitSalaryAmount()
 
-GET         /simple-calculation/salary/hourly        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.showHoursAWeek()
+GET         /simple-calculation/salary               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.showSalaryForm
+POST        /simple-calculation/salary               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.submitSalaryAmount
 
-POST        /simple-calculation/salary/hourly        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.submitHoursAWeek()
+GET         /simple-calculation/salary/hourly/:value        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.showHoursAWeek(value: Int)
+POST        /simple-calculation/salary/hourly/:value        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.submitHoursAWeek(value: Int)
+
+GET         /simple-calculation/salary/daily/:value          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.showDaysAWeek(value: Int)
+POST        /simple-calculation/salary/daily/:value         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.submitDaysAWeek(value: Int)
+
+GET         /simple-calculation/age                   uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.showAgeForm
+POST        /simple-calculation/age                   uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.submitAgeForm
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                            controllers.Assets.at(path="/public", file)

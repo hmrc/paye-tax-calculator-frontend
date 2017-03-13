@@ -20,48 +20,123 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.hours_a_week
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.{age, days_a_week, hours_a_week, salary}
 import play.api.mvc._
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.salary
+import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.Salary
+import uk.gov.hmrc.payetaxcalculatorfrontend.services.SimpleCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 import scala.concurrent.Future
 
 @Singleton
-class SimpleCalcController @Inject()(override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
+class SimpleCalcController @Inject()(override val messagesApi: MessagesApi,
+                                     cache: SimpleCalcCache) extends FrontendController with I18nSupport {
 
   def showSalaryForm() = ActionWithSessionId.async { implicit request =>
-    Future.successful(Ok(salary(Salary.form)))
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        val form = aggregate.salary.map(Salary.salaryBaseForm.fill).getOrElse(Salary.salaryBaseForm)
+        Ok(salary(form, aggregate.youHaveToldUsItems))
+      case None =>
+        Ok(salary(Salary.salaryBaseForm, Nil))
+    }
   }
 
   def submitSalaryAmount() = ActionWithSessionId.async { implicit request =>
-
-    Salary.form.bindFromRequest.fold(
-      formWithErrors => {
-        Future.successful(BadRequest(salary(formWithErrors)))
+    Salary.salaryBaseForm.bindFromRequest.fold(
+      formWithErrors => cache.fetchAndGetEntry.map {
+        case Some(aggregate) => BadRequest(salary(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(salary(formWithErrors, Nil))
       },
-      salaryAmount => `salaryAmount` match {
-        case salaryAmount: DailyAmount =>
-          Future.successful(Redirect(routes.IndexController.index()))
-        case salaryAmount: HourlyAmount =>
-          Future.successful(Redirect(routes.SimpleCalcController.showHoursAWeek()))
-        case _ =>
-          Future.successful(Redirect(routes.IndexController.index()))
+      salaryAmount => cache.fetchAndGetEntry.flatMap {
+        case Some(aggregate) => {
+          val updatedAggregate = aggregate.copy(salary = Some(salaryAmount))
+          `salaryAmount`.period match {
+            case "daily" =>
+              cache.save(updatedAggregate).map { _ => Redirect(routes.SimpleCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.value)))}
+            case "hourly" =>
+              cache.save(updatedAggregate).map { _ => Redirect(routes.SimpleCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.value)))}
+            case _ =>
+              cache.save(updatedAggregate).map { _ => Redirect(routes.SimpleCalcController.showAgeForm())}
+          }
+        }
+        case None => cache.save(SimpleCalcAggregateInput.newInstance.copy(salary = Some(salaryAmount))).map {
+          _ => Redirect(routes.SimpleCalcController.showAgeForm())
+        }
       }
     )
   }
 
-  def showHoursAWeek() = ActionWithSessionId.async { implicit request =>
-    Future.successful(Ok(hours_a_week(Salary.formHourly)))
+  def showAgeForm() = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        val form = aggregate.isOverStatePensionAge.map(OverStatePensionAge.form.fill).getOrElse(OverStatePensionAge.form)
+        Ok(age(form, aggregate.youHaveToldUsItems))
+      case None =>
+        Ok(age(OverStatePensionAge.form, Nil))
+    }
   }
 
-  def submitHoursAWeek() = ActionWithSessionId.async { implicit request =>
-    Salary.formHourly.bindFromRequest.fold(
-      formWithErrors => {
-        Future.successful(BadRequest(hours_a_week(formWithErrors)))
+  def submitAgeForm() = ActionWithSessionId.async { implicit request =>
+    OverStatePensionAge.form.bindFromRequest.fold(
+      formWithErrors => cache.fetchAndGetEntry.map {
+        case Some(aggregate) => BadRequest(age(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(age(formWithErrors, Nil))
       },
-      hours => {
+      userAge => cache.fetchAndGetEntry.flatMap {
+        case Some(aggregate) =>
+          val updatedAggregate = aggregate.copy(isOverStatePensionAge = Some(userAge))
+          cache.save(updatedAggregate).map { _ => Redirect(routes.SimpleCalcController.showAgeForm())}
+        case None => cache.save(SimpleCalcAggregateInput.newInstance.copy(isOverStatePensionAge = Some(userAge))).map {
+          _ =>  Redirect(routes.SimpleCalcController.showAgeForm())
+        }
+      }
+    )
+  }
+
+  def showHoursAWeek(valueInPence: Int) = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, aggregate.youHaveToldUsItems))
+      case None =>
+        Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, Nil))
+    }
+  }
+
+  def submitHoursAWeek(valueInPence: Int) = ActionWithSessionId.async { implicit request =>
+    Salary.salaryInHoursForm.bindFromRequest.fold(
+      formWithErrors => cache.fetchAndGetEntry.map {
+        case Some(aggregate) => BadRequest(hours_a_week(valueInPence, formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(hours_a_week(valueInPence, formWithErrors, Nil))
+      },
+      hours => //cache.fetchAndGetEntry.flatMap {
+//        case Some(aggregate) =>
+//          val updatedAggregate = aggregate.copy(Salary = Some(userAge))
+//          cache.save(updatedAggregate).map { _ => Redirect(routes.SimpleCalcController.showAgeForm())}
+//        case None => cache.save(SimpleCalcAggregateInput.newInstance.copy(isOverStatePensionAge = Some(userAge))).map {
+//          _ =>  Redirect(routes.SimpleCalcController.showAgeForm())
+//        }
+        Future.successful(Redirect(routes.IndexController.index()))
+      //}
+    )
+  }
+
+  def showDaysAWeek(valueInPence: Int) = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, aggregate.youHaveToldUsItems))
+      case None =>
+        Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, Nil))
+    }
+  }
+
+  def submitDaysAWeek(valueInPence: Int) = ActionWithSessionId.async { implicit request =>
+    Salary.salaryInHoursForm.bindFromRequest.fold(
+      formWithErrors => {
+        Future.successful(Redirect(routes.IndexController.index()))
+      },
+      days => {
         Future.successful(Redirect(routes.IndexController.index()))
       }
     )

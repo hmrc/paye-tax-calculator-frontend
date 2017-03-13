@@ -48,29 +48,29 @@ object YouHaveToldUs {
     }
   }
 
-  implicit def yearlyFormat(implicit m: Messages): YouHaveToldUs[YearlyAmount] = formatForIndividualSalary[YearlyAmount]
-  implicit def monthlyFormat(implicit m: Messages): YouHaveToldUs[MonthlyAmount] = formatForIndividualSalary[MonthlyAmount]
-  implicit def weeklyFormat(implicit m: Messages): YouHaveToldUs[WeeklyAmount] = formatForIndividualSalary[WeeklyAmount]
-  implicit def dailyFormat(implicit m: Messages): YouHaveToldUs[DailyAmount] = formatForIndividualSalary[DailyAmount]
-  implicit def hourlyFormat(implicit m: Messages): YouHaveToldUs[HourlyAmount] = formatForIndividualSalary[HourlyAmount]
-
-  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
-    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
-  }
-
-  implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
-    def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
-      val url = routes.QuickCalcController.showSalaryForm().url
-      def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
-      val idSuffix = "income"
-      def asPounds(v: BigDecimal) = "£" + v
-      s match {
-        case YearlyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.YEARLY), url, idSuffix)
-        case MonthlyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.MONTHLY), url, idSuffix)
-        case WeeklyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.WEEKLY), url, idSuffix)
-        case DailyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.DAILY), url, idSuffix)
-        case HourlyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.HOURLY), url, idSuffix)
-      }
-    }
-  }
+//  implicit def yearlyFormat(implicit m: Messages): YouHaveToldUs[YearlyAmount] = formatForIndividualSalary[YearlyAmount]
+//  implicit def monthlyFormat(implicit m: Messages): YouHaveToldUs[MonthlyAmount] = formatForIndividualSalary[MonthlyAmount]
+//  implicit def weeklyFormat(implicit m: Messages): YouHaveToldUs[WeeklyAmount] = formatForIndividualSalary[WeeklyAmount]
+//  implicit def dailyFormat(implicit m: Messages): YouHaveToldUs[DailyAmount] = formatForIndividualSalary[DailyAmount]
+//  implicit def hourlyFormat(implicit m: Messages): YouHaveToldUs[HourlyAmount] = formatForIndividualSalary[HourlyAmount]
+//
+//  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
+//    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
+//  }
+//
+//  implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
+//    def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
+//      val url = routes.QuickCalcController.showSalaryForm().url
+//      def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
+//      val idSuffix = "income"
+//      def asPounds(v: BigDecimal) = "£" + v
+//      s match {
+//        case YearlyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.YEARLY), url, idSuffix)
+//        case MonthlyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.MONTHLY), url, idSuffix)
+//        case WeeklyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.WEEKLY), url, idSuffix)
+//        case DailyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.DAILY), url, idSuffix)
+//        case HourlyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.HOURLY), url, idSuffix)
+//      }
+//    }
+//  }
 }

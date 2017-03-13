@@ -1,73 +1,73 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import play.api.i18n._
-@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.salary_radio_box
-@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.salary_amount_input
-@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.Salary
+@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.{Salary, YouHaveToldUsItem}
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 @import views.html.helper._
 @import uk.gov.hmrc.play.views.html._
 
-@(form: Form[Salary])(implicit request: Request[_], messages: Messages)
+@(form: Form[Salary], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@periodLabels = @{List("yearly","monthly","weekly","daily","hourly")}
 
-@radioField = @{
-  form("salaryType")
-}
-
-@radioElements = @{
-  FieldElements(radioField.id, radioField, null, Map.empty, messages)
-}
-
-@scriptToLinkRadioToTextBox = {
-  <script src='@routes.Assets.at("javascripts/salary_amount.js")' type="text/javascript"></script>
-}
-
-@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width"), scriptElem = Some(scriptToLinkRadioToTextBox)) {
+@main_template(title = Messages("simple_calc.salary.header.title"), mainClass = Some("full-width")) {
 
 
   <div class="grid-layout--stacked">
-
-    <div class="grid-layout__column grid-layout__column--2-3">
+    <div class="grid-layout__column">
 
       <header class="page-header">
-        <h1>@Messages("simple_calc.salary.header")</h1>
+        <h1>@Messages("quick_calc.salary.header")</h1>
+        <p class="faded-text faded-text--small">@Messages("quick_calc.salary.description")</p>
       </header>
-      <p>@Messages("simple_calc.salary.info")</p>
 
-      @helpers.form(action = controllers.routes.SimpleCalcController.submitSalaryAmount()) {
+      <br>
+
+
+
+      <p class="heading-medium">@Messages("quick_calc.salary.question.how_much_you_earn")</p>
+
+      @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.SimpleCalcController.submitSalaryAmount) {
         @helper.CSRF.formField
 
         <div class="form-group">
-          <fieldset class="form-field-group">
+
+          <fieldset class="form-field-group js-toggle"
+          id="hasTaxCode"
+          data-trigger="js-toggle-trigger">
+
             <label>
-            @Messages("calc.salary.enter_salary")
+              @if(form.hasErrors){
+                <div class="error-notification">
+                @form.errors
+                @form.h
+                </div>
+              }
+              <span>£</span>
+              <input type="text" id="value" name="value" value="" required />
             </label>
-            @salary_amount_input(form("amount-salary"))
-          </fieldset>
 
-        </div>
+            <br>
 
-        <div class="form-group">
-          <label>
-          @Messages("calc.salary.select_option_salary")
-          </label>
+            <p class="heading-medium">@Messages("quick_calc.salary.question.how_much_you_earn.period_selection")</p>
 
-          <fieldset>
-            @radioElements.errors.map { error => <span class="error-notification">@Messages(error)</span> }
-            @salary_radio_box(radioElements, Messages("calc.salary.yearly"), "yearly")
-            @salary_radio_box(radioElements, Messages("calc.salary.monthly"), "monthly")
-            @salary_radio_box(radioElements, Messages("calc.salary.weekly"), "weekly")
-            @salary_radio_box(radioElements, Messages("calc.salary.daily"), "daily")
-            @salary_radio_box(radioElements, Messages("calc.salary.hourly"), "hourly")
+            @for(label <- periodLabels) {
+              <label class="block-label">@Messages(s"quick_calc.salary.$label")
+              <input type="radio"
+              class="js-toggle-trigger"
+              name="period"
+              value="@label"
+              required />
+              </label>
+
+            }
 
           </fieldset>
-
         </div>
 
         <div class="form-group">
           <input type="submit" class="button" value="@Messages("continue")">
         </div>
       }
-      <a href="@controllers.routes.IndexController.index()">Back</a>
+
     </div>
 
   </div>
