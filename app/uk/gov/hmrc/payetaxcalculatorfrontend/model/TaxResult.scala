@@ -17,16 +17,15 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
-import uk.gov.hmrc.time.TaxYearResolver
 
 object TaxResult {
 
-  def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.taxCode match {
+  def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput): String = quickCalcAggregateInput.taxCode match {
     case Some(s) => s.taxCode match {
       case Some(taxCode) => taxCode
-      case None => UserTaxCode.defaultTaxCode
+      case None => UserTaxCode.DEFAULT_TAX_CODE
     }
-    case None => UserTaxCode.defaultTaxCode
+    case None => UserTaxCode.DEFAULT_TAX_CODE
   }
 
   def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.isOverStatePensionAge match {
@@ -71,13 +70,16 @@ object TaxResult {
   }
 
   def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput) = {
+
+    val taxCode = extractTaxCode(quickCalcAggregateInput)
+
     buildTaxCalc(
-      extractOverStatePensionAge(quickCalcAggregateInput),
-      TaxYearResolver.currentTaxYear,
-      extractTaxCode(quickCalcAggregateInput),
-      extractSalary(quickCalcAggregateInput).toInt,
-      extractPayPeriod(quickCalcAggregateInput),
-      extractHours(quickCalcAggregateInput))
+      isStatePensionAge = extractOverStatePensionAge(quickCalcAggregateInput),
+      taxCalcResource = UserTaxCode.taxConfig(taxCode),
+      taxCode = taxCode,
+      grossPayPence = extractSalary(quickCalcAggregateInput).toInt,
+      payPeriod = extractPayPeriod(quickCalcAggregateInput),
+      hoursIn = extractHours(quickCalcAggregateInput))
   }
 
 }

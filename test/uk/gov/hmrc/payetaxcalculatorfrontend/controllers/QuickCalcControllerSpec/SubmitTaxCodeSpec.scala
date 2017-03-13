@@ -28,15 +28,19 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
 
   "Submit Tax Code Form" should {
     "return 400, current list of aggregate data and an error message for invalid Tax Code" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
-      val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("110")))
+      val controller = new QuickCalcController(
+        messages.messages, cacheReturnTaxCode)
+      val formTax = UserTaxCode.form.fill(
+        UserTaxCode(true, Some("110")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
-      val result = action(request.withFormUrlEncodedBody(formTax.data.toSeq: _*)).withSession(request.session + (SessionKeys.sessionId -> "test-tax"))
+      val result = action(request.withFormUrlEncodedBody(formTax.data.toSeq: _*))
+        .withSession(request.session + (SessionKeys.sessionId -> "test-tax"))
       val status = result.header.status
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val expectedErrorMessage = "The tax code you have entered is not valid - it must end with the letter L, ‘M, ‘N, or T"
+      val expectedErrorMessage =
+        "The tax code you have entered is not valid - it must end with the letter L, ‘M, ‘N, or T"
       val expectedTableSize = 1 + aggregateListOnlyTaxCode.size // include header
 
       val actualTableSize = parseHtml.getElementsByTag("tr").size()
