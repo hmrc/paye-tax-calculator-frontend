@@ -54,7 +54,7 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
       },
       newTaxCode => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
-          val updatedTaxCode = if (newTaxCode.hasTaxCode) newTaxCode else UserTaxCode(hasTaxCode = false, Some(defaultTaxCode))
+          val updatedTaxCode = if (newTaxCode.hasTaxCode) newTaxCode else UserTaxCode(hasTaxCode = false, Some(DEFAULT_TAX_CODE))
           val newAggregate = aggregate.copy(taxCode = Some(updatedTaxCode))
           cache.save(newAggregate).map { _ =>
             nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {

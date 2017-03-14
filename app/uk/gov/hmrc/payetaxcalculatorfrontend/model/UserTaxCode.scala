@@ -16,11 +16,15 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.model
 
+import java.time.LocalDate
+
 import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.libs.json._
+import uk.gov.hmrc.payeestimator.domain.TaxCalcResourceBuilder
+import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService.isValidScottishTaxCode
 import uk.gov.hmrc.payetaxcalculatorfrontend.model.CustomFormatters._
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 
@@ -31,25 +35,27 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   implicit val format = Json.format[UserTaxCode]
 
-  val defaultTaxCode = "1150L"
-  val hasTaxCode = "hasTaxCode"
-  val taxCode = "taxCode"
+  val DEFAULT_TAX_CODE = "1150L"
+  val HAS_TAX_CODE = "hasTaxCode"
+  val TAX_CODE = "taxCode"
 
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
-      if (data.getOrElse(hasTaxCode, "false") == "true") {
-        if (isValidTaxCode(data.getOrElse(taxCode, ""))) Right(Some(data.getOrElse(taxCode, "")))
-        else {
-          data.getOrElse(taxCode, "") match {
-            case code if code.isEmpty => Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
-            case code if code.nonEmpty => {
-              if (data.getOrElse(taxCode, "").charAt(0).isDigit) Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code_suffix"))))
-              else Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
+      if (data.getOrElse(HAS_TAX_CODE, "false") == "true") {
+        data.get(TAX_CODE)
+          .filter(_.nonEmpty) match {
+          case Some(taxCode) =>
+            if (isValidTaxCode(taxCode, taxConfig(taxCode)))
+              Right(Some(taxCode))
+            else {
+              if (taxCode.charAt(0).isDigit)
+                Left(Seq(FormError(TAX_CODE, messages("quick_calc.about_tax_code.wrong_tax_code_suffix"))))
+              else
+                Left(Seq(FormError(TAX_CODE, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
             }
-          }
+          case None => Left(Seq(FormError(TAX_CODE, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
         }
-      }
-      else Right(Some(defaultTaxCode))
+      } else Right(Some(DEFAULT_TAX_CODE))
     }
 
     override def unbind(key: String, value: Option[String]): Map[String, String] = Map(key -> value.getOrElse(""))
@@ -57,8 +63,8 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   def form(implicit messages: Messages) = Form(
     mapping(
-      hasTaxCode -> of(requiredBooleanFormatter),
-      taxCode -> of(taxCodeFormatter)
+      HAS_TAX_CODE -> of(requiredBooleanFormatter),
+      TAX_CODE -> of(taxCodeFormatter)
     )(UserTaxCode.apply)(UserTaxCode.unapply)
   )
 
@@ -85,5 +91,9 @@ object UserTaxCode extends TaxCalculatorHelper {
       }
     }
   }
+
+  def taxConfig(taxCode: String) = TaxCalcResourceBuilder.resourceForDate(
+    LocalDate.now(),
+    isValidScottishTaxCode(taxCode))
 
 }
