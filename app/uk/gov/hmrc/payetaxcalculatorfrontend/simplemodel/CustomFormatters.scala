@@ -82,29 +82,23 @@ object CustomFormatters {
 
   }
 
-  def salaryValidation(salaryType:String)(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
+  def salaryValidation(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
     override def bind(key: String, data: Map[String, String]) = {
-      salaryType match{
-        case "hourly" => hourlySalaryValidation(key, data)
-        case "daily" => dailySalaryValidation(key, data)
-        case _ =>
-          Right(data.getOrElse(key,"")).right.flatMap {
-          case s if s.nonEmpty =>
-            try{
-              val salary = BigDecimal(s).setScale(2)
-              if(salary < 0.01) {
-                Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_salary_input"))))
-              } else if(salary > 9999999.99) {
-                Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
-              } else {
-                Right(salary)
-              }
-            } catch {
-              case _:Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_salary"))))
+      Right(data.getOrElse(key,"")).right.flatMap {
+        case s if s.nonEmpty =>
+          try{
+            val salary = BigDecimal(s).setScale(2)
+            if(salary < 0.01) {
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_salary_input"))))
+            } else if(salary > 9999999.99) {
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
+            } else {
+              Right(salary)
             }
-
-          case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_salary_input"))))
-        }
+          } catch {
+            case _:Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_salary"))))
+          }
+        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_salary_input"))))
       }
     }
 

@@ -20,6 +20,7 @@ GET         /language/:lang                          uk.gov.hmrc.payetaxcalculat
 
 # SimpleCalc Routes
 
+GET         /simple-calculation                      uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.redirectToSalaryForm
 
 GET         /simple-calculation/salary               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.showSalaryForm
 POST        /simple-calculation/salary               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.SimpleCalcController.submitSalaryAmount

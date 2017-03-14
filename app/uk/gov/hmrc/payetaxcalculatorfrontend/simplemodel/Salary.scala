@@ -22,8 +22,8 @@ import play.api.i18n.Messages
 import play.api.libs.json._
 
 case class Salary(value: BigDecimal, period: String)
-case class Hours(value: BigDecimal, howManyAWeek: Int)
-case class Days(value: BigDecimal, howManyAWeek: Int)
+case class Hours(value: Int, howManyAWeek: Int)
+case class Days(value: Int, howManyAWeek: Int)
 
 object Salary {
 
@@ -33,22 +33,22 @@ object Salary {
 
   def salaryBaseForm(implicit messages: Messages) = Form(
     mapping(
-      "value" -> bigDecimal(9,2),
+      "value" -> of(CustomFormatters.salaryValidation),
       "period" -> nonEmptyText
     )(Salary.apply)(Salary.unapply)
   )
 
   def salaryInDaysForm(implicit messages: Messages) = Form(
     mapping(
-      "value" -> bigDecimal(9,2),
-      "period" -> number
+      "value" -> number,
+      "howManyAWeek" -> of(CustomFormatters.dayValidation)
     )(Days.apply)(Days.unapply)
   )
 
   def salaryInHoursForm(implicit messages: Messages) = Form(
     mapping(
-      "value" -> bigDecimal(9,2),
-      "period" -> number
+      "value" -> number,
+      "howManyAWeek" -> of(CustomFormatters.hoursValidation)
     )(Hours.apply)(Hours.unapply)
   )
 

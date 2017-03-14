@@ -28,13 +28,12 @@
 
         <div class="form-group">
 
-          <fieldset class="form-field-group js-toggle"
-          data-trigger="js-toggle-trigger">
+          <fieldset class="form-field-group js-toggle" data-trigger="js-toggle-trigger">
 
-            <label class="form-field-group form-field--error panel-indent">
+            <label class="form-field--error panel-indent">
               @if(form("value").hasErrors){
                 <div class="error-notification">
-                  Amount earned must be 7 digits and 2 dp maximum (9999999.99) format
+                  @{form("value").errors.head.message}
                 </div>
               }
               <span>£</span>

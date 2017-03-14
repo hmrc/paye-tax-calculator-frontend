@@ -33,6 +33,10 @@ import scala.concurrent.Future
 class SimpleCalcController @Inject()(override val messagesApi: MessagesApi,
                                      cache: SimpleCalcCache) extends FrontendController with I18nSupport {
 
+  def redirectToSalaryForm() = ActionWithSessionId { implicit request =>
+    Redirect(routes.SimpleCalcController.showSalaryForm())
+  }
+
   def showSalaryForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
@@ -131,6 +135,8 @@ class SimpleCalcController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def submitDaysAWeek(valueInPence: Int) = ActionWithSessionId.async { implicit request =>
+    val a = Salary.salaryInDaysForm.bindFromRequest
+    println("======="+a)
     Salary.salaryInDaysForm.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
         case Some(aggregate) => BadRequest(days_a_week(valueInPence, formWithErrors, aggregate.youHaveToldUsItems))

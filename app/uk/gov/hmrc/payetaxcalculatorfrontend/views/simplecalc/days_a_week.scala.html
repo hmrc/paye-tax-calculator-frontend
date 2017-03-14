@@ -6,27 +6,31 @@
 
 @import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.{Days, YouHaveToldUsItem}
 
-@(valueInPence:Int, hoursForm: Form[Days], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@(valueInPence:Int, daysForm: Form[Days], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
   <div class="grid-layout grid-layout--stacked">
 
     <header class="page-header">
-      <h1>How many hours a week do you usually work?</h1>
+      <h1>How many days a week do you usually work?</h1>
     </header>
     <p>If you don't know, an approximate number is fine</p>
 
-    @helper.form(action = controllers.routes.SimpleCalcController.submitHoursAWeek(valueInPence)) {
+    @helper.form(action = controllers.routes.SimpleCalcController.submitDaysAWeek(valueInPence)) {
       @helper.CSRF.formField
-      <div class="form-group" style="width: 6%;
-        display: inline-block">
-        <input type="text" id="howManyAWeek"  name="howManyAWeek" maxlength="3" size="3">
-      </div>
 
-      <div style="width: 20%;
-        display: inline-block">
-        <label>hours a week</label>
-      </div>
+      <label class="form-field-group form-field--error panel-indent">
+
+        @if(daysForm("howManyAWeek").hasErrors){
+          <div class="error-notification">
+          @{daysForm("howManyAWeek").errors.head.message}
+          </div>
+        }
+        <input style= "display:inline " type="text" name="howManyAWeek" maxlength="3" size="3" required />
+
+        <p style= "display:inline">days a week</p>
+
+      </label>
 
       <input type="hidden" name="value" value=@valueInPence>
 
@@ -34,6 +38,7 @@
         <input type="submit" class="button" value="Continue">
       </div>
     }
+
     <div>
       <a href="@{request.uri}">back</a>
     </div>

@@ -18,15 +18,19 @@
 
     @helper.form(action = controllers.routes.SimpleCalcController.submitHoursAWeek(valueInPence)) {
       @helper.CSRF.formField
-      <div class="form-group" style="width: 6%;
-        display: inline-block">
-        <input type="text" id="howManyAWeek"  name="howManyAWeek" maxlength="3" size="3">
-      </div>
 
-      <div style="width: 20%;
-        display: inline-block">
-        <label>hours a week</label>
-      </div>
+      <label class="form-field-group form-field--error panel-indent">
+
+        @if(hoursForm("howManyAWeek").hasErrors){
+          <div class="error-notification">
+          @{hoursForm("howManyAWeek").errors.head.message}
+          </div>
+        }
+        <input style= "display:inline " type="text" name="howManyAWeek" maxlength="3" size="3" required />
+
+        <p style= "display:inline">hours a week</p>
+
+      </label>
 
       <input type="hidden" name="value" value=@valueInPence>
 
