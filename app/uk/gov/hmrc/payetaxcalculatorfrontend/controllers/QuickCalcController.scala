@@ -71,7 +71,6 @@ class QuickCalcController @Inject() (override val messagesApi: MessagesApi,
 
   }
 
-
   def showAgeForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
