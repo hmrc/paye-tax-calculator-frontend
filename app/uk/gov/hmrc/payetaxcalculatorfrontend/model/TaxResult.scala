@@ -33,7 +33,7 @@ object TaxResult {
       case true => "true"
       case false => "false"
     }
-    case None => throw new Exception("No answer has been provided for the question: Are you over state pension age?")
+    case None => throw new Exception("No answer has been provided for the question: Are you over state pension state_pension?")
   }
 
   def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {

@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.{age, days_a_week, hours_a_week, salary, scottish_income_tax_rate}
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.{state_pension, _}
 import play.api.mvc._
 import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.Salary
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.SimpleCalcCache
@@ -76,17 +76,17 @@ class SimpleCalcController @Inject()(override val messagesApi: MessagesApi,
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
         val form = aggregate.isOverStatePensionAge.map(OverStatePensionAge.form.fill).getOrElse(OverStatePensionAge.form)
-        Ok(age(form, aggregate.youHaveToldUsItems))
+        Ok(state_pension(form, aggregate.youHaveToldUsItems))
       case None =>
-        Ok(age(OverStatePensionAge.form, Nil))
+        Ok(state_pension(OverStatePensionAge.form, Nil))
     }
   }
 
   def submitAgeForm() = ActionWithSessionId.async { implicit request =>
     OverStatePensionAge.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
-        case Some(aggregate) => BadRequest(age(formWithErrors, aggregate.youHaveToldUsItems))
-        case None => BadRequest(age(formWithErrors, Nil))
+        case Some(aggregate) => BadRequest(state_pension(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(state_pension(formWithErrors, Nil))
       },
       userAge => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
@@ -112,8 +112,8 @@ class SimpleCalcController @Inject()(override val messagesApi: MessagesApi,
   def submitScottishRateForm() = ActionWithSessionId.async { implicit request =>
     OverStatePensionAge.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
-        case Some(aggregate) => BadRequest(age(formWithErrors, aggregate.youHaveToldUsItems))
-        case None => BadRequest(age(formWithErrors, Nil))
+        case Some(aggregate) => BadRequest(state_pension(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(state_pension(formWithErrors, Nil))
       },
       userAge => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>

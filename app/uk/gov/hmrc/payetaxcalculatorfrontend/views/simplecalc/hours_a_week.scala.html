@@ -12,9 +12,9 @@
   <div class="grid-layout grid-layout--stacked">
 
     <header class="page-header">
-      <h1>How many hours a week do you usually work?</h1>
+      <h1>@Messages("simple_calc.salary.question.hours_a_week")</h1>
     </header>
-    <p>If you don't know, an approximate number is fine</p>
+    <p class="faded-text faded-text--small">@Messages("simple_calc.salary.question.approximate")</p>
 
     @helper.form(action = controllers.routes.SimpleCalcController.submitHoursAWeek(valueInPence)) {
       @helper.CSRF.formField
@@ -39,7 +39,7 @@
       </div>
     }
     <div>
-      <a href="">back</a>
+      <a href="@{request.uri}">@Messages("back")</a>
     </div>
 
   </div>
