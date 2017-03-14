@@ -21,6 +21,7 @@ import play.api.libs.json.Json
 
 case class SimpleCalcAggregateInput(salary: Option[Salary],
                                    isOverStatePensionAge: Option[OverStatePensionAge],
+                                   scottishRate: Option[ScottishRate],
                                    taxCode: Option[UserTaxCode]){
 
   def allQuestionsAnswered: Boolean = List(salary, isOverStatePensionAge, taxCode).forall(_.isDefined)
@@ -36,7 +37,7 @@ case class SimpleCalcAggregateInput(salary: Option[Salary],
 }
 
 object SimpleCalcAggregateInput {
-  def newInstance = SimpleCalcAggregateInput(None, None, None)
+  def newInstance = SimpleCalcAggregateInput(None, None, None, None)
   implicit val format = Json.format[SimpleCalcAggregateInput]
 }
 

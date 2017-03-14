@@ -1,0 +1,57 @@
+@import play.api.i18n._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.{ScottishRate, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+
+@(ScottishRate: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@radioField = @{ ScottishRate("scottishRate") }
+
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+
+  <div class="grid-layout--stacked">
+
+    <header class="page-header">
+      <h1>Do you pay the Scottish Income Tax Rate?</h1>
+    </header>
+
+    <p>You usually pay <a href="https://www.gov.uk/scottish-rate-income-tax">Scottish Income Tax</a>
+      if you live in Scotland for more than half the tax year. It doesn't matter where you work</p>
+
+
+    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.SimpleCalcController.submitAgeForm" method="post">
+      @helper.CSRF.formField
+
+      <div class="form-group">
+        <fieldset class="inline form-field-group"
+        id="scottishRate">
+
+          <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
+            <input type="radio"
+            id="scottishRate-yes"
+            name="scottishRate"
+            value="true"
+              @if(radioField.value.contains("true")) { checked="checked" }
+            required />
+          </label>
+
+          <label class="block-label" for="scottishRate-no">@Messages("quick_calc.over_state_pension_age.no")
+            <input type="radio"
+            id="scottishRate-no"
+            name="scottishRate"
+            value="false"
+              @if(radioField.value.contains("false")) { checked="checked" }
+            required />
+          </label>
+
+        </fieldset>
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="button" value="@Messages("continue")">
+      </div>
+    </form>
+
+    <a href="">Back</a>
+
+  </div>
+
+}

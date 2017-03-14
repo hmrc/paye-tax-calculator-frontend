@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.{age, days_a_week, hours_a_week, salary}
+import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.simplecalc.{age, days_a_week, hours_a_week, salary, scottish_income_tax_rate}
 import play.api.mvc._
 import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.Salary
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.SimpleCalcCache
@@ -83,6 +83,33 @@ class SimpleCalcController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def submitAgeForm() = ActionWithSessionId.async { implicit request =>
+    OverStatePensionAge.form.bindFromRequest.fold(
+      formWithErrors => cache.fetchAndGetEntry.map {
+        case Some(aggregate) => BadRequest(age(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(age(formWithErrors, Nil))
+      },
+      userAge => cache.fetchAndGetEntry.flatMap {
+        case Some(aggregate) =>
+          val updatedAggregate = aggregate.copy(isOverStatePensionAge = Some(userAge))
+          cache.save(updatedAggregate).map { _ => Redirect(routes.SimpleCalcController.showScottishRateForm())}
+        case None => cache.save(SimpleCalcAggregateInput.newInstance.copy(isOverStatePensionAge = Some(userAge))).map {
+          _ =>  Redirect(routes.SimpleCalcController.showScottishRateForm())
+        }
+      }
+    )
+  }
+
+  def showScottishRateForm() = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        val form = aggregate.scottishRate.map(ScottishRate.form.fill).getOrElse(ScottishRate.form)
+        Ok(scottish_income_tax_rate(form, aggregate.youHaveToldUsItems))
+      case None =>
+        Ok(scottish_income_tax_rate(ScottishRate.form, Nil))
+    }
+  }
+
+  def submitScottishRateForm() = ActionWithSessionId.async { implicit request =>
     OverStatePensionAge.form.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
         case Some(aggregate) => BadRequest(age(formWithErrors, aggregate.youHaveToldUsItems))
