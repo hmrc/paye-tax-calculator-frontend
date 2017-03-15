@@ -19,7 +19,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.services
 import com.google.inject.{ImplementedBy, Singleton}
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.payetaxcalculatorfrontend.WSHttp
-import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{QuickCalcAggregateInput}
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
 import uk.gov.hmrc.play.http.HeaderCarrier
 
