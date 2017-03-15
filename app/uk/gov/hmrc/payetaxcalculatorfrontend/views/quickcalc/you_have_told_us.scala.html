@@ -1,25 +1,32 @@
-@import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUsItem
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+@import play.api.i18n._
+
 @(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
-@if(items.nonEmpty) {
-  <table style="margin-left: 15px">
-    <thead>
-    <tr>
-      <th colspan="2">@Messages("quick_calc.you_have_told_us.header")</th>
-    </tr>
-    </thead>
-    <tbody>
-    @items.map { item =>
-      <tr>
-        <td>
-          <div class="data">
-            <span class="data-item bold-medium">@item.value</span>
-            <span class="data-item bold-xsmall">@item.label</span>
-          </div>
-        </td>
-        <td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")</a></td>
-      </tr>
-    }
-    </tbody>
-  </table>
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+  @if(items.nonEmpty) {
+    <table style="margin-left: 15px">
+      <thead>
+        <tr>
+          <th colspan="2">@Messages("quick_calc.you_have_told_us.header")</th>
+        </tr>
+      </thead>
+      <tbody>
+      @items.map { item =>
+        <tr>
+          <td>
+            <div class="data">
+              <span class="data-item bold-medium">@item.value</span>
+              <span class="data-item bold-xsmall">@item.label</span>
+            </div>
+          </td>
+          <td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")</a></td>
+        </tr>
+      }
+      </tbody>
+    </table>
+
+    <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.showResult()" class="button" type="submit">@Messages("continue")</a>
+  }
 }

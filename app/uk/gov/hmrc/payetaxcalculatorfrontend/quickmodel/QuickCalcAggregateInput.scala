@@ -14,22 +14,30 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.model
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 
-case class QuickCalcAggregateInput(taxCode: Option[UserTaxCode],
-                                   isOverStatePensionAge: Option[OverStatePensionAge],
-                                   salary: Option[Salary]) {
+case class QuickCalcAggregateInput(salary: Option[Salary],
+                                   taxCode: Option[UserTaxCode],
+                                   isOverStatePensionAge: Option[OverStatePensionAge]
+//                                   scottishRate: Option[ScottishRate]
+                                  ){
 
-  def allQuestionsAnswered: Boolean = List(taxCode,isOverStatePensionAge,salary).forall(_.isDefined)
+  def allQuestionsAnswered: Boolean = List(
+    salary,
+    isOverStatePensionAge,
+    taxCode
+//    scottishRate
+  ).forall(_.isDefined)
 
   def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] = {
     List(
-      taxCode.map { YouHaveToldUs(_) },
+      salary.map { YouHaveToldUs(_ ) },
       isOverStatePensionAge.map { YouHaveToldUs(_) },
-      salary.map { YouHaveToldUs(_ ) }
+      taxCode.map { YouHaveToldUs(_) }
+//      scottishRate.map {YouHaveToldUs(_)}
     ).flatten
   }
 

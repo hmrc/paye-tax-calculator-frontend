@@ -16,8 +16,8 @@ index.use_the_detailed_calc_NI_select_Other=Selecting the alternative letter wil
 index.use_the_detailed_calc_ENI=The 'Employer National Insurance' estimate will not be correct. If you want to know the correct amount please use the
 index.use_the_detailed_calc_NIC_link=National Insurance Contributions calculator
 
-# index.detailed_calc_under_age=you are under the age of 21 or you are an apprentice under the age of 25
-# index.detailed_calc_ENI_estimate=The 'Employer National Insurance' estimation will not reflect the position for employees under the age of 21 or for apprentices under the age of 25. If you want to know the correct amount of 'Employer National Insurance' use the
+# index.detailed_calc_under_age=you are under the state_pension of 21 or you are an apprentice under the state_pension of 25
+# index.detailed_calc_ENI_estimate=The 'Employer National Insurance' estimation will not reflect the position for employees under the state_pension of 21 or for apprentices under the state_pension of 25. If you want to know the correct amount of 'Employer National Insurance' use the
 # legacy.detailed_calc.ni_contributions_calculator=National Insurance contributions calculator
 
 legacy.scottish_taxpayer_intro=If you are a Scottish taxpayer insert your Scottish tax code, this should begin with an “S”. For further information on the Scottish rate of Income Tax go to 
@@ -48,10 +48,9 @@ index.language_version.paragraph=to use the Welsh language version of the online
 index.language_version.target_language=welsh
 
 continue=Continue
-
+back = back
 label.click_here=Click here
 
-label.click_here=Click here
 
 quick_calc.title=HMRC Quick calculator
 
@@ -87,13 +86,24 @@ quick_calc.result.tabLabels.year=Year
 quick_calc.result.tabLabels.month=Month
 quick_calc.result.tabLabels.week=Week
 
-quick_calc.salary.header=Your gross salary
-quick_calc.salary.year=Yearly
-quick_calc.salary.month=Monthly
-quick_calc.salary.week=Weekly
-quick_calc.salary.day=Daily
-quick_calc.salary.hour=Hourly
-quick_calc.salary.question.How_you_paid=How are you paid?
+#quick_calc.salary.header=Your gross salary
+#quick_calc.salary.year=Yearly
+#quick_calc.salary.month=Monthly
+#quick_calc.salary.week=Weekly
+#quick_calc.salary.day=Daily
+#quick_calc.salary.hour=Hourly
+#quick_calc.salary.question.How_you_paid=How are you paid?
+
+quick_calc.salary.header=How much do you earn before tax?
+quick_calc.salary.description=This information will help us to give you the most accurate income tax results. Use the figure before tax or National Insurance are deducted - for example, £7.20 and hour or £26,500 a year.
+quick_calc.salary.yearly=a year
+quick_calc.salary.monthly=a month
+quick_calc.salary.weekly=a week
+quick_calc.salary.daily=a day
+quick_calc.salary.hourly=an hour
+quick_calc.salary.question.how_much_you_earn=Enter the amount you earn
+quick_calc.salary.question.how_much_you_earn.period_selection=Select the option the amount refers to
+
 quick_calc.salary.question.earn_a_year=How much do you earn a year?
 quick_calc.salary.question.earn_a_month=How much do you earn a month?
 quick_calc.salary.question.earn_a_week=How much do you earn a week?
@@ -134,3 +144,27 @@ quick_calc.about_tax_code.wrong_tax_code_suffix=The tax code you have entered is
 quick_calc.about_tax_code.wrong_tax_code=The tax code you have entered is not valid. A tax code is usually made up of several numbers and a letter, e.g. 117L or K497 or S117L or SK497
 quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
+
+#Simple Calc
+simple_calc.salary.header = How much do you earn before tax?
+simple_calc.salary.question.days_a_week=How many days a week do you usually work?
+simple_calc.salary.question.hours_a_week=How many hours a week do you usually work?
+simple_calc.salary.question.approximate=If you don't know, an approximate number is fine
+simple_calc.salary.question.state_pension_url_a=Your State Pension age depends on when you were born. You can
+simple_calc.salary.question.state_pension_url_b=check your State Pension age
+simple_calc.salary.question.state_pension_url_c=if you are not sure
+simple_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax Rate?
+simple_calc.salary.question.scottish_income_url_a=You usually pay
+simple_calc.salary.question.scottish_income_url_b=Scottish Income Tax
+simple_calc.salary.question.scottish_income_url_c=if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
+
+simple_calc.salary.info = This information will help us to give you the most accurate income tax results. Use the figure before tax or National Insurance are deducted - for example, £7.20 an hour or £26,500 a year
+
+#Both Calc
+calc.salary.enter_salary = Enter the amount you earn:
+calc.salary.select_option_salary = Select the option the amount refers to:
+calc.salary.yearly = Yearly
+calc.salary.monthly = Monthly
+calc.salary.weekly = Weekly
+calc.salary.daily = Daily
+calc.salary.hourly = Hourly

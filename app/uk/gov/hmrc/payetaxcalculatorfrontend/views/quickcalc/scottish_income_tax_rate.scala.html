@@ -1,0 +1,57 @@
+@import play.api.i18n._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{ScottishRate, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+
+@(ScottishRate: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@radioField = @{ ScottishRate("scottishRate") }
+
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+
+  <div class="grid-layout--stacked">
+
+    <header class="page-header">
+      <h1>@Messages("simple_calc.salary.question.scottish_income")</h1>
+    </header>
+
+    <p class="faded-text faded-text--small">@Messages("simple_calc.salary.question.scottish_income_url_a") <a href="https://www.gov.uk/scottish-rate-income-tax">@Messages("simple_calc.salary.question.scottish_income_url_b")</a>
+      @Messages("simple_calc.salary.question.scottish_income_url_c")</p>
+
+
+    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitScottishRateForm()" method="post">
+      @helper.CSRF.formField
+
+      <div class="form-group">
+        <fieldset class="inline form-field-group"
+        id="scottishRate">
+
+          <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
+            <input type="radio"
+            id="scottishRate-yes"
+            name="scottishRate"
+            value="true"
+              @if(radioField.value.contains("true")) { checked="checked" }
+            required />
+          </label>
+
+          <label class="block-label" for="scottishRate-no">@Messages("quick_calc.over_state_pension_age.no")
+            <input type="radio"
+            id="scottishRate-no"
+            name="scottishRate"
+            value="false"
+              @if(radioField.value.contains("false")) { checked="checked" }
+            required />
+          </label>
+
+        </fieldset>
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="button" value="@Messages("continue")">
+      </div>
+    </form>
+
+    <a href="@{request.uri}">@Messages("back")</a>
+
+  </div>
+
+}

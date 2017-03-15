@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.model
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
+
+import java.time.LocalDate
 
 import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.libs.json._
-import uk.gov.hmrc.payetaxcalculatorfrontend.model.CustomFormatters._
+import uk.gov.hmrc.payeestimator.domain.{TaxCalcResource, TaxCalcResourceBuilder}
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 
 
 case class UserTaxCode(hasTaxCode: Boolean, taxCode: Option[String])
@@ -38,7 +41,7 @@ object UserTaxCode extends TaxCalculatorHelper {
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
       if (data.getOrElse(hasTaxCode, "false") == "true") {
-        if (isValidTaxCode(data.getOrElse(taxCode, ""))) Right(Some(data.getOrElse(taxCode, "")))
+        if (isStandardTaxCode(data.getOrElse(taxCode, ""))) Right(Some(data.getOrElse(taxCode, "")))
         else {
           data.getOrElse(taxCode, "") match {
             case code if code.isEmpty => Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
@@ -85,5 +88,9 @@ object UserTaxCode extends TaxCalculatorHelper {
       }
     }
   }
+
+  def taxConfig(taxCode: String): TaxCalcResource = TaxCalcResourceBuilder.resourceForDate(
+    LocalDate.now(),
+    isValidScottishTaxCode(taxCode))
 
 }

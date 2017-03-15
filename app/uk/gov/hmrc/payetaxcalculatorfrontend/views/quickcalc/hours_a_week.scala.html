@@ -1,0 +1,47 @@
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+@import play.api.i18n._
+@import views.html.helper._
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
+
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{Hours, YouHaveToldUsItem}
+
+@(valueInPence:Int, hoursForm: Form[Hours], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+
+  <div class="grid-layout grid-layout--stacked">
+
+    <header class="page-header">
+      <h1>@Messages("simple_calc.salary.question.hours_a_week")</h1>
+    </header>
+    <p class="faded-text faded-text--small">@Messages("simple_calc.salary.question.approximate")</p>
+
+    @helper.form(action = controllers.routes.QuickCalcController.submitHoursAWeek(valueInPence)) {
+      @helper.CSRF.formField
+
+      <label class="form-field-group form-field--error panel-indent">
+
+        @if(hoursForm("howManyAWeek").hasErrors){
+          <div class="error-notification">
+          @{hoursForm("howManyAWeek").errors.head.message}
+          </div>
+        }
+        <input style= "display:inline " type="text" name="howManyAWeek" maxlength="3" size="3" required />
+
+        <p style= "display:inline">hours a week</p>
+
+      </label>
+
+      <input type="hidden" name="value" value=@valueInPence>
+
+      <div class="form-group">
+        <input type="submit" class="button" value="Continue">
+      </div>
+    }
+    <div>
+      <a href="@{request.uri}">@Messages("back")</a>
+    </div>
+
+  </div>
+
+}

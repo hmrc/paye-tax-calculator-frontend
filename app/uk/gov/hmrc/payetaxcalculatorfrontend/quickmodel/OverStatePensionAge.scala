@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.model
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import uk.gov.hmrc.payetaxcalculatorfrontend.model.CustomFormatters._
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 
 case class OverStatePensionAge(value: Boolean) extends AnyVal
 

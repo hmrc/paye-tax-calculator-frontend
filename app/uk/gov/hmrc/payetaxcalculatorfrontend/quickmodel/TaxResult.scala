@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.model
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
-import uk.gov.hmrc.time.TaxYearResolver
 
 object TaxResult {
 
@@ -38,44 +37,49 @@ object TaxResult {
   }
 
   def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
-    case Some(s) => s match {
-      case s: Yearly => s.value * 100
-      case s: Monthly => s.value * 100
-      case s: Weekly => s.value * 100
-      case s: Daily => s.value * 100
-      case s: Hourly => s.value * 100
+    case Some(s) => s.period match {
+      case "yearly" => s.value * 100
+      case "monthly" => s.value * 100
+      case "weekly" => s.value * 100
+      case "daily" => s.value
+      case "hourly" => s.value
+      case _ => throw new Exception("No Salary has been provided.")
     }
     case None => throw new Exception("No Salary has been provided.")
   }
 
   def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
-    case Some(s) => s match {
-      case s: Yearly => "annual"
-      case s: Monthly => "monthly"
-      case s: Weekly => "weekly"
+    case Some(s) => s.period match {
+      case "yearly" => "annual"
+      case "monthly" => "monthly"
+      case "weekly" => "weekly"
       case _ => ""
     }
     case _ => ""
   }
 
+
   /**
     * This function is called "extractHours" because in "buildTaxCalc" function, the last parameter is called "hoursIn".
     * "hoursIn" does not only means hours but can also mean days.
     * buildTaxCalc will use the number returned to calculate the weekly gross pay from Daily or Hourly via those case classes.
-   **/
+    **/
   def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
-    case Some(s) => s match {
-      case s: Daily => s.howManyDaysAWeek
-      case s: Hourly => s.howManyHoursAWeek
+    case Some(s) => s.period match {
+      case "daily" => s.value.toInt
+      case "hourly" => s.value.toInt
       case _ => -1
     }
     case _ => -1
   }
 
   def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput) = {
+
+    val taxCode = extractTaxCode(quickCalcAggregateInput)
+
     buildTaxCalc(
       extractOverStatePensionAge(quickCalcAggregateInput),
-      TaxYearResolver.currentTaxYear,
+      taxCalcResource = UserTaxCode.taxConfig(taxCode),
       extractTaxCode(quickCalcAggregateInput),
       extractSalary(quickCalcAggregateInput).toInt,
       extractPayPeriod(quickCalcAggregateInput),

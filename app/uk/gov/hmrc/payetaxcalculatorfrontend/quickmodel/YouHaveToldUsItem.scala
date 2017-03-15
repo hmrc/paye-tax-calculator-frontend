@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.model
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
@@ -47,16 +47,16 @@ object YouHaveToldUs {
         else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url, idSuffix)
     }
   }
-
-  implicit def yearlyFormat(implicit m: Messages): YouHaveToldUs[Yearly] = formatForIndividualSalary[Yearly]
-  implicit def monthlyFormat(implicit m: Messages): YouHaveToldUs[Monthly] = formatForIndividualSalary[Monthly]
-  implicit def weeklyFormat(implicit m: Messages): YouHaveToldUs[Weekly] = formatForIndividualSalary[Weekly]
-  implicit def dailyFormat(implicit m: Messages): YouHaveToldUs[Daily] = formatForIndividualSalary[Daily]
-  implicit def hourlyFormat(implicit m: Messages): YouHaveToldUs[Hourly] = formatForIndividualSalary[Hourly]
-
-  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
-    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
-  }
+//
+//  implicit def yearlyFormat(implicit m: Messages): YouHaveToldUs[YearlyAmount] = formatForIndividualSalary[YearlyAmount]
+//  implicit def monthlyFormat(implicit m: Messages): YouHaveToldUs[MonthlyAmount] = formatForIndividualSalary[MonthlyAmount]
+//  implicit def weeklyFormat(implicit m: Messages): YouHaveToldUs[WeeklyAmount] = formatForIndividualSalary[WeeklyAmount]
+//  implicit def dailyFormat(implicit m: Messages): YouHaveToldUs[DailyAmount] = formatForIndividualSalary[DailyAmount]
+//  implicit def hourlyFormat(implicit m: Messages): YouHaveToldUs[HourlyAmount] = formatForIndividualSalary[HourlyAmount]
+//
+//  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
+//    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
+//  }
 
   implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
@@ -64,13 +64,8 @@ object YouHaveToldUs {
       def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
       val idSuffix = "income"
       def asPounds(v: BigDecimal) = "£" + v
-      s match {
-        case Yearly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.YEARLY), url, idSuffix)
-        case Monthly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.MONTHLY), url, idSuffix)
-        case Weekly(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.WEEKLY), url, idSuffix)
-        case Daily(v, _) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.DAILY), url, idSuffix)
-        case Hourly(v, _) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.HOURLY), url, idSuffix)
-      }
+
+      YouHaveToldUsItem(asPounds(s.value), labelFor(s.period), url, idSuffix)
     }
   }
 }

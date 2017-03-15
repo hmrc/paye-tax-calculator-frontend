@@ -1,7 +1,11 @@
-@import uk.gov.hmrc.payetaxcalculatorfrontend.model.{UserTaxCode, YouHaveToldUsItem}
-@import uk.gov.hmrc.payetaxcalculatorfrontend.model.UserTaxCode._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUsItem
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.UserTaxCode
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.UserTaxCode._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
-@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
+@import views.html.helper._
+@import uk.gov.hmrc.play.views.html._
+
 
 @(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
@@ -73,9 +77,6 @@
 
     </div>
 
-    <div class="grid-layout__column grid-layout__column--1-3">
-    @you_have_told_us(youHaveToldUsItems)
-    </div>
   </div>
 
 }

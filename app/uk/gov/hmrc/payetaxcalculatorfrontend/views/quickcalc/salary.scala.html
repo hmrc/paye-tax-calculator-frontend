@@ -1,71 +1,58 @@
-@import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem
-@import uk.gov.hmrc.payetaxcalculatorfrontend.model.Salary
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
-@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.you_have_told_us
-@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.salary_amount_input
-@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.salary_radio_box
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 @import play.api.i18n._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{Salary, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 @import views.html.helper._
+@import uk.gov.hmrc.play.views.html._
 
 @(form: Form[Salary], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@periodLabels = @{List("yearly","monthly","weekly","daily","hourly")}
 
-@radioField = @{ form("salaryType") }
-@radioElements = @{ FieldElements(radioField.id, radioField, null, Map.empty, messages) }
-
-@scriptProvidingTogglingOfRadioButtons = {
-  <script src='@routes.Assets.at("javascripts/shame.js")' type="text/javascript"></script>
-}
-
-@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width"), scriptElem = Some(scriptProvidingTogglingOfRadioButtons)) {
+@main_template(title = Messages("simple_calc.salary.header.title"), mainClass = Some("full-width")) {
 
   <div class="grid-layout--stacked">
+    <div class="grid-layout__column">
 
-    <div class="grid-layout__column grid-layout__column--2-3">
-
-    <header class="page-header">
+      <header class="page-header">
         <h1>@Messages("quick_calc.salary.header")</h1>
-    </header>
+        <p class="faded-text faded-text--small">@Messages("quick_calc.salary.description")</p>
+      </header>
 
-    <h2 class="heading-medium">@Messages("quick_calc.salary.question.How_you_paid")</h2>
+      <br>
 
-      @helpers.form(action = controllers.routes.QuickCalcController.submitSalaryForm) {
+      <p class="heading-medium">@Messages("quick_calc.salary.question.how_much_you_earn")</p>
+
+      @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitSalaryAmount) {
+        @helper.CSRF.formField
+
         <div class="form-group">
 
-          <fieldset class="form-field-group js-visible js-aria-show @if(radioElements.hasErrors){ form-field-error } js-toggle-shame"
-                    id="us-number"
-                    data-trigger="js-toggle-trigger">
+          <fieldset class="form-field-group js-toggle" data-trigger="js-toggle-trigger">
 
-            @radioElements.errors.map { error => <span class="error-notification">@Messages(error)</span> }
+            <label class="form-field--error panel-indent">
+              @if(form("value").hasErrors){
+                <div class="error-notification">
+                  @{form("value").errors.head.message}
+                </div>
+              }
+              <span>£</span>
+              <input type="text" id="value" name="value" value="" required />
+            </label>
 
-            @salary_radio_box(radioElements, Messages("quick_calc.salary.year"), "yearly")
-            @salary_amount_input(form("amount-yearly"), Messages("quick_calc.salary.question.earn_a_year"), visible = radioField.value.contains("yearly"))
+            <br>
 
-            @salary_radio_box(radioElements, Messages("quick_calc.salary.month"), "monthly")
-            @salary_amount_input(form("amount-monthly"), Messages("quick_calc.salary.question.earn_a_month"), visible = radioField.value.contains("monthly"))
+            <p class="heading-medium">@Messages("quick_calc.salary.question.how_much_you_earn.period_selection")</p>
 
-            @salary_radio_box(radioElements, Messages("quick_calc.salary.week"), "weekly")
-            @salary_amount_input(form("amount-weekly"), Messages("quick_calc.salary.question.earn_a_week"), visible = radioField.value.contains("weekly"))
+            @for(label <- periodLabels) {
+              <label class="block-label">@Messages(s"quick_calc.salary.$label")
+              <input type="radio"
+              class="js-toggle-trigger"
+              name="period"
+              value="@label"
+              required />
+              </label>
 
-            @salary_radio_box(radioElements, Messages("quick_calc.salary.day"), "daily")
-            @salary_amount_input(
-              form("amount-daily"),
-              Messages("quick_calc.salary.question.earn_a_day"),
-              radioField.value.contains("daily"),
-              Some(Messages("quick_calc.salary.question.days_a_week")),
-              Some(form("howManyDaysAWeek-daily"))
-            )
-
-            @salary_radio_box(radioElements, Messages("quick_calc.salary.hour"), "hourly")
-            @salary_amount_input(
-              form("amount-hourly"),
-              Messages("quick_calc.salary.question.earn_a_hour"),
-              radioField.value.contains("hourly"),
-              Some(Messages("quick_calc.salary.question.hours_a_week")),
-              Some(form("howManyHoursAWeek-hourly"))
-            )
-
+            }
 
           </fieldset>
         </div>
@@ -75,11 +62,6 @@
         </div>
       }
 
-
-    </div>
-
-    <div class="grid-layout__column grid-layout__column--1-3">
-      @you_have_told_us(youHaveToldUsItems)
     </div>
 
   </div>
