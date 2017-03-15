@@ -20,10 +20,10 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 
 case class QuickCalcAggregateInput(salary: Option[Salary],
-                                   isOverStatePensionAge: Option[OverStatePensionAge],
+                                   taxCode: Option[UserTaxCode],
                                    scottishRate: Option[ScottishRate]){
 
-  def allQuestionsAnswered: Boolean = List(salary, isOverStatePensionAge, scottishRate).forall(_.isDefined)
+  def allQuestionsAnswered: Boolean = List(salary, taxCode, scottishRate).forall(_.isDefined)
 
   def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] = {
     List(

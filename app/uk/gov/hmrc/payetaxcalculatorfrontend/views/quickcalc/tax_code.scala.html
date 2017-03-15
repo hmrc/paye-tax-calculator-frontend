@@ -1,78 +1,82 @@
-@*@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{UserTaxCode, YouHaveToldUsItem}*@
-@*@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.UserTaxCode._*@
-@*@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template*@
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUsItem
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.UserTaxCode
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.UserTaxCode._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
+@import views.html.helper._
+@import uk.gov.hmrc.play.views.html._
 
 
-@*@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)*@
+@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
-@*@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {*@
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
-  @*<div class="grid-layout--stacked">*@
+  <div class="grid-layout--stacked">
 
-    @*<div class="grid-layout__column grid-layout__column--2-3">*@
+    <div class="grid-layout__column grid-layout__column--2-3">
 
-      @*<header class="page-header">*@
-        @*<h1>@Messages("quick_calc.about_tax_code.header")</h1>*@
-      @*</header>*@
+      <header class="page-header">
+        <h1>@Messages("quick_calc.about_tax_code.header")</h1>
+      </header>
 
-      @*@helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitTaxCodeForm) {*@
-        @*@helper.CSRF.formField*@
+      @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitTaxCodeForm) {
+        @helper.CSRF.formField
 
-        @*<div class="form-group">*@
-          @*<fieldset class="inline form-field-group js-visible js-aria-show js-toggle"*@
-          @*id="hasTaxCode"*@
-          @*data-target="tax-code-yes-target"*@
-          @*data-trigger="js-toggle-trigger"*@
-          @*data-open="tax-code-yes"*@
-          @*data-close="tax-code-no">*@
+        <div class="form-group">
+          <fieldset class="inline form-field-group js-visible js-aria-show js-toggle"
+          id="hasTaxCode"
+          data-target="tax-code-yes-target"
+          data-trigger="js-toggle-trigger"
+          data-open="tax-code-yes"
+          data-close="tax-code-no">
 
-            @*<label class="block-label" for="tax-code-yes">@Messages("quick_calc.about_tax_code.has_tax_code_yes")*@
-              @*<input type="radio"*@
-              @*id="tax-code-yes"*@
-              @*class="js-toggle-trigger"*@
-              @*name="hasTaxCode"*@
-              @*value="true"*@
-              @*@checkUserSelection(selection = true, userTaxCodeForm)*@
-              @*required />*@
-            @*</label>*@
+            <label class="block-label" for="tax-code-yes">@Messages("quick_calc.about_tax_code.has_tax_code_yes")
+              <input type="radio"
+              id="tax-code-yes"
+              class="js-toggle-trigger"
+              name="hasTaxCode"
+              value="true"
+              @checkUserSelection(selection = true, userTaxCodeForm)
+              required />
+            </label>
 
-            @*<label class="block-label" for="tax-code-no">@Messages("quick_calc.about_tax_code.has_tax_code_no")*@
-              @*<input type="radio"*@
-              @*id="tax-code-no"*@
-              @*class="js-toggle-trigger"*@
-              @*name="hasTaxCode"*@
-              @*value="false"*@
-              @*@checkUserSelection(selection = false, userTaxCodeForm)*@
-              @*required />*@
-            @*</label>*@
+            <label class="block-label" for="tax-code-no">@Messages("quick_calc.about_tax_code.has_tax_code_no")
+              <input type="radio"
+              id="tax-code-no"
+              class="js-toggle-trigger"
+              name="hasTaxCode"
+              value="false"
+              @checkUserSelection(selection = false, userTaxCodeForm)
+              required />
+            </label>
 
-            @*<div class="form-field-group form-field--error panel-indent @hideTextField(userTaxCodeForm)" id="tax-code-yes-target">*@
+            <div class="form-field-group form-field--error panel-indent @hideTextField(userTaxCodeForm)" id="tax-code-yes-target">
 
-              @*@if(userTaxCodeForm("taxCode").errors){*@
-                  @*<div class="error-notification">*@
-                    @*@userTaxCodeForm("taxCode").errors.head.message*@
-                  @*</div>*@
-              @*}*@
-              @*@Messages("quick_calc.about_tax_code.has_tax_code")<br>*@
-              @*<input type="text" id="taxCode" name="taxCode" value=@{*@
-                @*userTaxCodeForm.value match {*@
-                  @*case Some(userTaxCode) => userTaxCode.taxCode.getOrElse("")*@
-                  @*case _ => ""*@
-                @*}*@
-              @*}>*@
+              @if(userTaxCodeForm("taxCode").errors){
+                  <div class="error-notification">
+                    @userTaxCodeForm("taxCode").errors.head.message
+                  </div>
+              }
+              @Messages("quick_calc.about_tax_code.has_tax_code")<br>
+              <input type="text" id="taxCode" name="taxCode" value=@{
+                userTaxCodeForm.value match {
+                  case Some(userTaxCode) => userTaxCode.taxCode.getOrElse("")
+                  case _ => ""
+                }
+              }>
 
-            @*</div>*@
+            </div>
 
-          @*</fieldset>*@
-        @*</div>*@
+          </fieldset>
+        </div>
 
-        @*<div class="form-group">*@
-          @*<input type="submit" class="button" value="@Messages("continue")">*@
-        @*</div>*@
-      @*}*@
+        <div class="form-group">
+          <input type="submit" class="button" value="@Messages("continue")">
+        </div>
+      }
 
-    @*</div>*@
-    @**@
-  @*</div>*@
+    </div>
 
-@*}*@
+  </div>
+
+}
