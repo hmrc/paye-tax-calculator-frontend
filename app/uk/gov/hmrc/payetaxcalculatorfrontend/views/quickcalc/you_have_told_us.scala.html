@@ -1,25 +1,25 @@
-@*@import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem*@
-@*@(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)*@
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUsItem
+@(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
-@*@if(items.nonEmpty) {*@
-  @*<table style="margin-left: 15px">*@
-    @*<thead>*@
-    @*<tr>*@
-      @*<th colspan="2">@Messages("quick_calc.you_have_told_us.header")</th>*@
-    @*</tr>*@
-    @*</thead>*@
-    @*<tbody>*@
-    @*@items.map { item =>*@
-      @*<tr>*@
-        @*<td>*@
-          @*<div class="data">*@
-            @*<span class="data-item bold-medium">@item.value</span>*@
-            @*<span class="data-item bold-xsmall">@item.label</span>*@
-          @*</div>*@
-        @*</td>*@
-        @*<td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")</a></td>*@
-      @*</tr>*@
-    @*}*@
-    @*</tbody>*@
-  @*</table>*@
-@*}*@
+@if(items.nonEmpty) {
+  <table style="margin-left: 15px">
+    <thead>
+    <tr>
+      <th colspan="2">@Messages("quick_calc.you_have_told_us.header")</th>
+    </tr>
+    </thead>
+    <tbody>
+    @items.map { item =>
+      <tr>
+        <td>
+          <div class="data">
+            <span class="data-item bold-medium">@item.value</span>
+            <span class="data-item bold-xsmall">@item.label</span>
+          </div>
+        </td>
+        <td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")</a></td>
+      </tr>
+    }
+    </tbody>
+  </table>
+}

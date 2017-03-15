@@ -37,17 +37,17 @@ object YouHaveToldUs {
     }
   }
 
-//  implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[OverStatePensionAge] {
-//    def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {
-//      val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
-//      val idSuffix = "pension-state"
-//      val url = routes.QuickCalcController.showAgeForm().url
-//      YouHaveToldUsItem(
-//        if(overStatePensionAge.value) Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
-//        else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url, idSuffix)
-//    }
-//  }
-
+  implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[OverStatePensionAge] {
+    def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {
+      val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
+      val idSuffix = "pension-state"
+      val url = routes.QuickCalcController.showAgeForm().url
+      YouHaveToldUsItem(
+        if(overStatePensionAge.value) Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
+        else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url, idSuffix)
+    }
+  }
+//
 //  implicit def yearlyFormat(implicit m: Messages): YouHaveToldUs[YearlyAmount] = formatForIndividualSalary[YearlyAmount]
 //  implicit def monthlyFormat(implicit m: Messages): YouHaveToldUs[MonthlyAmount] = formatForIndividualSalary[MonthlyAmount]
 //  implicit def weeklyFormat(implicit m: Messages): YouHaveToldUs[WeeklyAmount] = formatForIndividualSalary[WeeklyAmount]
@@ -57,20 +57,15 @@ object YouHaveToldUs {
 //  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
 //    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
 //  }
-//
-//  implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
-//    def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
-//      val url = routes.QuickCalcController.showSalaryForm().url
-//      def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
-//      val idSuffix = "income"
-//      def asPounds(v: BigDecimal) = "£" + v
-//      s match {
-//        case YearlyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.YEARLY), url, idSuffix)
-//        case MonthlyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.MONTHLY), url, idSuffix)
-//        case WeeklyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.WEEKLY), url, idSuffix)
-//        case DailyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.DAILY), url, idSuffix)
-//        case HourlyAmount(v) => YouHaveToldUsItem(asPounds(v), labelFor(Salary.HOURLY), url, idSuffix)
-//      }
-//    }
-//  }
+
+  implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
+    def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
+      val url = routes.QuickCalcController.showSalaryForm().url
+      def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
+      val idSuffix = "income"
+      def asPounds(v: BigDecimal) = "£" + v
+
+      YouHaveToldUsItem(asPounds(s.value), labelFor(s.period), url, idSuffix)
+    }
+  }
 }
