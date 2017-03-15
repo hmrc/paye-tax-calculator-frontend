@@ -16,14 +16,16 @@ POST        /quick-calculation/salary/hourly/:value        uk.gov.hmrc.payetaxca
 GET         /quick-calculation/salary/daily/:value         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showDaysAWeek(value: Int)
 POST        /quick-calculation/salary/daily/:value         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitDaysAWeek(value: Int)
 
-#GET         /quick-calculation/age                         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showAgeForm
-#POST        /quick-calculation/age                         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitAgeForm
+GET         /quick-calculation/age                         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showAgeForm
+POST        /quick-calculation/age                         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitAgeForm
 
 GET         /quick-calculation/scottishRate                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showScottishRateForm
 POST        /quick-calculation/scottishRate                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitScottishRateForm
 
 GET         /quick-calculation/taxCode                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
 POST        /quick-calculation/taxCode                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitTaxCodeForm
+
+GET         /quick-calculation/taxCode                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                   controllers.Assets.at(path="/public", file)
