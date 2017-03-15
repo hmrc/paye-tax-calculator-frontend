@@ -21,6 +21,7 @@ import play.api.libs.json.Json
 
 case class QuickCalcAggregateInput(salary: Option[Salary],
                                    taxCode: Option[UserTaxCode],
+                                   isOverStatePensionAge: Option[OverStatePensionAge],
                                    scottishRate: Option[ScottishRate]){
 
   def allQuestionsAnswered: Boolean = List(salary, taxCode, scottishRate).forall(_.isDefined)
@@ -36,7 +37,7 @@ case class QuickCalcAggregateInput(salary: Option[Salary],
 }
 
 object QuickCalcAggregateInput {
-  def newInstance = QuickCalcAggregateInput(None, None, None)
+  def newInstance = QuickCalcAggregateInput(None, None, None, None)
   implicit val format = Json.format[QuickCalcAggregateInput]
 }
 

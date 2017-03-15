@@ -36,6 +36,17 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     Redirect(routes.QuickCalcController.showSalaryForm())
   }
 
+  def showResult() = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        if (aggregate.allQuestionsAnswered) {
+          Ok(result(aggregate))
+        } else {
+          redirectToNotYetDonePage(aggregate)
+        }
+      case None => Redirect(routes.QuickCalcController.showTaxCodeForm())
+    }
+  }
 
   def showTaxCodeForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
@@ -70,6 +81,8 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       }
     )
   }
+
+
 
   def showSalaryForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
@@ -106,32 +119,32 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     )
   }
 
-//  def showAgeForm() = ActionWithSessionId.async { implicit request =>
-//    cache.fetchAndGetEntry.map {
-//      case Some(aggregate) =>
-//        val form = aggregate.isOverStatePensionAge.map(OverStatePensionAge.form.fill).getOrElse(OverStatePensionAge.form)
-//        Ok(state_pension(form, aggregate.youHaveToldUsItems))
-//      case None =>
-//        Ok(state_pension(OverStatePensionAge.form, Nil))
-//    }
-//  }
-//
-//  def submitAgeForm() = ActionWithSessionId.async { implicit request =>
-//    OverStatePensionAge.form.bindFromRequest.fold(
-//      formWithErrors => cache.fetchAndGetEntry.map {
-//        case Some(aggregate) => BadRequest(state_pension(formWithErrors, aggregate.youHaveToldUsItems))
-//        case None => BadRequest(state_pension(formWithErrors, Nil))
-//      },
-//      userAge => cache.fetchAndGetEntry.flatMap {
-//        case Some(aggregate) =>
-//          val updatedAggregate = aggregate.copy(isOverStatePensionAge = Some(userAge))
-//          cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.showScottishRateForm())}
-//        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(isOverStatePensionAge = Some(userAge))).map {
-//          _ =>  Redirect(routes.QuickCalcController.showScottishRateForm())
-//        }
-//      }
-//    )
-//  }
+  def showAgeForm() = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) =>
+        val form = aggregate.isOverStatePensionAge.map(OverStatePensionAge.form.fill).getOrElse(OverStatePensionAge.form)
+        Ok(state_pension(form, aggregate.youHaveToldUsItems))
+      case None =>
+        Ok(state_pension(OverStatePensionAge.form, Nil))
+    }
+  }
+
+  def submitAgeForm() = ActionWithSessionId.async { implicit request =>
+    OverStatePensionAge.form.bindFromRequest.fold(
+      formWithErrors => cache.fetchAndGetEntry.map {
+        case Some(aggregate) => BadRequest(state_pension(formWithErrors, aggregate.youHaveToldUsItems))
+        case None => BadRequest(state_pension(formWithErrors, Nil))
+      },
+      userAge => cache.fetchAndGetEntry.flatMap {
+        case Some(aggregate) =>
+          val updatedAggregate = aggregate.copy(isOverStatePensionAge = Some(userAge))
+          cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.showScottishRateForm())}
+        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(isOverStatePensionAge = Some(userAge))).map {
+          _ =>  Redirect(routes.QuickCalcController.showScottishRateForm())
+        }
+      }
+    )
+  }
 
   def showScottishRateForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
