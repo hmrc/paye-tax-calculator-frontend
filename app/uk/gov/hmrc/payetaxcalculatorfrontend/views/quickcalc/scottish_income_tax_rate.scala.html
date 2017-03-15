@@ -1,5 +1,5 @@
 @import play.api.i18n._
-@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.{ScottishRate, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{ScottishRate, YouHaveToldUsItem}
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 
 @(ScottishRate: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
@@ -10,14 +10,14 @@
   <div class="grid-layout--stacked">
 
     <header class="page-header">
-      <h1>Do you pay the Scottish Income Tax Rate?</h1>
+      <h1>@Messages("simple_calc.salary.question.scottish_income")</h1>
     </header>
 
-    <p>You usually pay <a href="https://www.gov.uk/scottish-rate-income-tax">Scottish Income Tax</a>
-      if you live in Scotland for more than half the tax year. It doesn't matter where you work</p>
+    <p class="faded-text faded-text--small">@Messages("simple_calc.salary.question.scottish_income_url_a") <a href="https://www.gov.uk/scottish-rate-income-tax">@Messages("simple_calc.salary.question.scottish_income_url_b")</a>
+      @Messages("simple_calc.salary.question.scottish_income_url_c")</p>
 
 
-    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.SimpleCalcController.submitAgeForm" method="post">
+    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitAgeForm" method="post">
       @helper.CSRF.formField
 
       <div class="form-group">
@@ -50,7 +50,7 @@
       </div>
     </form>
 
-    <a href="">Back</a>
+    <a href="@{request.uri}">@Messages("back")</a>
 
   </div>
 

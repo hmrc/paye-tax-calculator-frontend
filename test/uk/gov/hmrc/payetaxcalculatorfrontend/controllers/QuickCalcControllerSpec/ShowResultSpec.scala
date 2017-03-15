@@ -72,7 +72,7 @@ class ShowResultSpec extends AppUnitGenerator {
       val status = result.header.status
 
       val actualRedirect = redirectLocation(result).get
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/age"
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/state_pension"
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }

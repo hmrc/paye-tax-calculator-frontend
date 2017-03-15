@@ -44,12 +44,12 @@ object QuickCalcCacheSetup {
 
   val aggregateListOnlyTaxCodeAndStatePension = List(
     YouHaveToldUsItem("1150L", "Tax Code", "/foo","tax-code"),
-    YouHaveToldUsItem("YES", "Over 65", "/foo", "age")
+    YouHaveToldUsItem("YES", "Over 65", "/foo", "state_pension")
   )
 
   val aggregateListTaxCodeStatePensionAndSalary = List(
     YouHaveToldUsItem("1150L", "Tax Code", "/foo","tax-code"),
-    YouHaveToldUsItem("YES", "Over 65", "/foo", "age"),
+    YouHaveToldUsItem("YES", "Over 65", "/foo", "state_pension"),
     YouHaveToldUsItem("20000", "Per year", "/foo", "salary")
   )
 

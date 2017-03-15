@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
@@ -28,14 +28,14 @@ trait YouHaveToldUs[A] {
 object YouHaveToldUs {
   def apply[A : YouHaveToldUs](a: A) = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
-  implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
-    def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
-      val label = Messages("quick_calc.you_have_told_us.about_tax_code.label")
-      val idSuffix = "tax-code"
-      val url = routes.QuickCalcController.showTaxCodeForm().url
-      YouHaveToldUsItem(t.taxCode.getOrElse(UserTaxCode.defaultTaxCode), label, url, idSuffix)
-    }
-  }
+//  implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
+//    def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
+//      val label = Messages("quick_calc.you_have_told_us.about_tax_code.label")
+//      val idSuffix = "tax-code"
+//      val url = routes.QuickCalcController.showTaxCodeForm().url
+//      YouHaveToldUsItem(t.taxCode.getOrElse(UserTaxCode.defaultTaxCode), label, url, idSuffix)
+//    }
+//  }
 
   implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[OverStatePensionAge] {
     def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {

@@ -34,7 +34,7 @@ class SubmitAgeSpec extends AppUnitGenerator {
 
       val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq:_*)
-        .withSession(SessionKeys.sessionId -> "test-age"))
+        .withSession(SessionKeys.sessionId -> "test-state_pension"))
 
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
@@ -52,7 +52,7 @@ class SubmitAgeSpec extends AppUnitGenerator {
 
       val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
-        .withSession(SessionKeys.sessionId -> "test-age")
+        .withSession(SessionKeys.sessionId -> "test-state_pension")
 
       val status = result.header.status
       val parseHTML = Jsoup.parse(contentAsString(result))
@@ -69,7 +69,7 @@ class SubmitAgeSpec extends AppUnitGenerator {
 
       val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
-        .withSession(SessionKeys.sessionId -> "test-age")
+        .withSession(SessionKeys.sessionId -> "test-state_pension")
 
       val status = result.header.status
       val actualRedirectUri = redirectLocation(result).get
@@ -87,7 +87,7 @@ class SubmitAgeSpec extends AppUnitGenerator {
 
       val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
-        .withSession(SessionKeys.sessionId -> "test-age")
+        .withSession(SessionKeys.sessionId -> "test-state_pension")
 
       val status = result.header.status
       val actualRedirectUri = redirectLocation(result).get
@@ -105,7 +105,7 @@ class SubmitAgeSpec extends AppUnitGenerator {
 
       val result = action(request
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
-        .withSession(SessionKeys.sessionId -> "test-age")
+        .withSession(SessionKeys.sessionId -> "test-state_pension")
 
       val status = result.header.status
       val actualRedirectUri = redirectLocation(result).get

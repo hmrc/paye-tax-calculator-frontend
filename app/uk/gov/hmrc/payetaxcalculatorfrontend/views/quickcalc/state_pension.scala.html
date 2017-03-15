@@ -1,0 +1,58 @@
+@import play.api.i18n._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{OverStatePensionAge, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
+
+@(overStatePensionAgeForm: Form[OverStatePensionAge], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+
+@radioField = @{ overStatePensionAgeForm("overStatePensionAge") }
+
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+
+  <div class="grid-layout--stacked">
+
+
+    <header class="page-header">
+      <h1>@Messages("quick_calc.over_state_pension_age.header")</h1>
+    </header>
+
+    <p class="faded-text faded-text--small">@Messages("simple_calc.salary.question.state_pension_url_a") <a href="https://www.gov.uk/state-pension-age">@Messages("simple_calc.salary.question.state_pension_url_b")</a>
+      @Messages("simple_calc.salary.question.state_pension_url_c")</p>
+
+
+    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitAgeForm" method="post">
+      @helper.CSRF.formField
+
+      <div class="form-group">
+        <fieldset class="inline form-field-group" id="overStatePensionAge">
+
+          <label class="block-label">@Messages("quick_calc.over_state_pension_age.yes")
+            <input type="radio"
+            name="overStatePensionAge"
+            value="true"
+              @if(radioField.value.contains("true")) { checked="checked" }
+            required />
+          </label>
+
+          <label class="block-label">@Messages("quick_calc.over_state_pension_age.no")
+            <input type="radio"
+            name="overStatePensionAge"
+            value="false"
+              @if(radioField.value.contains("false")) { checked="checked" }
+            required />
+          </label>
+
+        </fieldset>
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="button" value="@Messages("continue")">
+      </div>
+    </form>
+
+    <div>
+      <a href="@{request.uri}">@Messages("back")</a>
+    </div>
+
+  </div>
+
+}
