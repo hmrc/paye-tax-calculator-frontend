@@ -112,8 +112,13 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
               cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.showTaxCodeForm())}
           }
         }
-        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(salaryAmount))).map {
-          _ => Redirect(routes.QuickCalcController.showTaxCodeForm())
+        case None => `salaryAmount`.period match {
+          case "daily" =>
+            cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(salaryAmount))).map { _ => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.value)))}
+          case "hourly" =>
+            cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(salaryAmount))).map { _ => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.value)))}
+          case _ =>
+            cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(salaryAmount))).map { _ => Redirect(routes.QuickCalcController.showTaxCodeForm())}
         }
       }
     )

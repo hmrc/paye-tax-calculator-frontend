@@ -17,12 +17,13 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import java.time.LocalDate
+
 import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.libs.json._
-import uk.gov.hmrc.payeestimator.domain.TaxCalcResourceBuilder
+import uk.gov.hmrc.payeestimator.domain.{TaxCalcResource, TaxCalcResourceBuilder}
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 
@@ -88,7 +89,7 @@ object UserTaxCode extends TaxCalculatorHelper {
     }
   }
 
-  def taxConfig(taxCode: String) = TaxCalcResourceBuilder.resourceForDate(
+  def taxConfig(taxCode: String): TaxCalcResource = TaxCalcResourceBuilder.resourceForDate(
     LocalDate.now(),
     isValidScottishTaxCode(taxCode))
 

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
-import uk.gov.hmrc.time.TaxYearResolver
 
 object TaxResult {
 
