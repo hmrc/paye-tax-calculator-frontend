@@ -1,5 +1,5 @@
 @import play.api.i18n._
-@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.{OverStatePensionAge, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{OverStatePensionAge, YouHaveToldUsItem}
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 
 @(overStatePensionAgeForm: Form[OverStatePensionAge], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
@@ -19,7 +19,7 @@
       @Messages("simple_calc.salary.question.state_pension_url_c")</p>
 
 
-    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.SimpleCalcController.submitAgeForm" method="post">
+    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitAgeForm" method="post">
       @helper.CSRF.formField
 
       <div class="form-group">

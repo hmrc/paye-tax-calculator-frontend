@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.CustomFormatters._
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 
-case class ScottishRate(value: Boolean) extends AnyVal
+case class OverStatePensionAge(value: Boolean) extends AnyVal
 
-object ScottishRate {
+object OverStatePensionAge {
 
-  implicit val format = Json.format[ScottishRate]
+  implicit val format = Json.format[OverStatePensionAge]
   def form(implicit messages: Messages) = Form(
     mapping(
-      "scottishRate" -> of(requiredBooleanFormatter)
-    )(ScottishRate.apply)(ScottishRate.unapply))
+      "overStatePensionAge" -> of(requiredBooleanFormatter)
+    )(OverStatePensionAge.apply)(OverStatePensionAge.unapply))
 }
+

@@ -4,7 +4,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
-@import uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel.{Days, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{Days, YouHaveToldUsItem}
 
 @(valueInPence:Int, daysForm: Form[Days], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
@@ -16,7 +16,7 @@
     </header>
     <p class="faded-text faded-text--small">@Messages("simple_calc.salary.question.approximate")</p>
 
-    @helper.form(action = controllers.routes.SimpleCalcController.submitDaysAWeek(valueInPence)) {
+    @helper.form(action = controllers.routes.QuickCalcController.submitDaysAWeek(valueInPence)) {
       @helper.CSRF.formField
 
       <label class="form-field-group form-field--error panel-indent">

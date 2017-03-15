@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.simplemodel
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import play.api.data.FormError
 import play.api.data.format.Formatter
