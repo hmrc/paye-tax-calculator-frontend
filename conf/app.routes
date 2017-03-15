@@ -25,6 +25,8 @@ POST        /quick-calculation/scottishRate                uk.gov.hmrc.payetaxca
 GET         /quick-calculation/taxCode                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
 POST        /quick-calculation/taxCode                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitTaxCodeForm
 
+GET         /quick-calculation/summary                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.summary
+
 GET         /quick-calculation/showResult                  uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult
 
 # Map static resources from the /public folder to the /assets URL path

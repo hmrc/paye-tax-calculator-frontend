@@ -36,6 +36,14 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     Redirect(routes.QuickCalcController.showSalaryForm())
   }
 
+  def summary() = ActionWithSessionId.async { implicit request =>
+    println("111111111")
+    cache.fetchAndGetEntry.map {
+      case Some(aggregate) => Ok(you_have_told_us(aggregate.youHaveToldUsItems))
+      case None => Redirect(routes.QuickCalcController.showSalaryForm())
+    }
+  }
+
   def showResult() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
@@ -67,7 +75,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
           val newAggregate = aggregate.copy(taxCode = Some(updatedTaxCode))
           cache.save(newAggregate).map { _ =>
             nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
-              if (newTaxCode.hasTaxCode) Redirect(routes.QuickCalcController.showResult())
+              if (newTaxCode.hasTaxCode) Redirect(routes.QuickCalcController.summary())
               else Redirect(routes.QuickCalcController.showScottishRateForm())
             }
           }
@@ -75,7 +83,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
           val aggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))
           cache.save(aggregate).map {
             _ =>
-              if (newTaxCode.hasTaxCode) Redirect(routes.QuickCalcController.showResult())
+              if (newTaxCode.hasTaxCode) Redirect(routes.QuickCalcController.summary())
               else Redirect(routes.QuickCalcController.showScottishRateForm())
           }
       }
@@ -172,9 +180,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       userAge => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
 //          val updatedAggregate = aggregate.copy()
-          cache.save(aggregate).map { _ => Redirect(routes.QuickCalcController.showResult())}
+          cache.save(aggregate).map { _ => Redirect(routes.QuickCalcController.summary())}
         case None => cache.save(QuickCalcAggregateInput.newInstance.copy()).map {
-          _ => Redirect(routes.QuickCalcController.showResult())
+          _ => Redirect(routes.QuickCalcController.summary())
         }
       }
     )
@@ -236,7 +244,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
                                                      (next: Result)
                                                      (implicit request: Request[_]): Result = {
     if (aggregate.allQuestionsAnswered) {
-      Redirect(routes.QuickCalcController.showResult())
+      Redirect(routes.QuickCalcController.summary())
     } else {
       next
     }
