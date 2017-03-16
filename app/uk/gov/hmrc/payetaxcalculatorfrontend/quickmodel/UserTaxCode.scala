@@ -41,7 +41,7 @@ object UserTaxCode extends TaxCalculatorHelper {
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
       if (data.getOrElse(hasTaxCode, "false") == "true") {
-        if (isStandardTaxCode(data.getOrElse(taxCode, ""))) Right(Some(data.getOrElse(taxCode, "")))
+        if (isValidTaxCode(data.getOrElse(taxCode, ""), taxConfig(data.getOrElse(taxCode, "")))) Right(Some(data.getOrElse(taxCode, "")))
         else {
           data.getOrElse(taxCode, "") match {
             case code if code.isEmpty => Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
