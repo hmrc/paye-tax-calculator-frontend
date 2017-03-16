@@ -54,9 +54,9 @@ object YouHaveToldUs {
 //  implicit def dailyFormat(implicit m: Messages): YouHaveToldUs[DailyAmount] = formatForIndividualSalary[DailyAmount]
 //  implicit def hourlyFormat(implicit m: Messages): YouHaveToldUs[HourlyAmount] = formatForIndividualSalary[HourlyAmount]
 //
-//  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
-//    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
-//  }
+  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
+    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
+  }
 
   implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {

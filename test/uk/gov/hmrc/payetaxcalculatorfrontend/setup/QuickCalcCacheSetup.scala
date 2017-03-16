@@ -18,7 +18,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.setup
 
 import uk.gov.hmrc.http.cache.client.{CacheMap}
 
-import uk.gov.hmrc.payetaxcalculatorfrontend.model._
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -88,20 +88,20 @@ object QuickCalcCacheSetup {
     isOverStatePensionAge = Some(OverStatePensionAge(true)))))
 
   val cacheReturnTaxCodeIsOverStatePensionAndSalary = cache(Some(QuickCalcAggregateInput.newInstance.copy(
+    salary = Some(Salary(20000,"yearly")),
     taxCode = Some(UserTaxCode(false, Some("1150L"))),
-    isOverStatePensionAge = Some(OverStatePensionAge(true)),
-    salary = Some(Yearly(20000))
+    isOverStatePensionAge = Some(OverStatePensionAge(true))
   )))
 
   val cacheReturnNoTaxCodeButAnswerEverythingElse = cache(Some(QuickCalcAggregateInput.newInstance.copy(
+    salary = Some(Salary(20000,"yearly")),
     None,
-    isOverStatePensionAge = Some(OverStatePensionAge(true)),
-    salary = Some(Yearly(20000))
+    isOverStatePensionAge = Some(OverStatePensionAge(true))
   )))
 
   val cacheReturnNoAgeButAnswerEverythingElse = cache(Some(QuickCalcAggregateInput.newInstance.copy(
+    salary = Some(Salary(20000,"yearly")),
     taxCode = Some(UserTaxCode(false, Some("1150L"))),
-    None,
-    salary = Some(Yearly(20000))
+    None
   )))
 }

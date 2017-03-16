@@ -20,7 +20,7 @@ import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
-import uk.gov.hmrc.payetaxcalculatorfrontend.model.YouHaveToldUsItem
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUsItem
 import uk.gov.hmrc.play.test.UnitSpec
 
 class YouHaveToldUsHtmlSpec extends UnitSpec with OneAppPerSuite {

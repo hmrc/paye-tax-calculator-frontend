@@ -26,11 +26,11 @@ class RedirectSpec extends AppUnitGenerator {
   "Redirect to Tax Code Form" should {
     "return 303" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
-      val result = controller.redirectToTaxCodeForm().apply(request)
+      val result = controller.redirectToSalaryForm().apply(request)
       val status = result.header.status
 
       val actualRedirect = redirectLocation(result).get
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/tax-code"
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/salary"
 
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect

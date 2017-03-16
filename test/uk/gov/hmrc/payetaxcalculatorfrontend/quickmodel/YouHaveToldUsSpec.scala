@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.model
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.UnitSpec
 import play.api.i18n.Messages.Implicits._
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUs.salaryFormat
 
 class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
 
@@ -29,19 +30,19 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
     val idSuffix = "income"
 
     val yearlyLabel = Messages("quick_calc.you_have_told_us.salary.yearly.label")
-    YouHaveToldUs(Yearly(2)) shouldBe YouHaveToldUsItem("£2", yearlyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(2, "yearly")) shouldBe YouHaveToldUsItem("£2", yearlyLabel, salaryUrl, idSuffix)
 
     val monthlyLabel = Messages("quick_calc.you_have_told_us.salary.monthly.label")
-    YouHaveToldUs(Monthly(3)) shouldBe YouHaveToldUsItem("£3", monthlyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(3, "monthly")) shouldBe YouHaveToldUsItem("£3", monthlyLabel, salaryUrl, idSuffix)
 
     val weeklyLabel = Messages("quick_calc.you_have_told_us.salary.weekly.label")
-    YouHaveToldUs(Weekly(1)) shouldBe YouHaveToldUsItem("£1", weeklyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(1, "weekly")) shouldBe YouHaveToldUsItem("£1", weeklyLabel, salaryUrl, idSuffix)
 
     val dailyLabel = Messages("quick_calc.you_have_told_us.salary.daily.label")
-    YouHaveToldUs(Daily(1, 2)) shouldBe YouHaveToldUsItem("£1", dailyLabel,salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(1, "daily")) shouldBe YouHaveToldUsItem("£1", dailyLabel,salaryUrl, idSuffix)
 
     val hourlyLabel = Messages("quick_calc.you_have_told_us.salary.hourly.label")
-    YouHaveToldUs(Hourly(2, 3)) shouldBe YouHaveToldUsItem("£2", hourlyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(2, "hourly")) shouldBe YouHaveToldUsItem("£2", hourlyLabel, salaryUrl, idSuffix)
   }
 
   "Converting OverStatePensionAge to YouHaveToldUsItem" in {

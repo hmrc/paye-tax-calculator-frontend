@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.model
+package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -23,33 +23,35 @@ class SalarySerializationSpec extends UnitSpec {
 
   "Salary marshalling" should {
     "work for all salary types" in {
-      jsonOf(Yearly(1)) shouldBe yearlyJson
-      jsonOf(Monthly(1)) shouldBe monthlyJson
-      jsonOf(Weekly(1)) shouldBe weeklyJson
-      jsonOf(Daily(1,2)) shouldBe dailyJson
-      jsonOf(Hourly(1,2)) shouldBe hourlyJson
+      jsonOf(Salary(1, "yearly")) shouldBe yearlyJson
+      jsonOf(Salary(1, "monthly")) shouldBe monthlyJson
+      jsonOf(Salary(1, "weekly")) shouldBe weeklyJson
+      jsonOf(Days(1,2)) shouldBe dailyJson
+      jsonOf(Hours(1,2)) shouldBe hourlyJson
     }
   }
 
   "Salary unmarshalling" should {
     "work for all salary types" in {
-      unmarshalAndVerifyType[Yearly](yearlyJson)
-      unmarshalAndVerifyType[Monthly](monthlyJson)
-      unmarshalAndVerifyType[Weekly](weeklyJson)
-      unmarshalAndVerifyType[Daily](dailyJson)
-      unmarshalAndVerifyType[Hourly](hourlyJson)
+      unmarshalAndVerifyType[Salary](yearlyJson)
+      unmarshalAndVerifyType[Salary](monthlyJson)
+      unmarshalAndVerifyType[Salary](weeklyJson)
+      unmarshalAndVerifyTypeDay[Days](dailyJson)
+      unmarshalAndVerifyTypeHour[Hours](hourlyJson)
     }
   }
 
-  def yearlyJson = s"""{"value":1,"type":"${ Salary.YEARLY }"}"""
-  def monthlyJson = s"""{"value":1,"type":"${ Salary.MONTHLY }"}"""
-  def weeklyJson = s"""{"value":1,"type":"${ Salary.WEEKLY }"}"""
-  def dailyJson = s"""{"value":1,"howManyDaysAWeek":2,"type":"${ Salary.DAILY }"}"""
-  def hourlyJson = s"""{"value":1,"howManyHoursAWeek":2,"type":"${ Salary.HOURLY }"}"""
+  def yearlyJson = s"""{"value":1,"period":"yearly"}"""
+  def monthlyJson = s"""{"value":1,"period":"monthly"}"""
+  def weeklyJson = s"""{"value":1,"period":"weekly"}"""
+  def dailyJson = s"""{"value":1,"howManyAWeek":2}"""
+  def hourlyJson = s"""{"value":1,"howManyAWeek":2}"""
 
   def jsonOf[T : Writes](t: T): String = Json.stringify(Json.toJson(t))
 
   def unmarshalAndVerifyType[T](s: String)(implicit m: Manifest[T]) = Json.parse(s).as[Salary] shouldBe a[T]
+  def unmarshalAndVerifyTypeDay[T](s: String)(implicit m: Manifest[T]) = Json.parse(s).as[Days] shouldBe a[T]
+  def unmarshalAndVerifyTypeHour[T](s: String)(implicit m: Manifest[T]) = Json.parse(s).as[Hours] shouldBe a[T]
 
   def unmarshal(s: String) = Json.parse(s).as[Salary]
 
