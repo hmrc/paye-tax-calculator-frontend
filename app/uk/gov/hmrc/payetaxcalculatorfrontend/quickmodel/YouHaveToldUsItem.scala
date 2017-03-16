@@ -47,13 +47,7 @@ object YouHaveToldUs {
         else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url, idSuffix)
     }
   }
-//
-//  implicit def yearlyFormat(implicit m: Messages): YouHaveToldUs[YearlyAmount] = formatForIndividualSalary[YearlyAmount]
-//  implicit def monthlyFormat(implicit m: Messages): YouHaveToldUs[MonthlyAmount] = formatForIndividualSalary[MonthlyAmount]
-//  implicit def weeklyFormat(implicit m: Messages): YouHaveToldUs[WeeklyAmount] = formatForIndividualSalary[WeeklyAmount]
-//  implicit def dailyFormat(implicit m: Messages): YouHaveToldUs[DailyAmount] = formatForIndividualSalary[DailyAmount]
-//  implicit def hourlyFormat(implicit m: Messages): YouHaveToldUs[HourlyAmount] = formatForIndividualSalary[HourlyAmount]
-//
+
   def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
     def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
   }

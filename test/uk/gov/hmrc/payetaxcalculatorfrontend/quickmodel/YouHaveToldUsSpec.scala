@@ -30,19 +30,19 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
     val idSuffix = "income"
 
     val yearlyLabel = Messages("quick_calc.you_have_told_us.salary.yearly.label")
-    YouHaveToldUs(Salary(2, "yearly")) shouldBe YouHaveToldUsItem("£2", yearlyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(2, "yearly", None)) shouldBe YouHaveToldUsItem("£2", yearlyLabel, salaryUrl, idSuffix)
 
     val monthlyLabel = Messages("quick_calc.you_have_told_us.salary.monthly.label")
-    YouHaveToldUs(Salary(3, "monthly")) shouldBe YouHaveToldUsItem("£3", monthlyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(3, "monthly", None)) shouldBe YouHaveToldUsItem("£3", monthlyLabel, salaryUrl, idSuffix)
 
     val weeklyLabel = Messages("quick_calc.you_have_told_us.salary.weekly.label")
-    YouHaveToldUs(Salary(1, "weekly")) shouldBe YouHaveToldUsItem("£1", weeklyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(1, "weekly", None)) shouldBe YouHaveToldUsItem("£1", weeklyLabel, salaryUrl, idSuffix)
 
     val dailyLabel = Messages("quick_calc.you_have_told_us.salary.daily.label")
-    YouHaveToldUs(Salary(1, "daily")) shouldBe YouHaveToldUsItem("£1", dailyLabel,salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(1, "daily", None)) shouldBe YouHaveToldUsItem("£1", dailyLabel,salaryUrl, idSuffix)
 
     val hourlyLabel = Messages("quick_calc.you_have_told_us.salary.hourly.label")
-    YouHaveToldUs(Salary(2, "hourly")) shouldBe YouHaveToldUsItem("£2", hourlyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(2, "hourly", None)) shouldBe YouHaveToldUsItem("£2", hourlyLabel, salaryUrl, idSuffix)
   }
 
   "Converting OverStatePensionAge to YouHaveToldUsItem" in {

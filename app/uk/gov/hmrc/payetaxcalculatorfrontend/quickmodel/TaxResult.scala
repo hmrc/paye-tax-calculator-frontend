@@ -41,8 +41,8 @@ object TaxResult {
       case "yearly" => s.value * 100
       case "monthly" => s.value * 100
       case "weekly" => s.value * 100
-      case "daily" => s.value
-      case "hourly" => s.value
+      case "daily" => s.value * 100
+      case "hourly" => s.value * 100
       case _ => throw new Exception("No Salary has been provided.")
     }
     case None => throw new Exception("No Salary has been provided.")
@@ -66,8 +66,8 @@ object TaxResult {
     **/
   def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
     case Some(s) => s.period match {
-      case "daily" => s.value.toInt
-      case "hourly" => s.value.toInt
+      case "daily" => s.howManyAWeek.getOrElse(-1)
+      case "hourly" => s.howManyAWeek.getOrElse(-1)
       case _ => -1
     }
     case _ => -1

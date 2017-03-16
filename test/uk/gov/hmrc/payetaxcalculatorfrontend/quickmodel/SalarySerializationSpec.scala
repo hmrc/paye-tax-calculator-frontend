@@ -23,9 +23,9 @@ class SalarySerializationSpec extends UnitSpec {
 
   "Salary marshalling" should {
     "work for all salary types" in {
-      jsonOf(Salary(1, "yearly")) shouldBe yearlyJson
-      jsonOf(Salary(1, "monthly")) shouldBe monthlyJson
-      jsonOf(Salary(1, "weekly")) shouldBe weeklyJson
+      jsonOf(Salary(1, "yearly", None)) shouldBe yearlyJson
+      jsonOf(Salary(1, "monthly", None)) shouldBe monthlyJson
+      jsonOf(Salary(1, "weekly", None)) shouldBe weeklyJson
       jsonOf(Days(1,2)) shouldBe dailyJson
       jsonOf(Hours(1,2)) shouldBe hourlyJson
     }

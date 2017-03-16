@@ -101,8 +101,6 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     )
   }
 
-
-
   def showSalaryForm() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
@@ -209,6 +207,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def submitHoursAWeek(valueInPence: Int) = ActionWithSessionId.async { implicit request =>
+    val value = BigDecimal(valueInPence)/100
     Salary.salaryInHoursForm.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
         case Some(aggregate) => BadRequest(hours_a_week(valueInPence, formWithErrors, aggregate.youHaveToldUsItems))
@@ -216,9 +215,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       },
       hours => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
-          val updatedAggregate = aggregate.copy(salary = Some(Salary(valueInPence, "hourly")))
+          val updatedAggregate = aggregate.copy(salary = Some(Salary(value, "hourly", Some(hours.howManyAWeek))))
           cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.showAgeForm())}
-        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(Salary(valueInPence, "hourly")))).map {
+        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(Salary(value, "hourly", Some(hours.howManyAWeek))))).map {
           _ =>  Redirect(routes.QuickCalcController.showAgeForm())
         }
       }
@@ -235,6 +234,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def submitDaysAWeek(valueInPence: Int) = ActionWithSessionId.async { implicit request =>
+    val value = BigDecimal(valueInPence)/100
     Salary.salaryInDaysForm.bindFromRequest.fold(
       formWithErrors => cache.fetchAndGetEntry.map {
         case Some(aggregate) => BadRequest(days_a_week(valueInPence, formWithErrors, aggregate.youHaveToldUsItems))
@@ -242,9 +242,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       },
       days => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
-          val updatedAggregate = aggregate.copy(salary = Some(Salary(valueInPence, "daily")))
+          val updatedAggregate = aggregate.copy(salary = Some(Salary(value, "daily", Some(days.howManyAWeek))))
           cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.showAgeForm())}
-        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(Salary(valueInPence, "daily")))).map {
+        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(salary = Some(Salary(value, "daily", Some(days.howManyAWeek))))).map {
           _ =>  Redirect(routes.QuickCalcController.showAgeForm())
         }
       }

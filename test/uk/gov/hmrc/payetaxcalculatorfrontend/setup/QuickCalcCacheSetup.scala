@@ -88,19 +88,19 @@ object QuickCalcCacheSetup {
     isOverStatePensionAge = Some(OverStatePensionAge(true)))))
 
   val cacheReturnTaxCodeIsOverStatePensionAndSalary = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    salary = Some(Salary(20000,"yearly")),
+    salary = Some(Salary(20000,"yearly", None)),
     taxCode = Some(UserTaxCode(false, Some("1150L"))),
     isOverStatePensionAge = Some(OverStatePensionAge(true))
   )))
 
   val cacheReturnNoTaxCodeButAnswerEverythingElse = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    salary = Some(Salary(20000,"yearly")),
+    salary = Some(Salary(20000,"yearly", None)),
     None,
     isOverStatePensionAge = Some(OverStatePensionAge(true))
   )))
 
   val cacheReturnNoAgeButAnswerEverythingElse = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    salary = Some(Salary(20000,"yearly")),
+    salary = Some(Salary(20000,"yearly", None)),
     taxCode = Some(UserTaxCode(false, Some("1150L"))),
     None
   )))

@@ -21,20 +21,19 @@ import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.libs.json._
 
-case class Salary(value: BigDecimal, period: String)
+case class Salary(value: BigDecimal, period: String, howManyAWeek:Option[Int])
 case class Hours(value: Int, howManyAWeek: Int)
 case class Days(value: Int, howManyAWeek: Int)
 
 object Salary {
 
   implicit val format = Json.format[Salary]
-  implicit val daysFormat = Json.format[Days]
-  implicit val hoursFormat = Json.format[Hours]
 
   def salaryBaseForm(implicit messages: Messages) = Form(
     mapping(
       "value" -> of(CustomFormatters.salaryValidation),
-      "period" -> nonEmptyText
+      "period" -> nonEmptyText,
+      "howManyAWeek" -> optional(number)
     )(Salary.apply)(Salary.unapply)
   )
 
