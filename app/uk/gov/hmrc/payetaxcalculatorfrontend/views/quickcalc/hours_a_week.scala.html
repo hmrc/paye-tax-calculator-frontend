@@ -12,9 +12,9 @@
   <div class="grid-layout grid-layout--stacked">
 
     <header class="page-header">
-      <h1>@Messages("simple_calc.salary.question.hours_a_week")</h1>
+      <h1>@Messages("quick_calc.salary.question.hours_a_week")</h1>
     </header>
-    <p class="faded-text faded-text--small">@Messages("simple_calc.salary.question.approximate")</p>
+    <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.approximate")</p>
 
     @helper.form(action = controllers.routes.QuickCalcController.submitHoursAWeek(valueInPence)) {
       @helper.CSRF.formField

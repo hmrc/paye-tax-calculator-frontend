@@ -37,7 +37,6 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def summary() = ActionWithSessionId.async { implicit request =>
-    println("111111111")
     cache.fetchAndGetEntry.map {
       case Some(aggregate) => Ok(you_have_told_us(aggregate.youHaveToldUsItems))
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
@@ -71,20 +70,32 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       },
       newTaxCode => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
-          val updatedTaxCode = if (newTaxCode.hasTaxCode) newTaxCode else UserTaxCode(hasTaxCode = false, Some(UserTaxCode.defaultTaxCode))
-          val newAggregate = aggregate.copy(taxCode = Some(updatedTaxCode))
-          cache.save(newAggregate).map { _ =>
-            nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
-              if (newTaxCode.hasTaxCode) Redirect(routes.QuickCalcController.summary())
-              else Redirect(routes.QuickCalcController.showScottishRateForm())
+          if (newTaxCode.hasTaxCode) {
+            val newAggregate = aggregate.copy(taxCode = Some(newTaxCode))
+            cache.save(newAggregate).map{ _ =>
+              nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
+                Redirect(routes.QuickCalcController.summary())
+              }
+            }
+          } else {
+            val newAggregate = aggregate.copy(taxCode = Some(UserTaxCode(hasTaxCode = false, Some(UserTaxCode.defaultTaxCode))))
+            cache.save(newAggregate).map{ _ =>
+              Redirect(routes.QuickCalcController.showScottishRateForm())
             }
           }
         case None =>
-          val aggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))
-          cache.save(aggregate).map {
-            _ =>
-              if (newTaxCode.hasTaxCode) Redirect(routes.QuickCalcController.summary())
-              else Redirect(routes.QuickCalcController.showScottishRateForm())
+          if (newTaxCode.hasTaxCode) {
+            val newAggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(newTaxCode))
+            cache.save(newAggregate).map{ _ =>
+              nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
+                Redirect(routes.QuickCalcController.summary())
+              }
+            }
+          } else {
+            val newAggregate = QuickCalcAggregateInput.newInstance.copy(taxCode = Some(UserTaxCode(hasTaxCode = false, Some(UserTaxCode.defaultTaxCode))))
+            cache.save(newAggregate).map{ _ =>
+              Redirect(routes.QuickCalcController.showScottishRateForm())
+            }
           }
       }
     )

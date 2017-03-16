@@ -7,7 +7,6 @@ legacy.employment_only=you have employment income only
 legacy.dont_contribute_pension=you don’t contribute to a workplace or personal pension through your employer.
 legacy.scottish_taxpayer_intro=If you are a Scottish taxpayer you will need to enter your Scottish tax code, fo example "S1100L". For further information on the Scottish rate of Income Tax go to  
 legacy.scottish_income_tax=Scottish Income Tax
-legacy.detailed_calc.employer_ni_intro=If you use the detailed calculation and you are under the age of 21 or you are an apprentice under the age of 25, select National Insurance category letter A if your category letter is either H or M. Select National Insurance category letter D if your category letter is I. Selecting the alternative category letter will not affect the amount of 'National Insurance' estimated. The 'Employer National Insurance' estimation will not reflect the position for employees under the age of 21 or for apprentices under the age of 25. If you want to know the correct amount of 'Employer National Insurance' use the
 index.use_the_detailed_calc_if=Notes for employees under the age of 21 and apprentices under the age of 25:
 index.use_the_detailed_calc_NI_select=You will need to select the National Insurance category letter:
 index.use_the_detailed_calc_NI_select_A='A' if your category letter is either 'H' or 'M'
@@ -20,10 +19,7 @@ index.use_the_detailed_calc_NIC_link=National Insurance Contributions calculator
 # index.detailed_calc_ENI_estimate=The 'Employer National Insurance' estimation will not reflect the position for employees under the state_pension of 21 or for apprentices under the state_pension of 25. If you want to know the correct amount of 'Employer National Insurance' use the
 # legacy.detailed_calc.ni_contributions_calculator=National Insurance contributions calculator
 
-legacy.scottish_taxpayer_intro=If you are a Scottish taxpayer insert your Scottish tax code, this should begin with an “S”. For further information on the Scottish rate of Income Tax go to 
-legacy.scottish_income_tax=Scottish Income Tax
-legacy.detailed_calc.employer_ni_intro=If you use the detailed calculation and you are under the age of 21 or you are an apprentice under the age of 25, select National Insurance category letter A if your category letter is either H or M. Select National Insurance category letter D if your category letter is I. Selecting the alternative category letter will not affect the amount of 'National Insurance' estimated. The 'Employer National Insurance' estimation will not reflect the position for employees under the age of 21 or for apprentices under the age of 25. If you want to know the correct amount of 'Employer National Insurance' use the
-index.use_the_detailed_calc_if=Use the detailed calculation if you can answer ’yes’ to the following:
+
 index.detailed_calc_under_age=you are under the age of 21 or you are an apprentice under the age of 25
 index.detailed_calc_ENI_estimate=The 'Employer National Insurance' estimation will not reflect the position for employees under the age of 21 or for apprentices under the age of 25. If you want to know the correct amount of 'Employer National Insurance' use the
 legacy.detailed_calc.ni_contributions_calculator=National Insurance contributions calculator
@@ -48,7 +44,7 @@ index.language_version.paragraph=to use the Welsh language version of the online
 index.language_version.target_language=welsh
 
 continue=Continue
-back = back
+back = Back
 label.click_here=Click here
 
 
@@ -86,14 +82,6 @@ quick_calc.result.tabLabels.year=Year
 quick_calc.result.tabLabels.month=Month
 quick_calc.result.tabLabels.week=Week
 
-#quick_calc.salary.header=Your gross salary
-#quick_calc.salary.year=Yearly
-#quick_calc.salary.month=Monthly
-#quick_calc.salary.week=Weekly
-#quick_calc.salary.day=Daily
-#quick_calc.salary.hour=Hourly
-#quick_calc.salary.question.How_you_paid=How are you paid?
-
 quick_calc.salary.header=How much do you earn before tax?
 quick_calc.salary.description=This information will help us to give you the most accurate income tax results. Use the figure before tax or National Insurance are deducted - for example, £7.20 and hour or £26,500 a year.
 quick_calc.salary.yearly=a year
@@ -104,13 +92,20 @@ quick_calc.salary.hourly=an hour
 quick_calc.salary.question.how_much_you_earn=Enter the amount you earn
 quick_calc.salary.question.how_much_you_earn.period_selection=Select the option the amount refers to
 
-quick_calc.salary.question.earn_a_year=How much do you earn a year?
-quick_calc.salary.question.earn_a_month=How much do you earn a month?
-quick_calc.salary.question.earn_a_week=How much do you earn a week?
-quick_calc.salary.question.earn_a_day=How much do you earn a day?
-quick_calc.salary.question.days_a_week=How many days a week do you work?
-quick_calc.salary.question.earn_a_hour=How much do you earn a hour?
-quick_calc.salary.question.hours_a_week=How many hours a week do you work?
+quick_calc.salary.question.approximate=If you don't know, an approximate number is fine
+quick_calc.salary.question.days_a_week=How many days a week do you usually work?
+quick_calc.salary.question.hours_a_week=How many hours a week do you usually work?
+quick_calc.salary.question.state_pension_url_a=Your State Pension age depends on when you were born. You can
+quick_calc.salary.question.state_pension_url_b=check your State Pension age
+quick_calc.salary.question.state_pension_url_c=if you are not sure
+quick_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax Rate?
+quick_calc.salary.question.scottish_income_url_a=You usually pay
+quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax
+quick_calc.salary.question.scottish_income_url_c=if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
+quick_calc.salary.question.tax_code_info=If you don’t know your tax code, we’ll use the default tax code for England, Wales, Scotland or Northern Ireland.
+quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
+quick_calc.salary.question.tax_code_info_url_b=payslip, P45 or P60 (opens in a new window).
+
 quick_calc.salary.question.error.number_of_days.less_than_zero=Days per week must be at least 1
 quick_calc.salary.question.error.number_of_days.more_than_seven=Maximum days per week is 7
 quick_calc.salary.question.error.number_of_hours.less_than_one=Hours per week must be at least 1
@@ -145,24 +140,6 @@ quick_calc.about_tax_code.wrong_tax_code=The tax code you have entered is not va
 quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
 
-#Simple Calc
-simple_calc.salary.header = How much do you earn before tax?
-simple_calc.salary.question.days_a_week=How many days a week do you usually work?
-simple_calc.salary.question.hours_a_week=How many hours a week do you usually work?
-simple_calc.salary.question.approximate=If you don't know, an approximate number is fine
-simple_calc.salary.question.state_pension_url_a=Your State Pension age depends on when you were born. You can
-simple_calc.salary.question.state_pension_url_b=check your State Pension age
-simple_calc.salary.question.state_pension_url_c=if you are not sure
-simple_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax Rate?
-simple_calc.salary.question.scottish_income_url_a=You usually pay
-simple_calc.salary.question.scottish_income_url_b=Scottish Income Tax
-simple_calc.salary.question.scottish_income_url_c=if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
-
-simple_calc.salary.info = This information will help us to give you the most accurate income tax results. Use the figure before tax or National Insurance are deducted - for example, £7.20 an hour or £26,500 a year
-
-#Both Calc
-calc.salary.enter_salary = Enter the amount you earn:
-calc.salary.select_option_salary = Select the option the amount refers to:
 calc.salary.yearly = Yearly
 calc.salary.monthly = Monthly
 calc.salary.weekly = Weekly

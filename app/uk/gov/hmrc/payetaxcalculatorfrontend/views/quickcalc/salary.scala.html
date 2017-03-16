@@ -8,7 +8,7 @@
 @(form: Form[Salary], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 @periodLabels = @{List("yearly","monthly","weekly","daily","hourly")}
 
-@main_template(title = Messages("simple_calc.salary.header.title"), mainClass = Some("full-width")) {
+@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
   <div class="grid-layout--stacked">
     <div class="grid-layout__column">

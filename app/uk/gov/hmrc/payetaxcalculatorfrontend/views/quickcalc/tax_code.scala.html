@@ -19,6 +19,9 @@
         <h1>@Messages("quick_calc.about_tax_code.header")</h1>
       </header>
 
+      <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.tax_code_info")</p>
+
+
       @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitTaxCodeForm) {
         @helper.CSRF.formField
 
@@ -70,10 +73,16 @@
           </fieldset>
         </div>
 
+        <p>@Messages("quick_calc.salary.question.tax_code_info_url_a") <a href="https://www.gov.uk/tax-codes/overview">@Messages("quick_calc.salary.question.tax_code_info_url_b")</a></p>
+
         <div class="form-group">
           <input type="submit" class="button" value="@Messages("continue")">
         </div>
       }
+
+      <div>
+        <a href="@{request.uri}">@Messages("back")</a>
+      </div>
 
     </div>
 
