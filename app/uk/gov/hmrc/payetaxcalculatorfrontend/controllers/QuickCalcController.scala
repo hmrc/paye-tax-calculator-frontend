@@ -186,13 +186,23 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
         case Some(aggregate) => BadRequest(scottish_income_tax_rate(formWithErrors, aggregate.youHaveToldUsItems))
         case None => BadRequest(scottish_income_tax_rate(formWithErrors, Nil))
       },
-      userAge => cache.fetchAndGetEntry.flatMap {
+      scottish => cache.fetchAndGetEntry.flatMap {
         case Some(aggregate) =>
-//          val updatedAggregate = aggregate.copy()
-          cache.save(aggregate).map { _ => Redirect(routes.QuickCalcController.summary())}
-        case None => cache.save(QuickCalcAggregateInput.newInstance.copy()).map {
-          _ => Redirect(routes.QuickCalcController.summary())
+          if(scottish.value) {
+          val updatedAggregate = aggregate.copy(taxCode = Some(UserTaxCode(false, Some(UserTaxCode.defaultScottishTaxCode))))
+          cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.summary())}
+        } else {
+            val updatedAggregate = aggregate.copy(taxCode = Some(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode))))
+            cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.summary())}
         }
+        case None =>
+          if(scottish.value) {
+            cache.save(QuickCalcAggregateInput.newInstance.copy(taxCode = Some(UserTaxCode(false, Some(UserTaxCode.defaultScottishTaxCode))))).map {
+              _ => Redirect(routes.QuickCalcController.summary())}
+          } else {
+            cache.save(QuickCalcAggregateInput.newInstance.copy(taxCode = Some(UserTaxCode(false, Some(UserTaxCode.defaultTaxCode))))).map {
+              _ => Redirect(routes.QuickCalcController.summary())}
+          }
       }
     )
   }

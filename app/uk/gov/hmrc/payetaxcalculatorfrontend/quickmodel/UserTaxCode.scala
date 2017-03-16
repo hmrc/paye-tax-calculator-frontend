@@ -34,6 +34,7 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   implicit val format = Json.format[UserTaxCode]
 
+  val defaultScottishTaxCode = "S1150L"
   val defaultTaxCode = "1150L"
   val hasTaxCode = "hasTaxCode"
   val taxCode = "taxCode"
