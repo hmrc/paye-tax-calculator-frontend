@@ -1,9 +1,9 @@
 # microservice specific routes
 
-GET         /                                               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.index()
-GET         /legacy                                         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.legacy()
+GET         /                                              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.index()
+GET         /legacy                                        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.legacy()
 
-GET         /language/:lang                                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.WelshLanguageController.switchToLanguage(lang: String)
+GET         /language/:lang                                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.WelshLanguageController.switchToLanguage(lang: String)
 
 GET         /quick-calculation                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.redirectToSalaryForm
 
@@ -29,5 +29,7 @@ GET         /quick-calculation/summary                     uk.gov.hmrc.payetaxca
 
 GET         /quick-calculation/showResult                  uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult
 
+GET         /quick-calculation/restart                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.restartQuickCalc
+
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                                   controllers.Assets.at(path="/public", file)
+GET         /assets/*file                                  controllers.Assets.at(path="/public", file)

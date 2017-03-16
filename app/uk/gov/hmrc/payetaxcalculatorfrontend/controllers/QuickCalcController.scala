@@ -261,6 +261,16 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     )
   }
 
+  def restartQuickCalc() = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry.flatMap {
+      case Some(aggregate) =>
+        val updatedAggregate = aggregate.copy(None, None, None)
+        cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.showSalaryForm())}
+      case None =>
+        Future.successful(Redirect(routes.QuickCalcController.showSalaryForm()))
+    }
+  }
+
   private def nextPageOrSummaryIfAllQuestionsAnswered(aggregate: QuickCalcAggregateInput)
                                                      (next: Result)
                                                      (implicit request: Request[_]): Result = {
