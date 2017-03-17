@@ -87,7 +87,7 @@ object CustomFormatters {
       Right(data.getOrElse(key,"")).right.flatMap {
         case s if s.nonEmpty =>
           try{
-            val salary = BigDecimal(s).setScale(2)
+            val salary = BigDecimal(s.replaceAll(",","")).setScale(2)
             if(salary < 0.01) {
               Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_salary_input"))))
             } else if(salary > 9999999.99) {
