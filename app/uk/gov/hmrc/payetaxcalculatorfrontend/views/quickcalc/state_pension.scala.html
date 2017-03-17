@@ -18,7 +18,7 @@
     <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.state_pension_url_a") <a href="https://www.gov.uk/state-pension-age">@Messages("quick_calc.salary.question.state_pension_url_b")</a>
       @Messages("quick_calc.salary.question.state_pension_url_c")</p>
 
-    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitAgeForm()" method="post">
+    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitStatePensionForm()" method="post">
       @helper.CSRF.formField
 
       <div class="form-group">
@@ -49,7 +49,7 @@
     </form>
 
     <div>
-      <a href="@{request.uri}">@Messages("back")</a>
+      <a href="@{youHaveToldUsItems.head.url}">@Messages("back")</a>
     </div>
 
   </div>

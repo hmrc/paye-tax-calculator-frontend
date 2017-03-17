@@ -6,7 +6,7 @@
 
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{Days, YouHaveToldUsItem}
 
-@(valueInPence:Int, daysForm: Form[Days], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@(valueInPence:Int, daysForm: Form[Days], youHaveToldUsItems: List[YouHaveToldUsItem], url: String)(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
   <div class="grid-layout grid-layout--stacked">
@@ -40,7 +40,7 @@
     }
 
     <div>
-      <a href="@{request.uri}">@Messages("back")</a>
+      <a href="@{url}">@Messages("back")</a>
     </div>
 
   </div>

@@ -10,14 +10,14 @@ GET         /quick-calculation                             uk.gov.hmrc.payetaxca
 GET         /quick-calculation/salary                      uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showSalaryForm
 POST        /quick-calculation/salary                      uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitSalaryAmount
 
-GET         /quick-calculation/salary/hourly/:value        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showHoursAWeek(value: Int)
+GET         /quick-calculation/salary/hourly/:value        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showHoursAWeek(value: Int, url: String)
 POST        /quick-calculation/salary/hourly/:value        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitHoursAWeek(value: Int)
 
-GET         /quick-calculation/salary/daily/:value         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showDaysAWeek(value: Int)
+GET         /quick-calculation/salary/daily/:value         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showDaysAWeek(value: Int, url: String)
 POST        /quick-calculation/salary/daily/:value         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitDaysAWeek(value: Int)
 
-GET         /quick-calculation/age                         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showAgeForm
-POST        /quick-calculation/age                         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitAgeForm
+GET         /quick-calculation/statePension                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showStatePensionForm
+POST        /quick-calculation/statePension                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitStatePensionForm
 
 GET         /quick-calculation/scottishRate                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showScottishRateForm
 POST        /quick-calculation/scottishRate                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitScottishRateForm

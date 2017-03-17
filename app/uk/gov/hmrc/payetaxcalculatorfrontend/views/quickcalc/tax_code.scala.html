@@ -81,7 +81,7 @@
       }
 
       <div>
-        <a href="@{request.uri}">@Messages("back")</a>
+        <a href="@{youHaveToldUsItems.flatMap(y => if (y.label == Messages("quick_calc.you_have_told_us.over_state_pension_age.label")) y.url else "")}">@Messages("back")</a>
       </div>
 
     </div>

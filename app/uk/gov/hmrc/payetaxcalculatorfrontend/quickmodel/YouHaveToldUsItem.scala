@@ -41,7 +41,7 @@ object YouHaveToldUs {
     def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {
       val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
       val idSuffix = "pension-state"
-      val url = routes.QuickCalcController.showAgeForm().url
+      val url = routes.QuickCalcController.showStatePensionForm().url
       YouHaveToldUsItem(
         if(overStatePensionAge.value) Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
         else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url, idSuffix)

@@ -50,7 +50,7 @@
       </div>
     </form>
 
-    <a href="@{request.uri}">@Messages("back")</a>
+    <a href="@{youHaveToldUsItems.flatMap(y => if (y.label == Messages("quick_calc.you_have_told_us.about_tax_code.label")) y.url else "")}">@Messages("back")</a>
 
   </div>
 
