@@ -123,12 +123,10 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
             `salaryAmount`.period match {
               case "daily" =>
                 cache.save(updatedAggregate).map { _ =>
-                  nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-                  Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.value))) } }
+                  Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.value))) }
               case "hourly" =>
                 cache.save(updatedAggregate).map { _ =>
-                  nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-                  Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.value))) } }
+                  Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.value))) }
               case _ =>
                 cache.save(updatedAggregate).map { _ =>
                   nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
