@@ -84,7 +84,7 @@ quick_calc.result.tabLabels.month=Month
 quick_calc.result.tabLabels.week=Week
 
 quick_calc.salary.header=How much do you earn before tax?
-quick_calc.salary.description=This information will help us to give you the most accurate income tax results. Use the figure before tax or National Insurance are deducted - for example, £7.20 and hour or £26,500 a year.
+quick_calc.salary.description=This information will help us to give you the most accurate income tax results. Use the figure before tax or National Insurance are deducted - for example, £7.20 and hour or £26500 a year.
 quick_calc.salary.yearly=a year
 quick_calc.salary.monthly=a month
 quick_calc.salary.weekly=a week
@@ -119,7 +119,7 @@ quick_calc.salary.question.error.invalid_number_hourly=Hours per week must be a 
 quick_calc.salary.question.error.empty_number_hourly=Please enter hours worked
 quick_calc.salary.question.error.invalid_salary=Please enter amount in pounds and pence e.g. 123.45
 
-quick_calc.salary.question.error.maximum_salary_input=Maximum value for gross pay is £9,999,999.99
+quick_calc.salary.question.error.maximum_salary_input=Maximum value for gross pay is £9999999.99
 quick_calc.salary.question.error.minimum_salary_input=The gross pay must be more than zero
 
 quick_calc.salary.question.error.empty_salary_input=Please enter your gross pay
