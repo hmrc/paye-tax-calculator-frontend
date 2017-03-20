@@ -9,11 +9,13 @@
 
   <div class="grid-layout--stacked">
 
-    <header class="page-header">
-      <h1>@Messages("quick_calc.salary.question.scottish_income")</h1>
-    </header>
+    <a class="link-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == Messages("quick_calc.you_have_told_us.about_tax_code.label")) y.url else "")}">@Messages("back")</a>
 
-    <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.scottish_income_url_a") <a href="https://www.gov.uk/scottish-rate-income-tax">@Messages("quick_calc.salary.question.scottish_income_url_b")</a>
+    <h1 class="heading-large">@Messages("quick_calc.salary.question.scottish_income")</h1>
+
+    <p>@Messages("quick_calc.salary.question.scottish_income_info")</p>
+
+    <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.scottish_income_url_a") <a href="https://www.gov.uk/scottish-rate-income-tax" target="_blank">@Messages("quick_calc.salary.question.scottish_income_url_b")</a>
       @Messages("quick_calc.salary.question.scottish_income_url_c")</p>
 
 
@@ -50,7 +52,9 @@
       </div>
     </form>
 
-    <a href="@{youHaveToldUsItems.flatMap(y => if (y.label == Messages("quick_calc.you_have_told_us.about_tax_code.label")) y.url else "")}">@Messages("back")</a>
+    <div>
+      @report_page_issue()
+    </div>
 
   </div>
 

@@ -10,12 +10,11 @@
 
   <div class="grid-layout--stacked">
 
+    <a class="link-back" href="@{youHaveToldUsItems.head.url}">@Messages("back")</a>
 
-    <header class="page-header">
-      <h1>@Messages("quick_calc.over_state_pension_age.header")</h1>
-    </header>
+    <h1 class="heading-large">@Messages("quick_calc.over_state_pension_age.header")</h1>
 
-    <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.state_pension_url_a") <a href="https://www.gov.uk/state-pension-age">@Messages("quick_calc.salary.question.state_pension_url_b")</a>
+    <p>@Messages("quick_calc.salary.question.state_pension_url_a") <a href="https://www.gov.uk/state-pension-age" target="_blank">@Messages("quick_calc.salary.question.state_pension_url_b")</a>
       @Messages("quick_calc.salary.question.state_pension_url_c")</p>
 
     <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitStatePensionForm()" method="post">
@@ -49,7 +48,7 @@
     </form>
 
     <div>
-      <a href="@{youHaveToldUsItems.head.url}">@Messages("back")</a>
+      @report_page_issue()
     </div>
 
   </div>

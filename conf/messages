@@ -43,7 +43,7 @@ index.language_version.click_here=Click here
 index.language_version.paragraph=to use the Welsh language version of the online calculator.
 index.language_version.target_language=welsh
 
-continue=Continue
+continue=Save and Continue
 back = Back
 restart = Restart
 label.click_here=Click here
@@ -51,20 +51,20 @@ label.click_here=Click here
 
 quick_calc.title=HMRC Quick calculator
 
-quick_calc.you_have_told_us.header=You have told us:
-quick_calc.you_have_told_us.edit=Edit
+quick_calc.you_have_told_us.header=Check your answers
+quick_calc.you_have_told_us.edit=Change
 
-quick_calc.you_have_told_us.about_tax_code.label=Tax Code
+quick_calc.you_have_told_us.about_tax_code.label=Do you know your tax code?
 
-quick_calc.you_have_told_us.over_state_pension_age.label=Over state pension age
+quick_calc.you_have_told_us.over_state_pension_age.label=Are you over the State Pension age?
 quick_calc.you_have_told_us.over_state_pension_age.yes=YES
 quick_calc.you_have_told_us.over_state_pension_age.no=NOT
 
-quick_calc.you_have_told_us.salary.yearly.label=Per year
-quick_calc.you_have_told_us.salary.monthly.label=Per month
-quick_calc.you_have_told_us.salary.weekly.label=Per week
-quick_calc.you_have_told_us.salary.daily.label=Per day
-quick_calc.you_have_told_us.salary.hourly.label=Per hour
+quick_calc.you_have_told_us.salary.yearly.label=How much do you earn per year?
+quick_calc.you_have_told_us.salary.monthly.label=How much do you earn Per month?
+quick_calc.you_have_told_us.salary.weekly.label=How much do you earn per week?
+quick_calc.you_have_told_us.salary.daily.label=How much do you earn per day?
+quick_calc.you_have_told_us.salary.hourly.label=How much do you earn per hour?
 
 quick_calc.result.header=Your income-tax calculation
 quick_calc.result.you_take_home=You take home
@@ -83,8 +83,15 @@ quick_calc.result.tabLabels.year=Year
 quick_calc.result.tabLabels.month=Month
 quick_calc.result.tabLabels.week=Week
 
-quick_calc.salary.header=How much do you earn before tax?
-quick_calc.salary.description=This information will help us to give you the most accurate income tax results. Use the figure before tax or National Insurance are deducted - for example, £7.20 and hour or £26500 a year.
+quick_calc.salary.header=How much do you get paid before tax?
+quick_calc.salary.description_a=Use the figure before tax or National Insurance are deducted.
+quick_calc.salary.description_b=For example, £7.20 and hour or £26500 a year.
+quick_calc.salary.about=About this service
+quick_calc.salary.about_inf=Get your estimated Income Tax figures for the tax year
+quick_calc.salary.about_should_know=Before you start, make sure you know:
+quick_calc.salary.about_should_know_a=how much you usually get paid
+quick_calc.salary.about_should_know_b=how often you work
+quick_calc.salary.about_addition=It’s also useful to know your tax code. The calculator will work without it.
 quick_calc.salary.yearly=a year
 quick_calc.salary.monthly=a month
 quick_calc.salary.weekly=a week
@@ -96,16 +103,17 @@ quick_calc.salary.question.how_much_you_earn.period_selection=Select the option 
 quick_calc.salary.question.approximate=If you don't know, an approximate number is fine
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
 quick_calc.salary.question.hours_a_week=How many hours a week do you usually work?
-quick_calc.salary.question.state_pension_url_a=Your State Pension age depends on when you were born. You can
+quick_calc.salary.question.state_pension_url_a=Your State Pension age depends on when you were born. If you’re aged under 63 you haven’t reached it yet. You can
 quick_calc.salary.question.state_pension_url_b=check your State Pension age
 quick_calc.salary.question.state_pension_url_c=if you are not sure
 quick_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax Rate?
-quick_calc.salary.question.scottish_income_url_a=You usually pay
-quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax
-quick_calc.salary.question.scottish_income_url_c=if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
-quick_calc.salary.question.tax_code_info=If you don’t know your tax code, we’ll use the default tax code for England, Wales, Scotland or Northern Ireland.
+quick_calc.salary.question.scottish_income_info=You usually pay Scottish Income Tax if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
+quick_calc.salary.question.scottish_income_url_a=You can check if you pay
+quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a new tab)
+quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
+quick_calc.salary.question.tax_code_info=If you don't know, we'll use the default tax code. Adding your current tax code will help us give you more accurate results.
 quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
-quick_calc.salary.question.tax_code_info_url_b=payslip, P45 or P60 (opens in a new window).
+quick_calc.salary.question.tax_code_info_url_b=payslip, P45 or P60 (opens in a new tab).
 
 quick_calc.salary.question.error.number_of_days.less_than_zero=Days per week must be at least 1
 quick_calc.salary.question.error.number_of_days.more_than_seven=Maximum days per week is 7
