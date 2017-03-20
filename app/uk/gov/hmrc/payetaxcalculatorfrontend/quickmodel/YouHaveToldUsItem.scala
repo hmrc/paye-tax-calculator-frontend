@@ -33,7 +33,9 @@ object YouHaveToldUs {
       val label = Messages("quick_calc.you_have_told_us.about_tax_code.label")
       val idSuffix = "tax-code"
       val url = routes.QuickCalcController.showTaxCodeForm().url
-      YouHaveToldUsItem(t.taxCode.getOrElse(UserTaxCode.defaultTaxCode), label, url, idSuffix)
+      YouHaveToldUsItem(
+        if(t.hasTaxCode) t.taxCode.getOrElse(UserTaxCode.defaultTaxCode)
+        else s"${Messages("quick_calc.you_have_told_us.about_tax_code.default")} ${t.taxCode.getOrElse(UserTaxCode.defaultTaxCode)})", label, url, idSuffix)
     }
   }
 
@@ -45,6 +47,17 @@ object YouHaveToldUs {
       YouHaveToldUsItem(
         if(overStatePensionAge.value) Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
         else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"), label, url, idSuffix)
+    }
+  }
+
+  implicit def scottishIncomeFormat(implicit messages: Messages) = new YouHaveToldUs[ScottishRate] {
+    def toYouHaveToldUsItem(scottish: ScottishRate): YouHaveToldUsItem = {
+      val label = Messages("quick_calc.you_have_told_us.scottish_rate.label")
+      val idSuffix = "scottish_rate"
+      val url = routes.QuickCalcController.showScottishRateForm().url
+      YouHaveToldUsItem(
+        if(scottish.value) Messages("quick_calc.you_have_told_us.scottish_rate.yes")
+        else Messages("quick_calc.you_have_told_us.scottish_rate.no"), label, url, idSuffix)
     }
   }
 
@@ -62,4 +75,15 @@ object YouHaveToldUs {
       YouHaveToldUsItem(asPounds(s.value), labelFor(s.period), url, idSuffix)
     }
   }
+
+  implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[Detail] {
+    def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
+      val label = Messages(s"quick_calc.you_have_told_us.salary.work_${detail.period}.label")
+      val idSuffix = "scottish_rate"
+      val url = routes.QuickCalcController.showSalaryForm().url
+      YouHaveToldUsItem(
+        detail.howManyAWeek.toString, label, url, idSuffix)
+    }
+  }
+
 }

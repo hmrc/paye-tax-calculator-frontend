@@ -55,6 +55,11 @@ quick_calc.you_have_told_us.header=Check your answers
 quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=Do you know your tax code?
+quick_calc.you_have_told_us.about_tax_code.default=No (We'll use the default
+
+quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
+quick_calc.you_have_told_us.scottish_rate.yes=YES
+quick_calc.you_have_told_us.scottish_rate.no=NOT
 
 quick_calc.you_have_told_us.over_state_pension_age.label=Are you over the State Pension age?
 quick_calc.you_have_told_us.over_state_pension_age.yes=YES
@@ -65,6 +70,9 @@ quick_calc.you_have_told_us.salary.monthly.label=How much do you earn Per month?
 quick_calc.you_have_told_us.salary.weekly.label=How much do you earn per week?
 quick_calc.you_have_told_us.salary.daily.label=How much do you earn per day?
 quick_calc.you_have_told_us.salary.hourly.label=How much do you earn per hour?
+
+quick_calc.you_have_told_us.salary.work_daily.label=How many days a week do you usually work?
+quick_calc.you_have_told_us.salary.work_hourly.label=How many hours a week do you usually work?
 
 quick_calc.result.header=Your income-tax calculation
 quick_calc.result.you_take_home=Your take home pay is
