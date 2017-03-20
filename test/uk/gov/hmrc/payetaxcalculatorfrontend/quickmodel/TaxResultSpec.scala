@@ -24,27 +24,27 @@ class TaxResultSpec extends UnitSpec {
   "Extracting Tax Code from user response" should {
 
     "return tax code that a user has provided" in {
-      extractTaxCode(QuickCalcAggregateInput(None, Some(UserTaxCode(true,Some("K452"))), None)) shouldBe "K452"
+      extractTaxCode(QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(true,Some("K452"))), None)) shouldBe "K452"
     }
 
     "return default tax code: 1150L if a user does not provide one" in {
-      extractTaxCode(QuickCalcAggregateInput(None, Some(UserTaxCode(false,None)), None)) shouldBe "1150L"
+      extractTaxCode(QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(false,None)), None)) shouldBe "1150L"
     }
   }
 
   "Extracting OverStatePensionAge answer from user response" should {
 
     "return true if the response is user is over state pension state_pension" in {
-      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(true)))) shouldBe "true"
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(true)), None, None)) shouldBe "true"
     }
 
     "return false if the reponse is user is not over state pension state_pension" in {
-      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(false)))) shouldBe "false"
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(false)), None, None)) shouldBe "false"
     }
 
     "return an error with message with \"No answer has been provided for the question: Are you over state pension state_pension?\" if no response" in {
       val thrown = intercept[Exception]{
-        extractOverStatePensionAge(QuickCalcAggregateInput(None, None, None))
+        extractOverStatePensionAge(QuickCalcAggregateInput(None, None, None, None, None))
       }
       thrown.getMessage shouldBe "No answer has been provided for the question: Are you over state pension age?"
     }
@@ -53,28 +53,28 @@ class TaxResultSpec extends UnitSpec {
   "Extracting Salary from user response" should {
 
     "return if response provided is the Yearly Salary" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(20000, "yearly", None)), None, None)) shouldBe 2000000
+      extractSalary(QuickCalcAggregateInput(Some(Salary(20000, "yearly", None)), None, None, None, None)) shouldBe 2000000
     }
 
     "return if response provided is the Monthly Salary" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(2000, "monthly", None)), None, None)) shouldBe 200000
+      extractSalary(QuickCalcAggregateInput(Some(Salary(2000, "monthly", None)), None, None, None, None)) shouldBe 200000
     }
 
     "return if response provided is the Weekly Salary" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(200, "weekly", None)), None, None)) shouldBe 20000
+      extractSalary(QuickCalcAggregateInput(Some(Salary(200, "weekly", None)), None, None, None, None)) shouldBe 20000
     }
 
     "return if response provided is the Daily Salary" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(20, "daily", None)), None, None)) shouldBe 2000
+      extractSalary(QuickCalcAggregateInput(Some(Salary(20, "daily", None)), None, None, None, None)) shouldBe 2000
     }
 
     "return if response provided is the Hourly Salary" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(2, "hourly", None)), None, None)) shouldBe 200
+      extractSalary(QuickCalcAggregateInput(Some(Salary(2, "hourly", None)), None, None, None, None)) shouldBe 200
     }
 
     "return an error with message \"No Salary has been provided\" if no response" in {
       val thrown = intercept[Exception]{
-        extractSalary(QuickCalcAggregateInput(None, None, None))
+        extractSalary(QuickCalcAggregateInput(None, None, None, None, None))
       }
       thrown.getMessage shouldBe "No Salary has been provided."
     }
@@ -83,38 +83,38 @@ class TaxResultSpec extends UnitSpec {
   "Extracting Pay Period from user response" should {
 
     "return  if response provided is Yearly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "yearly", None)), None, None)) shouldBe "annual"
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "yearly", None)), None, None, None, None)) shouldBe "annual"
     }
 
     "return if response provided is Monthly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "monthly", None)), None, None)) shouldBe "monthly"
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "monthly", None)), None, None, None, None)) shouldBe "monthly"
     }
 
     "return if response provided is Weekly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "weekly", None)), None, None)) shouldBe "weekly"
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "weekly", None)), None, None, None, None)) shouldBe "weekly"
     }
 
     "return empty string if response is Daily" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "daily", None)), None, None)) shouldBe ""
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "daily", None)), None, None, None, None)) shouldBe ""
     }
 
     "return empty string if response is Hourly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "hourly", None)), None, None)) shouldBe ""
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "hourly", None)), None, None, None, None)) shouldBe ""
     }
   }
 
   "Extracting Hours from user response" should {
 
     "return if response is hours in Daily" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(40,"daily", None)), None, None)) shouldBe -1
+      extractHours(QuickCalcAggregateInput(Some(Salary(40,"daily", None)), None, None, None, None)) shouldBe -1
     }
 
     "return if response is hours in Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(20,"hourly", None)), None, None)) shouldBe -1
+      extractHours(QuickCalcAggregateInput(Some(Salary(20,"hourly", None)), None, None, None, None)) shouldBe -1
     }
 
     "return if response is not Daily or Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(-1,"hourly", None)), None, None)) shouldBe -1
+      extractHours(QuickCalcAggregateInput(Some(Salary(-1,"hourly", None)), None, None, None, None)) shouldBe -1
     }
   }
 

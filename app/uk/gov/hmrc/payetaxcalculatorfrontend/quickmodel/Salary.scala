@@ -24,6 +24,11 @@ import play.api.libs.json._
 case class Salary(value: BigDecimal, period: String, howManyAWeek:Option[Int])
 case class Hours(value: Int, howManyAWeek: Int)
 case class Days(value: Int, howManyAWeek: Int)
+case class Detail(howManyAWeek: Int, period: String)
+
+object Detail {
+  implicit val format = Json.format[Detail]
+}
 
 object Salary {
 

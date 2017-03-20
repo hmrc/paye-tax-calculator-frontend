@@ -11,37 +11,34 @@
 
   <div class="grid-layout grid-layout--stacked">
 
+    <a class="link-back" href="@url">@Messages("back")</a>
+
     <header class="page-header">
       <h1>@Messages("quick_calc.salary.question.days_a_week")</h1>
     </header>
-    <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.approximate")</p>
+    <p>@Messages("quick_calc.salary.question.approximate")</p>
 
     @helper.form(action = controllers.routes.QuickCalcController.submitDaysAWeek(valueInPence)) {
       @helper.CSRF.formField
 
-      <label class="form-field-group form-field--error panel-indent">
-
+      <fieldset class="form-field-group">
         @if(daysForm("howManyAWeek").hasErrors){
-          <div class="error-notification">
-          @{daysForm("howManyAWeek").errors.head.message}
-          </div>
+          <label class="form-field--error">
+            <div class="error-notification">
+              @{daysForm("howManyAWeek").errors.head.message}
+            </div>
+          </label>
         }
-        <input style= "display:inline " type="text" name="howManyAWeek" maxlength="3" size="3" required />
-
-        <p style= "display:inline">days a week</p>
-
-      </label>
+        <input style= "display:inline " type="text" name="howManyAWeek" maxlength="1" size="1" required />
+      </fieldset>
 
       <input type="hidden" name="value" value=@valueInPence>
 
       <div class="form-group">
-        <input type="submit" class="button" value="Continue">
+        <input type="submit" class="button" value="@Messages("continue")">
       </div>
-    }
 
-    <div>
-      <a href="@{url}">@Messages("back")</a>
-    </div>
+    }
 
   </div>
 

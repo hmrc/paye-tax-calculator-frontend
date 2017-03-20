@@ -20,31 +20,32 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 
 case class QuickCalcAggregateInput(salary: Option[Salary],
+                                   period: Option[Detail],
+                                   isOverStatePensionAge: Option[OverStatePensionAge],
                                    taxCode: Option[UserTaxCode],
-                                   isOverStatePensionAge: Option[OverStatePensionAge]
-//                                   scottishRate: Option[ScottishRate]
+                                   scottishRate: Option[ScottishRate]
                                   ){
 
   def allQuestionsAnswered: Boolean = List(
     salary,
     isOverStatePensionAge,
     taxCode
-//    scottishRate
   ).forall(_.isDefined)
 
   def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] = {
     List(
-      salary.map { YouHaveToldUs(_ ) },
+      salary.map { YouHaveToldUs(_) },
+      period.map { YouHaveToldUs(_) },
       isOverStatePensionAge.map { YouHaveToldUs(_) },
-      taxCode.map { YouHaveToldUs(_) }
-//      scottishRate.map {YouHaveToldUs(_)}
+      taxCode.map { YouHaveToldUs(_) },
+      scottishRate.map {YouHaveToldUs(_)}
     ).flatten
   }
 
 }
 
 object QuickCalcAggregateInput {
-  def newInstance = QuickCalcAggregateInput(None, None, None)
+  def newInstance = QuickCalcAggregateInput(None, None, None, None, None)
   implicit val format = Json.format[QuickCalcAggregateInput]
 }
 

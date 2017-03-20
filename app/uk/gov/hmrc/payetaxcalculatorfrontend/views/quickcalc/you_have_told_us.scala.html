@@ -6,21 +6,19 @@
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
   @if(items.nonEmpty) {
-    <table style="margin-left: 15px">
+    <table class="check-your-answers" style="margin-left: 15px">
       <thead>
-        <tr>
-          <th colspan="2">@Messages("quick_calc.you_have_told_us.header")</th>
-        </tr>
+          <th colspan="3">
+            <h1 class="heading-large">
+              @Messages("quick_calc.you_have_told_us.header")
+            </h1>
+          </th>
       </thead>
       <tbody>
       @items.map { item =>
         <tr>
-          <td>
-            <div class="data">
-              <span class="data-item bold-medium">@item.value</span>
-              <span class="data-item bold-xsmall">@item.label</span>
-            </div>
-          </td>
+          <td>@item.label</td>
+          <td>@item.value</td>
           <td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")</a></td>
         </tr>
       }
@@ -29,4 +27,5 @@
 
     <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.showResult()" class="button" type="submit">@Messages("continue")</a>
   }
+
 }
