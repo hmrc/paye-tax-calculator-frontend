@@ -50,8 +50,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
-          val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get) // FIXME seems one get to much
-          Ok(result(aggregate, date.taxYear.replaceAll("to","-"))) // FIXME .replaceAll("to","-") needs to be extracted
+          val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
+          // the date.taxYear method will give a string such as "2016 to 2017", but we want "2016 - 2017"
+          Ok(result(aggregate, date.taxYear.replaceAll("to","-")))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())

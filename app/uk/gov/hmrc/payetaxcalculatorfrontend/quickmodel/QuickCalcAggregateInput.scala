@@ -45,7 +45,7 @@ case class QuickCalcAggregateInput(savedSalary: Option[Salary],
 }
 
 object QuickCalcAggregateInput {
-  def newInstance = QuickCalcAggregateInput(None, None, None, None, None) // FIXME prototype name
+  def newInstance = QuickCalcAggregateInput(None, None, None, None, None)
   implicit val format = Json.format[QuickCalcAggregateInput]
 }
 
