@@ -19,26 +19,26 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 
-case class QuickCalcAggregateInput(salary: Option[Salary],
-                                   period: Option[Detail],
-                                   isOverStatePensionAge: Option[OverStatePensionAge],
-                                   taxCode: Option[UserTaxCode],
-                                   scottishRate: Option[ScottishRate]
+case class QuickCalcAggregateInput(savedSalary: Option[Salary],
+                                   savedPeriod: Option[Detail],
+                                   savedIsOverStatePensionAge: Option[OverStatePensionAge],
+                                   savedTaxCode: Option[UserTaxCode],
+                                   savedScottishRate: Option[ScottishRate]
                                   ){
 
   def allQuestionsAnswered: Boolean = List(
-    salary,
-    isOverStatePensionAge,
-    taxCode
+    savedSalary,
+    savedIsOverStatePensionAge,
+    savedTaxCode
   ).forall(_.isDefined)
 
   def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] = {
     List(
-      salary.map { YouHaveToldUs(_) },
-      period.map { YouHaveToldUs(_) },
-      isOverStatePensionAge.map { YouHaveToldUs(_) },
-      taxCode.map { YouHaveToldUs(_) },
-      scottishRate.map {YouHaveToldUs(_)}
+      savedSalary.map { YouHaveToldUs(_) },
+      savedPeriod.map { YouHaveToldUs(_) },
+      savedIsOverStatePensionAge.map { YouHaveToldUs(_) },
+      savedTaxCode.map { YouHaveToldUs(_) },
+      savedScottishRate.map {YouHaveToldUs(_)}
     ).flatten
   }
 

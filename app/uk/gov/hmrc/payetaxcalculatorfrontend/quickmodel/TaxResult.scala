@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
+import uk.gov.hmrc.payeestimator.domain.TaxCalc
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
 
 object TaxResult {
 
-  def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.taxCode match {
+  def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput): String = quickCalcAggregateInput.savedTaxCode match {
     case Some(s) => s.taxCode match {
       case Some(taxCode) => taxCode
       case None => UserTaxCode.defaultTaxCode
@@ -28,15 +29,16 @@ object TaxResult {
     case None => UserTaxCode.defaultTaxCode
   }
 
-  def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.isOverStatePensionAge match {
-    case Some(s) => s.value match {
-      case true => "true"
-      case false => "false"
+  def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): String =
+    quickCalcAggregateInput.savedIsOverStatePensionAge match {
+      case Some(s) => s.value match {
+        case true => "true"
+        case false => "false"
+      }
+      case None => throw new Exception("No answer has been provided for the question: Are you over state pension age?")
     }
-    case None => throw new Exception("No answer has been provided for the question: Are you over state pension age?")
-  }
 
-  def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
+  def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput): BigDecimal = quickCalcAggregateInput.savedSalary match {
     case Some(s) => s.period match {
       case "yearly" => s.value * 100
       case "monthly" => s.value * 100
@@ -48,7 +50,7 @@ object TaxResult {
     case None => throw new Exception("No Salary has been provided.")
   }
 
-  def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
+  def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput): String = quickCalcAggregateInput.savedSalary match {
     case Some(s) => s.period match {
       case "yearly" => "annual"
       case "monthly" => "monthly"
@@ -64,7 +66,7 @@ object TaxResult {
     * "hoursIn" does not only means hours but can also mean days.
     * buildTaxCalc will use the number returned to calculate the weekly gross pay from Daily or Hourly via those case classes.
     **/
-  def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput) = quickCalcAggregateInput.salary match {
+  def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput): Int = quickCalcAggregateInput.savedSalary match {
     case Some(s) => s.period match {
       case "daily" => s.howManyAWeek.getOrElse(-1)
       case "hourly" => s.howManyAWeek.getOrElse(-1)
@@ -73,7 +75,7 @@ object TaxResult {
     case _ => -1
   }
 
-  def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput) = {
+  def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput): TaxCalc = {
 
     val taxCode = extractTaxCode(quickCalcAggregateInput)
 
