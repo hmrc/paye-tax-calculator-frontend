@@ -32,12 +32,12 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
 
   private def loadConfig(key: String) = configuration(key: String).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
-  private val contactHost = configuration(s"contact-frontend.host").getOrElse("")
-  private val contactFormServiceIdentifier = "PayeTaxCalculator"
+  private val contactHost: String = configuration(s"contact-frontend.host").getOrElse("")
+  private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
 
   override lazy val analyticsToken: String = loadConfig(s"google-analytics.token")
   override lazy val analyticsHost: String = loadConfig(s"google-analytics.host")
-  override lazy val betaFeedbackUrl = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
-  override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  override lazy val betaFeedbackUrl: String = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  override lazy val reportAProblemPartialUrl: String = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
+  override lazy val reportAProblemNonJSUrl: String = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 }

@@ -57,7 +57,8 @@ quick_calc.you_have_told_us.header=Check your answers
 quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=Do you know your tax code?
-quick_calc.you_have_told_us.about_tax_code.default=No (We’ll use the default
+quick_calc.you_have_told_us.about_tax_code.no=No
+quick_calc.you_have_told_us.about_tax_code.default=We’ll use the default
 
 quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
 quick_calc.you_have_told_us.scottish_rate.yes=YES
