@@ -46,7 +46,10 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   def showResult() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
       case Some(aggregate) =>
-        if (aggregate.allQuestionsAnswered) Ok(result(aggregate))
+        if (aggregate.allQuestionsAnswered) {
+          val date = UserTaxCode.taxConfig(aggregate.taxCode.get.taxCode.get)
+          Ok(result(aggregate, date.taxYear.replaceAll("to","-")))
+        }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
     }

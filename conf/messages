@@ -46,10 +46,12 @@ index.language_version.target_language=welsh
 continue=Continue
 back = Back
 restart = Start again
+get_results=Get Results
 label.click_here=Click here
 
 
 quick_calc.title=HMRC Quick calculator
+quick_calc.header.title=PAYE Income Tax calculator
 
 quick_calc.you_have_told_us.header=Check your answers
 quick_calc.you_have_told_us.edit=Change
@@ -75,7 +77,7 @@ quick_calc.you_have_told_us.salary.work_daily.label=How many days a week do you 
 quick_calc.you_have_told_us.salary.work_hourly.label=How many hours a week do you usually work?
 
 quick_calc.result.header=Your income-tax calculation
-quick_calc.result.you_take_home=Your take home pay is
+quick_calc.result.you_take_home=Your take-home pay for
 quick_calc.result.gross_pay=Gross Pay
 quick_calc.result.total_deductions=Your total deductions are
 quick_calc.result.income=Income
@@ -90,6 +92,15 @@ quick_calc.result.your_marginal_rate_is=Your marginal rate is
 quick_calc.result.tabLabels.year=Year
 quick_calc.result.tabLabels.month=Month
 quick_calc.result.tabLabels.week=Week
+quick_calc.result.info_a=We have based your National Insurance estimate on the most popular
+quick_calc.result.info_b=options: Class 1, Categories A, B, C, H, J or M.
+quick_calc.result.info_c=This calculation is an estimate and is not legally binding.
+quick_calc.result.info_d=It is not a demand for payment.
+quick_calc.result.info_e=HMRC won’t keep a record of your data for security reasons.
+quick_calc.result.info_print=Print my calculation
+quick_calc.result.about=About your taxes
+quick_calc.result.about_url_a=How does the government spend your Income Tax?
+quick_calc.result.about_url_b=How is Scottish Income Tax different?
 
 quick_calc.salary.header=How much do you get paid before tax?
 quick_calc.salary.description_a=Use the figure before tax or National Insurance are deducted.
