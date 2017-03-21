@@ -57,7 +57,7 @@ quick_calc.you_have_told_us.header=Check your answers
 quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=Do you know your tax code?
-quick_calc.you_have_told_us.about_tax_code.default=No (We'll use the default
+quick_calc.you_have_told_us.about_tax_code.default=No (We’ll use the default
 
 quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
 quick_calc.you_have_told_us.scottish_rate.yes=YES
@@ -130,7 +130,7 @@ quick_calc.salary.question.scottish_income_info=You usually pay Scottish Income 
 quick_calc.salary.question.scottish_income_url_a=You can check if you pay
 quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a new tab)
 quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
-quick_calc.salary.question.tax_code_info=If you don't know, we'll use the default tax code. Adding your current tax code will help us give you more accurate results.
+quick_calc.salary.question.tax_code_info=If you don’t know, we’ll use the default tax code. Adding your current tax code will help us give you more accurate results.
 quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
 quick_calc.salary.question.tax_code_info_url_b=payslip, P45 or P60 (opens in a new tab).
 

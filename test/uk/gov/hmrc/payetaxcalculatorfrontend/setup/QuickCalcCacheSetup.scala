@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.setup
 
-import uk.gov.hmrc.http.cache.client.{CacheMap}
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
@@ -77,35 +77,35 @@ object QuickCalcCacheSetup {
   val expectedMaxGrossPayErrorMessage = "Maximum value for gross pay is £9,999,999.99"
   val expectedMaxHourlyRateErrorMessage = "Maximum value for hourly rate is £999,9999.99"
 
-  val cacheEmpty = cache(None)
+  val cacheEmpty: QuickCalcCache = cache(None)
 
-  val cacheReturnTaxCode = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    taxCode = Some(UserTaxCode(false, Some("1150L")))
+  val cacheReturnTaxCode: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
+    savedTaxCode = Some(UserTaxCode(false, Some("1150L")))
   )))
 
-  val cacheReturnTaxCodeAndIsOverStatePension = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    taxCode = Some(UserTaxCode(false, Some("1150L"))),
-    isOverStatePensionAge = Some(OverStatePensionAge(true)))))
+  val cacheReturnTaxCodeAndIsOverStatePension: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
+    savedTaxCode = Some(UserTaxCode(false, Some("1150L"))),
+    savedIsOverStatePensionAge = Some(OverStatePensionAge(true)))))
 
-  val cacheReturnTaxCodeIsOverStatePensionAndSalary = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    salary = Some(Salary(20000,"yearly", None)),
-    taxCode = Some(UserTaxCode(false, Some("1150L"))),
-    isOverStatePensionAge = Some(OverStatePensionAge(true))
+  val cacheReturnTaxCodeIsOverStatePensionAndSalary: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
+    savedSalary = Some(Salary(20000,"yearly", None)),
+    savedTaxCode = Some(UserTaxCode(false, Some("1150L"))),
+    savedIsOverStatePensionAge = Some(OverStatePensionAge(true))
   )))
 
-  val cacheReturnNoTaxCodeButAnswerEverythingElse = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    salary = Some(Salary(20000,"yearly", None)),
+  val cacheReturnNoTaxCodeButAnswerEverythingElse: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
+    savedSalary = Some(Salary(20000,"yearly", None)),
     None,
-    isOverStatePensionAge = Some(OverStatePensionAge(true)),
+    savedIsOverStatePensionAge = Some(OverStatePensionAge(true)),
     None,
     None
   )))
 
-  val cacheReturnNoAgeButAnswerEverythingElse = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    salary = Some(Salary(20000,"yearly", None)),
+  val cacheReturnNoAgeButAnswerEverythingElse: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
+    savedSalary = Some(Salary(20000,"yearly", None)),
     None,
     None,
-    taxCode = Some(UserTaxCode(false, Some("1150L"))),
+    savedTaxCode = Some(UserTaxCode(false, Some("1150L"))),
     None
   )))
 }
