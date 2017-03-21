@@ -38,7 +38,10 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
 
   def summary() = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry.map {
-      case Some(aggregate) => Ok(you_have_told_us(aggregate.youHaveToldUsItems))
+      case Some(aggregate) => {
+        if (aggregate.allQuestionsAnswered) Ok(you_have_told_us(aggregate.youHaveToldUsItems))
+        else redirectToNotYetDonePage(aggregate)
+      }
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
     }
   }
