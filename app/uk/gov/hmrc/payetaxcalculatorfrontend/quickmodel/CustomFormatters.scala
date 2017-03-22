@@ -39,7 +39,7 @@ object CustomFormatters {
         case s if s.nonEmpty =>
           try {
             val days = s.toInt
-            if(days < 0) {
+            if(days < 1) {
               Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_days.less_than_zero"))))
             } else if(days > 7) {
               Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_days.more_than_seven"))))

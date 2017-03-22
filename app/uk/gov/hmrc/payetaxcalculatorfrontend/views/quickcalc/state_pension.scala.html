@@ -10,7 +10,7 @@
 
   <div class="grid-layout--stacked">
 
-    <a class="link-back" href="@{youHaveToldUsItems.head.url}">@Messages("back")</a>
+    <a class="link-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label.substring(0,15) == Messages("quick_calc.you_have_told_us.salary.yearly.label").substring(0,15)) y.url else "")}">@Messages("back")</a>
 
     <h1 class="heading-large">@Messages("quick_calc.over_state_pension_age.header")</h1>
 
