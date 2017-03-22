@@ -28,7 +28,7 @@ import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 
 
-case class UserTaxCode(hasTaxCode: Boolean, taxCode: Option[String])
+case class UserTaxCode(gaveUsTaxCode: Boolean, taxCode: Option[String])
 
 object UserTaxCode extends TaxCalculatorHelper {
 
@@ -71,12 +71,12 @@ object UserTaxCode extends TaxCalculatorHelper {
     if (taxCode.hasErrors && selection) "checked"
     else if (selection)
       taxCode.value match {
-        case Some(code) => if (code.hasTaxCode) "checked" else ""
+        case Some(code) => if (code.gaveUsTaxCode) "checked" else ""
         case _ => ""
       }
     else
       taxCode.value match {
-        case Some(code) => if (!code.hasTaxCode && !taxCode.hasErrors) "checked" else ""
+        case Some(code) => if (!code.gaveUsTaxCode && !taxCode.hasErrors) "checked" else ""
         case _ => ""
       }
   }
@@ -85,7 +85,7 @@ object UserTaxCode extends TaxCalculatorHelper {
     if (taxCode("taxCode").hasErrors) ""
     else {
       taxCode.value match {
-        case Some(v) => if (v.hasTaxCode) "" else "hidden"
+        case Some(v) => if (v.gaveUsTaxCode) "" else "hidden"
         case _ => "hidden"
       }
     }
