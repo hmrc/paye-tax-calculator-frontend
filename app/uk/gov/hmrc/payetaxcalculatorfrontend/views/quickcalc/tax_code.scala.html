@@ -34,14 +34,23 @@
           data-open="tax-code-yes"
           data-close="tax-code-no">
 
+            @if(userTaxCodeForm("hasTaxCode").hasErrors){
+              <label class="form-field--error">
+                <div class="error-notification">
+                @{userTaxCodeForm("hasTaxCode").errors.head.message}
+                </div>
+              </label>
+            }
             <label class="block-label" for="tax-code-yes">@Messages("quick_calc.about_tax_code.has_tax_code_yes")
               <input type="radio"
               id="tax-code-yes"
               class="js-toggle-trigger"
               name="hasTaxCode"
               value="true"
-              @checkUserSelection(selection = true, userTaxCodeForm)
-              required />
+              @if(!userTaxCodeForm("hasTaxCode").hasErrors){
+                @checkUserSelection(selection = true, userTaxCodeForm)
+              }
+              />
             </label>
 
             <label class="block-label" for="tax-code-no">@Messages("quick_calc.about_tax_code.has_tax_code_no")
@@ -50,8 +59,10 @@
               class="js-toggle-trigger"
               name="hasTaxCode"
               value="false"
-              @checkUserSelection(selection = false, userTaxCodeForm)
-              required />
+              @if(!userTaxCodeForm("hasTaxCode").hasErrors){
+                @checkUserSelection(selection = false, userTaxCodeForm)
+              }
+              />
             </label>
 
             <div class="form-field-group form-field--error panel-indent @hideTextField(userTaxCodeForm)" id="tax-code-yes-target">

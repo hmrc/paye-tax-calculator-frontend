@@ -2,8 +2,8 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{ScottishRate, YouHaveToldUsItem}
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 
-@(ScottishRate: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
-@radioField = @{ ScottishRate("scottishRate") }
+@(scottishRate: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@radioField = @{ scottishRate("scottishRate") }
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
@@ -23,16 +23,22 @@
       @helper.CSRF.formField
 
       <div class="form-group">
-        <fieldset class="inline form-field-group"
-        id="scottishRate">
+        <fieldset class="inline form-field-group" id="scottishRate">
+
+          @if(scottishRate("scottishRate").hasErrors){
+            <label class="form-field--error">
+              <div class="error-notification">
+              @{scottishRate("scottishRate").errors.head.message}
+              </div>
+            </label>
+          }
 
           <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
             <input type="radio"
             id="scottishRate-yes"
             name="scottishRate"
             value="true"
-              @if(radioField.value.contains("true")) { checked="checked" }
-            required />
+              @if(radioField.value.contains("true")) { checked="checked" } />
           </label>
 
           <label class="block-label" for="scottishRate-no">@Messages("quick_calc.over_state_pension_age.no")
@@ -40,8 +46,7 @@
             id="scottishRate-no"
             name="scottishRate"
             value="false"
-              @if(radioField.value.contains("false")) { checked="checked" }
-            required />
+              @if(radioField.value.contains("false")) { checked="checked" } />
           </label>
 
         </fieldset>

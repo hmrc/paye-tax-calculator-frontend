@@ -37,7 +37,7 @@ object Salary {
   def salaryBaseForm(implicit messages: Messages) = Form(
     mapping(
       "value" -> of(CustomFormatters.salaryValidation),
-      "period" -> nonEmptyText,
+      "period" -> of(CustomFormatters.requiredSalaryPeriodFormatter),
       "howManyAWeek" -> optional(number)
     )(Salary.apply)(Salary.unapply)
   )

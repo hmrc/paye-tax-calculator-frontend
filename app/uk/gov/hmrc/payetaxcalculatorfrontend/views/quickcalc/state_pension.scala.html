@@ -23,20 +23,26 @@
       <div class="form-group">
         <fieldset class="inline form-field-group" id="overStatePensionAge">
 
+          @if(overStatePensionAgeForm("overStatePensionAge").hasErrors){
+            <label class="form-field--error">
+              <div class="error-notification">
+              @{overStatePensionAgeForm("overStatePensionAge").errors.head.message}
+              </div>
+            </label>
+          }
+
           <label class="block-label">@Messages("quick_calc.over_state_pension_age.yes")
             <input type="radio"
             name="overStatePensionAge"
             value="true"
-              @if(radioField.value.contains("true")) { checked="checked" }
-            required />
+              @if(radioField.value.contains("true")) { checked="checked" } />
           </label>
 
           <label class="block-label">@Messages("quick_calc.over_state_pension_age.no")
             <input type="radio"
             name="overStatePensionAge"
             value="false"
-              @if(radioField.value.contains("false")) { checked="checked" }
-            required />
+              @if(radioField.value.contains("false")) { checked="checked" } />
           </label>
 
         </fieldset>

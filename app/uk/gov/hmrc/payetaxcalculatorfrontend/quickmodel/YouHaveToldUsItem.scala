@@ -81,7 +81,7 @@ object YouHaveToldUs {
   implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[Detail] {
     def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
       val label = Messages(s"quick_calc.you_have_told_us.salary.work_${detail.period}.label")
-      val idSuffix = "scottish_rate"
+      val idSuffix = "salary_period"
       val url = routes.QuickCalcController.showSalaryForm().url
       YouHaveToldUsItem(
         detail.howManyAWeek.toString, label, url, idSuffix)

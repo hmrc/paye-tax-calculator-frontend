@@ -22,15 +22,26 @@ import play.api.i18n.Messages
 
 object CustomFormatters {
 
-  def requiredBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
+  def requiredBooleanFormatter(implicit messages: Messages): Formatter[Boolean] = new Formatter[Boolean] {
     override def bind(key: String, data: Map[String, String]) = {
       Right(data.getOrElse(key,"")).right.flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
-        case _ => Left(Seq(FormError(key,"Please select one of these options.")))
+        case _ => Left(Seq(FormError(key, Messages("select_one"))))
       }
     }
     override def unbind(key: String, value: Boolean): Map[String, String] = Map(key -> value.toString)
+  }
+
+  def requiredSalaryPeriodFormatter(implicit messages: Messages): Formatter[String] = new Formatter[String] {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
+      Right(data.getOrElse(key,"")).right.flatMap {
+        case "" => Left(Seq(FormError(key, Messages("select_one"))))
+        case p => Right(p)
+      }
+    }
+
+    override def unbind(key: String, value: String): Map[String, String] = Map(key -> value.toString)
   }
 
   def dayValidation(implicit messages: Messages): Formatter[Int] = new Formatter[Int] {

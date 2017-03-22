@@ -32,15 +32,23 @@
 
             <span>£</span>
 
-            <input type="text" id="value" name="value" value="" required />
+            <input type="text" id="value" name="value" value="" />
             <br>
+            <br>
+
+            @if(form("period").hasErrors){
+              <label class="form-field--error">
+                <div class="error-notification">
+                @{form("period").errors.head.message}
+                </div>
+              </label>
+            }
 
             @for(label <- periodLabels) {
               <label class="block-label selection-button-radio">@Messages(s"quick_calc.salary.$label")
               <input type="radio"
               name="period"
-              value="@label"
-              required />
+              value="@label" />
               </label>
 
             }

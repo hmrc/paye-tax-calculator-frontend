@@ -2,7 +2,6 @@ legacy.title=HMRC Tax Calculator
 legacy.introduction=Estimate how much Income Tax and National Insurance contributions you can expect to pay on your income – and find out how this money gets spent by the Government. The calculator is aimed at people who pay tax through Pay As You Earn (the system used by employers and pension providers to deduct tax from your wages or pension). It’s free and easy to use.
 legacy.scottish_taxpayer_intro=If you are a Scottish taxpayer you will need to enter your Scottish tax code, fo example "S1100L". For further information on the Scottish rate of Income Tax go to  
 legacy.scottish_income_tax=Scottish Income Tax
-
 index.use_the_detailed_calc_if=Notes for employees under the age of 21 and apprentices under the age of 25:
 index.use_the_detailed_calc_NI_select=You will need to select the National Insurance category letter:
 index.use_the_detailed_calc_NI_select_A=’A’ if your category letter is either ’H’ or ’M’
@@ -12,7 +11,6 @@ index.use_the_detailed_calc_ENI=The ’Employer National Insurance’ estimate w
 index.use_the_detailed_calc_NIC_link=National Insurance Contributions calculator
 
 index.detailed_calc_under_age=you are under the age of 21 or you are an apprentice under the age of 25
-
 index.title=How much is your income, tax and National Insurance?
 index.introduction=The calculator is aimed at people who pay tax through Pay As You Earn (the system used by employers and pension providers to deduct tax from your wages or pension). It’s free and easy to use.
 index.quick_calculation=Quick calculation
@@ -32,6 +30,7 @@ continue=Continue
 back = Back
 restart = Start again
 get_results=Get Results
+select_one=Please select one of these options.
 
 quick_calc.title=HMRC Quick calculator
 quick_calc.header.title=PAYE Income Tax calculator
@@ -93,6 +92,8 @@ quick_calc.salary.about_should_know_a=how much you usually get paid
 quick_calc.salary.about_should_know_b=how often you work
 quick_calc.salary.about_addition=It’s also useful to know your tax code. The calculator will work without it.
 quick_calc.salary.yearly=a year
+quick_calc.salary.monthly=a month
+quick_calc.salary.weekly=a week
 quick_calc.salary.daily=a day
 quick_calc.salary.hourly=an hour
 
@@ -100,7 +101,7 @@ quick_calc.salary.question.approximate=If you don’t know, an approximate numbe
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
 quick_calc.salary.question.hours_a_week=How many hours a week do you usually work?
 quick_calc.salary.question.state_pension_url_a=Your State Pension age depends on when you were born. If you’re aged under 63 you haven’t reached it yet. You can
-quick_calc.salary.question.state_pension_url_b=check your State Pension age
+quick_calc.salary.question.state_pension_url_b=check your State Pension age (opens in a new window)
 quick_calc.salary.question.state_pension_url_c=if you are not sure
 quick_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax Rate?
 quick_calc.salary.question.scottish_income_info=You usually pay Scottish Income Tax if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
@@ -117,7 +118,7 @@ quick_calc.salary.question.error.number_of_hours.less_than_one=Hours per week mu
 quick_calc.salary.question.error.number_of_hours.more_than_168=Maximum hours per week is 168
 
 quick_calc.salary.question.error.invalid_number_daily=Days per week must be a whole number
-quick_calc.salary.question.error.empty_number_daily=Please enter hours worked
+quick_calc.salary.question.error.empty_number_daily=Please enter days worked
 
 quick_calc.salary.question.error.invalid_number_hourly=Hours per week must be a whole number
 quick_calc.salary.question.error.empty_number_hourly=Please enter hours worked
@@ -146,5 +147,7 @@ quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
 
 calc.salary.yearly = Yearly
+calc.salary.monthly = Monthly
+calc.salary.weekly = Weekly
 calc.salary.daily = Daily
 calc.salary.hourly = Hourly
