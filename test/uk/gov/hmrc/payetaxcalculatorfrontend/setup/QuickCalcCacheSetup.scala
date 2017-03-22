@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.setup
 
+import play.api.i18n.Messages
 import uk.gov.hmrc.http.cache.client.CacheMap
-
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -40,29 +40,162 @@ object QuickCalcCacheSetup {
     }
   }
 
-  val aggregateListOnlyTaxCode = List(YouHaveToldUsItem("1150L", "Tax Code", "/foo","tax-code"))
+  val taxCodeTest = YouHaveToldUsItem("1150L", "Tax Code", "/foo", "tax-code")
+  val overStatePensionTest = YouHaveToldUsItem("YES", "Over 65", "/foo", "state_pension")
+  val salaryYearlyTest = YouHaveToldUsItem("20000", "Per year", "/foo", "salary")
+  val salaryDailyTest = YouHaveToldUsItem("40", "Per day", "/foo", "salary")
+  val salaryDailyPeriodTest = YouHaveToldUsItem("5", "Days", "/foo", "time")
+  val salaryHourlyPeriodTest = YouHaveToldUsItem("5", "Hours", "/foo", "time")
+  val scottishRateTest = YouHaveToldUsItem("No", "Scottish", "/foo", "scottish_rate")
+
+  val aggregateListOnlyTaxCode = List(
+    taxCodeTest
+  )
 
   val aggregateListOnlyTaxCodeAndStatePension = List(
-    YouHaveToldUsItem("1150L", "Tax Code", "/foo","tax-code"),
-    YouHaveToldUsItem("YES", "Over 65", "/foo", "state_pension")
+    taxCodeTest,
+    overStatePensionTest
   )
 
   val aggregateListTaxCodeStatePensionAndSalary = List(
-    YouHaveToldUsItem("1150L", "Tax Code", "/foo","tax-code"),
-    YouHaveToldUsItem("YES", "Over 65", "/foo", "state_pension"),
-    YouHaveToldUsItem("20000", "Per year", "/foo", "salary")
+    taxCodeTest,
+    overStatePensionTest,
+    salaryYearlyTest
   )
 
-  val expectedTaxCode = "1150L"
-  val expectedAgeAnswer = "YES"
+  val aggregateCompleteListYearly = List(
+    taxCodeTest,
+    overStatePensionTest,
+    salaryYearlyTest,
+    scottishRateTest
+  )
 
-  val expectedSalary = "£20000"
-  val expectedSalaryType = "Per year"
+  val aggregateCompleteListDaily = List(
+    taxCodeTest,
+    overStatePensionTest,
+    salaryDailyTest,
+    scottishRateTest,
+    salaryDailyPeriodTest
+  )
+
+  val aggregateCompleteListHourly = List(
+    taxCodeTest,
+    overStatePensionTest,
+    salaryDailyTest,
+    scottishRateTest,
+    salaryHourlyPeriodTest
+  )
+
+  val cacheTestTaxCode = Some(UserTaxCode(false, Some("1150L")))
+  val cacheTestScottishNO = Some(ScottishRate(false))
+  val cacheTestScottishYES = Some(ScottishRate(true))
+  val cacheTestStatePensionYES = Some(OverStatePensionAge(true))
+  val cacheTestStatusPensionNO = Some(OverStatePensionAge(false))
+  val cacheTestYearlySalary = Some(Salary(20000, "yearly", None))
+  val cacheTestDailySalary = Some(Salary(40, "daily", None))
+  val cacheTestHourlySalary = Some(Salary(8, "hourly", None))
+  val cacheTestSalaryPeriodDaily = Some(Detail(5, "daily"))
+  val cacheTestSalaryPeriodHourly = Some(Detail(40, "hourly"))
+
+  val cacheTaxCode = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedTaxCode = cacheTestTaxCode
+    )
+  )
+
+  val cacheTaxCodeStatePension = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedTaxCode = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES
+    )
+  )
+
+  val cacheTaxCodeStatePensionSalary = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary = cacheTestYearlySalary,
+      savedTaxCode = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedScottishRate = cacheTestScottishNO
+    )
+  )
+
+  val cacheCompleteYearly = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary = cacheTestYearlySalary,
+      savedTaxCode = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate = cacheTestScottishNO
+    )
+  )
+
+  val cacheStatePensionSalary = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary = cacheTestYearlySalary,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES
+    )
+  )
+
+  val cacheTaxCodeSalary = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary = cacheTestYearlySalary,
+      savedTaxCode = cacheTestTaxCode
+    )
+  )
+
+  val cacheCompleteDaily = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary = cacheTestDailySalary,
+      savedTaxCode = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate = cacheTestScottishNO,
+      savedPeriod = cacheTestSalaryPeriodDaily
+    )
+  )
+
+  val cacheCompleteHourly = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary = cacheTestHourlySalary,
+      savedTaxCode = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate = cacheTestScottishNO,
+      savedPeriod = cacheTestSalaryPeriodHourly
+    )
+  )
+
+  val cacheEmpty: QuickCalcCache = cache(None)
+
+  val cacheReturnTaxCode: QuickCalcCache = cache(cacheTaxCode)
+
+  val cacheReturnTaxCodeStatePension: QuickCalcCache = cache(cacheTaxCodeStatePension)
+
+  val cacheReturnTaxCodeStatePensionSalary: QuickCalcCache = cache(cacheTaxCodeStatePensionSalary)
+
+  val cacheReturnCompleteYearly: QuickCalcCache = cache(cacheCompleteYearly)
+
+  val cacheReturnCompleteDaily: QuickCalcCache = cache(cacheCompleteDaily)
+
+  val cacheReturnCompleteHourly: QuickCalcCache = cache(cacheCompleteHourly)
+
+  val cacheReturnStatePensionSalary: QuickCalcCache = cache(cacheStatePensionSalary)
+
+  val cacheReturnTaxCodeSalary: QuickCalcCache = cache(cacheTaxCodeSalary)
+
+  val expectedTaxCodeAnswer = "No(We’ll use the default 1150L)"
+  val expectedStatePensionYES = "YES"
+  val expectedStatePensionNO = "NOT"
+  val expectedYearlySalaryAnswer = "£20000"
+  val expectedDailySalaryAnswer = "£40"
+  val expectedHourlySalaryAnswer = "£8"
+  val expectedDailyPeriodAnswer = "5"
+  val expectedHourlyPeriodAnswer = "40"
+  val expectedYearlySalaryTypeAnswer = "Per year"
+  val expectedScottishAnswer = "NOT"
 
   val expectedFieldErrorMessage = "This field is required"
   val expectedSuffixTaxCodeErrorMessage = "The tax code you have entered is not valid - it must end with the letter L, M, N, or T"
   val expectedInvalidTaxCodeErrorMessage = "The tax code you have entered is not valid. A tax code is usually made up of several numbers and a letter, e.g. 117L or K497 or S117L or SK497"
 
+  val expectedGrossPayErrorMessage = "Please enter your gross pay"
   val expectedEmptyErrorMessage = "Please enter numbers and \".\" only"
   val expectedNegativeNumberErrorMessage = "The gross pay must be more than zero"
   val expectedInvalidSalaryErrorMessage = "Please enter amount in pounds and pence e.g. 123.45"
@@ -71,41 +204,9 @@ object QuickCalcCacheSetup {
   val expectedMinDailyRateErrorMessage = "Daily rate must be at least 0.01"
   val expectedMinDaysAWeekErrorMessage = "Days per week must be at least 1"
   val expectedWholeNumberDailyErrorMessage = "Days per week must be a whole number"
-  val expectedWholeNumberHourlyErrorMessage ="Hours per week must be a whole number"
-  val expectedMaxHoursAWeekErrorMessage= "Maximum hours per week is 168"
+  val expectedWholeNumberHourlyErrorMessage = "Hours per week must be a whole number"
+  val expectedMaxHoursAWeekErrorMessage = "Maximum hours per week is 168"
   val expectedMaxDaysAWeekErrorMessage = "Maximum days per week is 7"
-  val expectedMaxGrossPayErrorMessage = "Maximum value for gross pay is £9,999,999.99"
-  val expectedMaxHourlyRateErrorMessage = "Maximum value for hourly rate is £999,9999.99"
-
-  val cacheEmpty: QuickCalcCache = cache(None)
-
-  val cacheReturnTaxCode: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    savedTaxCode = Some(UserTaxCode(false, Some("1150L")))
-  )))
-
-  val cacheReturnTaxCodeAndIsOverStatePension: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    savedTaxCode = Some(UserTaxCode(false, Some("1150L"))),
-    savedIsOverStatePensionAge = Some(OverStatePensionAge(true)))))
-
-  val cacheReturnTaxCodeIsOverStatePensionAndSalary: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    savedSalary = Some(Salary(20000,"yearly", None)),
-    savedTaxCode = Some(UserTaxCode(false, Some("1150L"))),
-    savedIsOverStatePensionAge = Some(OverStatePensionAge(true))
-  )))
-
-  val cacheReturnNoTaxCodeButAnswerEverythingElse: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    savedSalary = Some(Salary(20000,"yearly", None)),
-    None,
-    savedIsOverStatePensionAge = Some(OverStatePensionAge(true)),
-    None,
-    None
-  )))
-
-  val cacheReturnNoAgeButAnswerEverythingElse: QuickCalcCache = cache(Some(QuickCalcAggregateInput.newInstance.copy(
-    savedSalary = Some(Salary(20000,"yearly", None)),
-    None,
-    None,
-    savedTaxCode = Some(UserTaxCode(false, Some("1150L"))),
-    None
-  )))
+  val expectedMaxGrossPayErrorMessage = "Maximum value for gross pay is £9999999.99"
+  val expectedMaxHourlyRateErrorMessage = "Maximum value for hourly rate is £9999999.99"
 }

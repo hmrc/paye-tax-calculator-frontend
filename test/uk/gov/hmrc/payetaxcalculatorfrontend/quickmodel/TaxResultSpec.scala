@@ -38,11 +38,11 @@ class TaxResultSpec extends UnitSpec {
       extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(true)), None, None)) shouldBe "true"
     }
 
-    "return false if the reponse is user is not over state pension state_pension" in {
+    "return false if the response is user is not over state pension state_pension" in {
       extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(false)), None, None)) shouldBe "false"
     }
 
-    "return an error with message with \"No answer has been provided for the question: Are you over state pension state_pension?\" if no response" in {
+    """return an error with message with "No answer has been provided for the question: Are you over state pension state_pension?" if no response""" in {
       val thrown = intercept[Exception]{
         extractOverStatePensionAge(QuickCalcAggregateInput(None, None, None, None, None))
       }
@@ -52,27 +52,27 @@ class TaxResultSpec extends UnitSpec {
 
   "Extracting Salary from user response" should {
 
-    "return if response provided is the Yearly Salary" in {
+    "return if response provided is the Yearly Salary: £20000 in pence" in {
       extractSalary(QuickCalcAggregateInput(Some(Salary(20000, "yearly", None)), None, None, None, None)) shouldBe 2000000
     }
 
-    "return if response provided is the Monthly Salary" in {
+    "return if response provided is the Monthly Salary: £2000 in pence" in {
       extractSalary(QuickCalcAggregateInput(Some(Salary(2000, "monthly", None)), None, None, None, None)) shouldBe 200000
     }
 
-    "return if response provided is the Weekly Salary" in {
+    "return if response provided is the Weekly Salary: £200 in pence" in {
       extractSalary(QuickCalcAggregateInput(Some(Salary(200, "weekly", None)), None, None, None, None)) shouldBe 20000
     }
 
-    "return if response provided is the Daily Salary" in {
+    "return if response provided is the Daily Salary: £20 in pence" in {
       extractSalary(QuickCalcAggregateInput(Some(Salary(20, "daily", None)), None, None, None, None)) shouldBe 2000
     }
 
-    "return if response provided is the Hourly Salary" in {
+    "return if response provided is the Hourly Salary: £2 in pence" in {
       extractSalary(QuickCalcAggregateInput(Some(Salary(2, "hourly", None)), None, None, None, None)) shouldBe 200
     }
 
-    "return an error with message \"No Salary has been provided\" if no response" in {
+    """return an error with message "No Salary has been provided" if no response""" in {
       val thrown = intercept[Exception]{
         extractSalary(QuickCalcAggregateInput(None, None, None, None, None))
       }

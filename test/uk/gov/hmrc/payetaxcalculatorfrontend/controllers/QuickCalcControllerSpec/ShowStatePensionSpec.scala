@@ -36,22 +36,22 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-class ShowTaxCodeSpec extends AppUnitGenerator {
+class ShowStatePensionSpec extends AppUnitGenerator{
 
-  "Show Tax Code Form" should {
-    "return 200 and an empty list of aggregate data" in {
+  "Show State Pension Form" should {
 
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
-      val action = csrfAddToken(controller.showTaxCodeForm())
+    "return 200, with existing list of aggregate data" in {
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
+      val action = csrfAddToken(controller.showStatePensionForm())
       val result = action.apply(request)
       val status = result.header.status
 
       status shouldBe 200
     }
 
-    "return 200 and a list of current aggregate data containing Tax Code: 1150L" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
-      val action = csrfAddToken(controller.showTaxCodeForm())
+    "return 200, with emtpy list of aggregate data" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val action = csrfAddToken(controller.showStatePensionForm())
       val result = action.apply(request)
       val status = result.header.status
 

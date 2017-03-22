@@ -23,7 +23,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
 class RedirectSpec extends AppUnitGenerator {
 
-  "Redirect to Tax Code Form" should {
+  "Redirect to Salary Form" should {
     "return 303" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val result = controller.redirectToSalaryForm().apply(request)
