@@ -20,6 +20,8 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.i18n.Messages
 
+import cats.syntax.either._
+
 object CustomFormatters {
 
   def requiredBooleanFormatter(implicit messages: Messages): Formatter[Boolean] = new Formatter[Boolean] {
@@ -30,18 +32,18 @@ object CustomFormatters {
         case _ => Left(Seq(FormError(key, Messages("select_one"))))
       }
     }
-    override def unbind(key: String, value: Boolean): Map[String, String] = Map(key -> value.toString)
+    override def unbind(key: String, value: Boolean) = Map(key -> value.toString)
   }
 
   def requiredSalaryPeriodFormatter(implicit messages: Messages): Formatter[String] = new Formatter[String] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
+    override def bind(key: String, data: Map[String, String]) = {
       Right(data.getOrElse(key,"")).right.flatMap {
         case "" => Left(Seq(FormError(key, Messages("select_one"))))
         case p => Right(p)
       }
     }
 
-    override def unbind(key: String, value: String): Map[String, String] = Map(key -> value.toString)
+    override def unbind(key: String, value: String) = Map(key -> value.toString)
   }
 
   def dayValidation(implicit messages: Messages): Formatter[Int] = new Formatter[Int] {
@@ -95,22 +97,22 @@ object CustomFormatters {
 
   def salaryValidation(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
     override def bind(key: String, data: Map[String, String]) = {
-      Right(data.getOrElse(key,"")).right.flatMap {
-        case s if s.nonEmpty =>
+      (data.get(key).filter(_.nonEmpty) match {
+        case Some(s) =>
           try{
             val salary = BigDecimal(s).setScale(2)
             if(salary < 0.01) {
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_salary_input"))))
+              Left("quick_calc.salary.question.error.minimum_salary_input")
             } else if(salary > 9999999.99) {
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
+              Left("quick_calc.salary.question.error.maximum_salary_input")
             } else {
               Right(salary)
             }
           } catch {
-            case _:Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_salary"))))
+            case _:Throwable => Left("quick_calc.salary.question.error.invalid_salary")
           }
-        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_salary_input"))))
-      }
+        case None => Left("quick_calc.salary.question.error.empty_salary_input")
+      }).leftMap(translationKey => Seq(FormError(key, Messages(translationKey))))
     }
 
     override def unbind(key: String, value: BigDecimal): Map[String, String] = Map(key -> value.toString)
