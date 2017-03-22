@@ -232,7 +232,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       newTaxCode => cache.fetchAndGetEntry().flatMap {
         case Some(aggregate) =>
           if (newTaxCode.gaveUsTaxCode) {
-            val newAggregate = aggregate.copy(savedTaxCode = Some(newTaxCode))
+            val newAggregate = aggregate.copy(savedTaxCode = Some(newTaxCode), savedScottishRate = None)
             cache.save(newAggregate).map { _ =>
               nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
                 Redirect(routes.QuickCalcController.summary())

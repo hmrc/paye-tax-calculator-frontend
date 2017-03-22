@@ -1,12 +1,8 @@
 legacy.title=HMRC Tax Calculator
 legacy.introduction=Estimate how much Income Tax and National Insurance contributions you can expect to pay on your income – and find out how this money gets spent by the Government. The calculator is aimed at people who pay tax through Pay As You Earn (the system used by employers and pension providers to deduct tax from your wages or pension). It’s free and easy to use.
-legacy.which_calc_header=Which calculation to use?
-legacy.which_calc.intro_options=Depending on your situation, you can get a quick or more detailed estimate.
-legacy.which_calc.use_quick_calc_if=Use the quick calculation if you can answer ’yes’ to the following:
-legacy.employment_only=you have employment income only
-legacy.dont_contribute_pension=you don’t contribute to a workplace or personal pension through your employer.
 legacy.scottish_taxpayer_intro=If you are a Scottish taxpayer you will need to enter your Scottish tax code, fo example "S1100L". For further information on the Scottish rate of Income Tax go to  
 legacy.scottish_income_tax=Scottish Income Tax
+
 index.use_the_detailed_calc_if=Notes for employees under the age of 21 and apprentices under the age of 25:
 index.use_the_detailed_calc_NI_select=You will need to select the National Insurance category letter:
 index.use_the_detailed_calc_NI_select_A=’A’ if your category letter is either ’H’ or ’M’
@@ -15,14 +11,7 @@ index.use_the_detailed_calc_NI_select_Other=Selecting the alternative letter wil
 index.use_the_detailed_calc_ENI=The ’Employer National Insurance’ estimate will not be correct. If you want to know the correct amount please use the
 index.use_the_detailed_calc_NIC_link=National Insurance Contributions calculator
 
-# index.detailed_calc_under_age=you are under the state_pension of 21 or you are an apprentice under the state_pension of 25
-# index.detailed_calc_ENI_estimate=The ’Employer National Insurance’ estimation will not reflect the position for employees under the state_pension of 21 or for apprentices under the state_pension of 25. If you want to know the correct amount of ’Employer National Insurance’ use the
-# legacy.detailed_calc.ni_contributions_calculator=National Insurance contributions calculator
-
-
 index.detailed_calc_under_age=you are under the age of 21 or you are an apprentice under the age of 25
-index.detailed_calc_ENI_estimate=The ’Employer National Insurance’ estimation will not reflect the position for employees under the age of 21 or for apprentices under the age of 25. If you want to know the correct amount of ’Employer National Insurance’ use the
-legacy.detailed_calc.ni_contributions_calculator=National Insurance contributions calculator
 
 index.title=How much is your income, tax and National Insurance?
 index.introduction=The calculator is aimed at people who pay tax through Pay As You Earn (the system used by employers and pension providers to deduct tax from your wages or pension). It’s free and easy to use.
@@ -30,11 +19,7 @@ index.quick_calculation=Quick calculation
 index.detailed_calculation=Detailed calculation
 index.welsh_version=Welsh version
 index.welsh_version_description=Follow the link below to use the Welsh language version of the online calculator.
-index.welsh_version_use=to use the Welsh language version of the online calculator.
 index.welsh_version_link=Cyfrifiannell Treth CThEM
-index.feedback=Feedback
-index.feedback_description=Send us feedback by following the link below.
-index.feedback_link=Give us feedback
 index.use_the_quick_calc_if=Use the quick calculation if you can answer ’yes’ to the following:
 index.employment_only=you have employment income only
 index.dont_contribute_pension=you don’t contribute to a workplace or personal pension through your employer.
@@ -47,8 +32,6 @@ continue=Continue
 back = Back
 restart = Start again
 get_results=Get Results
-label.click_here=Click here
-
 
 quick_calc.title=HMRC Quick calculator
 quick_calc.header.title=PAYE Income Tax calculator
@@ -79,17 +62,17 @@ quick_calc.you_have_told_us.salary.work_hourly.label=How many hours a week do yo
 
 quick_calc.result.header=Your income-tax calculation
 quick_calc.result.you_take_home=Your take-home pay for
-quick_calc.result.gross_pay=Gross Pay
-quick_calc.result.total_deductions=Your total deductions are
+quick_calc.result.gross_pay=Your gross pay
+quick_calc.result.total_deductions.info=Your total deductions are based on the information you’ve given us.
 quick_calc.result.income=Income
-quick_calc.result.tax_free_allowance=Tax free allowance
-quick_calc.result.taxable_pay=Taxable pay
-quick_calc.result.deductions=Deductions
-quick_calc.result.income_tax=Income tax
-quick_calc.result.your_national_insurance= Employee’s National Insurance
-quick_calc.result.your_employer_national_insurance=Your Employer National Insurance
-quick_calc.result.your_average_rate_is=Your average rate is
-quick_calc.result.your_marginal_rate_is=Your marginal rate is
+quick_calc.result.tax_free_allowance=You don’t pay tax on
+quick_calc.result.taxable_pay=You pay tax on
+quick_calc.result.deductions=Total deductions
+quick_calc.result.income_tax=Your Income Tax is
+quick_calc.result.your_national_insurance=Your National Insurance is
+quick_calc.result.how_we_calculated=How we calculated your results
+quick_calc.result.how_we_calculated.you_earn=What you earn
+
 quick_calc.result.tabLabels.year=Year
 quick_calc.result.tabLabels.month=Month
 quick_calc.result.tabLabels.week=Week
@@ -99,9 +82,6 @@ quick_calc.result.info_c=This calculation is an estimate and is not legally bind
 quick_calc.result.info_d=It is not a demand for payment.
 quick_calc.result.info_e=HMRC won’t keep a record of your data for security reasons.
 quick_calc.result.info_print=Print my calculation
-quick_calc.result.about=About your taxes
-quick_calc.result.about_url_a=How does the government spend your Income Tax?
-quick_calc.result.about_url_b=How is Scottish Income Tax different?
 
 quick_calc.salary.header=How much do you get paid before tax?
 quick_calc.salary.description_a=Use the figure before tax or National Insurance are deducted.
@@ -113,12 +93,8 @@ quick_calc.salary.about_should_know_a=how much you usually get paid
 quick_calc.salary.about_should_know_b=how often you work
 quick_calc.salary.about_addition=It’s also useful to know your tax code. The calculator will work without it.
 quick_calc.salary.yearly=a year
-quick_calc.salary.monthly=a month
-quick_calc.salary.weekly=a week
 quick_calc.salary.daily=a day
 quick_calc.salary.hourly=an hour
-quick_calc.salary.question.how_much_you_earn=Enter the amount you earn
-quick_calc.salary.question.how_much_you_earn.period_selection=Select the option the amount refers to
 
 quick_calc.salary.question.approximate=If you don’t know, an approximate number is fine
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
@@ -170,7 +146,5 @@ quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
 
 calc.salary.yearly = Yearly
-calc.salary.monthly = Monthly
-calc.salary.weekly = Weekly
 calc.salary.daily = Daily
 calc.salary.hourly = Hourly

@@ -17,7 +17,7 @@
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
   <div class="grid-layout--stacked">
 
-    <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.summary()" class="button">@Messages("back")</a>
+    <a class="link-back" href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.summary()">@Messages("back")</a>
 
     <div class="grid-layout__column grid-layout__column--2-3">
       <header class="page-header">
@@ -46,87 +46,72 @@
         </ul>
 
         <ul>
-        @for((breakdown, label) <- summary.taxBreakdown.zip(tabLabels)) {
-          <li id=@{
-            "tabContent" + breakdown.period
-          }
-          data-tab-content= @{
-            breakdown.period
-          }
+        @for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
+          <li id=@{"tabContent"+breakdown.period}
+          data-tab-content=@{breakdown.period}
             class="tab-content"
             role="tabpanel"
-            aria-labelledby=@{
-            breakdown.period
-          }>
+            aria-labelledby=@{breakdown.period}>
           <p class="tab-content__first">
-
         <div class="data">
           <div class="transaction-banner--complete">
             <span class="data-item bold-xsmall">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear"}</span>
             <br/>
             <br/>
-            <span class="data-item bold-xlarge">£@{
-              breakdown.takeHomePay
-            }</span>
+            <span class="data-item bold-xlarge">£@{breakdown.takeHomePay}</span>
           </div>
         </div>
           <br>
-          <div class="data">
-            <span class="data-item bold-xsmall">@Messages("quick_calc.result.total_deductions")</span>
-            <br/>
-            <br/>
-            <span class="data-item bold-xlarge">£@{
-              breakdown.totalDeductions
-            }</span>
-          </div>
-          <br/>
+          <table>
+            <thead>
+              <tr>
+                <th colspan="2">@{Messages("quick_calc.result.total_deductions.info")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>@{Messages("quick_calc.result.income_tax")}</td>
+                <td>£@{breakdown.taxCategories.head.total}</td>
+              </tr>
+              <tr>
+                <td>@{Messages("quick_calc.result.your_national_insurance")}</td>
+                <td>£@{breakdown.taxCategories(1).total}</td>
+              </tr>
+              <tr>
+                <td>@{Messages("quick_calc.result.deductions")}</td>
+                <td>£@{breakdown.totalDeductions}</td>
+              </tr>
+            </tbody>
+          </table>
+
           <details>
             <summary class="summary">
-                How we calculated your results
+              @{Messages("quick_calc.result.how_we_calculated")}
             </summary>
             <div>
               <table>
                 <thead >
                   <tr>
-                    <th colspan="2">@Messages("quick_calc.result.income")</th>
+                    <th colspan="2">@{Messages("quick_calc.result.how_we_calculated.you_earn")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>@Messages("quick_calc.result.gross_pay")</td>
+                    <td>@{Messages("quick_calc.result.gross_pay")}</td>
                     <td>£@{
                       breakdown.grossPay
                     }</td>
                   </tr>
                   <tr>
-                    <td>@Messages("quick_calc.result.tax_free_allowance")</td>
+                    <td>@{Messages("quick_calc.result.tax_free_allowance")}</td>
                     <td>£@{
                       breakdown.taxFreePay
                     }</td>
                   </tr>
                   <tr>
-                    <td>@Messages("quick_calc.result.taxable_pay")</td>
+                    <td>@{Messages("quick_calc.result.taxable_pay")}</td>
                     <td>£@{
                       breakdown.taxablePay
-                    }</td>
-                  </tr>
-                </tbody>
-                <thead>
-                  <tr>
-                    <th colspan="2">@Messages("quick_calc.result.deductions")</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>@Messages("quick_calc.result.income_tax")</td>
-                    <td>£@{
-                      breakdown.taxCategories.head.total
-                    }</td>
-                  </tr>
-                  <tr>
-                    <td>@Messages("quick_calc.result.your_national_insurance")</td>
-                    <td>£@{
-                      breakdown.taxCategories(1).total
                     }</td>
                   </tr>
                 </tbody>
@@ -147,14 +132,6 @@
 
       </div>
       <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.restartQuickCalc()" class="button" type="submit">@Messages("restart")</a>
-    </div>
-
-    <div class="grid-layout__column grid-layout__column--1-3">
-      <aside class="govuk-related-items" role="complementary" style="margin-left: 15px">
-        <h2 class="heading-medium" id="subsection-title">@Messages("quick_calc.result.about")</h2>
-        <p><a href="https://www.gov.uk/scottish-rate-income-tax" target="_blank">@Messages("quick_calc.result.about_url_a")</a></p>
-        <p><a href="https://www.gov.uk/scottish-rate-income-tax" target="_blank">@Messages("quick_calc.result.about_url_b")</a></p>
-      </aside>
     </div>
 
   </div>
