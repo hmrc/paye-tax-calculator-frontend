@@ -33,6 +33,7 @@
 
           <label class="block-label">@Messages("quick_calc.over_state_pension_age.yes")
             <input type="radio"
+            id="overStatePensionAgeYes"
             name="overStatePensionAge"
             value="true"
               @if(radioField.value.contains("true")) { checked="checked" } />
@@ -40,6 +41,7 @@
 
           <label class="block-label">@Messages("quick_calc.over_state_pension_age.no")
             <input type="radio"
+            id="overStatePensionAgeNo"
             name="overStatePensionAge"
             value="false"
               @if(radioField.value.contains("false")) { checked="checked" } />
