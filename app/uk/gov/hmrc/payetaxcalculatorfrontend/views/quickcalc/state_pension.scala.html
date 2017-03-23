@@ -8,52 +8,57 @@
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
-  <div class="grid-layout--stacked">
+  <div class="grid-layout">
+    <div class="grid-layout__column grid-layout__column--2-3">
 
-    <a class="link-back" id="sp-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label.substring(0,15) == Messages("quick_calc.you_have_told_us.salary.yearly.label").substring(0,15)) y.url else "")}">@Messages("back")</a>
+      <a class="link-back" id="sp-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label.substring(0,15) == Messages("quick_calc.you_have_told_us.salary.yearly.label").substring(0,15)) y.url else "")}">@Messages("back")</a>
 
-    <h1 class="heading-large">@Messages("quick_calc.over_state_pension_age.header")</h1>
+      <h1 class="heading-large">@Messages("quick_calc.over_state_pension_age.header")</h1>
 
-    <p>@Messages("quick_calc.salary.question.state_pension_url_a") <a href="https://www.gov.uk/state-pension-age" target="_blank">@Messages("quick_calc.salary.question.state_pension_url_b")</a>
-      @Messages("quick_calc.salary.question.state_pension_url_c")</p>
+      <p>@Messages("quick_calc.salary.question.state_pension_url_a") <a href="https://www.gov.uk/state-pension-age" target="_blank">@Messages("quick_calc.salary.question.state_pension_url_b")</a>
+        @Messages("quick_calc.salary.question.state_pension_url_c")</p>
 
-    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitStatePensionForm()" method="post">
-      @helper.CSRF.formField
+      <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitStatePensionForm()" method="post">
+        @helper.CSRF.formField
 
-      <div class="form-group">
-        <fieldset class="inline form-field-group" id="overStatePensionAge">
+        <div class="form-group">
+          <fieldset class="inline form-field-group" id="overStatePensionAge">
 
-          @if(overStatePensionAgeForm("overStatePensionAge").hasErrors){
-            <label class="form-field--error">
-              <div class="error-notification">
-              @{overStatePensionAgeForm("overStatePensionAge").errors.head.message}
-              </div>
+            @if(overStatePensionAgeForm("overStatePensionAge").hasErrors){
+              <label class="form-field--error">
+                <div class="error-notification">
+                @{overStatePensionAgeForm("overStatePensionAge").errors.head.message}
+                </div>
+              </label>
+            }
+
+            <label class="block-label">@Messages("quick_calc.over_state_pension_age.yes")
+              <input type="radio"
+              id="overStatePensionAgeYes"
+              name="overStatePensionAge"
+              value="true"
+                @if(radioField.value.contains("true")) { checked="checked" } />
             </label>
-          }
 
-          <label class="block-label">@Messages("quick_calc.over_state_pension_age.yes")
-            <input type="radio"
-            id="overStatePensionAgeYes"
-            name="overStatePensionAge"
-            value="true"
-              @if(radioField.value.contains("true")) { checked="checked" } />
-          </label>
+            <label class="block-label">@Messages("quick_calc.over_state_pension_age.no")
+              <input type="radio"
+              id="overStatePensionAgeNo"
+              name="overStatePensionAge"
+              value="false"
+                @if(radioField.value.contains("false")) { checked="checked" } />
+            </label>
 
-          <label class="block-label">@Messages("quick_calc.over_state_pension_age.no")
-            <input type="radio"
-            id="overStatePensionAgeNo"
-            name="overStatePensionAge"
-            value="false"
-              @if(radioField.value.contains("false")) { checked="checked" } />
-          </label>
+          </fieldset>
+        </div>
 
-        </fieldset>
-      </div>
+        <div class="form-group">
+          <input type="submit" id="sp-continue" class="button" value="@Messages("continue")">
+        </div>
+      </form>
+    </div>
 
-      <div class="form-group">
-        <input type="submit" id="sp-continue" class="button" value="@Messages("continue")">
-      </div>
-    </form>
+    <div class="grid-layout__column grid-layout__column--1-3">
+    </div>
 
   </div>
 

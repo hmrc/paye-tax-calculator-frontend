@@ -15,123 +15,130 @@
 }
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
-  <div class="grid-layout--stacked">
-
-    <a class="link-back" id="r-back" href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.summary()">@Messages("back")</a>
-
+  <div class="grid-layout grid-layout--maintain-width">
     <div class="grid-layout__column grid-layout__column--2-3">
-      <header class="page-header">
-        <h1>@Messages("quick_calc.result.header")</h1>
-      </header>
 
-      <div data-tabs>
-        <ul class="tabs-nav" role="tablist">
-        @for((breakdown, label) <- summary.taxBreakdown.zip(tabLabels)) {
-          <li
-          id=@{
-            breakdown.period
+      <a class="link-back" id="r-back" href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.summary()">@Messages("back")</a>
+
+      <div class="grid-layout__column grid-layout__column--2-3">
+        <header class="page-header">
+          <h1>@Messages("quick_calc.result.header")</h1>
+        </header>
+
+        <div data-tabs>
+          <ul class="tabs-nav" role="tablist">
+          @for((breakdown, label) <- summary.taxBreakdown.zip(tabLabels)) {
+            <li
+            id=@{
+              breakdown.period
+            }
+            role="tab"
+            data-tab-link=@{
+              breakdown.period
+            }
+            aria-selected="true"
+            aria-controls=@{
+              "tabContent" + breakdown.period
+            }>
+              <span class="tabs-nav__tab tabs-nav__tab--active"
+              href="#">@label</span>
+            </li>
           }
-          role="tab"
-          data-tab-link=@{
-            breakdown.period
-          }
-          aria-selected="true"
-          aria-controls=@{
-            "tabContent" + breakdown.period
-          }>
-            <span class="tabs-nav__tab tabs-nav__tab--active"
-            href="#">@label</span>
-          </li>
-        }
-        </ul>
+          </ul>
 
-        <ul>
-        @for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
-          <li id=@{"tabContent"+breakdown.period}
-          data-tab-content=@{breakdown.period}
-            class="tab-content"
-            role="tabpanel"
-            aria-labelledby=@{breakdown.period}>
-          <p class="tab-content__first">
-        <div class="data">
-          <div class="transaction-banner--complete">
-            <span class="data-item bold-xsmall">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear"}</span>
-            <br/>
-            <br/>
-            <span class="data-item bold-xlarge">£@{breakdown.takeHomePay}</span>
-          </div>
-        </div>
-          <br>
-          <table>
-            <thead>
-              <tr>
-                <th colspan="2">@{Messages("quick_calc.result.total_deductions.info")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>@{Messages("quick_calc.result.income_tax")}</td>
-                <td>£@{breakdown.taxCategories.head.total}</td>
-              </tr>
-              <tr>
-                <td>@{Messages("quick_calc.result.your_national_insurance")}</td>
-                <td>£@{breakdown.taxCategories(1).total}</td>
-              </tr>
-              <tr>
-                <td>@{Messages("quick_calc.result.deductions")}</td>
-                <td>£@{breakdown.totalDeductions}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <details>
-            <summary class="summary">
-              @{Messages("quick_calc.result.how_we_calculated")}
-            </summary>
-            <div>
-              <table>
-                <thead >
-                  <tr>
-                    <th colspan="2">@{Messages("quick_calc.result.how_we_calculated.you_earn")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>@{Messages("quick_calc.result.gross_pay")}</td>
-                    <td>£@{
-                      breakdown.grossPay
-                    }</td>
-                  </tr>
-                  <tr>
-                    <td>@{Messages("quick_calc.result.tax_free_allowance")}</td>
-                    <td>£@{
-                      breakdown.taxFreePay
-                    }</td>
-                  </tr>
-                  <tr>
-                    <td>@{Messages("quick_calc.result.taxable_pay")}</td>
-                    <td>£@{
-                      breakdown.taxablePay
-                    }</td>
-                  </tr>
-                </tbody>
-              </table>
+          <ul>
+          @for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
+            <li id=@{"tabContent"+breakdown.period}
+            data-tab-content=@{breakdown.period}
+              class="tab-content"
+              role="tabpanel"
+              aria-labelledby=@{breakdown.period}>
+            <p class="tab-content__first">
+          <div class="data">
+            <div class="transaction-banner--complete">
+              <span class="data-item bold-xsmall">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear"}</span>
+              <br/>
+              <br/>
+              <span class="data-item bold-xlarge">£@{breakdown.takeHomePay}</span>
             </div>
-          </details>
+          </div>
+            <br>
+            <table class="calc">
+              <thead>
+                <tr>
+                  <th colspan="3">@{Messages("quick_calc.result.total_deductions.info")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>@{Messages("quick_calc.result.income_tax")}</td>
+                  <td>£@{breakdown.taxCategories.head.total}</td>
+                </tr>
+                <tr>
+                  <td>@{Messages("quick_calc.result.your_national_insurance")}</td>
+                  <td>£@{breakdown.taxCategories(1).total}</td>
+                </tr>
+                <tr>
+                  <td>@{Messages("quick_calc.result.deductions")}</td>
+                  <td>£@{breakdown.totalDeductions}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="form-group" style="margin-top:2em">
+            <details>
+              <summary class="summary">
+              @{Messages("quick_calc.result.how_we_calculated")}
+              </summary>
+              <div>
+                <table class="calc">
+                  <thead >
+                    <tr>
+                      <th colspan="2">@{Messages("quick_calc.result.how_we_calculated.you_earn")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>@{Messages("quick_calc.result.gross_pay")}</td>
+                      <td>£@{
+                        breakdown.grossPay
+                      }</td>
+                    </tr>
+                    <tr>
+                      <td>@{Messages("quick_calc.result.tax_free_allowance")}</td>
+                      <td>£@{
+                        breakdown.taxFreePay
+                      }</td>
+                    </tr>
+                    <tr>
+                      <td>@{Messages("quick_calc.result.taxable_pay")}</td>
+                      <td>£@{
+                        breakdown.taxablePay
+                      }</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+            </div>
+            </p>
+            </li>
+          }
+          </ul>
+          <p><a href="javascript:window.print()">@Messages("quick_calc.result.info_print")</a></p>
+
+          <p>@Messages("quick_calc.result.info_a")
+            <br>@Messages("quick_calc.result.info_b")
+            <li>@Messages("quick_calc.result.info_c")</li>
+            <li>@Messages("quick_calc.result.info_d")</li>
+            <li>@Messages("quick_calc.result.info_e")</li>
           </p>
-          </li>
-        }
-        </ul>
-        <p><a href="javascript:window.print()">@Messages("quick_calc.result.info_print")</a></p>
 
-        <p>@Messages("quick_calc.result.info_a")
-        <br>@Messages("quick_calc.result.info_b")
-        <br>@Messages("quick_calc.result.info_c")
-        <br>@Messages("quick_calc.result.info_d")
-        <br>@Messages("quick_calc.result.info_e")</p>
-
+        </div>
+        <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart" class="button" type="submit">@Messages("restart")</a>
       </div>
-      <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.restartQuickCalc()" id="restart" class="button" type="submit">@Messages("restart")</a>
+    </div>
+
+    <div class="grid-layout__column grid-layout__column--1-3">
     </div>
 
   </div>
