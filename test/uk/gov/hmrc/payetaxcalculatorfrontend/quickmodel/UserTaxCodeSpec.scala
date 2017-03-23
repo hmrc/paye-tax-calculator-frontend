@@ -61,4 +61,11 @@ class UserTaxCodeSpec extends UnitSpec with OneAppPerSuite {
     }
   }
 
+  "Tax engine config" should {
+    "be set only for 2017/2018 tax year" in {
+      val config = UserTaxCode.taxConfig("1150L")
+      config.startDate.getYear shouldEqual 2017
+      config.endDate.getYear shouldEqual 2018
+    }
+  }
 }

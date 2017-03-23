@@ -3,7 +3,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{Salary, YouHaveToldUsItem}
 @import views.html.helper._
 
-@(form: Form[Salary], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@(form: Form[Salary])(implicit request: Request[_], messages: Messages)
 @periodLabels = @{List("yearly","monthly","weekly","daily","hourly")}
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
@@ -32,7 +32,7 @@
 
             <span>£</span>
 
-            <input type="text" id="value" name="value" value="" />
+            <input type="text" id="pay-amount" name="value" value="" />
             <br>
             <br>
 
@@ -58,7 +58,7 @@
         </div>
 
         <div class="form-group">
-          <input type="submit" class="button" value="@Messages("continue")">
+          <input type="submit" id="p-continue" class="button" value="@Messages("continue")">
         </div>
       }
 

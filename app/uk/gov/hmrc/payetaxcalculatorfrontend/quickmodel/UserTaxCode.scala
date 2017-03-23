@@ -43,12 +43,12 @@ object UserTaxCode extends TaxCalculatorHelper {
     val charList = List('L', 'M', 'N', 'T')
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
       if (data.getOrElse(hasTaxCode, "false") == "true") {
-        if (isValidTaxCode(data.getOrElse(taxCode, ""), taxConfig(data.getOrElse(taxCode, "")))) Right(Some(data.getOrElse(taxCode, "")))
+        val taxCodeData = data.getOrElse(taxCode, "").toUpperCase()
+        if (isValidTaxCode(taxCodeData, taxConfig(taxCodeData))) Right(Some(taxCodeData))
         else {
           data.getOrElse(taxCode, "") match {
             case code if code.isEmpty => Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
             case code if code.nonEmpty =>
-              val taxCodeData = data.getOrElse(taxCode, "")
               if (charList.contains(taxCodeData.last)) Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code_suffix"))))
               else Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
           }
@@ -71,12 +71,12 @@ object UserTaxCode extends TaxCalculatorHelper {
     if (taxCode.hasErrors && selection) "checked"
     else if (selection)
       taxCode.value match {
-        case Some(code) => if (code.gaveUsTaxCode) "checked" else ""
+        case Some(code) if code.gaveUsTaxCode => "checked"
         case _ => ""
       }
     else
       taxCode.value match {
-        case Some(code) => if (!code.gaveUsTaxCode && !taxCode.hasErrors) "checked" else ""
+        case Some(code) if !code.gaveUsTaxCode && !taxCode.hasErrors => "checked"
         case _ => ""
       }
   }
@@ -92,7 +92,7 @@ object UserTaxCode extends TaxCalculatorHelper {
   }
 
   def taxConfig(taxCode: String): TaxCalcResource = TaxCalcResourceBuilder.resourceForDate(
-    LocalDate.now(),
-    isValidScottishTaxCode(taxCode))
-
+    LocalDate.of(2017, 4, 6),
+    isValidScottishTaxCode(taxCode)
+  )
 }

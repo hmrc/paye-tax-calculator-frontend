@@ -59,63 +59,35 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def showSalaryForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    cache.fetchAndGetEntry().map {
-      case Some(aggregate) =>
-        val form = aggregate.savedSalary.map(Salary.salaryBaseForm.fill).getOrElse(Salary.salaryBaseForm)
-        Ok(salary(form, aggregate.youHaveToldUsItems))
-      case None =>
-        Ok(salary(Salary.salaryBaseForm, Nil))
-    }
+    Future(Ok(salary(Salary.salaryBaseForm)))
   }
 
   def submitSalaryAmount(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     val url = request.uri
     Salary.salaryBaseForm.bindFromRequest().fold(
-      formWithErrors => cache.fetchAndGetEntry().map {
-        case Some(aggregate) => BadRequest(salary(formWithErrors, aggregate.youHaveToldUsItems))
-        case None => BadRequest(salary(formWithErrors, Nil))
-      },
-      salaryAmount => cache.fetchAndGetEntry().flatMap {
-        case Some(aggregate) =>{
-          val updatedAggregate = aggregate.copy(savedSalary = Some(salaryAmount), savedPeriod = None)
-          `salaryAmount`.period match {
-            case "daily" =>
-              cache.save(updatedAggregate).map { _ =>
-                Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.value), url))
-              }
-            case "hourly" =>
-              cache.save(updatedAggregate).map { _ =>
-                Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.value), url))
-              }
-            case _ =>
-              cache.save(updatedAggregate).map { _ =>
-                nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-                  Redirect(routes.QuickCalcController.showStatePensionForm())
-                }
-              }
+      formWithErrors => Future(BadRequest(salary(formWithErrors))),
+
+      salaryAmount => {
+        val updatedAggregate = cache.fetchAndGetEntry()
+                      .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+                        .map(_.copy(savedSalary = Some(salaryAmount), savedPeriod = None))
+
+        updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
+            salaryAmount.period match {
+              case "daily" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.value), url))
+              case "hourly" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.value), url))
+              case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
+                Redirect(routes.QuickCalcController.showStatePensionForm())
+            }
           }
-        }
-        case None => `salaryAmount`.period match {
-          case "daily" =>
-            cache.save(QuickCalcAggregateInput.newInstance.copy(savedSalary = Some(salaryAmount)))
-              .map { _ => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.value), url)) }
-          case "hourly" =>
-            cache.save(QuickCalcAggregateInput.newInstance.copy(savedSalary = Some(salaryAmount)))
-              .map { _ => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.value), url)) }
-          case _ =>
-            cache.save(QuickCalcAggregateInput.newInstance.copy(savedSalary = Some(salaryAmount), savedPeriod = None))
-              .map { _ => Redirect(routes.QuickCalcController.showStatePensionForm()) }
-        }
+        }))
       }
     )
   }
 
   def showHoursAWeek(valueInPence: Int, url: String): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry().map {
-      case Some(aggregate) =>
-        Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, url))
-      case None =>
-        Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, url))
+      _ => Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, url))
     }
   }
 
@@ -124,32 +96,27 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     val value = BigDecimal(valueInPence) / 100
     Salary.salaryInHoursForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
-        case Some(aggregate) => BadRequest(hours_a_week(valueInPence, formWithErrors, url))
-        case None => BadRequest(hours_a_week(valueInPence, formWithErrors, url))
+        _ => BadRequest(hours_a_week(valueInPence, formWithErrors, url))
       },
-      hours => cache.fetchAndGetEntry().flatMap {
-        case Some(aggregate) =>
-          val updatedAggregate = aggregate.copy(savedSalary = Some(Salary(
-            value, "hourly", Some(hours.howManyAWeek))), savedPeriod = Some(Detail(hours.howManyAWeek, "hourly")))
-          cache.save(updatedAggregate)
-            .map { _ =>
-              nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-                Redirect(routes.QuickCalcController.showStatePensionForm())
-              }
-            }
-        case None => cache.save(QuickCalcAggregateInput.newInstance.copy(savedSalary = Some(Salary(
-          value, "hourly", Some(hours.howManyAWeek))), Some(Detail(hours.howManyAWeek, "hourly"))))
-          .map { _ => Redirect(routes.QuickCalcController.showStatePensionForm()) }
+      hours => {
+        val updatedAggregate = cache.fetchAndGetEntry()
+          .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+            .map(_.copy(savedSalary = Some(Salary(value, "hourly", Some(hours.howManyAWeek))),
+                        savedPeriod = Some(Detail(hours.howManyAWeek, "hourly"))))
+
+        updatedAggregate.flatMap( agg => {
+          cache.save(agg).map( _ =>
+            nextPageOrSummaryIfAllQuestionsAnswered(agg)(
+              Redirect(routes.QuickCalcController.showStatePensionForm())
+          ))
+        })
       }
     )
   }
 
   def showDaysAWeek(valueInPence: Int, url: String): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry().map {
-      case Some(aggregate) =>
-        Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, url))
-      case None =>
-        Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, url))
+      _ => Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, url))
     }
   }
 
@@ -158,23 +125,20 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     val value = BigDecimal(valueInPence) / 100
     Salary.salaryInDaysForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
-        case Some(aggregate) => BadRequest(days_a_week(valueInPence, formWithErrors, url))
-        case None => BadRequest(days_a_week(valueInPence, formWithErrors, url))
+        _ => BadRequest(days_a_week(valueInPence, formWithErrors, url))
       },
-      days => cache.fetchAndGetEntry().flatMap {
-        case Some(aggregate) =>
-          val updatedAggregate = aggregate.copy(savedSalary = Some(Salary(
-            value, "daily", Some(days.howManyAWeek))), savedPeriod = Some(Detail(days.howManyAWeek, "daily")))
-          cache.save(updatedAggregate).map { _ =>
-            nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-              Redirect(routes.QuickCalcController.showStatePensionForm())
-            }
-          }
-        case None =>
-          cache.save(QuickCalcAggregateInput.newInstance.copy(
-            savedSalary = Some(Salary(value, "daily", Some(days.howManyAWeek))),
-            savedPeriod = Some(Detail(days.howManyAWeek, "daily")))
-          ).map { _ => Redirect(routes.QuickCalcController.showStatePensionForm()) }
+      days => {
+        val updatedAggregate = cache.fetchAndGetEntry()
+          .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+            .map(_.copy(savedSalary = Some(Salary(value, "daily", Some(days.howManyAWeek))),
+                        savedPeriod = Some(Detail(days.howManyAWeek, "daily"))))
+
+        updatedAggregate.flatMap{ agg => {
+          cache.save(agg)
+            .map( _ =>
+              nextPageOrSummaryIfAllQuestionsAnswered(agg) (
+                Redirect(routes.QuickCalcController.showStatePensionForm())))
+        }}
       }
     )
   }
@@ -230,46 +194,20 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
           case None => BadRequest(tax_code(formWithErrors, Nil))
       },
       newTaxCode => {
-        val newAggregate = newTaxCode
-        cache.fetchAndGetEntry().flatMap {
-          case Some(aggregate) =>
-            if (newTaxCode.gaveUsTaxCode) {
-              val newAggregate = aggregate.copy(savedTaxCode = Some(newTaxCode), savedScottishRate = None)
-              cache.save(newAggregate).map { _ =>
-                nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
-                  Redirect(routes.QuickCalcController.summary())
-                }
-              }
-            } else {
-              val newAggregate = aggregate.copy(
-                savedTaxCode = Some(UserTaxCode(
-                  gaveUsTaxCode = false,
-                  Some(UserTaxCode.defaultTaxCode)))
-              )
-              cache.save(newAggregate).map { _ =>
-                Redirect(routes.QuickCalcController.showScottishRateForm())
-              }
-            }
+        val updatedAggregate = cache.fetchAndGetEntry()
+          .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+            .map(agg =>
+              if (newTaxCode.gaveUsTaxCode) agg.copy(savedTaxCode = Some(newTaxCode), savedScottishRate = None)
+              else agg.copy(savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(UserTaxCode.defaultTaxCode))))
+            )
 
-          case None =>
-            if (newTaxCode.gaveUsTaxCode) {
-              val newAggregate = QuickCalcAggregateInput.newInstance.copy(savedTaxCode = Some(newTaxCode))
-              cache.save(newAggregate).map { _ =>
-                nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
-                  Redirect(routes.QuickCalcController.summary())
-                }
-              }
-            } else {
-              val newAggregate = QuickCalcAggregateInput.newInstance.copy(
-                savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(UserTaxCode.defaultTaxCode))))
-              cache.save(newAggregate).map { _ =>
-                Redirect(routes.QuickCalcController.showScottishRateForm())
-              }
-            }
-        }
+        updatedAggregate.flatMap(agg => cache.save(agg).map(_ =>
+          if (newTaxCode.gaveUsTaxCode) {
+            nextPageOrSummaryIfAllQuestionsAnswered(agg) {Redirect(routes.QuickCalcController.summary())}
+          }
+          else Redirect(routes.QuickCalcController.showScottishRateForm())
+        ))
       }
-
-
     )
   }
 
