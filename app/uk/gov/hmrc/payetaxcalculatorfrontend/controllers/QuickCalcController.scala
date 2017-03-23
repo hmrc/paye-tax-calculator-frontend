@@ -124,46 +124,18 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
         _ => BadRequest(hours_a_week(valueInPence, formWithErrors, url))
       },
       hours => {
-//        val updatedAggregate = cache.fetchAndGetEntry()
-//          .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-//            .map(_.copy(savedSalary = Some(Salary(value, "hourly", Some(hours.howManyAWeek))),
-//                        savedPeriod = Some(Detail(hours.howManyAWeek, "hourly"))))
-//
-//        updatedAggregate.map(agg => cache.save(agg).map(_ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
-//          Redirect(routes.QuickCalcController.showStatePensionForm())
-//        }))
-//
-        cache.fetchAndGetEntry().flatMap {
-          case Some(aggregate) =>
-            val updatedAggregate = aggregate.copy(savedSalary = Some(Salary(
-              value, "hourly", Some(hours.howManyAWeek))), savedPeriod = Some(Detail(hours.howManyAWeek, "hourly")))
-            cache.save(updatedAggregate)
-              .map { _ =>
-                nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-                  Redirect(routes.QuickCalcController.showStatePensionForm())
-                }
-              }
-          case None => cache.save(QuickCalcAggregateInput.newInstance.copy(savedSalary = Some(Salary(
-            value, "hourly", Some(hours.howManyAWeek))), Some(Detail(hours.howManyAWeek, "hourly"))))
-            .map { _ => Redirect(routes.QuickCalcController.showStatePensionForm()) }
-        }
+        val updatedAggregate = cache.fetchAndGetEntry()
+          .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+            .map(_.copy(savedSalary = Some(Salary(value, "hourly", Some(hours.howManyAWeek))),
+                        savedPeriod = Some(Detail(hours.howManyAWeek, "hourly"))))
+
+        updatedAggregate.flatMap( agg => {
+          cache.save(agg).map( _ =>
+            nextPageOrSummaryIfAllQuestionsAnswered(agg)(
+              Redirect(routes.QuickCalcController.showStatePensionForm())
+          ))
+        })
       }
-//      hours => {
-//        cache.fetchAndGetEntry().flatMap {
-//          case Some(aggregate) =>
-//            val updatedAggregate = aggregate.copy(savedSalary = Some(Salary(
-//              value, "hourly", Some(hours.howManyAWeek))), savedPeriod = Some(Detail(hours.howManyAWeek, "hourly")))
-//            cache.save(updatedAggregate)
-//              .map { _ =>
-//                nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-//                  Redirect(routes.QuickCalcController.showStatePensionForm())
-//                }
-//              }
-//          case None => cache.save(QuickCalcAggregateInput.newInstance.copy(savedSalary = Some(Salary(
-//            value, "hourly", Some(hours.howManyAWeek))), Some(Detail(hours.howManyAWeek, "hourly"))))
-//            .map { _ => Redirect(routes.QuickCalcController.showStatePensionForm()) }
-//        }
-//      }
     )
   }
 
