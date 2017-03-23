@@ -39,6 +39,8 @@ object UserTaxCode extends TaxCalculatorHelper {
   val hasTaxCode = "hasTaxCode"
   val taxCode = "taxCode"
 
+  private val startOfHardcodedTaxYear = LocalDate.of(2017, 4, 6)
+
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
     val charList = List('L', 'M', 'N', 'T')
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
@@ -69,16 +71,14 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   def checkUserSelection(selection: Boolean, taxCode: Form[UserTaxCode]): String = {
     if (taxCode.hasErrors && selection) "checked"
-    else if (selection)
+    else {
       taxCode.value match {
-        case Some(code) if code.gaveUsTaxCode => "checked"
+        case Some(code) if selection && code.gaveUsTaxCode ||
+          (!selection && (!code.gaveUsTaxCode && !taxCode.hasErrors)) =>
+          "checked"
         case _ => ""
       }
-    else
-      taxCode.value match {
-        case Some(code) if !code.gaveUsTaxCode && !taxCode.hasErrors => "checked"
-        case _ => ""
-      }
+    }
   }
 
   def hideTextField(taxCode: Form[UserTaxCode]): String = {
@@ -92,7 +92,7 @@ object UserTaxCode extends TaxCalculatorHelper {
   }
 
   def taxConfig(taxCode: String): TaxCalcResource = TaxCalcResourceBuilder.resourceForDate(
-    LocalDate.of(2017, 4, 6),
+    startOfHardcodedTaxYear,
     isValidScottishTaxCode(taxCode)
   )
 }
