@@ -180,16 +180,16 @@ object QuickCalcCacheSetup {
 
   val cacheReturnTaxCodeSalary: QuickCalcCache = cache(cacheTaxCodeSalary)
 
-  val expectedTaxCodeAnswer = "No (We’ll use the default 1150L)"
-  val expectedStatePensionYES = "YES"
-  val expectedStatePensionNO = "NOT"
+  val expectedTaxCodeAnswer = "No (we’ll use the default 1150L)"
+  val expectedStatePensionYES = "Yes"
+  val expectedStatePensionNO = "No"
   val expectedYearlySalaryAnswer = "£20000"
   val expectedDailySalaryAnswer = "£40"
   val expectedHourlySalaryAnswer = "£8"
   val expectedDailyPeriodAnswer = "5"
   val expectedHourlyPeriodAnswer = "40"
   val expectedYearlySalaryTypeAnswer = "Per year"
-  val expectedScottishAnswer = "NOT"
+  val expectedScottishAnswer = "No"
 
   val expectedFieldErrorMessage = "This field is required"
   val expectedSuffixTaxCodeErrorMessage = "The tax code you have entered is not valid - it must end with the letter L, M, N, or T"
