@@ -180,7 +180,7 @@ object QuickCalcCacheSetup {
 
   val cacheReturnTaxCodeSalary: QuickCalcCache = cache(cacheTaxCodeSalary)
 
-  val expectedTaxCodeAnswer = "No(We’ll use the default 1150L)"
+  val expectedTaxCodeAnswer = "No (We’ll use the default 1150L)"
   val expectedStatePensionYES = "YES"
   val expectedStatePensionNO = "NOT"
   val expectedYearlySalaryAnswer = "£20000"
