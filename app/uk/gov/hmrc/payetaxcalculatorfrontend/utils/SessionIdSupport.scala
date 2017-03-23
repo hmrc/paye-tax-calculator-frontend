@@ -37,14 +37,15 @@ import scala.concurrent.Future
  */
 
 object SessionIdSupport {
-  def maybeSessionId(rh: RequestHeader) =
+  def maybeSessionId(rh: RequestHeader): Option[String] =
     rh.session.get(SessionKeys.sessionId).orElse(rh.headers.get(HeaderNames.xSessionId))
 
   def hasSessionId(rh: RequestHeader): Boolean = maybeSessionId(rh).isDefined
 }
 
 object SessionIdFilter extends Filter with MicroserviceFilterSupport{
-  def apply(next: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] = {
+  def apply(next: (RequestHeader) => Future[Result])
+           (rh: RequestHeader): Future[Result] = {
     if (hasSessionId(rh)) {
       next(rh)
     } else {
@@ -61,7 +62,8 @@ object SessionIdFilter extends Filter with MicroserviceFilterSupport{
 }
 
 object ActionWithSessionId extends ActionBuilder[Request] {
-  def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
+  def invokeBlock[A](request: Request[A],
+                     block: (Request[A]) => Future[Result]): Future[Result] = {
     maybeSessionId(request).map { sessionId =>
       block(request).map(addSessionIdToSession(request, sessionId))
     }.getOrElse {
@@ -69,7 +71,8 @@ object ActionWithSessionId extends ActionBuilder[Request] {
     }
   }
 
-  def addSessionIdToSession[A](request: Request[A], sessionId: String)(result: Result) =
+  def addSessionIdToSession[A](request: Request[A], sessionId: String)
+                              (result: Result): Result =
     result.withSession(request.session + (SessionKeys.sessionId -> sessionId))
 
   case class SessionIdNotFoundException() extends Exception(

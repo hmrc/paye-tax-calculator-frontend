@@ -26,7 +26,7 @@ trait YouHaveToldUs[A] {
 }
 
 object YouHaveToldUs {
-  def apply[A : YouHaveToldUs](a: A) = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
+  def apply[A : YouHaveToldUs](a: A): YouHaveToldUsItem = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
@@ -63,10 +63,6 @@ object YouHaveToldUs {
     }
   }
 
-  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
-    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
-  }
-
   implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
       val url = routes.QuickCalcController.showSalaryForm().url
@@ -88,4 +84,7 @@ object YouHaveToldUs {
     }
   }
 
+  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
+    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
+  }
 }
