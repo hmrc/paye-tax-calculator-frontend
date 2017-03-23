@@ -13,7 +13,7 @@
 
   <div class="grid-layout--stacked">
 
-    <a class="link-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == Messages("quick_calc.you_have_told_us.over_state_pension_age.label")) y.url else "")}">@Messages("back")</a>
+    <a class="link-back" id="tc-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == Messages("quick_calc.you_have_told_us.over_state_pension_age.label")) y.url else "")}">@Messages("back")</a>
 
     <div class="grid-layout__column grid-layout__column--2-3">
 
@@ -86,7 +86,7 @@
         </div>
 
         <div class="form-group">
-          <input type="submit" class="button" value="@Messages("continue")">
+          <input type="submit" id="tc-continue" class="button" value="@Messages("continue")">
         </div>
       }
 

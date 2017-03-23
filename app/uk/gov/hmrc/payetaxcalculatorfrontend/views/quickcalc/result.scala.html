@@ -17,7 +17,7 @@
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
   <div class="grid-layout--stacked">
 
-    <a class="link-back" href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.summary()">@Messages("back")</a>
+    <a class="link-back" id="r-back" href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.summary()">@Messages("back")</a>
 
     <div class="grid-layout__column grid-layout__column--2-3">
       <header class="page-header">
@@ -131,7 +131,7 @@
         <br>@Messages("quick_calc.result.info_e")</p>
 
       </div>
-      <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.restartQuickCalc()" class="button" type="submit">@Messages("restart")</a>
+      <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.restartQuickCalc()" id="restart" class="button" type="submit">@Messages("restart")</a>
     </div>
 
   </div>

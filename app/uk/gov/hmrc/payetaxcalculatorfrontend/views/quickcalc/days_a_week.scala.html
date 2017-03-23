@@ -10,7 +10,7 @@
 
   <div class="grid-layout grid-layout--stacked">
 
-    <a class="link-back" href="@url">@Messages("back")</a>
+    <a class="link-back" id="pd-back" href="@url">@Messages("back")</a>
 
     <header class="page-header">
       <h1>@Messages("quick_calc.salary.question.days_a_week")</h1>
@@ -34,7 +34,7 @@
       <input type="hidden" id="value" name="value" value=@valueInPence>
 
       <div class="form-group">
-        <input type="submit" class="button" value="@Messages("continue")">
+        <input type="submit" id="pd-continue" class="button" value="@Messages("continue")">
       </div>
 
     }
