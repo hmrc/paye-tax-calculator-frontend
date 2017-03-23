@@ -4,9 +4,9 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
-@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{Hours, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.Hours
 
-@(valueInPence:Int, hoursForm: Form[Hours], youHaveToldUsItems: List[YouHaveToldUsItem], url: String)(implicit request: Request[_], messages: Messages)
+@(valueInPence:Int, hoursForm: Form[Hours], url: String)(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
   <div class="grid-layout grid-layout--stacked">
@@ -28,10 +28,10 @@
             </div>
           </label>
         }
-        <input style= "display:inline " type="text" name="howManyAWeek" maxlength="3" size="3" />
+        <input style= "display:inline " type="text" id="howManyAWeek" name="howManyAWeek" maxlength="3" size="3" />
       </fieldset>
 
-      <input type="hidden" name="value" value=@valueInPence>
+      <input type="hidden" id="value" name="value" value=@valueInPence>
       <br>
       <br>
 

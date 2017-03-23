@@ -113,9 +113,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   def showHoursAWeek(valueInPence: Int, url: String): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
-        Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, aggregate.youHaveToldUsItems, url))
+        Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, url))
       case None =>
-        Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, Nil, url))
+        Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, url))
     }
   }
 
@@ -124,8 +124,8 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     val value = BigDecimal(valueInPence) / 100
     Salary.salaryInHoursForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
-        case Some(aggregate) => BadRequest(hours_a_week(valueInPence, formWithErrors, aggregate.youHaveToldUsItems, url))
-        case None => BadRequest(hours_a_week(valueInPence, formWithErrors, Nil, url))
+        case Some(aggregate) => BadRequest(hours_a_week(valueInPence, formWithErrors, url))
+        case None => BadRequest(hours_a_week(valueInPence, formWithErrors, url))
       },
       hours => cache.fetchAndGetEntry().flatMap {
         case Some(aggregate) =>
@@ -147,9 +147,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   def showDaysAWeek(valueInPence: Int, url: String): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
-        Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, aggregate.youHaveToldUsItems, url))
+        Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, url))
       case None =>
-        Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, Nil, url))
+        Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, url))
     }
   }
 
@@ -158,8 +158,8 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     val value = BigDecimal(valueInPence) / 100
     Salary.salaryInDaysForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
-        case Some(aggregate) => BadRequest(days_a_week(valueInPence, formWithErrors, aggregate.youHaveToldUsItems, url))
-        case None => BadRequest(days_a_week(valueInPence, formWithErrors, Nil, url))
+        case Some(aggregate) => BadRequest(days_a_week(valueInPence, formWithErrors, url))
+        case None => BadRequest(days_a_week(valueInPence, formWithErrors, url))
       },
       days => cache.fetchAndGetEntry().flatMap {
         case Some(aggregate) =>
@@ -224,13 +224,15 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
 
   def submitTaxCodeForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     UserTaxCode.form.bindFromRequest().fold(
-      formWithErrors => cache.fetchAndGetEntry().map {
-        case Some(aggregate) => BadRequest(tax_code(formWithErrors, aggregate.youHaveToldUsItems))
-        case None => BadRequest(tax_code(formWithErrors, Nil))
+      formWithErrors =>
+        cache.fetchAndGetEntry().map {
+          case Some(aggregate) => BadRequest(tax_code(formWithErrors, aggregate.youHaveToldUsItems))
+          case None => BadRequest(tax_code(formWithErrors, Nil))
       },
-      newTaxCode => cache.fetchAndGetEntry().flatMap {
-        case Some(aggregate) =>
-          def updateTaxCodeWithAggregate(aggregate: QuickCalcAggregateInput) = {
+      newTaxCode => {
+        val newAggregate = newTaxCode
+        cache.fetchAndGetEntry().flatMap {
+          case Some(aggregate) =>
             if (newTaxCode.gaveUsTaxCode) {
               val newAggregate = aggregate.copy(savedTaxCode = Some(newTaxCode), savedScottishRate = None)
               cache.save(newAggregate).map { _ =>
@@ -248,24 +250,26 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
                 Redirect(routes.QuickCalcController.showScottishRateForm())
               }
             }
-          }
-          updateTaxCodeWithAggregate(aggregate)
-        case None =>
-          if (newTaxCode.gaveUsTaxCode) {
-            val newAggregate = QuickCalcAggregateInput.newInstance.copy(savedTaxCode = Some(newTaxCode))
-            cache.save(newAggregate).map { _ =>
-              nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
-                Redirect(routes.QuickCalcController.summary())
+
+          case None =>
+            if (newTaxCode.gaveUsTaxCode) {
+              val newAggregate = QuickCalcAggregateInput.newInstance.copy(savedTaxCode = Some(newTaxCode))
+              cache.save(newAggregate).map { _ =>
+                nextPageOrSummaryIfAllQuestionsAnswered(newAggregate) {
+                  Redirect(routes.QuickCalcController.summary())
+                }
+              }
+            } else {
+              val newAggregate = QuickCalcAggregateInput.newInstance.copy(
+                savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(UserTaxCode.defaultTaxCode))))
+              cache.save(newAggregate).map { _ =>
+                Redirect(routes.QuickCalcController.showScottishRateForm())
               }
             }
-          } else {
-            val newAggregate = QuickCalcAggregateInput.newInstance.copy(
-              savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(UserTaxCode.defaultTaxCode))))
-            cache.save(newAggregate).map { _ =>
-              Redirect(routes.QuickCalcController.showScottishRateForm())
-            }
-          }
+        }
       }
+
+
     )
   }
 

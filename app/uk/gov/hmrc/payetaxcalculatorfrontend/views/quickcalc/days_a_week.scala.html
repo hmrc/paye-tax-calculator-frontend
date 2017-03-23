@@ -1,12 +1,11 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import play.api.i18n._
 @import views.html.helper._
-@import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
-@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{Days, YouHaveToldUsItem}
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.Days
 
-@(valueInPence:Int, daysForm: Form[Days], youHaveToldUsItems: List[YouHaveToldUsItem], url: String)(implicit request: Request[_], messages: Messages)
+@(valueInPence:Int, daysForm: Form[Days], url: String)(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
   <div class="grid-layout grid-layout--stacked">
@@ -29,10 +28,10 @@
             </div>
           </label>
         }
-        <input style= "display:inline " type="text" name="howManyAWeek" maxlength="1" size="1" />
+        <input style= "display:inline " type="text" id="howManyAWeek" name="howManyAWeek" maxlength="1" size="1" />
       </fieldset>
 
-      <input type="hidden" name="value" value=@valueInPence>
+      <input type="hidden" id="value" name="value" value=@valueInPence>
 
       <div class="form-group">
         <input type="submit" class="button" value="@Messages("continue")">
