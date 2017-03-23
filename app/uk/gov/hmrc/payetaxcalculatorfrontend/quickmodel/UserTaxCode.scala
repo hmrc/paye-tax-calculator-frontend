@@ -71,12 +71,12 @@ object UserTaxCode extends TaxCalculatorHelper {
     if (taxCode.hasErrors && selection) "checked"
     else if (selection)
       taxCode.value match {
-        case Some(code) => if (code.gaveUsTaxCode) "checked" else ""
+        case Some(code) if code.gaveUsTaxCode => "checked"
         case _ => ""
       }
     else
       taxCode.value match {
-        case Some(code) => if (!code.gaveUsTaxCode && !taxCode.hasErrors) "checked" else ""
+        case Some(code) if !code.gaveUsTaxCode && !taxCode.hasErrors => "checked"
         case _ => ""
       }
   }
@@ -92,7 +92,7 @@ object UserTaxCode extends TaxCalculatorHelper {
   }
 
   def taxConfig(taxCode: String): TaxCalcResource = TaxCalcResourceBuilder.resourceForDate(
-    LocalDate.now(),
-    isValidScottishTaxCode(taxCode))
-
+    LocalDate.of(2017, 4, 6),
+    isValidScottishTaxCode(taxCode)
+  )
 }
