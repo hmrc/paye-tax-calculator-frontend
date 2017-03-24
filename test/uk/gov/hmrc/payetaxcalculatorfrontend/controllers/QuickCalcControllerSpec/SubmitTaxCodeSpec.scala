@@ -58,7 +58,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedInvalidTaxCodeErrorMessage
+      actualErrorMessage shouldBe expectedSuffixTaxCodeErrorMessage
     }
 
     "return 400, empty list of aggregate data and an error message for invalid Tax Code" in {
@@ -76,7 +76,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedInvalidTaxCodeErrorMessage
+      actualErrorMessage shouldBe expectedSuffixTaxCodeErrorMessage
       actualTableSize shouldBe 0
     }
 

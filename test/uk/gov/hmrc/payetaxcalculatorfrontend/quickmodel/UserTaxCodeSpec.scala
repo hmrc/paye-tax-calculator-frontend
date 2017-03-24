@@ -34,7 +34,7 @@ class UserTaxCodeSpec extends UnitSpec with OneAppPerSuite {
     "return error message if some input is invalid such as the tax-code etc." in {
       val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "taxCode" -> "foo"))
       val hasError = form.hasErrors
-      val errorMessage = "The tax code you have entered is not valid. A tax code is usually made up of several numbers and a letter, e.g. 117L or K497 or S117L or SK497"
+      val errorMessage = "The tax code you have entered is not valid - it must end with the letter L, M, N, or T"
       hasError shouldBe true
       errorMessage shouldBe form.errors.head.message
     }
