@@ -22,16 +22,16 @@
 
           <fieldset class="form-field-group">
 
-            @if(form("value").hasErrors){
+            @if(form("amount").hasErrors){
               <label class="form-field--error">
                 <div class="error-notification">
-                @{form("value").errors.head.message}
+                @{form("amount").errors.head.message}
                 </div>
                 }
 
               <span>£</span>
 
-              <input type="text" id="pay-amount" name="value" value="" />
+              <input type="text" id="pay-amount" name="amount" value="" />
               </label>
             <br>
             <br>

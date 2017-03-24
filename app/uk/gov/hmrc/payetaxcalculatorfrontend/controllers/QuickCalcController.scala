@@ -74,8 +74,8 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
 
         updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
             salaryAmount.period match {
-              case "daily" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.value), url))
-              case "hourly" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.value), url))
+              case "daily" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+              case "hourly" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
               case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
                 Redirect(routes.QuickCalcController.showStatePensionForm())
             }

@@ -24,9 +24,6 @@ import play.filters.csrf.CSRFAddToken
 import uk.gov.hmrc.play.http.HeaderNames
 import uk.gov.hmrc.play.test.UnitSpec
 
-/**
-  * Created by paul on 17/02/17.
-  */
 class AppUnitGenerator extends UnitSpec with OneAppPerSuite {
   val appInjector = app.injector
   val csrfAddToken = appInjector.instanceOf[CSRFAddToken]

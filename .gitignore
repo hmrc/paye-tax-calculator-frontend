@@ -34,3 +34,8 @@ tmp
 .idea_modules
 bin
 nohup*
+app-2.11/
+it/
+src/
+test-2.11/
+test/resources/

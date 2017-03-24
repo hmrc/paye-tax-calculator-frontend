@@ -21,7 +21,6 @@ import uk.gov.hmrc.play.test.UnitSpec
 import play.api.i18n.Messages.Implicits._
 import org.scalatestplus.play.OneAppPerSuite
 
-
 class UserTaxCodeSpec extends UnitSpec with OneAppPerSuite {
 
   val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
