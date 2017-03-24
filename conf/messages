@@ -151,3 +151,6 @@ calc.salary.monthly = Monthly
 calc.salary.weekly = Weekly
 calc.salary.daily = Daily
 calc.salary.hourly = Hourly
+
+#content > article > table > tbody > tr:nth-child(3) > td:nth-child(2)
+#content > article > table > tbody > tr:nth-child(4) > td:nth-child(2)

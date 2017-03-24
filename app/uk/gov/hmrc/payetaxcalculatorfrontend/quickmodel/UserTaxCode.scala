@@ -49,8 +49,8 @@ object UserTaxCode extends TaxCalculatorHelper {
           data.getOrElse(taxCode, "") match {
             case code if code.isEmpty => Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
             case code if code.nonEmpty =>
-              if (charList.contains(taxCodeData.last)) Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code_suffix"))))
-              else Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
+              if (charList.contains(taxCodeData.last)) Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
+              else Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code_suffix"))))
           }
         }
       }
