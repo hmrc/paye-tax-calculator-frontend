@@ -24,9 +24,6 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.play.http.SessionKeys
 
-/**
-  * Created by paul on 21/03/17.
-  */
 class SubmitDaysSpec extends AppUnitGenerator {
 
   "Submit Days Form" should {
@@ -35,7 +32,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
       val formSalary = Salary.salaryInDaysForm
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 
-      val days = Map("value" -> "1", "howManyAWeek" -> "0")
+      val days = Map("amount" -> "1", "howManyAWeek" -> "0")
 
       val result = action(request
         .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
@@ -74,7 +71,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
       val formSalary = Salary.salaryInDaysForm
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 
-      val daily = Map("value"->"1", "howManyAWeek" -> "1.5")
+      val daily = Map("amount"->"1", "howManyAWeek" -> "1.5")
 
       val result = action(request
         .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
@@ -94,7 +91,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
       val formSalary = Salary.salaryInDaysForm
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 
-      val daily = Map("value"->"1", "howManyAWeek" -> "1")
+      val daily = Map("amount"->"1", "howManyAWeek" -> "1")
 
       val result = action(request
         .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
@@ -115,7 +112,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
       val formSalary = Salary.salaryInDaysForm
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 
-      val daily = Map("value"->"1", "howManyAWeek" -> "5")
+      val daily = Map("amount"->"1", "howManyAWeek" -> "5")
 
       val result = action(request
         .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)

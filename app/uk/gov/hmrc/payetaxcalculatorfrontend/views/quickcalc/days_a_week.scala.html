@@ -8,37 +8,42 @@
 @(valueInPence:Int, daysForm: Form[Days], url: String)(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
-  <div class="grid-layout grid-layout--stacked">
+  <div class="grid-layout">
+    <div class="grid-layout__column grid-layout__column--2-3">
 
-    <a class="link-back" id="pd-back" href="@url">@Messages("back")</a>
+      <a class="link-back" id="pd-back" href="@url">@Messages("back")</a>
 
-    <header class="page-header">
-      <h1>@Messages("quick_calc.salary.question.days_a_week")</h1>
-    </header>
-    <p>@Messages("quick_calc.salary.question.approximate")</p>
+      <h1 class="heading-large">@Messages("quick_calc.salary.question.days_a_week")</h1>
+      <p>@Messages("quick_calc.salary.question.approximate")</p>
 
-    @helper.form(action = controllers.routes.QuickCalcController.submitDaysAWeek(valueInPence)) {
-      @helper.CSRF.formField
+      @helper.form(action = controllers.routes.QuickCalcController.submitDaysAWeek(valueInPence)) {
+        @helper.CSRF.formField
 
-      <fieldset class="form-field-group">
-        @if(daysForm("howManyAWeek").hasErrors){
-          <label class="form-field--error">
-            <div class="error-notification">
+        <fieldset class="form-field-group">
+          @if(daysForm("howManyAWeek").hasErrors){
+            <label class="form-field--error">
+              <div class="error-notification">
               @{daysForm("howManyAWeek").errors.head.message}
-            </div>
-          </label>
-        }
-        <input style= "display:inline " type="text" id="howManyAWeek" name="howManyAWeek" maxlength="1" size="1" />
-      </fieldset>
+              </div>
 
-      <input type="hidden" id="num-days" name="value" value=@valueInPence>
+          }
+          <input style= "display:inline " type="text" id="howManyDaysAWeek" name="howManyAWeek" maxlength="1" size="1" />
+        </label>
 
-      <div class="form-group">
-        <input type="submit" id="pd-continue" class="button" value="@Messages("continue")">
-      </div>
+        </fieldset>
 
-    }
+        <input type="hidden" id="num-days" name="amount" value=@valueInPence>
 
+        <div class="form-group">
+          <input type="submit" id="pd-continue" class="button" value="@Messages("continue")">
+        </div>
+
+      }
+
+    </div>
+
+    <div class="grid-layout__column grid-layout__column--1-3">
+    </div>
   </div>
 
 }

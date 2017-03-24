@@ -40,18 +40,17 @@ object TaxResult {
       case None => throw new Exception("No answer has been provided for the question: Are you over state pension age?")
     }
 
-  private[quickmodel] def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput): BigDecimal =
-    quickCalcAggregateInput.savedSalary match {
-      case Some(s) => s.period match {
-        case "yearly" => s.value * 100
-        case "monthly" => s.value * 100
-        case "weekly" => s.value * 100
-        case "daily" => s.value * 100
-        case "hourly" => s.value * 100
-        case _ => throw new Exception("No Salary has been provided.")
-      }
-      case None => throw new Exception("No Salary has been provided.")
+  def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput): BigDecimal = quickCalcAggregateInput.savedSalary match {
+    case Some(s) => s.period match {
+      case "yearly" => s.amount * 100
+      case "monthly" => s.amount * 100
+      case "weekly" => s.amount * 100
+      case "daily" => s.amount * 100
+      case "hourly" => s.amount * 100
+      case _ => throw new Exception("No Salary has been provided.")
     }
+    case None => throw new Exception("No Salary has been provided.")
+  }
 
   private[quickmodel] def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput): String =
     quickCalcAggregateInput.savedSalary match {

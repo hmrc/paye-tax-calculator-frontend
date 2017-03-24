@@ -20,9 +20,6 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-/**
-  * Created by paul on 21/03/17.
-  */
 class ShowDaysSpec extends AppUnitGenerator {
 
   "Show Days Form" should {

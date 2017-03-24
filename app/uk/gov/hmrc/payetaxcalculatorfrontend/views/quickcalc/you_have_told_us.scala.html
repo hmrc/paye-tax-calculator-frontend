@@ -6,7 +6,7 @@
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
   @if(items.nonEmpty) {
-    <table class="check-your-answers" style="margin-left: 15px">
+    <table class="check-your-answers">
       <thead>
           <th colspan="3">
             <h1 class="heading-large">
@@ -18,7 +18,7 @@
       @items.map { item =>
         <tr>
           <td>@item.label</td>
-          <td>@item.value</td>
+          <td id="value-@item.idSuffix">@item.value</td>
           <td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")</a></td>
         </tr>
       }

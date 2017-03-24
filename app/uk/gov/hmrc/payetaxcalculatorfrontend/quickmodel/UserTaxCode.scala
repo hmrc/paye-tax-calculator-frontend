@@ -48,16 +48,16 @@ object UserTaxCode extends TaxCalculatorHelper {
     val charList = List('L', 'M', 'N', 'T')
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
       if (data.getOrElse(HAS_TAX_CODE, "false") == "true") {
-        data.get(TAX_CODE)
-          .filter(_.nonEmpty) match {
+        data.get(TAX_CODE).filter(_.nonEmpty)
+          .map(_.toUpperCase()) match {
           case Some(taxCode) =>
             if (isValidTaxCode(taxCode, taxConfig(taxCode)))
               Right(Some(taxCode))
             else {
-              if (taxCode.charAt(0).isDigit)
-                Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY))))
-              else
+              if (charList.contains(taxCode.last))
                 Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY))))
+              else
+                Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY))))
             }
           case None => Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY))))
         }

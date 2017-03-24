@@ -4,7 +4,7 @@
 @import views.html.helper._
 
 @(form: Form[Salary])(implicit request: Request[_], messages: Messages)
-@periodLabels = @{List("yearly","monthly","weekly","daily","hourly")}
+@periodLabels = @{List("hourly","daily","weekly","monthly","yearly")}
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
@@ -22,17 +22,17 @@
 
           <fieldset class="form-field-group">
 
-            @if(form("value").hasErrors){
+            @if(form("amount").hasErrors){
               <label class="form-field--error">
                 <div class="error-notification">
-                @{form("value").errors.head.message}
+                @{form("amount").errors.head.message}
                 </div>
+                }
+
+              <span>£</span>
+
+              <input type="text" id="pay-amount" name="amount" value="" />
               </label>
-            }
-
-            <span>£</span>
-
-            <input type="text" id="pay-amount" name="value" value="" />
             <br>
             <br>
 
@@ -65,7 +65,7 @@
     </div>
 
     <div class="grid-layout__column grid-layout__column--1-3">
-      <aside class="govuk-related-items" role="complementary" style="margin-left: 15px">
+      <aside class="govuk-related-items" role="complementary" style="margin-top: 100px">
         <h2 class="heading-medium" id="subsection-title">@Messages("quick_calc.salary.about")</h2>
         <p>@Messages("quick_calc.salary.about_inf")</p>
         <p>@Messages("quick_calc.salary.about_should_know")</p>

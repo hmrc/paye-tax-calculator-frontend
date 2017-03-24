@@ -71,7 +71,7 @@ object YouHaveToldUs {
       val idSuffix = "income"
       def asPounds(v: BigDecimal) = "£" + v
 
-      YouHaveToldUsItem(asPounds(s.value), labelFor(s.period), url, idSuffix)
+      YouHaveToldUsItem(asPounds(s.amount), labelFor(s.period), url, idSuffix)
     }
   }
 
