@@ -35,28 +35,33 @@ object UserTaxCode extends TaxCalculatorHelper {
   implicit val format = Json.format[UserTaxCode]
 
   val defaultScottishTaxCode = "S1150L"
-  val defaultTaxCode = "1150L"
-  val hasTaxCode = "hasTaxCode"
-  val taxCode = "taxCode"
+  val DEFAULT_TAX_CODE = "1150L"
+  val HAS_TAX_CODE = "hasTaxCode"
+  val TAX_CODE = "taxCode"
 
   private val startOfHardcodedTaxYear = LocalDate.of(2017, 4, 6)
+
+  val WRONG_TAX_CODE_SUFFIX_KEY = "quick_calc.about_tax_code.wrong_tax_code_suffix"
+  val WRONG_TAX_CODE_KEY = "quick_calc.about_tax_code.wrong_tax_code"
 
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
     val charList = List('L', 'M', 'N', 'T')
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
-      if (data.getOrElse(hasTaxCode, "false") == "true") {
-        val taxCodeData = data.getOrElse(taxCode, "").toUpperCase()
-        if (isValidTaxCode(taxCodeData, taxConfig(taxCodeData))) Right(Some(taxCodeData))
-        else {
-          data.getOrElse(taxCode, "") match {
-            case code if code.isEmpty => Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
-            case code if code.nonEmpty =>
-              if (charList.contains(taxCodeData.last)) Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code_suffix"))))
-              else Left(Seq(FormError(taxCode, Messages("quick_calc.about_tax_code.wrong_tax_code"))))
-          }
+      if (data.getOrElse(HAS_TAX_CODE, "false") == "true") {
+        data.get(TAX_CODE)
+          .filter(_.nonEmpty) match {
+          case Some(taxCode) =>
+            if (isValidTaxCode(taxCode, taxConfig(taxCode)))
+              Right(Some(taxCode))
+            else {
+              if (taxCode.charAt(0).isDigit)
+                Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY))))
+              else
+                Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY))))
+            }
+          case None => Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY))))
         }
-      }
-      else Right(Some(defaultTaxCode))
+      } else Right(Some(DEFAULT_TAX_CODE))
     }
 
     override def unbind(key: String, value: Option[String]): Map[String, String] = Map(key -> value.getOrElse(""))
@@ -64,21 +69,23 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   def form(implicit messages: Messages) = Form(
     mapping(
-      hasTaxCode -> of(requiredBooleanFormatter),
-      taxCode -> of(taxCodeFormatter)
+      HAS_TAX_CODE -> of(requiredBooleanFormatter),
+      TAX_CODE -> of(taxCodeFormatter)
     )(UserTaxCode.apply)(UserTaxCode.unapply)
   )
 
-  def checkUserSelection(selection: Boolean, taxCode: Form[UserTaxCode]): String = {
-    if (taxCode.hasErrors && selection) "checked"
-    else {
-      taxCode.value match {
-        case Some(code) if selection && code.gaveUsTaxCode ||
-          (!selection && (!code.gaveUsTaxCode && !taxCode.hasErrors)) =>
-          "checked"
-        case _ => ""
-      }
+  def checkUserSelection(checkFor: Boolean, taxCodeFromServer: Form[UserTaxCode]): String = {
+    def htmlMapper(bO: Option[Boolean]): String =
+      bO.filter(identity)
+        .map(_ => "checked")
+        .getOrElse("")
+
+    def whatWasSelected(taxCode: Form[UserTaxCode]): Option[Boolean] = {
+      taxCode.value.map( formData => formData.gaveUsTaxCode)
     }
+    // Body
+    htmlMapper(
+      whatWasSelected(taxCodeFromServer).map(_ == checkFor))
   }
 
   def hideTextField(taxCode: Form[UserTaxCode]): String = {

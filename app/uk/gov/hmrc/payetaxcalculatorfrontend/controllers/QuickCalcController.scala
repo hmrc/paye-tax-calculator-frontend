@@ -18,7 +18,8 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc._
 import play.api.mvc._
@@ -185,12 +186,22 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
         Ok(tax_code(UserTaxCode.form, Nil))
     }
   }
+  // better design might obsoletes this need
+  private def recoverTheUserState(formWithErrors: Form[UserTaxCode])(implicit messages: Messages) = {
+    if (formWithErrors.errors.flatMap(_.messages).exists(er =>
+      (er == messages(UserTaxCode.WRONG_TAX_CODE_SUFFIX_KEY)) ||
+        (er == messages(UserTaxCode.WRONG_TAX_CODE_KEY))))
+      formWithErrors.fill(UserTaxCode(true, None))
+    else formWithErrors
+  }
 
   def submitTaxCodeForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     UserTaxCode.form.bindFromRequest().fold(
       formWithErrors =>
         cache.fetchAndGetEntry().map {
-          case Some(aggregate) => BadRequest(tax_code(formWithErrors, aggregate.youHaveToldUsItems))
+          case Some(aggregate) =>
+            val updatedForm: Form[UserTaxCode] = recoverTheUserState(formWithErrors)
+            BadRequest(tax_code(updatedForm, aggregate.youHaveToldUsItems))
           case None => BadRequest(tax_code(formWithErrors, Nil))
       },
       newTaxCode => {
@@ -198,7 +209,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
           .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
             .map(agg =>
               if (newTaxCode.gaveUsTaxCode) agg.copy(savedTaxCode = Some(newTaxCode), savedScottishRate = None)
-              else agg.copy(savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(UserTaxCode.defaultTaxCode))))
+              else agg.copy(savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(UserTaxCode.DEFAULT_TAX_CODE))))
             )
 
         updatedAggregate.flatMap(agg => cache.save(agg).map(_ =>
@@ -232,7 +243,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
         )
       },
       scottish => {
-        val taxCode = if (scottish.value) UserTaxCode.defaultScottishTaxCode else UserTaxCode.defaultTaxCode
+        val taxCode = if (scottish.value) UserTaxCode.defaultScottishTaxCode else UserTaxCode.DEFAULT_TAX_CODE
 
         val updatedAggregate = cache.fetchAndGetEntry()
           .map(_.getOrElse(QuickCalcAggregateInput.newInstance))

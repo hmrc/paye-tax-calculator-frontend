@@ -25,16 +25,17 @@ object TaxResult {
     quickCalcAggregateInput.savedTaxCode match {
       case Some(s) => s.taxCode match {
         case Some(taxCode) => taxCode
-        case None => UserTaxCode.defaultTaxCode
+        case None => UserTaxCode.DEFAULT_TAX_CODE
       }
-      case None => UserTaxCode.defaultTaxCode
+      case None => UserTaxCode.DEFAULT_TAX_CODE
     }
 
   private[quickmodel] def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): String =
     quickCalcAggregateInput.savedIsOverStatePensionAge match {
-      case Some(s) => s.value match {
-        case true => "true"
-        case false => "false"
+      case Some(s) => if (s.value) {
+        "true"
+      } else {
+        "false"
       }
       case None => throw new Exception("No answer has been provided for the question: Are you over state pension age?")
     }
