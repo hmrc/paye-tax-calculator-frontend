@@ -243,7 +243,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
         )
       },
       scottish => {
-        val taxCode = if (scottish.value) UserTaxCode.defaultScottishTaxCode else UserTaxCode.DEFAULT_TAX_CODE
+        val taxCode = if (scottish.value) UserTaxCode.DEFAULT_SCOTTISH_TAC_CODE else UserTaxCode.DEFAULT_TAX_CODE
 
         val updatedAggregate = cache.fetchAndGetEntry()
           .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
