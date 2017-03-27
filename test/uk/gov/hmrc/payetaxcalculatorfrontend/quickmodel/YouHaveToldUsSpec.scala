@@ -46,7 +46,7 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
   }
 
   "Converting OverStatePensionAge to YouHaveToldUsItem" in {
-    val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
+    val label = "over_state_pension_age"
     val idSuffix = "pension-state"
     val url = routes.QuickCalcController.showStatePensionForm().url
 
