@@ -17,7 +17,7 @@
       <tbody>
       @items.map { item =>
         <tr>
-          <td>@item.label</td>
+          <td>@Messages(s"quick_calc.you_have_told_us.${item.label}.label")</td>
           <td id="value-@item.idSuffix">@item.value</td>
           <td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")</a></td>
         </tr>

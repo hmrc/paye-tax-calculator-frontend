@@ -50,14 +50,14 @@ quick_calc.you_have_told_us.over_state_pension_age.label=Are you over the State 
 quick_calc.you_have_told_us.over_state_pension_age.yes=Yes
 quick_calc.you_have_told_us.over_state_pension_age.no=No
 
-quick_calc.you_have_told_us.salary.yearly.label=How much do you earn per year?
-quick_calc.you_have_told_us.salary.monthly.label=How much do you earn Per month?
-quick_calc.you_have_told_us.salary.weekly.label=How much do you earn per week?
-quick_calc.you_have_told_us.salary.daily.label=How much do you earn per day?
-quick_calc.you_have_told_us.salary.hourly.label=How much do you earn per hour?
+quick_calc.you_have_told_us.yearly.label=How much do you earn per year?
+quick_calc.you_have_told_us.monthly.label=How much do you earn Per month?
+quick_calc.you_have_told_us.weekly.label=How much do you earn per week?
+quick_calc.you_have_told_us.daily.label=How much do you earn per day?
+quick_calc.you_have_told_us.hourly.label=How much do you earn per hour?
 
-quick_calc.you_have_told_us.salary.work_daily.label=How many days a week do you usually work?
-quick_calc.you_have_told_us.salary.work_hourly.label=How many hours a week do you usually work?
+quick_calc.you_have_told_us.daily_sub.label=How many days a week do you usually work?
+quick_calc.you_have_told_us.hourly_sub.label=How many hours a week do you usually work?
 
 quick_calc.result.header=Your income-tax calculation
 quick_calc.result.you_take_home=Your take-home pay for
@@ -91,11 +91,11 @@ quick_calc.salary.about_should_know=Before you start, make sure you know:
 quick_calc.salary.about_should_know_a=how much you usually get paid
 quick_calc.salary.about_should_know_b=how often you work
 quick_calc.salary.about_addition=It’s also useful to know your tax code. The calculator will work without it.
-quick_calc.salary.yearly=a year
-quick_calc.salary.monthly=a month
-quick_calc.salary.weekly=a week
-quick_calc.salary.daily=a day
-quick_calc.salary.hourly=an hour
+quick_calc.salary.yearly=yearly
+quick_calc.salary.monthly=monthly
+quick_calc.salary.weekly=weekly
+quick_calc.salary.daily=daily
+quick_calc.salary.hourly=hourly
 
 quick_calc.salary.question.approximate=If you don’t know, an approximate number is fine
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
@@ -151,6 +151,3 @@ calc.salary.monthly = Monthly
 calc.salary.weekly = Weekly
 calc.salary.daily = Daily
 calc.salary.hourly = Hourly
-
-#content > article > table > tbody > tr:nth-child(3) > td:nth-child(2)
-#content > article > table > tbody > tr:nth-child(4) > td:nth-child(2)
