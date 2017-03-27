@@ -40,9 +40,9 @@ class QuickCalcKeyStoreCache extends QuickCalcCache {
     sessionCache.fetchAndGetEntry[QuickCalcAggregateInput](id)
   }
 
-  def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier) = sessionCache.cache(id, o)
+  def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[CacheMap] = sessionCache.cache(id, o)
 
-  object sessionCache extends SessionCache with AppName with ServicesConfig {
+  private object sessionCache extends SessionCache with AppName with ServicesConfig {
     override lazy val http = WSHttp
     override lazy val defaultSource = appName
     override lazy val baseUri = baseUrl("cachable.session-cache")

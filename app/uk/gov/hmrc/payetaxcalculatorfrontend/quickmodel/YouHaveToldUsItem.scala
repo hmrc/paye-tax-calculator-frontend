@@ -26,7 +26,7 @@ trait YouHaveToldUs[A] {
 }
 
 object YouHaveToldUs {
-  def apply[A : YouHaveToldUs](a: A) = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
+  def apply[A : YouHaveToldUs](a: A): YouHaveToldUsItem = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
@@ -34,10 +34,11 @@ object YouHaveToldUs {
       val idSuffix = "tax-code"
       val url = routes.QuickCalcController.showTaxCodeForm().url
       YouHaveToldUsItem(
-        if(t.gaveUsTaxCode) t.taxCode.getOrElse(UserTaxCode.defaultTaxCode)
+        if(t.gaveUsTaxCode) t.taxCode.getOrElse(UserTaxCode.DEFAULT_TAX_CODE)
         else s"${Messages("quick_calc.you_have_told_us.about_tax_code.no")}" + " (" +
           s"${Messages("quick_calc.you_have_told_us.about_tax_code.default")} " +
-          s"${t.taxCode.getOrElse(UserTaxCode.defaultTaxCode)}" + ")", label, url, idSuffix)
+          s"${t.taxCode.getOrElse(UserTaxCode.DEFAULT_TAX_CODE)}" + ")",
+        label, url, idSuffix)
     }
   }
 
@@ -63,10 +64,6 @@ object YouHaveToldUs {
     }
   }
 
-  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
-    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
-  }
-
   implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
       val url = routes.QuickCalcController.showSalaryForm().url
@@ -88,4 +85,7 @@ object YouHaveToldUs {
     }
   }
 
+  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
+    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
+  }
 }

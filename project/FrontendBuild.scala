@@ -22,7 +22,8 @@ object FrontendBuild extends Build with MicroService {
     "uk.gov.hmrc" %% "http-caching-client" % "6.2.0",
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0",
     "uk.gov.hmrc" %% "url-builder" % "2.0.0",
-    "uk.gov.hmrc" %% "tax-year" % "0.3.0"
+    "uk.gov.hmrc" %% "tax-year" % "0.3.0",
+    "org.typelevel" %% "cats-core" % "0.9.0"
   )
 
   def test(scope: String = "test") = Seq(

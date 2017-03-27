@@ -20,6 +20,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.config.{Region, TaxRefData}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.BigDecimalUtils.{max, min}
 import uk.gov.hmrc.time.TaxYear
 
+// Descoped, might be deleted
 trait DetailedCalcEngine extends TaxRefData {
   def basicRateElement(taxableIncome: BigDecimal)(implicit region: Region, taxYear: TaxYear): BigDecimal =
     min(taxableIncome, basicRateBand)
@@ -47,5 +48,14 @@ trait DetailedCalcEngine extends TaxRefData {
 case class CalculationResult(basicRateTax: BigDecimal,
                              higherRateTax: BigDecimal,
                              additionalRateTax: BigDecimal) {
-  def totalIncomeTax = basicRateTax + higherRateTax + additionalRateTax
+  def totalIncomeTax: BigDecimal = basicRateTax + higherRateTax + additionalRateTax
+}
+
+object TaxableIncome {
+  def calculate(taperedAllowanceLimit: Int, defaultPersonalAllowance: Int)
+               (earnings: BigDecimal): BigDecimal = {
+    val taperedAllowanceDeduction = max((earnings - taperedAllowanceLimit) / 2, 0)
+    val adjustedPersonalAllowance = max(defaultPersonalAllowance - taperedAllowanceDeduction, 0)
+    max(earnings - adjustedPersonalAllowance, 0)
+  }
 }
