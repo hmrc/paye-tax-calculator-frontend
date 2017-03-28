@@ -30,7 +30,7 @@ object YouHaveToldUs {
 
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
-      val label = Messages("quick_calc.you_have_told_us.about_tax_code.label")
+      val label = "about_tax_code"
       val idSuffix = "tax-code"
       val url = routes.QuickCalcController.showTaxCodeForm().url
       YouHaveToldUsItem(
@@ -44,7 +44,7 @@ object YouHaveToldUs {
 
   implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[OverStatePensionAge] {
     def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {
-      val label = Messages("quick_calc.you_have_told_us.over_state_pension_age.label")
+      val label = "over_state_pension_age"
       val idSuffix = "pension-state"
       val url = routes.QuickCalcController.showStatePensionForm().url
       YouHaveToldUsItem(
@@ -55,7 +55,7 @@ object YouHaveToldUs {
 
   implicit def scottishIncomeFormat(implicit messages: Messages) = new YouHaveToldUs[ScottishRate] {
     def toYouHaveToldUsItem(scottish: ScottishRate): YouHaveToldUsItem = {
-      val label = Messages("quick_calc.you_have_told_us.scottish_rate.label")
+      val label = "scottish_rate"
       val idSuffix = "scottish_rate"
       val url = routes.QuickCalcController.showScottishRateForm().url
       YouHaveToldUsItem(
@@ -67,17 +67,16 @@ object YouHaveToldUs {
   implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
       val url = routes.QuickCalcController.showSalaryForm().url
-      def labelFor(s: String) = Messages(s"quick_calc.you_have_told_us.salary.$s.label")
       val idSuffix = "income"
       def asPounds(v: BigDecimal) = "£" + v
 
-      YouHaveToldUsItem(asPounds(s.amount), labelFor(s.period), url, idSuffix)
+      YouHaveToldUsItem(asPounds(s.amount), s.period, url, idSuffix)
     }
   }
 
   implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[Detail] {
     def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
-      val label = Messages(s"quick_calc.you_have_told_us.salary.work_${detail.period}.label")
+      val label = s"${detail.period}_sub"
       val idSuffix = "salary_period"
       val url = routes.QuickCalcController.showSalaryForm().url
       YouHaveToldUsItem(

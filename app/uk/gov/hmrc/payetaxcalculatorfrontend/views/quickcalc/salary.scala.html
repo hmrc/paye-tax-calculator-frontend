@@ -1,10 +1,12 @@
-@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import play.api.i18n._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.Salary
 @import views.html.helper._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 
-@(form: Form[Salary])(implicit request: Request[_], messages: Messages)
+@(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
 @periodLabels = @{List("hourly","daily","weekly","monthly","yearly")}
+@radioFieldAmount = @{ salaryForm("amount") }
+@radioFieldPeriod = @{ salaryForm("period") }
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
@@ -22,24 +24,24 @@
 
           <fieldset class="form-field-group">
 
-            @if(form("amount").hasErrors){
+            @if(salaryForm("amount").hasErrors){
               <label class="form-field--error">
                 <div class="error-notification">
-                @{form("amount").errors.head.message}
+                @{salaryForm("amount").errors.head.message}
                 </div>
                 }
 
               <span>£</span>
 
-              <input type="text" id="pay-amount" name="amount" value="" />
+              <input type="text" id="pay-amount" name="amount" value="@{radioFieldAmount.value}" />
               </label>
             <br>
             <br>
 
-            @if(form("period").hasErrors){
+            @if(salaryForm("period").hasErrors){
               <label class="form-field--error">
                 <div class="error-notification">
-                @{form("period").errors.head.message}
+                @{salaryForm("period").errors.head.message}
                 </div>
               </label>
             }
@@ -49,7 +51,8 @@
               <input type="radio"
               name="period"
               id="@label"
-              value="@label" />
+              value="@label"
+                @if(radioFieldPeriod.value.contains(label)) { checked="checked" } />
               </label>
 
             }

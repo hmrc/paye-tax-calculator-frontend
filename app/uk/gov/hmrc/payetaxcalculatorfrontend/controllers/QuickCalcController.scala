@@ -59,8 +59,16 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     }
   }
 
-  def showSalaryForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    Future(Ok(salary(Salary.salaryBaseForm)))
+  def showSalaryForm() = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry().map {
+      case Some(aggregate) =>
+        val form = {
+          aggregate.savedSalary.map(s => Salary.salaryBaseForm.fill(s)).getOrElse(Salary.salaryBaseForm)
+        }
+        Ok(salary(form))
+      case None =>
+        Ok(salary(Salary.salaryBaseForm))
+    }
   }
 
   def submitSalaryAmount(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>

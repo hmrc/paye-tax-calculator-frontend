@@ -4,6 +4,14 @@
 
 @(overStatePensionAgeForm: Form[OverStatePensionAge], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
+@labels = @{
+  List(Messages("quick_calc.salary.yearly"),
+    Messages("quick_calc.salary.monthly"),
+    Messages("quick_calc.salary.weekly"),
+    Messages("quick_calc.salary.daily"),
+    Messages("quick_calc.salary.hourly"))
+}
+
 @radioField = @{ overStatePensionAgeForm("overStatePensionAge") }
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
@@ -11,7 +19,7 @@
   <div class="grid-layout">
     <div class="grid-layout__column grid-layout__column--2-3">
 
-      <a class="link-back" id="sp-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label.substring(0,15) == Messages("quick_calc.you_have_told_us.salary.yearly.label").substring(0,15)) y.url else "")}">@Messages("back")</a>
+      <a class="link-back" id="sp-back" href="@{youHaveToldUsItems.flatMap(y => if (labels.contains(y.label)) y.url else "")}">@Messages("back")</a>
 
       <h1 class="heading-large">@Messages("quick_calc.over_state_pension_age.header")</h1>
 
