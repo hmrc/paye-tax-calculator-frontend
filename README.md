@@ -18,17 +18,13 @@ sbt run
 
 #### View landing Page
 ```
-GET   	/paye-tax-calculator/
+GET   	/estimate-paye-take-home-pay/
 ```
 
-#### Redirect to first page of the form of quick-calculation Tax Code Page
-```
-GET   	/paye-tax-calculator/quick-calculation/
-```
 
 #### Change Language
 ```
-GET      /paye-tax-calculator/language/:lang  
+GET      /estimate-paye-take-home-pay/language/:lang  
 ```
 Currently the app supports English(:lang = english) and Welsh(:lang = welsh)
 

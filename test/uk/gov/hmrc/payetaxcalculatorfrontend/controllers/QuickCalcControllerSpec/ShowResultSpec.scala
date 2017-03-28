@@ -43,7 +43,7 @@ class ShowResultSpec extends AppUnitGenerator {
       val status = result.header.status
 
       val actualRedirect = redirectLocation(result).get
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/taxCode"
+      val expectedRedirect = "/estimate-paye-take-home-pay/tax-code"
 
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
@@ -56,7 +56,7 @@ class ShowResultSpec extends AppUnitGenerator {
       val status = result.header.status
 
       val actualRedirect = redirectLocation(result).get
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/statePension"
+      val expectedRedirect = "/estimate-paye-take-home-pay/state-pension"
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
@@ -68,7 +68,7 @@ class ShowResultSpec extends AppUnitGenerator {
       val status = result.header.status
 
       val actualRedirect = redirectLocation(result).get
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/salary"
+      val expectedRedirect = "/estimate-paye-take-home-pay/your-pay"
 
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
@@ -80,7 +80,7 @@ class ShowResultSpec extends AppUnitGenerator {
       val result = action.apply(request)
       val status = result.header.status
 
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/salary"
+      val expectedRedirect = "/estimate-paye-take-home-pay/your-pay"
       val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303

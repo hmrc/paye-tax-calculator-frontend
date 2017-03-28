@@ -66,7 +66,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
       val status = result.header.status
       val actualRedirectUri = redirectLocation(result).get
 
-      val expectedRedirectUri = "/paye-tax-calculator/quick-calculation/taxCode"
+      val expectedRedirectUri = "/estimate-paye-take-home-pay/tax-code"
 
       status shouldBe 303
       actualRedirectUri shouldBe expectedRedirectUri
@@ -84,7 +84,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
       val status = result.header.status
       val actualRedirectUri = redirectLocation(result).get
 
-      val expectedRedirectUri = "/paye-tax-calculator/quick-calculation/taxCode"
+      val expectedRedirectUri = "/estimate-paye-take-home-pay/tax-code"
 
       status shouldBe 303
       actualRedirectUri shouldBe expectedRedirectUri
@@ -102,7 +102,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
       val status = result.header.status
       val actualRedirectUri = redirectLocation(result).get
 
-      val expectedRedirectUri = "/paye-tax-calculator/quick-calculation/summary"
+      val expectedRedirectUri = "/estimate-paye-take-home-pay/your-answers"
 
       status shouldBe 303
       actualRedirectUri shouldBe expectedRedirectUri

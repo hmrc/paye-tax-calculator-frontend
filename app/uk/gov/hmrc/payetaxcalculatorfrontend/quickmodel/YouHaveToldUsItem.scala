@@ -85,6 +85,6 @@ object YouHaveToldUs {
   }
 
   def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
-    def toYouHaveToldUsItem(salary: T) = salaryFormat.toYouHaveToldUsItem(salary)
+    def toYouHaveToldUsItem(salary: T): YouHaveToldUsItem = salaryFormat.toYouHaveToldUsItem(salary)
   }
 }
