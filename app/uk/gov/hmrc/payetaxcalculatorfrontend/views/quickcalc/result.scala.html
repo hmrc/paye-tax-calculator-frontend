@@ -2,7 +2,6 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
-@import java.time.LocalDate
 
 @(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
 @summary = @{
@@ -63,7 +62,7 @@
             </div>
           </div>
             <br>
-            <table class="calc">
+            <table style="width:100%">
               <thead>
                 <tr>
                   <th colspan="3">@{Messages("quick_calc.result.total_deductions.info")}</th>
@@ -71,15 +70,15 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>@{Messages("quick_calc.result.income_tax")}</td>
+                  <td style="width:66%">@{Messages("quick_calc.result.income_tax")}</td>
                   <td>£@{breakdown.taxCategories.head.total}</td>
                 </tr>
                 <tr>
-                  <td>@{Messages("quick_calc.result.your_national_insurance")}</td>
+                  <td style="width:66%">@{Messages("quick_calc.result.your_national_insurance")}</td>
                   <td>£@{breakdown.taxCategories(1).total}</td>
                 </tr>
                 <tr>
-                  <td>@{Messages("quick_calc.result.deductions")}</td>
+                  <td style="width:66%">@{Messages("quick_calc.result.deductions")}</td>
                   <td>£@{breakdown.totalDeductions}</td>
                 </tr>
               </tbody>
@@ -90,7 +89,7 @@
               @{Messages("quick_calc.result.how_we_calculated")}
               </summary>
               <div>
-                <table class="calc">
+                <table style="width:100%">
                   <thead >
                     <tr>
                       <th colspan="2">@{Messages("quick_calc.result.how_we_calculated.you_earn")}</th>
@@ -98,19 +97,19 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>@{Messages("quick_calc.result.gross_pay")}</td>
+                      <td style="width:66%">@{Messages("quick_calc.result.gross_pay")}</td>
                       <td>£@{
                         breakdown.grossPay
                       }</td>
                     </tr>
                     <tr>
-                      <td>@{Messages("quick_calc.result.tax_free_allowance")}</td>
+                      <td style="width:66%">@{Messages("quick_calc.result.tax_free_allowance")}</td>
                       <td>£@{
                         breakdown.taxFreePay
                       }</td>
                     </tr>
                     <tr>
-                      <td>@{Messages("quick_calc.result.taxable_pay")}</td>
+                      <td style="width:66%">@{Messages("quick_calc.result.taxable_pay")}</td>
                       <td>£@{
                         breakdown.taxablePay
                       }</td>

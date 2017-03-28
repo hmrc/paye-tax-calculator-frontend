@@ -100,7 +100,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/state-pension"
+      val expectedRedirect = "/estimate-paye-take-home-pay/state-pension"
       val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303
@@ -121,7 +121,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/state-pension"
+      val expectedRedirect = "/estimate-paye-take-home-pay/state-pension"
       val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303
