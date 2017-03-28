@@ -147,7 +147,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
 
       val status = result.header.status
 
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/statePension"
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/state-pension"
       val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303
@@ -164,7 +164,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
 
       val status = result.header.status
 
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/statePension"
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/state-pension"
       val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303
@@ -180,7 +180,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
 
       val status = result.header.status
 
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/summary"
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/your-answers"
       val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303

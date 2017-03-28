@@ -30,7 +30,7 @@ class RedirectSpec extends AppUnitGenerator {
       val status = result.header.status
 
       val actualRedirect = redirectLocation(result).get
-      val expectedRedirect = "/paye-tax-calculator/quick-calculation/salary"
+      val expectedRedirect = "/paye-tax-calculator/quick-calculation/your-pay"
 
       status shouldBe 303
       actualRedirect shouldBe expectedRedirect
