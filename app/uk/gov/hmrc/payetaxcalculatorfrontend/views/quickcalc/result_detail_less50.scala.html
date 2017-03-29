@@ -1,0 +1,89 @@
+@import play.api.i18n._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
+
+@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
+@summary = @{
+  taxCalculation(quickCalcAggregateInput)
+}
+@tabLabels = @{
+  List(Messages("quick_calc.result.tabLabels.year"),
+    Messages("quick_calc.result.tabLabels.month"),
+    Messages("quick_calc.result.tabLabels.week"))
+}
+
+<ul>
+@for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
+  <li id=@{"tabContent"+breakdown.period}
+  data-tab-content=@{breakdown.period}
+    class="tab-content"
+    role="tabpanel"
+    aria-labelledby=@{breakdown.period}>
+  <p class="tab-content__first">
+<div class="data">
+  <div class="transaction-banner--complete">
+    <span class="data-item bold-xsmall">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear"}</span>
+    <br/>
+    <br/>
+    <span class="data-item bold-xlarge">£@{breakdown.takeHomePay}</span>
+  </div>
+</div>
+  <br>
+  <table style="width:100%">
+    <thead>
+      <tr>
+        <th colspan="3">@{Messages("quick_calc.result.total_deductions.info")}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="width:66%">@{Messages("quick_calc.result.income_tax")}</td>
+        <td>£@{breakdown.taxCategories.head.total}</td>
+      </tr>
+      <tr>
+        <td style="width:66%">@{Messages("quick_calc.result.your_national_insurance")}</td>
+        <td>£@{breakdown.taxCategories(1).total}</td>
+      </tr>
+      <tr>
+        <td style="width:66%"><h3>@{Messages("quick_calc.result.deductions")}</h3></td>
+        <td>£@{breakdown.totalDeductions}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="form-group" style="margin-top:2em">
+    <details>
+      <summary class="summary">
+      @{Messages("quick_calc.result.how_we_calculated")}
+      </summary>
+      <div>
+        <table style="width:100%">
+          <thead >
+            <tr>
+              <th colspan="2">
+              @{s"${Messages("quick_calc.result.how_we_calculated.you_earn_a")} $label " +
+                  s"${Messages("quick_calc.result.how_we_calculated.you_earn_b")} £${breakdown.grossPay}:"}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width:66%">@{Messages("quick_calc.result.tax_free_allowance")}</td>
+              <td>£@{
+                breakdown.taxFreePay
+              }</td>
+            </tr>
+            <tr>
+              <td style="width:66%">@{Messages("quick_calc.result.taxable_pay")}</td>
+              <td>£@{
+                breakdown.taxablePay
+              }</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+  </p>
+  </li>
+}
+</ul>
