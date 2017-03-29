@@ -61,16 +61,19 @@ quick_calc.you_have_told_us.hourly_sub.label=How many hours a week do you usuall
 
 quick_calc.result.header=Your income-tax calculation
 quick_calc.result.you_take_home=Your take-home pay for
-quick_calc.result.gross_pay=Your gross pay
 quick_calc.result.total_deductions.info=Based on the information you’ve given us.
 quick_calc.result.income=Income
-quick_calc.result.tax_free_allowance=You don’t pay tax on
-quick_calc.result.taxable_pay=You pay tax on
+quick_calc.result.tax_free_allowance=your tax-free allowance is
+quick_calc.result.k_code=your ’k code’ pay adjustment
+quick_calc.result.taxable_pay=your taxbale pay is
 quick_calc.result.deductions=In total you pay
 quick_calc.result.income_tax=Your Income Tax is
 quick_calc.result.your_national_insurance=Your National Insurance is
 quick_calc.result.how_we_calculated=How we calculated your results
-quick_calc.result.how_we_calculated.you_earn=What you earn
+quick_calc.result.how_we_calculated.you_earn_a=Based on your
+quick_calc.result.how_we_calculated.you_earn_b=pay of
+quick_calc.result.adjusted.head=What is adjusted Income Tax?
+quick_calc.result.adjusted.info=HMRC can’t take more than 50% of you total pay to cover Income Tax. Your estimated Income Tax is more than 50% in this case, so we’ve adjusted it to reflect this limit.
 
 quick_calc.result.tabLabels.year=Year
 quick_calc.result.tabLabels.month=Month
