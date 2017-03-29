@@ -40,7 +40,7 @@
         <td style="width:66%">@{Messages("quick_calc.result.income_tax")}</td>
         <td>
           £@{
-            if(breakdown.maxTaxAmount.equals(-1)) breakdown.taxCategories.head.total
+            if(breakdown.maxTaxAmount < breakdown.taxCategories.head.total) breakdown.taxCategories.head.total
             else breakdown.maxTaxAmount
           }
         </td>
