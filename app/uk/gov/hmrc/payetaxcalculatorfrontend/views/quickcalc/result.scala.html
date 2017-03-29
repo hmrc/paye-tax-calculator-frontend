@@ -8,7 +8,7 @@
   taxCalculation(quickCalcAggregateInput)
 }
 @overMaxRate = @{
-  summary.taxBreakdown.head.grossPay/2 < summary.taxBreakdown.head.taxablePay
+  summary.maxTaxRate < summary.taxBreakdown.head.taxablePay
 }
 
 @tabLabels = @{
@@ -49,8 +49,8 @@
           }
           </ul>
           @{
-            if(!overMaxRate) result_detail_less50(quickCalcAggregateInput, taxYear)
-            else result_detail_more50(quickCalcAggregateInput, taxYear)
+            if(!overMaxRate) result_detail(quickCalcAggregateInput, taxYear)
+            else result_detail_over_rate(quickCalcAggregateInput, taxYear)
           }
 
 
