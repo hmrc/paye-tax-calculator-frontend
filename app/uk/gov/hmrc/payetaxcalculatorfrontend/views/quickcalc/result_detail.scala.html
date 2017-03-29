@@ -38,7 +38,7 @@
     <tbody>
       <tr>
         <td style="width:66%">@{Messages("quick_calc.result.income_tax")}</td>
-        <td>£@{breakdown.taxCategories.head.total}</td>
+        <td>£@{extractIncomeTax(breakdown.taxCategories)}</td>
       </tr>
       <tr>
         <td style="width:66%">@{Messages("quick_calc.result.your_national_insurance")}</td>

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
-import uk.gov.hmrc.payeestimator.domain.TaxCalc
+import uk.gov.hmrc.payeestimator.domain.{TaxCalc, TaxCategory}
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
 
 object TaxResult {
@@ -78,6 +78,20 @@ object TaxResult {
       }
       case _ => -1
     }
+
+  def incomeTax(maxTaxAmount: BigDecimal, taxCategory: Seq[TaxCategory]): BigDecimal = {
+    val stdIncomeTax = extractIncomeTax(taxCategory)
+    if(maxTaxAmount >= 0) stdIncomeTax min maxTaxAmount
+    else stdIncomeTax
+  }
+
+  def extractIncomeTax(taxCategory: Seq[TaxCategory]) = {
+    taxCategory.head.total
+  }
+
+  def isOverMaxRate(grossPay: BigDecimal, maxTaxRate: BigDecimal, taxablePay: BigDecimal): Boolean = {
+    (grossPay * maxTaxRate / 100) < taxablePay
+  }
 
   def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput): TaxCalc = {
 

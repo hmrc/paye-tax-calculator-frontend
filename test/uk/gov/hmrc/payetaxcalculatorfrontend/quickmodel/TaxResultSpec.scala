@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
+import uk.gov.hmrc.payeestimator.domain.{Aggregation, TaxBreakdown, TaxCategory}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 
@@ -118,4 +119,38 @@ class TaxResultSpec extends UnitSpec {
     }
   }
 
+  "Extracting income tax" should {
+
+    "return the maxTaxAmount if the tax is over 50% of the gross income" in {
+      val expectedTaxAmount = 10400.00
+      val maxTaxBreakdown = Seq(
+        TaxCategory("incomeTax",41619.60,List(Aggregation(20,4359.80), Aggregation(40,0.0), Aggregation(45,0)))
+      )
+
+      expectedTaxAmount shouldBe incomeTax(expectedTaxAmount, maxTaxBreakdown)
+    }
+
+    "return the standard TaxAmount if the tax is not over 50% of the gross income" in {
+      val maxTaxAmount = 10400.00
+      val expectedTaxAmount = 4359.8
+      val maxTaxBreakdown = Seq(
+        TaxCategory("incomeTax",4359.80,List(Aggregation(20,4359.80), Aggregation(40,0.0), Aggregation(45,0)))
+      )
+
+      expectedTaxAmount shouldBe incomeTax(maxTaxAmount, maxTaxBreakdown)
+    }
+
+  }
+
+  "Check isOverMaxRate or not" should {
+
+    "return true if income tax is more than 50% of the total (gross) pay entered" in {
+      isOverMaxRate(grossPay = 10000, maxTaxRate = 50, taxablePay = 10000) shouldBe true
+    }
+
+    "return false if income tax is not more than 50% of the total (gross) pay entered" in {
+      isOverMaxRate(grossPay = 10000, maxTaxRate = 50, taxablePay = 100) shouldBe false
+    }
+
+  }
 }
