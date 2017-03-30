@@ -9,43 +9,41 @@
 @(valueInPence:Int, hoursForm: Form[Hours], url: String)(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
-  <div class="grid-layout">
-    <div class="grid-layout__column grid-layout__column--2-3">
+  <div class="grid-layout__column grid-layout__column--2-3">
 
-      <a class="link-back" id="ph-back" href="@url">@Messages("back")</a>
+    <a class="link-back" id="ph-back" href="@url">@Messages("back")</a>
 
-      <h1 class="heading-large">@Messages("quick_calc.salary.question.hours_a_week")</h1>
+    <h1 class="heading-large">@Messages("quick_calc.salary.question.hours_a_week")</h1>
 
-      <p>@Messages("quick_calc.salary.question.approximate")</p>
+    <p>@Messages("quick_calc.salary.question.approximate")</p>
 
-      @helper.form(action = controllers.routes.QuickCalcController.submitHoursAWeek(valueInPence)) {
-        @helper.CSRF.formField
+    @helper.form(action = controllers.routes.QuickCalcController.submitHoursAWeek(valueInPence)) {
+      @helper.CSRF.formField
 
-        <fieldset class="form-field-group">
-          @if(hoursForm("howManyAWeek").hasErrors){
-            <label class="form-field--error">
-              <div class="error-notification">
-              @{hoursForm("howManyAWeek").errors.head.message}
-              </div>
-          }
-          <input style= "display:inline " type="text" id="howManyHoursAWeek" name="howManyAWeek" maxlength="3" size="3" />
-          </label>
-        </fieldset>
+      <fieldset class="form-field-group">
+        @if(hoursForm("howManyAWeek").hasErrors){
+          <label class="form-field--error">
+            <div class="error-notification">
+            @{hoursForm("howManyAWeek").errors.head.message}
+            </div>
+            }
+        <input style= "display:inline " type="text" id="howManyHoursAWeek" name="howManyAWeek" maxlength="3" size="3" />
+      </label>
+      </fieldset>
 
-        <input type="hidden" id="num-hours" name="amount" value=@valueInPence>
-        <br>
-        <br>
+      <input type="hidden" id="num-hours" name="amount" value=@valueInPence>
+      <br>
+      <br>
 
-        <div class="form-group">
-          <input type="submit" id="ph-continue" class="button" value="@Messages("continue")">
-        </div>
+      <div class="form-group">
+        <input type="submit" id="ph-continue" class="button" value="@Messages("continue")">
+      </div>
 
-      }
+    }
 
-    </div>
+  </div>
 
-    <div class="grid-layout__column grid-layout__column--1-3">
-    </div>
+  <div class="grid-layout__column grid-layout__column--1-3">
   </div>
 
 }

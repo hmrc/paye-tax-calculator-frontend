@@ -85,6 +85,11 @@ quick_calc.result.info_d=It is not a demand for payment.
 quick_calc.result.info_e=HMRC won’t keep a record of your data for security reasons.
 quick_calc.result.info_print=Print my calculation
 
+quick_calc.result.info_url_list=What to do now
+quick_calc.result.info_url_a=Check my tax for a previous year
+quick_calc.result.info_url_b=Check if an overpayment has been made
+quick_calc.result.info_url_c=Claim for a tax refund
+
 quick_calc.salary.header=How much do you get paid before tax?
 quick_calc.salary.description_a=Use the figure before tax or National Insurance are deducted.
 quick_calc.salary.description_b=For example, £7.20 and hour or £26500 a year.
