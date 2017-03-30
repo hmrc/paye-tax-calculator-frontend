@@ -2,13 +2,14 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
 
 @(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
 }
 @overMaxRate = @{
-  (summary.taxBreakdown.head.grossPay * summary.maxTaxRate / 100) < summary.taxBreakdown.head.taxablePay
+  isOverMaxRate(summary)
 }
 
 @tabLabels = @{
@@ -21,7 +22,7 @@
   <div class="grid-layout grid-layout--maintain-width">
     <div class="grid-layout__column grid-layout__column--2-3">
 
-      <a class="link-back" id="r-back" href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.summary()">@Messages("back")</a>
+      <a class="link-back" id="r-back" href="@routes.QuickCalcController.summary()">@Messages("back")</a>
 
       <div class="grid-layout__column grid-layout__column--2-3">
         <header class="page-header">
@@ -64,7 +65,7 @@
           </p>
 
         </div>
-        <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart" class="button" type="submit">@Messages("restart")</a>
+        <a href="@routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart" class="button" type="submit">@Messages("restart")</a>
       </div>
     </div>
 

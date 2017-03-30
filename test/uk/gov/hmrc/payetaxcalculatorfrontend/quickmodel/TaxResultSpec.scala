@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
+import uk.gov.hmrc.payeestimator.domain.{Aggregation, TaxBreakdown, TaxCalc, TaxCategory}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 
@@ -24,11 +25,11 @@ class TaxResultSpec extends UnitSpec {
   "Extracting Tax Code from user response" should {
 
     "return tax code that a user has provided" in {
-      extractTaxCode(QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(true,Some("K452"))), None)) shouldBe "K452"
+      extractTaxCode(QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = true,Some("K452"))), None)) shouldBe "K452"
     }
 
     "return default tax code: 1150L if a user does not provide one" in {
-      extractTaxCode(QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(false,None)), None)) shouldBe "1150L"
+      extractTaxCode(QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false,None)), None)) shouldBe "1150L"
     }
   }
 
@@ -118,4 +119,29 @@ class TaxResultSpec extends UnitSpec {
     }
   }
 
+  "Extracting income tax" should {
+
+    "return the maxTaxAmount if the tax is over 50% of the gross income" in {
+      val expectedTaxAmount = 10400.00
+
+      incomeTax(maxTaxAmount = expectedTaxAmount, stdIncomeTax = 41619.60) shouldBe expectedTaxAmount
+    }
+
+    "return the standard TaxAmount if the tax is not over 50% of the gross income" in {
+      val expectedTaxAmount = 4359.8
+
+      incomeTax(maxTaxAmount = 10400.00, stdIncomeTax = 4359.80) shouldBe expectedTaxAmount
+    }
+  }
+
+  "Check isOverMaxRate or not" should {
+    "return true if income tax is more than 50% of the total (gross) pay entered" in {
+      isOverMaxRate(grossPay = 10000, maxTaxRate = 50, taxablePay = 10000) shouldBe true
+    }
+
+    "return false if income tax is not more than 50% of the total (gross) pay entered" in {
+      isOverMaxRate(grossPay = 10000, maxTaxRate = 50, taxablePay = 100) shouldBe false
+    }
+
+  }
 }
