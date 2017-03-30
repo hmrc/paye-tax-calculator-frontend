@@ -9,7 +9,7 @@
   taxCalculation(quickCalcAggregateInput)
 }
 @overMaxRate = @{
-  isOverMaxRate(summary.taxBreakdown.head.grossPay, summary.maxTaxRate, summary.taxBreakdown.head.taxablePay)
+  isOverMaxRate(summary)
 }
 
 @tabLabels = @{

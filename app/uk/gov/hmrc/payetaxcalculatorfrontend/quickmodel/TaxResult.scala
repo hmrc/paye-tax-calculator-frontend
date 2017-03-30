@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
-import uk.gov.hmrc.payeestimator.domain.{TaxCalc, TaxCategory}
+import uk.gov.hmrc.payeestimator.domain.{TaxBreakdown, TaxCalc, TaxCategory}
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
 
 object TaxResult {
@@ -79,14 +79,29 @@ object TaxResult {
       case _ => -1
     }
 
-  def incomeTax(maxTaxAmount: BigDecimal, taxCategory: Seq[TaxCategory]): BigDecimal = {
-    val stdIncomeTax = extractIncomeTax(taxCategory)
+  def incomeTax(breakdown : TaxBreakdown): BigDecimal = {
+    val maxTaxAmount = breakdown.maxTaxAmount
+    val stdIncomeTax: BigDecimal = extractIncomeTax(breakdown)
+
+    incomeTax(maxTaxAmount: BigDecimal, stdIncomeTax)
+  }
+
+  def incomeTax(maxTaxAmount: BigDecimal, stdIncomeTax: BigDecimal): BigDecimal = {
     if(maxTaxAmount >= 0) stdIncomeTax min maxTaxAmount
     else stdIncomeTax
   }
 
-  def extractIncomeTax(taxCategory: Seq[TaxCategory]) = {
-    taxCategory.head.total
+  def extractIncomeTax( breakdown : TaxBreakdown): BigDecimal = {
+    breakdown.taxCategories.find(_.taxType == "incomeTax").map(_.total)
+      .getOrElse(throw new AssertionError("Unknown Engine change"))
+  }
+
+  def isOverMaxRate(summary: TaxCalc): Boolean = {
+    val grossPay = summary.taxBreakdown.head.grossPay
+    val maxTaxRate = summary.maxTaxRate
+    val taxablePay = summary.taxBreakdown.head.taxablePay
+
+    isOverMaxRate(grossPay, maxTaxRate, taxablePay)
   }
 
   def isOverMaxRate(grossPay: BigDecimal, maxTaxRate: BigDecimal, taxablePay: BigDecimal): Boolean = {
