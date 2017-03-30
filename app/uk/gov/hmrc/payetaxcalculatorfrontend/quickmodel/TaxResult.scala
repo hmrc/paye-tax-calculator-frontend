@@ -121,4 +121,9 @@ object TaxResult {
       extractHours(quickCalcAggregateInput))
   }
 
+  def moneyFormatter(value: BigDecimal): String ={
+    val formatter = java.text.NumberFormat.getInstance
+
+    formatter.format(value)
+  }
 }

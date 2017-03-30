@@ -31,6 +31,7 @@ back = Back
 restart = Start again
 get_results=Get Results
 select_one=Please select one of these options.
+a=a
 
 quick_calc.title=HMRC Quick calculator
 quick_calc.header.title=PAYE Income Tax calculator
@@ -40,6 +41,7 @@ quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=Do you know your tax code?
 quick_calc.you_have_told_us.about_tax_code.no=No
+quick_calc.you_have_told_us.about_tax_code.yes=Yes
 quick_calc.you_have_told_us.about_tax_code.default=we’ll use the default
 
 quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
@@ -50,25 +52,27 @@ quick_calc.you_have_told_us.over_state_pension_age.label=Are you over the State 
 quick_calc.you_have_told_us.over_state_pension_age.yes=Yes
 quick_calc.you_have_told_us.over_state_pension_age.no=No
 
-quick_calc.you_have_told_us.yearly.label=How much do you earn per year?
-quick_calc.you_have_told_us.monthly.label=How much do you earn Per month?
-quick_calc.you_have_told_us.weekly.label=How much do you earn per week?
-quick_calc.you_have_told_us.daily.label=How much do you earn per day?
-quick_calc.you_have_told_us.hourly.label=How much do you earn per hour?
+quick_calc.you_have_told_us.a_year.label=How much do you get paid?
+quick_calc.you_have_told_us.a_month.label=How much do you get paid?
+quick_calc.you_have_told_us.a_week.label=How much do you get paid?
+quick_calc.you_have_told_us.daily.label=How much do you get paid?
+quick_calc.you_have_told_us.hourly.label=How much do you get paid?
+
+quick_calc.you_have_told_us.label=How much do you get paid?
 
 quick_calc.you_have_told_us.daily_sub.label=How many days a week do you usually work?
 quick_calc.you_have_told_us.hourly_sub.label=How many hours a week do you usually work?
 
-quick_calc.result.header=Your income-tax calculation
-quick_calc.result.you_take_home=Your take-home pay for
+quick_calc.result.header=Your estimated take-home pay
+quick_calc.result.you_take_home=Your estimated take-home pay for
 quick_calc.result.total_deductions.info=Based on the information you’ve given us.
 quick_calc.result.income=Income
 quick_calc.result.tax_free_allowance=your tax-free allowance is
 quick_calc.result.k_code=your ’k code’ pay adjustment
 quick_calc.result.taxable_pay=your taxbale pay is
-quick_calc.result.deductions=In total you pay
-quick_calc.result.income_tax=Your Income Tax is
-quick_calc.result.your_national_insurance=Your National Insurance is
+quick_calc.result.deductions=in total you pay
+quick_calc.result.income_tax=your Income Tax is
+quick_calc.result.your_national_insurance=your National Insurance is
 quick_calc.result.how_we_calculated=How we calculated your results
 quick_calc.result.how_we_calculated.you_earn_a=Based on your
 quick_calc.result.how_we_calculated.you_earn_b=pay of
@@ -79,9 +83,7 @@ quick_calc.result.tabLabels.year=Year
 quick_calc.result.tabLabels.month=Month
 quick_calc.result.tabLabels.week=Week
 quick_calc.result.info_a=We have based your National Insurance estimate on the most popular
-quick_calc.result.info_b=options: Class 1, Categories A, B, C, H, J or M.
-quick_calc.result.info_c=This calculation is an estimate and is not legally binding.
-quick_calc.result.info_d=It is not a demand for payment.
+quick_calc.result.info_b=Class 1 options: Categories A, B, C, H, J or M. (Opens in a new tab)
 quick_calc.result.info_e=HMRC won’t keep a record of your data for security reasons.
 quick_calc.result.info_print=Print my calculation
 
@@ -90,8 +92,8 @@ quick_calc.result.info_url_a=Check my tax for a previous year
 quick_calc.result.info_url_b=Check if an overpayment has been made
 quick_calc.result.info_url_c=Claim for a tax refund
 
-quick_calc.salary.header=How much do you get paid before tax?
-quick_calc.salary.description_a=Use the figure before tax or National Insurance are deducted.
+quick_calc.salary.header=How much do you get paid?
+quick_calc.salary.description_a=For each job you have, use the amount before tax and National Insurance are deducted. You can use the calculator as many times as you need.
 quick_calc.salary.description_b=For example, £7.20 and hour or £26500 a year.
 quick_calc.salary.about=About this service
 quick_calc.salary.about_inf=Get your estimated Income Tax figures for the tax year
@@ -114,17 +116,18 @@ quick_calc.salary.hourly.label=an hour
 quick_calc.salary.question.approximate=If you don’t know, an approximate number is fine
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
 quick_calc.salary.question.hours_a_week=How many hours a week do you usually work?
-quick_calc.salary.question.state_pension_url_a=Your State Pension age depends on when you were born. If you’re aged under 63 you haven’t reached it yet. You can
-quick_calc.salary.question.state_pension_url_b=check your State Pension age (opens in a new window)
+quick_calc.salary.question.state_pension_url_a=You can
+quick_calc.salary.question.state_pension_url_b=check your State Pension age (opens in a new tab)
 quick_calc.salary.question.state_pension_url_c=if you are not sure
+quick_calc.salary.question.state_pension_inf=Anyone over State Pension age doesn't pay National Insurance contributions.
 quick_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax Rate?
 quick_calc.salary.question.scottish_income_info=You usually pay Scottish Income Tax if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
 quick_calc.salary.question.scottish_income_url_a=You can check if you pay
 quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a new tab)
 quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
-quick_calc.salary.question.tax_code_info=If you don’t know, we’ll use the default tax code. Adding your current tax code will help us give you more accurate results.
+quick_calc.salary.question.tax_code_info=If you know it, your take-home pay estimate will be more accurate. If you don't, we'll use the most common tax code instead.
 quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
-quick_calc.salary.question.tax_code_info_url_b=payslip, P45 or P60 (opens in a new tab).
+quick_calc.salary.question.tax_code_info_url_b=recent payslip or P45 (opens in a new tab).
 
 quick_calc.salary.question.error.number_of_days.less_than_zero=Days per week must be at least 1
 quick_calc.salary.question.error.number_of_days.more_than_seven=Maximum days per week is 7
@@ -153,7 +156,7 @@ quick_calc.over_state_pension_age.header=Are you over state pension age?
 quick_calc.over_state_pension_age.yes=Yes
 quick_calc.over_state_pension_age.no=No
 
-quick_calc.about_tax_code.header=Do you know your Tax Code?
+quick_calc.about_tax_code.header=Do you want to use your current tax code?
 quick_calc.about_tax_code.has_tax_code=Enter your Tax Code
 quick_calc.about_tax_code.wrong_tax_code_suffix=The tax code you have entered is not valid - it must end with the letter L, M, N, or T
 quick_calc.about_tax_code.wrong_tax_code=The tax code you have entered is not valid. A tax code is usually made up of several numbers and a letter, e.g. 117L or K497 or S117L or SK497

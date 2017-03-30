@@ -51,8 +51,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          // the date.taxYear method will give a string such as "2016 to 2017", but we want "2016 - 2017"
-          Ok(result(aggregate, date.taxYear.replaceAll("to","-")))
+          Ok(result(aggregate, date.taxYear))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
@@ -83,8 +82,8 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
 
         updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
             salaryAmount.period match {
-              case "daily" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-              case "hourly" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+              case "a day" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+              case "an hour" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
               case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
                 Redirect(routes.QuickCalcController.showStatePensionForm())
             }

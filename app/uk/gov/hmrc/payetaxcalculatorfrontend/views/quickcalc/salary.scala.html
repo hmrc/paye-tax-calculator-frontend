@@ -10,65 +10,65 @@
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
-  <div class="grid-row">
-    <div class="grid-layout__column grid-layout__column--2-3">
+  <div class="grid-layout__column grid-layout__column--2-3">
 
-      <a class="link-back" id="r-back" href="#">@Messages("back")</a>
+    <a class="link-back" id="r-back" href="#">@Messages("back")</a>
 
-      <h1 class="heading-large">@Messages("quick_calc.salary.header")</h1>
-      <p>@Messages("quick_calc.salary.description_a")</p>
-      <p class="faded-text faded-text--small">@Messages("quick_calc.salary.description_b")</p>
+    <h1 class="heading-large">@Messages("quick_calc.salary.header")</h1>
+    <p>@Messages("quick_calc.salary.description_a")</p>
+    <p class="faded-text faded-text--small">@Messages("quick_calc.salary.description_b")</p>
 
-      @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitSalaryAmount) {
-        @helper.CSRF.formField
+    @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitSalaryAmount) {
+      @helper.CSRF.formField
 
-        <div class="form-group">
+      <div class="form-group">
 
-          <fieldset class="form-field-group">
+        <fieldset class="form-field-group">
 
-            @if(salaryForm("amount").hasErrors){
-              <label class="form-field--error">
-                <div class="error-notification">
-                @{salaryForm("amount").errors.head.message}
-                </div>
-                }
+          @if(salaryForm("amount").hasErrors){
+            <label class="form-field--error">
+              <div class="error-notification">
+              @{salaryForm("amount").errors.head.message}
+              </div>
+              }
 
-              <span>£</span>
+          <span>£</span>
 
-              <input type="text" id="pay-amount" name="amount" value="@{radioFieldAmount.value}" />
-              </label>
-            <br>
-            <br>
+          <input type="text" id="pay-amount" name="amount" value="@{radioFieldAmount.value}" />
+        </label>
+          <br>
+          <br>
 
-            @if(salaryForm("period").hasErrors){
-              <label class="form-field--error">
-                <div class="error-notification">
-                @{salaryForm("period").errors.head.message}
-                </div>
-              </label>
-            }
+          @if(salaryForm("period").hasErrors){
+            <label class="form-field--error">
+              <div class="error-notification">
+              @{salaryForm("period").errors.head.message}
+              </div>
+            </label>
+          }
 
-            @for(label <- periodLabels) {
-              <label class="block-label selection-button-radio">@Messages(s"quick_calc.salary.$label.label")
-              <input type="radio"
-              name="period"
-              id="@label"
-              value="@label"
-                @if(radioFieldPeriod.value.contains(label)) { checked="checked" } />
-              </label>
+          @for(label <- periodLabels) {
+            <label class="block-label selection-button-radio">@Messages(s"quick_calc.salary.$label.label")
+            <input type="radio"
+            name="period"
+            id="@label"
+            value="@Messages(s"quick_calc.salary.$label.label")"
+              @if(radioFieldPeriod.value.contains(Messages(s"quick_calc.salary.$label.label"))) { checked="checked" } />
+            </label>
 
-            }
+          }
 
-          </fieldset>
-        </div>
+        </fieldset>
+      </div>
 
-        <div class="form-group">
-          <input type="submit" id="p-continue" class="button" value="@Messages("continue")">
-        </div>
-      }
+      <div class="form-group">
+        <input type="submit" id="p-continue" class="button" value="@Messages("continue")">
+      </div>
+    }
 
-    </div>
+  </div>
 
+  <div class="grid-layout__column grid-layout__column--1-3">
   </div>
 
 }
