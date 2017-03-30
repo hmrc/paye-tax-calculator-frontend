@@ -33,6 +33,8 @@ get_results=Get Results
 select_one=Please select one of these options.
 a=a
 
+feedback=Please provide us feedback on this service
+
 quick_calc.title=HMRC Quick calculator
 quick_calc.header.title=PAYE Income Tax calculator
 
@@ -55,13 +57,11 @@ quick_calc.you_have_told_us.over_state_pension_age.no=No
 quick_calc.you_have_told_us.a_year.label=How much do you get paid?
 quick_calc.you_have_told_us.a_month.label=How much do you get paid?
 quick_calc.you_have_told_us.a_week.label=How much do you get paid?
-quick_calc.you_have_told_us.daily.label=How much do you get paid?
-quick_calc.you_have_told_us.hourly.label=How much do you get paid?
+quick_calc.you_have_told_us.a_day.label=How much do you get paid?
+quick_calc.you_have_told_us.an_hour.label=How much do you get paid?
 
-quick_calc.you_have_told_us.label=How much do you get paid?
-
-quick_calc.you_have_told_us.daily_sub.label=How many days a week do you usually work?
-quick_calc.you_have_told_us.hourly_sub.label=How many hours a week do you usually work?
+quick_calc.you_have_told_us.a_day_sub.label=How many days a week do you usually work?
+quick_calc.you_have_told_us.an_hour_sub.label=How many hours a week do you usually work?
 
 quick_calc.result.header=Your estimated take-home pay
 quick_calc.result.you_take_home=Your estimated take-home pay for
@@ -95,17 +95,6 @@ quick_calc.result.info_url_c=Claim for a tax refund
 quick_calc.salary.header=How much do you get paid?
 quick_calc.salary.description_a=For each job you have, use the amount before tax and National Insurance are deducted. You can use the calculator as many times as you need.
 quick_calc.salary.description_b=For example, £7.20 and hour or £26500 a year.
-quick_calc.salary.about=About this service
-quick_calc.salary.about_inf=Get your estimated Income Tax figures for the tax year
-quick_calc.salary.about_should_know=Before you start, make sure you know:
-quick_calc.salary.about_should_know_a=how much you usually get paid
-quick_calc.salary.about_should_know_b=how often you work
-quick_calc.salary.about_addition=It’s also useful to know your tax code. The calculator will work without it.
-quick_calc.salary.yearly=yearly
-quick_calc.salary.monthly=monthly
-quick_calc.salary.weekly=weekly
-quick_calc.salary.daily=daily
-quick_calc.salary.hourly=hourly
 
 quick_calc.salary.yearly.label=a year
 quick_calc.salary.monthly.label=a month

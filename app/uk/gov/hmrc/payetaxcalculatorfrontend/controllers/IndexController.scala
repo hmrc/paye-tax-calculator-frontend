@@ -20,16 +20,11 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Action
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.mainIndex
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.legacyIndex
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 @Singleton
 class IndexController @Inject() (override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
-
-  def index() = Action { implicit request =>
-    Ok(mainIndex())
-  }
 
   def legacy() = Action { implicit request =>
     Ok(legacyIndex())

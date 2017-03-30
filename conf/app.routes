@@ -1,9 +1,6 @@
 # microservice specific routes
 
-GET         /                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.index()
 GET         /legacy                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.legacy()
-
-GET         /language/:lang               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.WelshLanguageController.switchToLanguage(lang: String)
 
 GET         /                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.redirectToSalaryForm
 

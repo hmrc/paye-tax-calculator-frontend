@@ -76,7 +76,7 @@ object YouHaveToldUs {
 
   implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[Detail] {
     def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
-      val label = s"${detail.period}_sub"
+      val label = s"${detail.period.replace(" ","_")}_sub"
       val idSuffix = "salary_period"
       val url = routes.QuickCalcController.showSalaryForm().url
       YouHaveToldUsItem(

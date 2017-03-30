@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
-import uk.gov.hmrc.payeestimator.domain.{TaxBreakdown, TaxCalc, TaxCategory}
+import uk.gov.hmrc.payeestimator.domain.{TaxBreakdown, TaxCalc}
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
 
 object TaxResult {
@@ -42,11 +42,11 @@ object TaxResult {
 
   def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput): BigDecimal = quickCalcAggregateInput.savedSalary match {
     case Some(s) => s.period match {
-      case "yearly" => s.amount * 100
-      case "monthly" => s.amount * 100
-      case "weekly" => s.amount * 100
-      case "daily" => s.amount * 100
-      case "hourly" => s.amount * 100
+      case "a year" => s.amount * 100
+      case "a month" => s.amount * 100
+      case "a week" => s.amount * 100
+      case "a day" => s.amount * 100
+      case "an hour" => s.amount * 100
       case _ => throw new Exception("No Salary has been provided.")
     }
     case None => throw new Exception("No Salary has been provided.")
@@ -55,9 +55,9 @@ object TaxResult {
   private[quickmodel] def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput): String =
     quickCalcAggregateInput.savedSalary match {
       case Some(s) => s.period match {
-        case "yearly" => "annual"
-        case "monthly" => "monthly"
-        case "weekly" => "weekly"
+        case "a year" => "annual"
+        case "a month" => "monthly"
+        case "a week" => "weekly"
         case _ => ""
       }
       case _ => ""
@@ -72,8 +72,8 @@ object TaxResult {
   private[quickmodel] def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput): Int =
     quickCalcAggregateInput.savedSalary match {
       case Some(s) => s.period match {
-        case "daily" => s.howManyAWeek.getOrElse(-1)
-        case "hourly" => s.howManyAWeek.getOrElse(-1)
+        case "a day" => s.howManyAWeek.getOrElse(-1)
+        case "an hour" => s.howManyAWeek.getOrElse(-1)
         case _ => -1
       }
       case _ => -1

@@ -3,6 +3,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
+@import uk.gov.hmrc.payetaxcalculatorfrontend.FrontendAppConfig
 
 @(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
 @summary = @{
@@ -63,7 +64,7 @@
 
         </div>
         <br>
-        <a href="#">Please provide us feedback on this service</a>
+        <a href="@{FrontendAppConfig.betaFeedbackUrl}">@Messages("feedback")</a>
         <br><br>
         <a href="@routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart" class="button" type="submit">@Messages("restart")</a>
     </div>
