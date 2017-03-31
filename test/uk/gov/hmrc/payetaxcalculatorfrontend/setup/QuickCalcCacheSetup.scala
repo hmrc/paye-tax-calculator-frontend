@@ -91,11 +91,11 @@ object QuickCalcCacheSetup {
   val cacheTestScottishYES = Some(ScottishRate(true))
   val cacheTestStatePensionYES = Some(OverStatePensionAge(true))
   val cacheTestStatusPensionNO = Some(OverStatePensionAge(false))
-  val cacheTestYearlySalary = Some(Salary(20000, "yearly", None))
-  val cacheTestDailySalary = Some(Salary(40, "daily", None))
-  val cacheTestHourlySalary = Some(Salary(8, "hourly", None))
-  val cacheTestSalaryPeriodDaily = Some(Detail(5, "daily"))
-  val cacheTestSalaryPeriodHourly = Some(Detail(40, "hourly"))
+  val cacheTestYearlySalary = Some(Salary(20000, "a year", None))
+  val cacheTestDailySalary = Some(Salary(40, "a day", None))
+  val cacheTestHourlySalary = Some(Salary(8, "an hour", None))
+  val cacheTestSalaryPeriodDaily = Some(Detail(5, "a day"))
+  val cacheTestSalaryPeriodHourly = Some(Detail(40, "an hour"))
 
   val cacheTaxCode = Some(
     QuickCalcAggregateInput.newInstance.copy(
@@ -183,9 +183,9 @@ object QuickCalcCacheSetup {
   val expectedTaxCodeAnswer = "No (we’ll use the default 1150L)"
   val expectedStatePensionYES = "Yes"
   val expectedStatePensionNO = "No"
-  val expectedYearlySalaryAnswer = "£20000"
-  val expectedDailySalaryAnswer = "£40"
-  val expectedHourlySalaryAnswer = "£8"
+  val expectedYearlySalaryAnswer = "£20000 a year"
+  val expectedDailySalaryAnswer = "£40 a day"
+  val expectedHourlySalaryAnswer = "£8 an hour"
   val expectedDailyPeriodAnswer = "5"
   val expectedHourlyPeriodAnswer = "40"
   val expectedYearlySalaryTypeAnswer = "Per year"

@@ -3,6 +3,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
+@import uk.gov.hmrc.payetaxcalculatorfrontend.FrontendAppConfig
 
 @(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
 @summary = @{
@@ -25,7 +26,7 @@
       <a class="link-back" id="r-back" href="@routes.QuickCalcController.summary()">@Messages("back")</a>
 
         <header class="page-header">
-          <h1>@Messages("quick_calc.result.header")</h1>
+          <h2>@Messages("quick_calc.result.header")</h2>
         </header>
 
         <div data-tabs>
@@ -54,16 +55,17 @@
             else result_detail(quickCalcAggregateInput, taxYear)
           }
 
-          <p><a href="javascript:window.print()">@Messages("quick_calc.result.info_print")</a></p>
+          <p class="no-print"><a href="javascript:window.print()">@Messages("quick_calc.result.info_print")</a></p>
 
-          <p>@Messages("quick_calc.result.info_a")
-            <br>@Messages("quick_calc.result.info_b")
-            <li>@Messages("quick_calc.result.info_c")</li>
-            <li>@Messages("quick_calc.result.info_d")</li>
+          <p>
+            <li>@Messages("quick_calc.result.info_a") <a href="https://www.gov.uk/national-insurance-rates-letters/category-letters" target="_blank">@Messages("quick_calc.result.info_b")</a></li>
             <li>@Messages("quick_calc.result.info_e")</li>
           </p>
 
         </div>
+        <br>
+        <a href="@{FrontendAppConfig.betaFeedbackUrl}">@Messages("feedback")</a>
+        <br><br>
         <a href="@routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart" class="button" type="submit">@Messages("restart")</a>
     </div>
 

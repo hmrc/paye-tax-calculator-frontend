@@ -22,17 +22,15 @@
   <p class="tab-content__first">
 <div class="data">
   <div class="transaction-banner--complete">
-    <span class="data-item bold-xsmall">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear"}</span>
-    <br/>
-    <br/>
-    <span class="data-item bold-xlarge">£@{breakdown.takeHomePay}</span>
+<p style="margin:-0.5em 0 0.7em">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear is"}</p>
+  <span class="data-item bold-xlarge">£@{s"${moneyFormatter(breakdown.takeHomePay)} ${Messages("a")} ${label.toLowerCase}"}</span>
   </div>
 </div>
   <br>
   <table style="width:100%">
     <thead>
       <tr>
-        <th colspan="3">@{Messages("quick_calc.result.total_deductions.info")}</th>
+        <th colspan="3"><h3 style="font-weight:normal">@{Messages("quick_calc.result.total_deductions.info")}</h3></th>
       </tr>
     </thead>
     <tbody>
@@ -40,17 +38,17 @@
         <td style="width:66%">@{Messages("quick_calc.result.income_tax")}</td>
         <td>
           £@{
-            incomeTax(breakdown)
+            moneyFormatter(incomeTax(breakdown))
           }
         </td>
       </tr>
       <tr>
         <td style="width:66%">@{Messages("quick_calc.result.your_national_insurance")}</td>
-        <td>£@{breakdown.taxCategories(1).total}</td>
+        <td >£@{moneyFormatter(breakdown.taxCategories(1).total)}</td>
       </tr>
       <tr>
-        <td style="width:66%"><h3>@{Messages("quick_calc.result.deductions")}</h3></td>
-        <td>£@{breakdown.totalDeductions}</td>
+        <td style="font-weight: 700; width:66%">@{Messages("quick_calc.result.deductions")}</td>
+        <td style="font-weight: 700">£@{moneyFormatter(breakdown.totalDeductions)}</td>
       </tr>
     </tbody>
   </table>
@@ -67,9 +65,11 @@
         <table style="width:100%">
           <thead >
             <tr>
-              <th colspan="2">
-                @{s"${Messages("quick_calc.result.how_we_calculated.you_earn_a")} $label " +
-                    s"${Messages("quick_calc.result.how_we_calculated.you_earn_b")} £${breakdown.grossPay}:"}
+              <th colspan="2" style="font-weight:normal">
+                @{s"${Messages("quick_calc.result.how_we_calculated.you_earn_a")} ${label.toLowerCase} " +
+                    s"${Messages("quick_calc.result.how_we_calculated.you_earn_b")} "
+                }
+              <span style="font-weight: 700">£@{moneyFormatter(breakdown.grossPay)}:</span>
               </th>
             </tr>
           </thead>
@@ -77,19 +77,19 @@
             <tr>
               <td style="width:66%">@{Messages("quick_calc.result.k_code")}</td>
               <td>£@{
-                breakdown.additionalTaxablePay
+                moneyFormatter(breakdown.additionalTaxablePay)
               }</td>
             </tr>
             <tr>
               <td style="width:66%">@{Messages("quick_calc.result.tax_free_allowance")}</td>
               <td>£@{
-                breakdown.taxFreePay
+                moneyFormatter(breakdown.taxFreePay)
               }</td>
             </tr>
             <tr>
               <td style="width:66%">@{Messages("quick_calc.result.taxable_pay")}</td>
               <td>£@{
-                breakdown.taxablePay
+                moneyFormatter(breakdown.taxablePay)
               }</td>
             </tr>
           </tbody>

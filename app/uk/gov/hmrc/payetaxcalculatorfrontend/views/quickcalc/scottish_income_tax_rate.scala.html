@@ -7,60 +7,58 @@
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
-  <div class="grid-layout grid-layout--maintain-width">
-    <div class="grid-layout__column grid-layout__column--2-3">
+  <div class="grid-layout__column grid-layout__column--2-3">
 
-      <a class="link-back" id="sr-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == Messages("quick_calc.you_have_told_us.about_tax_code.label")) y.url else "")}">@Messages("back")</a>
+    <a class="link-back" id="sr-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "about_tax_code") y.url else "")}">@Messages("back")</a>
 
-      <h1 class="heading-large">@Messages("quick_calc.salary.question.scottish_income")</h1>
+    <h1 class="heading-large">@Messages("quick_calc.salary.question.scottish_income")</h1>
 
-      <p>@Messages("quick_calc.salary.question.scottish_income_info")</p>
+    <p>@Messages("quick_calc.salary.question.scottish_income_info")</p>
 
-      <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.scottish_income_url_a") <a href="https://www.gov.uk/scottish-rate-income-tax" target="_blank">@Messages("quick_calc.salary.question.scottish_income_url_b")</a>
-        @Messages("quick_calc.salary.question.scottish_income_url_c")</p>
+    <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.scottish_income_url_a") <a href="https://www.gov.uk/scottish-rate-income-tax" target="_blank">@Messages("quick_calc.salary.question.scottish_income_url_b")</a>
+      @Messages("quick_calc.salary.question.scottish_income_url_c")</p>
 
 
-      <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitScottishRateForm()" method="post">
-        @helper.CSRF.formField
+    <form action = "@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitScottishRateForm()" method="post">
+      @helper.CSRF.formField
 
-        <div class="form-group">
-          <fieldset class="inline form-field-group" id="scottishRate">
+      <div class="form-group">
+        <fieldset class="inline form-field-group" id="scottishRate">
 
-            @if(scottishRate("scottishRate").hasErrors){
-              <label class="form-field--error">
-                <div class="error-notification">
-                @{scottishRate("scottishRate").errors.head.message}
-                </div>
-              </label>
-            }
-
-            <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
-              <input type="radio"
-              id="scottishRate-yes"
-              name="scottishRate"
-              value="true"
-                @if(radioField.value.contains("true")) { checked="checked" } />
+          @if(scottishRate("scottishRate").hasErrors){
+            <label class="form-field--error">
+              <div class="error-notification">
+              @{scottishRate("scottishRate").errors.head.message}
+              </div>
             </label>
+          }
 
-            <label class="block-label" for="scottishRate-no">@Messages("quick_calc.over_state_pension_age.no")
-              <input type="radio"
-              id="scottishRate-no"
-              name="scottishRate"
-              value="false"
-                @if(radioField.value.contains("false")) { checked="checked" } />
-            </label>
+          <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
+            <input type="radio"
+            id="scottishRate-yes"
+            name="scottishRate"
+            value="true"
+              @if(radioField.value.contains("true")) { checked="checked" } />
+          </label>
 
-          </fieldset>
-        </div>
+          <label class="block-label" for="scottishRate-no">@Messages("quick_calc.over_state_pension_age.no")
+            <input type="radio"
+            id="scottishRate-no"
+            name="scottishRate"
+            value="false"
+              @if(radioField.value.contains("false")) { checked="checked" } />
+          </label>
 
-        <div class="form-group">
-          <input type="submit" id="sr-continue" class="button" value="@Messages("continue")">
-        </div>
-      </form>
+        </fieldset>
+      </div>
 
-    </div>
+      <div class="form-group">
+        <input type="submit" id="sr-continue" class="button" value="@Messages("continue")">
+      </div>
+    </form>
+
+  </div>
     <div class="grid-layout__column grid-layout__column--1-3">
-    </div>
   </div>
 
 }

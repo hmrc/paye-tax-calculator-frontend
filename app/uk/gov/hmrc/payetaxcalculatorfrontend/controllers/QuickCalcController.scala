@@ -50,9 +50,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
+          println(aggregate)
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          // the date.taxYear method will give a string such as "2016 to 2017", but we want "2016 - 2017"
-          Ok(result(aggregate, date.taxYear.replaceAll("to","-")))
+          Ok(result(aggregate, date.taxYear))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
@@ -83,8 +83,8 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
 
         updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
             salaryAmount.period match {
-              case "daily" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-              case "hourly" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+              case "a day" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+              case "an hour" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
               case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
                 Redirect(routes.QuickCalcController.showStatePensionForm())
             }
@@ -110,8 +110,8 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       hours => {
         val updatedAggregate = cache.fetchAndGetEntry()
           .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-            .map(_.copy(savedSalary = Some(Salary(value, "hourly", Some(hours.howManyAWeek))),
-                        savedPeriod = Some(Detail(hours.howManyAWeek, "hourly"))))
+            .map(_.copy(savedSalary = Some(Salary(value, Messages("quick_calc.salary.hourly.label"), Some(hours.howManyAWeek))),
+                        savedPeriod = Some(Detail(hours.howManyAWeek, Messages("quick_calc.salary.hourly.label")))))
 
         updatedAggregate.flatMap( agg => {
           cache.save(agg).map( _ =>
@@ -139,8 +139,8 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       days => {
         val updatedAggregate = cache.fetchAndGetEntry()
           .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-            .map(_.copy(savedSalary = Some(Salary(value, "daily", Some(days.howManyAWeek))),
-                        savedPeriod = Some(Detail(days.howManyAWeek, "daily"))))
+            .map(_.copy(savedSalary = Some(Salary(value, Messages("quick_calc.salary.daily.label"), Some(days.howManyAWeek))),
+                        savedPeriod = Some(Detail(days.howManyAWeek,Messages("quick_calc.salary.daily.label")))))
 
         updatedAggregate.flatMap{ agg => {
           cache.save(agg)

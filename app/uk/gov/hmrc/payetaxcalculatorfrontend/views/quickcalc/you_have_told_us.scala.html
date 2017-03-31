@@ -5,6 +5,7 @@
 @(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+
   @if(items.nonEmpty) {
     <table class="check-your-answers">
       <thead>
@@ -17,7 +18,7 @@
       <tbody>
       @items.map { item =>
         <tr>
-          <td>@Messages(s"quick_calc.you_have_told_us.${item.label}.label")</td>
+          <td style="width:50%">@Messages(s"quick_calc.you_have_told_us.${item.label}.label")</td>
           <td id="value-@item.idSuffix">@item.value</td>
           <td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")</a></td>
         </tr>

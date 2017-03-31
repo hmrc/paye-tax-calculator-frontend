@@ -27,12 +27,12 @@ class WelshLanguageController @Inject()(implicit val messagesApi: MessagesApi) e
   val englishLang = Lang("en")
   val welshLang = Lang("cy")
   val languageMap = Map("english" -> englishLang, "welsh" -> welshLang)
-  val rootUrl = routes.IndexController.index().url
+  //val rootUrl = routes.IndexController.index().url
 
-  def switchToLanguage(language: String) = Action { implicit request =>
-    val lang = languageMap.getOrElse(language, englishLang)
-    val redirectURL = request.headers.get(REFERER).getOrElse(rootUrl)
-    Redirect(redirectURL).withLang(Lang.apply(lang.code))
-  }
+//  def switchToLanguage(language: String) = Action { implicit request =>
+//    val lang = languageMap.getOrElse(language, englishLang)
+//    val redirectURL = request.headers.get(REFERER).getOrElse(rootUrl)
+//    Redirect(redirectURL).withLang(Lang.apply(lang.code))
+//  }
 
 }

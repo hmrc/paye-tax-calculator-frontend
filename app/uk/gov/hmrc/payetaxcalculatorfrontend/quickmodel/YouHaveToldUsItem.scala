@@ -34,7 +34,7 @@ object YouHaveToldUs {
       val idSuffix = "tax-code"
       val url = routes.QuickCalcController.showTaxCodeForm().url
       YouHaveToldUsItem(
-        if(t.gaveUsTaxCode) t.taxCode.getOrElse(UserTaxCode.DEFAULT_TAX_CODE)
+        if(t.gaveUsTaxCode) s"${Messages("quick_calc.you_have_told_us.about_tax_code.yes")} (${t.taxCode.getOrElse(UserTaxCode.DEFAULT_TAX_CODE)})"
         else s"${Messages("quick_calc.you_have_told_us.about_tax_code.no")}" + " (" +
           s"${Messages("quick_calc.you_have_told_us.about_tax_code.default")} " +
           s"${t.taxCode.getOrElse(UserTaxCode.DEFAULT_TAX_CODE)}" + ")",
@@ -70,13 +70,13 @@ object YouHaveToldUs {
       val idSuffix = "income"
       def asPounds(v: BigDecimal) = "£" + v
 
-      YouHaveToldUsItem(asPounds(s.amount), s.period, url, idSuffix)
+      YouHaveToldUsItem(s"${asPounds(s.amount)} ${s.period}", s.period.replace(" ","_"), url, idSuffix)
     }
   }
 
   implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[Detail] {
     def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
-      val label = s"${detail.period}_sub"
+      val label = s"${detail.period.replace(" ","_")}_sub"
       val idSuffix = "salary_period"
       val url = routes.QuickCalcController.showSalaryForm().url
       YouHaveToldUsItem(
