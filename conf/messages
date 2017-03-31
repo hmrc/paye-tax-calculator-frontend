@@ -30,10 +30,11 @@ continue=Continue
 back = Back
 restart = Start again
 get_results=Get Results
-select_one=Please select one of these options.
 a=a
 
 feedback=Please provide us feedback on this service
+#TODO Allow formatting for quote marks
+select_one=Answer 'Yes' or 'No'
 
 quick_calc.title=HMRC Quick calculator
 quick_calc.header.title=PAYE Income Tax calculator
@@ -118,22 +119,22 @@ quick_calc.salary.question.tax_code_info=If you know it, your take-home pay esti
 quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
 quick_calc.salary.question.tax_code_info_url_b=recent payslip or P45 (opens in a new tab).
 
-quick_calc.salary.question.error.number_of_days.less_than_zero=Days per week must be at least 1
-quick_calc.salary.question.error.number_of_days.more_than_seven=Maximum days per week is 7
-quick_calc.salary.question.error.number_of_hours.less_than_one=Hours per week must be at least 1
-quick_calc.salary.question.error.number_of_hours.more_than_168=Maximum hours per week is 168
+quick_calc.salary.question.error.number_of_days.less_than_zero=Enter your days a week as a number between 1 and 7
+quick_calc.salary.question.error.number_of_days.more_than_seven=Enter your days a week as a number between 1 and 7
+quick_calc.salary.question.error.number_of_hours.less_than_one=Enter your hours a week as a number between 1 and 168
+quick_calc.salary.question.error.number_of_hours.more_than_168=Enter your hours a week as a number between 1 and 168
 
-quick_calc.salary.question.error.invalid_number_daily=Days per week must be a whole number
-quick_calc.salary.question.error.empty_number_daily=Please enter days worked
+quick_calc.salary.question.error.invalid_number_daily=Enter your days a week as a whole number
+quick_calc.salary.question.error.empty_number_daily=Enter how many days a week you work
 
-quick_calc.salary.question.error.invalid_number_hourly=Hours per week must be a whole number
-quick_calc.salary.question.error.empty_number_hourly=Please enter hours worked
+quick_calc.salary.question.error.invalid_number_hourly=Enter your hours a week as a whole number
+quick_calc.salary.question.error.empty_number_hourly=Enter how many hours a week you work
 quick_calc.salary.question.error.invalid_salary=Please enter amount in pounds and pence e.g. 123.45
 
-quick_calc.salary.question.error.maximum_salary_input=Maximum value for gross pay is £9999999.99
-quick_calc.salary.question.error.minimum_salary_input=The gross pay must be more than zero
+quick_calc.salary.question.error.maximum_salary_input=Enter your pay as a number less than £10,000,000.00
+quick_calc.salary.question.error.minimum_salary_input=Enter your pay as a number more than £0.00
 
-quick_calc.salary.question.error.empty_salary_input=Please enter your gross pay
+quick_calc.salary.question.error.empty_salary_input=Enter how much you get paid
 
 quick_calc.salary.question.error.empty_daily_salary_input=Please enter your daily rate
 quick_calc.salary.question.error.empty_hourly_salary_input=Please enter your hourly rate
@@ -147,7 +148,7 @@ quick_calc.over_state_pension_age.no=No
 
 quick_calc.about_tax_code.header=Do you want to use your current tax code?
 quick_calc.about_tax_code.has_tax_code=Enter your Tax Code
-quick_calc.about_tax_code.wrong_tax_code_suffix=The tax code you have entered is not valid - it must end with the letter L, M, N, or T
-quick_calc.about_tax_code.wrong_tax_code=The tax code you have entered is not valid. A tax code is usually made up of several numbers and a letter, e.g. 117L or K497 or S117L or SK497
+quick_calc.about_tax_code.wrong_tax_code_suffix=Enter your current tax code, finishing with the letter L, M, N or T
+quick_calc.about_tax_code.wrong_tax_code=Enter your current tax code as numbers and letters, for example 1117L, K497, S1117L or SK497
 quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
