@@ -192,6 +192,7 @@ object QuickCalcCacheSetup {
   val expectedScottishAnswer = "No"
 
   val expectedFieldErrorMessage = "This field is required"
+  val expectedWrongNumberTaxCodeErrorMessage = "Enter your current tax code, making sure the number is between 0 and 9999"
   val expectedSuffixTaxCodeErrorMessage = "Enter your current tax code, finishing with the letter L, M, N or T"
   val expectedInvalidTaxCodeErrorMessage = "Enter your current tax code as numbers and letters, for example 1117L, K497, S1117L or SK497"
 

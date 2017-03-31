@@ -152,3 +152,4 @@ quick_calc.about_tax_code.wrong_tax_code_suffix=Enter your current tax code, fin
 quick_calc.about_tax_code.wrong_tax_code=Enter your current tax code as numbers and letters, for example 1117L, K497, S1117L or SK497
 quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
+quick_calc.about_tax_code.wrong_tax_code_number=Enter your current tax code, making sure the number is between 0 and 9999
