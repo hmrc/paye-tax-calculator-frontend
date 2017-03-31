@@ -29,20 +29,20 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
     val salaryUrl =  routes.QuickCalcController.showSalaryForm().url
     val idSuffix = "income"
 
-    val yearlyLabel = Messages("quick_calc.salary.yearly")
-    YouHaveToldUs(Salary(2, "a year", None)) shouldBe YouHaveToldUsItem("£2", yearlyLabel, salaryUrl, idSuffix)
+    val yearlyLabel = "a_year"
+    YouHaveToldUs(Salary(2, "a year", None)) shouldBe YouHaveToldUsItem("£2 a year", yearlyLabel, salaryUrl, idSuffix)
 
-    val monthlyLabel = Messages("quick_calc.salary.monthly")
-    YouHaveToldUs(Salary(3, "a month", None)) shouldBe YouHaveToldUsItem("£3", monthlyLabel, salaryUrl, idSuffix)
+    val monthlyLabel = "a_month"
+    YouHaveToldUs(Salary(3, "a month", None)) shouldBe YouHaveToldUsItem("£3 a month", monthlyLabel, salaryUrl, idSuffix)
 
-    val weeklyLabel = Messages("quick_calc.salary.weekly")
-    YouHaveToldUs(Salary(1, "a week", None)) shouldBe YouHaveToldUsItem("£1", weeklyLabel, salaryUrl, idSuffix)
+    val weeklyLabel = "a_week"
+    YouHaveToldUs(Salary(1, "a week", None)) shouldBe YouHaveToldUsItem("£1 a week", weeklyLabel, salaryUrl, idSuffix)
 
-    val dailyLabel = Messages("quick_calc.salary.daily")
-    YouHaveToldUs(Salary(1, "a day", None)) shouldBe YouHaveToldUsItem("£1", dailyLabel,salaryUrl, idSuffix)
+    val dailyLabel = "a_day"
+    YouHaveToldUs(Salary(1, "a day", None)) shouldBe YouHaveToldUsItem("£1 a day", dailyLabel,salaryUrl, idSuffix)
 
-    val hourlyLabel = Messages("quick_calc.salary.hourly")
-    YouHaveToldUs(Salary(2, "an hour", None)) shouldBe YouHaveToldUsItem("£2", hourlyLabel, salaryUrl, idSuffix)
+    val hourlyLabel = "an_hour"
+    YouHaveToldUs(Salary(2, "an hour", None)) shouldBe YouHaveToldUsItem("£2 an hour", hourlyLabel, salaryUrl, idSuffix)
   }
 
   "Converting OverStatePensionAge to YouHaveToldUsItem" in {
