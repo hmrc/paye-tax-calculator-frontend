@@ -40,6 +40,8 @@ object QuickCalcCacheSetup {
     }
   }
 
+  val baseURL = "/paye-tax-calculator/"
+
   val taxCodeTest = YouHaveToldUsItem("1150L", "Tax Code", "/foo", "tax-code")
   val overStatePensionTest = YouHaveToldUsItem("YES", "Over 65", "/foo", "state_pension")
   val salaryYearlyTest = YouHaveToldUsItem("20000", "Per year", "/foo", "salary")
