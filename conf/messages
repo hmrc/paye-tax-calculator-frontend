@@ -95,7 +95,7 @@ quick_calc.result.info_url_c=Claim for a tax refund
 
 quick_calc.salary.header=How much do you get paid?
 quick_calc.salary.description_a=For each job you have, use the amount before tax and National Insurance are deducted. You can use the calculator as many times as you need.
-quick_calc.salary.description_b=For example, £7.20 and hour or £26500 a year.
+quick_calc.salary.description_b=For example, £7.20 an hour or £26500 a year.
 
 quick_calc.salary.yearly.label=a year
 quick_calc.salary.monthly.label=a month

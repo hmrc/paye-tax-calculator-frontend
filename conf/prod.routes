@@ -1,5 +1,6 @@
 # Add all the application routes to the app.routes file
 ->         /estimate-paye-take-home-pay       app.Routes
+->         /paye-tax-calculator               app.Routes
 ->         /                                  health.Routes
 ->     	   /template                          template.Routes
 

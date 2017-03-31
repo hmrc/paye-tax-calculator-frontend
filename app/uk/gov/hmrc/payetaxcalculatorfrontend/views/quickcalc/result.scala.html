@@ -5,12 +5,9 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
 @import uk.gov.hmrc.payetaxcalculatorfrontend.FrontendAppConfig
 
-@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
+@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String, detailStatus: String, print: Boolean)(implicit request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
-}
-@overMaxRate = @{
-  isOverMaxRate(summary)
 }
 
 @tabLabels = @{
@@ -21,11 +18,13 @@
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
+  <div class="grid-layout--stacked">
+
     <div class="grid-layout__column grid-layout__column--2-3">
 
       <a class="link-back" id="r-back" href="@routes.QuickCalcController.summary()">@Messages("back")</a>
 
-        <header class="page-header">
+        <header class="page-header no-print">
           <h2>@Messages("quick_calc.result.header")</h2>
         </header>
 
@@ -51,26 +50,26 @@
           </ul>
 
           @{
-            if(overMaxRate) result_detail_over_rate(quickCalcAggregateInput, taxYear)
-            else result_detail(quickCalcAggregateInput, taxYear)
+            if(summary.taxCode.head.equals('K')) result_detail_over_rate(quickCalcAggregateInput, taxYear, detailStatus)
+            else result_detail(quickCalcAggregateInput, taxYear, detailStatus)
           }
 
-          <p class="no-print"><a href="javascript:window.print()">@Messages("quick_calc.result.info_print")</a></p>
+          <p class="no-print"><a href="@routes.QuickCalcController.showPrint()">@Messages("quick_calc.result.info_print")</a></p>
 
-          <p>
+          <p class="no-print" >
             <li>@Messages("quick_calc.result.info_a") <a href="https://www.gov.uk/national-insurance-rates-letters/category-letters" target="_blank">@Messages("quick_calc.result.info_b")</a></li>
             <li>@Messages("quick_calc.result.info_e")</li>
           </p>
 
         </div>
         <br>
-        <a href="@{FrontendAppConfig.betaFeedbackUrl}">@Messages("feedback")</a>
+        <a class="no-print" href="@{FrontendAppConfig.betaFeedbackUrl}">@Messages("feedback")</a>
         <br><br>
-        <a href="@routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart" class="button" type="submit">@Messages("restart")</a>
+        <a class="no-print button" href="@routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart" type="submit">@Messages("restart")</a>
     </div>
 
     <div class="grid-layout__column grid-layout__column--1-3">
-      <aside style="margin-top: 30px; border-top: 10px solid #005ea5; padding-top: 5px; padding-left: 15px;">
+      <aside style="margin-top: 30px; border-top: 10px solid #005ea5; padding-top: 5px; padding-left: 30px;">
         <h2 class="heading-medium" id="subsection-title">@Messages("quick_calc.result.info_url_list")</h2>
         <p><a href="https://www.gov.uk/check-income-tax-last-year" target="_blank">@Messages("quick_calc.result.info_url_a")</a></p>
         <p><a href="https://www.gov.uk/tax-overpayments-and-underpayments" target="_blank">@Messages("quick_calc.result.info_url_b")</a></p>
@@ -78,6 +77,9 @@
       </aside>
     </div>
 
+  </div>
 
-
+  @if(print){
+    <body onload="javascript:window.print()">
+  }
 }
