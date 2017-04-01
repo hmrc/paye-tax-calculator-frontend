@@ -56,13 +56,6 @@ object UserTaxCode extends TaxCalculatorHelper {
             if (isValidTaxCode(taxCode, taxConfig(taxCode)))
               Right(Some(taxCode))
             else {
-//              if(!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{0,4}")) {
-//                Left(Seq(FormError(TAX_CODE, WRONG_TAX_CODE_NUMBER)))
-//              }
-//              else if (charList.contains(taxCode.last))
-//                Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY))))
-//              else
-//                Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY))))
               Left(wrongTaxCode(taxCode))
             }
           case None => Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY))))
