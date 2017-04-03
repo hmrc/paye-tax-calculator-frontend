@@ -25,6 +25,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc._
 import play.api.mvc._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult.getYear
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 import scala.concurrent.Future
@@ -51,7 +52,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          Ok(result(aggregate, date.taxYear, "close", print = false))
+          Ok(result(aggregate, getYear(date.taxYear), "close", print = false))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())

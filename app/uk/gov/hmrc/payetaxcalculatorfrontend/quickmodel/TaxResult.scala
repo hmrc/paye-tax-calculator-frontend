@@ -133,4 +133,8 @@ object TaxResult {
       case _ => formatter.format(value)
     }
   }
+
+  def getYear(value: String): String = {
+    value.replaceAll("Scotland ", "")
+  }
 }

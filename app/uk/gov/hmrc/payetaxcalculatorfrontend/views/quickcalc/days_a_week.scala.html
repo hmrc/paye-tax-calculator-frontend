@@ -22,7 +22,10 @@
         <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
         <ul>
           <li><a href="#howManyDaysAWeek">@{
-            Messages("quick_calc.salary.period_error_link")
+            if(daysForm.errors.head.message == Messages("quick_calc.salary.question.error.number_of_days.less_than_zero")){
+              Messages("quick_calc.salary.period_error_link_a")
+            }
+            else Messages("quick_calc.salary.period_error_link_b")
           }</a></li>
         </ul>
       </div>

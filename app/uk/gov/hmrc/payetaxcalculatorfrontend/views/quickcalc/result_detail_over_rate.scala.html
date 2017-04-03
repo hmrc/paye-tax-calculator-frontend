@@ -35,7 +35,10 @@
     </thead>
     <tbody>
       <tr>
-        <td style="width:66%">@{Messages("quick_calc.result.income_tax")}</td>
+        <td style="width:66%">@{
+          if(summary.taxCode.contains('S')) Messages("quick_calc.result.income_tax_scottish_adjusted")
+          else Messages("quick_calc.result.income_tax_adjusted")
+        }</td>
         <td>
           £@{
             moneyFormatter(incomeTax(breakdown))
@@ -66,7 +69,7 @@
           <thead >
             <tr>
               <th colspan="2" style="font-weight:normal">
-                @{s"${Messages("quick_calc.result.how_we_calculated.you_earn_a")} ${label.toLowerCase} " +
+                @{s"${Messages("quick_calc.result.how_we_calculated.you_earn_a")} " +
                     s"${Messages("quick_calc.result.how_we_calculated.you_earn_b")} "
                 }
               <span style="font-weight: 700">£@{moneyFormatter(breakdown.grossPay)}:</span>
@@ -81,7 +84,10 @@
               }</td>
             </tr>
             <tr>
-              <td style="width:66%">@{Messages("quick_calc.result.tax_free_allowance")}</td>
+              <td style="width:66%">@{
+                if(summary.taxCode.contains('S')) Messages("quick_calc.result.tax_free_allowance_scottish")
+                else Messages("quick_calc.result.tax_free_allowance")
+              }
               <td>£@{
                 moneyFormatter(breakdown.taxFreePay)
               }</td>
