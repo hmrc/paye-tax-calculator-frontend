@@ -41,11 +41,14 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   private val startOfHardcodedTaxYear = LocalDate.of(2017, 4, 6)
 
+  val suffixKeys = List('L', 'M', 'N', 'T')
   val WRONG_TAX_CODE_SUFFIX_KEY = "quick_calc.about_tax_code.wrong_tax_code_suffix"
   val WRONG_TAX_CODE_KEY = "quick_calc.about_tax_code.wrong_tax_code"
+  val WRONG_TAX_CODE_NUMBER = "quick_calc.about_tax_code.wrong_tax_code_number"
+
 
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
-    val charList = List('L', 'M', 'N', 'T')
+
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
       if (data.getOrElse(HAS_TAX_CODE, "false") == "true") {
         data.get(TAX_CODE).filter(_.nonEmpty)
@@ -54,10 +57,7 @@ object UserTaxCode extends TaxCalculatorHelper {
             if (isValidTaxCode(taxCode, taxConfig(taxCode)))
               Right(Some(taxCode))
             else {
-              if (charList.contains(taxCode.last))
-                Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY))))
-              else
-                Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY))))
+              Left(wrongTaxCode(taxCode))
             }
           case None => Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY))))
         }
@@ -65,6 +65,16 @@ object UserTaxCode extends TaxCalculatorHelper {
     }
 
     override def unbind(key: String, value: Option[String]): Map[String, String] = Map(key -> value.getOrElse(""))
+  }
+
+  def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
+    if(!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}")) {
+      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_NUMBER)))
+    }
+    else if (suffixKeys.contains(taxCode.last))
+      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY)))
+    else
+      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY)))
   }
 
   def form(implicit messages: Messages) = Form(

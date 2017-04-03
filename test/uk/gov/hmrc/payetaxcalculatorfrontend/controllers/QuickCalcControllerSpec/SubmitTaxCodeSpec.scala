@@ -81,6 +81,23 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       actualTableSize shouldBe 0
     }
 
+    "return 400, empty list of aggregate data and an error message when user selects \"Yes\" but Tax Code entered is 99999L" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("99999L")))
+      val action = await(csrfAddToken(controller.submitTaxCodeForm()))
+      val result = action(request.withFormUrlEncodedBody(formTax.data.toSeq: _*)).withSession(request.session + (SessionKeys.sessionId -> "test-tax"))
+      val status = result.header.status
+      val responseBody = contentAsString(result)
+      val parseHtml = Jsoup.parse(responseBody)
+
+      val actualTableSize = parseHtml.getElementsByTag("tr").size()
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualErrorMessage shouldBe expectedWrongNumberTaxCodeErrorMessage
+      actualTableSize shouldBe 0
+    }
+
     "return 400 when Tax Code Form submission is empty" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form
