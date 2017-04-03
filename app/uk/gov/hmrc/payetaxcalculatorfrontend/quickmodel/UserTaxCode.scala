@@ -68,7 +68,7 @@ object UserTaxCode extends TaxCalculatorHelper {
   }
 
   def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
-    if(!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{0,4}")) {
+    if(!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}")) {
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_NUMBER)))
     }
     else if (suffixKeys.contains(taxCode.last))
