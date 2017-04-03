@@ -20,6 +20,23 @@
 
     <a class="link-back" id="sp-back" href="@{youHaveToldUsItems.flatMap(y => if (labels.contains(y.label)) y.url else "")}">@Messages("back")</a>
 
+    <br>
+    <br>
+    @if(overStatePensionAgeForm.hasErrors) {
+      <div class="flash error-summary error-summary--show"
+      id="error-summary-display"
+      role="alert"
+      aria-labelledby="error-summary-heading"
+      tabindex="-1">
+        <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
+        <ul>
+          <li><a href="#overStatePensionAgeError">@{
+            Messages("quick_calc.over_state_pension_age_error_link")
+          }</a></li>
+        </ul>
+      </div>
+    }
+
     <h1 class="heading-large">@Messages("quick_calc.over_state_pension_age.header")</h1>
 
     <p>@Messages("quick_calc.salary.question.state_pension_url_a") <a href="https://www.gov.uk/state-pension-age" target="_blank">@Messages("quick_calc.salary.question.state_pension_url_b")</a>
@@ -31,14 +48,13 @@
       @helper.CSRF.formField
 
       <div class="form-group">
-        <fieldset class="inline form-field-group" id="overStatePensionAge">
+        <fieldset class="inline form-field-group">
 
           @if(overStatePensionAgeForm("overStatePensionAge").hasErrors){
-            <label class="form-field--error">
-              <div class="error-notification">
+            <fieldset class="form-field--error">
+              <div class="error-notification"  id="overStatePensionAgeError">
               @{overStatePensionAgeForm("overStatePensionAge").errors.head.message}
               </div>
-            </label>
           }
 
           <label class="block-label">@Messages("quick_calc.over_state_pension_age.yes")
@@ -56,7 +72,7 @@
             value="false"
               @if(radioField.value.contains("false")) { checked="checked" } />
           </label>
-
+        </fieldset>
         </fieldset>
       </div>
 

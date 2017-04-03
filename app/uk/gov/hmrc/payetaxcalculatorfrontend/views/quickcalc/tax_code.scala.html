@@ -15,6 +15,38 @@
 
     <a class="link-back" id="tc-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "over_state_pension_age") y.url else "")}">@Messages("back")</a>
 
+    <br>
+    <br>
+    @if(userTaxCodeForm("hasTaxCode").hasErrors) {
+      <div class="flash error-summary error-summary--show"
+      id="error-summary-display"
+      role="alert"
+      aria-labelledby="error-summary-heading"
+      tabindex="-1">
+        <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
+        <ul>
+          <li><a href="#hasTaxCodeError">@{
+            Messages("quick_calc.about_has_tax_code_error_link")
+          }</a></li>
+        </ul>
+      </div>
+    }
+
+    @if(userTaxCodeForm("taxCode").hasErrors) {
+      <div class="flash error-summary error-summary--show"
+      id="error-summary-display"
+      role="alert"
+      aria-labelledby="error-summary-heading"
+      tabindex="-1">
+        <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
+        <ul>
+          <li><a href="#taxCodeError">@{
+            Messages("quick_calc.about_tax_code_error_link")
+          }</a></li>
+        </ul>
+      </div>
+    }
+
     <h1 class="heading-large">@Messages("quick_calc.about_tax_code.header")</h1>
 
     <p>@Messages("quick_calc.salary.question.tax_code_info")</p>
@@ -33,12 +65,12 @@
         data-close="tax-code-no">
 
           @if(userTaxCodeForm("hasTaxCode").hasErrors){
-            <label class="form-field--error">
-              <div class="error-notification">
+            <fieldset class="form-field--error">
+              <div class="error-notification" id="hasTaxCodeError">
               @{userTaxCodeForm("hasTaxCode").errors.head.message}
               </div>
-            </label>
           }
+
           <label class="block-label" for="tax-code-yes">@Messages("quick_calc.about_tax_code.has_tax_code_yes")
             <input type="radio"
             id="tax-code-yes"
@@ -46,6 +78,9 @@
             name="hasTaxCode"
             value="true"
             @checkUserSelection(checkFor = true, userTaxCodeForm)
+            @if(userTaxCodeForm("taxCode").errors){
+              checked
+            }
             />
           </label>
 
@@ -58,12 +93,14 @@
             @checkUserSelection(checkFor = false, userTaxCodeForm)
             />
           </label>
+        </fieldset>
 
-          <div class="form-field-group form-field--error panel-indent @hideTextField(userTaxCodeForm)"
+          <div class="form-field-group @if(!userTaxCodeForm("taxCode").errors){panel-indent} @hideTextField(userTaxCodeForm)"
           id="tax-code-yes-target">
 
             @if(userTaxCodeForm("taxCode").errors){
-              <div class="error-notification">
+              <fieldset class="form-field--error">
+              <div class="error-notification" id="taxCodeError">
               @userTaxCodeForm("taxCode").errors.head.message
               </div>
             }
@@ -74,6 +111,7 @@
                 case _ => ""
               }
             }>
+          </fieldset>
 
           </div>
 

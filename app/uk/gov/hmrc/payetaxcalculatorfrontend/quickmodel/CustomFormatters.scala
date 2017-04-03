@@ -38,7 +38,7 @@ object CustomFormatters {
   def requiredSalaryPeriodFormatter(implicit messages: Messages): Formatter[String] = new Formatter[String] {
     override def bind(key: String, data: Map[String, String]) = {
       Right(data.getOrElse(key,"")).right.flatMap {
-        case "" => Left(Seq(FormError(key, Messages("select_one"))))
+        case "" => Left(Seq(FormError(key, Messages("quick_calc.salary.option_error"))))
         case p => Right(p)
       }
     }

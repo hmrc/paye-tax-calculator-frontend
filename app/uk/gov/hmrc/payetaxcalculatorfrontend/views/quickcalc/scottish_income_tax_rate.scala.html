@@ -11,6 +11,23 @@
 
     <a class="link-back" id="sr-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "about_tax_code") y.url else "")}">@Messages("back")</a>
 
+    <br>
+    <br>
+    @if(scottishRate.hasErrors) {
+      <div class="flash error-summary error-summary--show"
+      id="error-summary-display"
+      role="alert"
+      aria-labelledby="error-summary-heading"
+      tabindex="-1">
+        <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
+        <ul>
+          <li><a href="#scottishRateError">@{
+            Messages("quick_calc.salary.question.scottish_income_error_link")
+          }</a></li>
+        </ul>
+      </div>
+    }
+
     <h1 class="heading-large">@Messages("quick_calc.salary.question.scottish_income")</h1>
 
     <p>@Messages("quick_calc.salary.question.scottish_income_info")</p>
@@ -23,14 +40,14 @@
       @helper.CSRF.formField
 
       <div class="form-group">
-        <fieldset class="inline form-field-group" id="scottishRate">
+        <fieldset class="inline form-field-group">
 
           @if(scottishRate("scottishRate").hasErrors){
-            <label class="form-field--error">
-              <div class="error-notification">
+            <fieldset class="form-field--error">
+              <div class="error-notification" id="scottishRateError">
               @{scottishRate("scottishRate").errors.head.message}
               </div>
-            </label>
+
           }
 
           <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
@@ -48,7 +65,7 @@
             value="false"
               @if(radioField.value.contains("false")) { checked="checked" } />
           </label>
-
+        </fieldset>
         </fieldset>
       </div>
 
