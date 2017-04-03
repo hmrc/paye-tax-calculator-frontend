@@ -2,7 +2,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 
-@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
+@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String, detailStatus: String)(implicit request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
 }
@@ -22,7 +22,7 @@
   <p class="tab-content__first">
 <div class="data">
   <div class="transaction-banner--complete">
-<p style="margin:-0.5em 0 0.7em">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear is"}</p>
+<p style="margin:10px 0 15px">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear is"}</p>
   <span class="data-item bold-xlarge">£@{s"${moneyFormatter(breakdown.takeHomePay)} ${Messages("a")} ${label.toLowerCase}"}</span>
   </div>
 </div>
@@ -57,7 +57,7 @@
   <p>@{Messages("quick_calc.result.adjusted.info")}</p>
 
   <div class="form-group" style="margin-top:2em">
-    <details>
+    <details @detailStatus>
       <summary class="summary">
       @{Messages("quick_calc.result.how_we_calculated")}
       </summary>
@@ -101,3 +101,6 @@
   </li>
 }
 </ul>
+
+
+

@@ -131,7 +131,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
 
       val status = result.header.status
 
-      val expectedRedirect = "/estimate-paye-take-home-pay/state-pension"
+      val expectedRedirect = s"${baseURL}state-pension"
       val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303
@@ -148,7 +148,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
 
       val status = result.header.status
 
-      val expectedRedirect = "/estimate-paye-take-home-pay/state-pension"
+      val expectedRedirect = s"${baseURL}state-pension"
       val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303
@@ -164,7 +164,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
 
       val status = result.header.status
 
-      val expectedRedirect = "/estimate-paye-take-home-pay/your-answers"
+      val expectedRedirect = s"${baseURL}your-answers"
       val actualRedirect = redirectLocation(result).get
 
       status shouldBe 303

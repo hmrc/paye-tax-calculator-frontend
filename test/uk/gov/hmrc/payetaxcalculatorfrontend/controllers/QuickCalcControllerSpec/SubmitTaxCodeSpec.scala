@@ -106,7 +106,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val status = result.header.status
       val actualRedirectUri = redirectLocation(result).get
 
-      val expectedRedirectUri = "/estimate-paye-take-home-pay/your-answers"
+      val expectedRedirectUri = s"${baseURL}your-answers"
 
       status shouldBe 303
       actualRedirectUri shouldBe expectedRedirectUri
@@ -124,7 +124,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val status = result.header.status
       val actualRedirectUri = redirectLocation(result).get
 
-      val expectedRedirectUri = "/estimate-paye-take-home-pay/your-answers"
+      val expectedRedirectUri = s"${baseURL}your-answers"
 
       status shouldBe 303
       actualRedirectUri shouldBe expectedRedirectUri
@@ -142,7 +142,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val status = result.header.status
       val actualRedirectUri = redirectLocation(result).get
 
-      val expectedRedirectUri = "/estimate-paye-take-home-pay/your-answers"
+      val expectedRedirectUri = s"${baseURL}your-answers"
 
       status shouldBe 303
       actualRedirectUri shouldBe expectedRedirectUri

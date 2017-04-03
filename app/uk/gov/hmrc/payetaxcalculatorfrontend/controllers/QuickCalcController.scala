@@ -50,9 +50,20 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
-          println(aggregate)
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          Ok(result(aggregate, date.taxYear))
+          Ok(result(aggregate, date.taxYear, "close", print = false))
+        }
+        else redirectToNotYetDonePage(aggregate)
+      case None => Redirect(routes.QuickCalcController.showSalaryForm())
+    }
+  }
+
+  def showPrint(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+    cache.fetchAndGetEntry().map {
+      case Some(aggregate) =>
+        if (aggregate.allQuestionsAnswered) {
+          val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
+          Ok(result(aggregate, date.taxYear, "open", print = true))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
