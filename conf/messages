@@ -37,7 +37,7 @@ feedback=Please provide us feedback on this service
 select_one=Answer 'Yes' or 'No'
 
 quick_calc.title=HMRC Quick calculator
-quick_calc.header.title=PAYE Income Tax calculator
+quick_calc.header.title=Estimate your take-home pay
 
 quick_calc.you_have_told_us.header=Check your answers
 quick_calc.you_have_told_us.edit=Change
@@ -106,6 +106,12 @@ quick_calc.salary.option_error = Choose how often you get paid
 quick_calc.salary.option_error_link = You have not entered how much you get paid
 quick_calc.salary.amount_error_link = There is a problem with how much you have entered
 quick_calc.salary.error_header = Something is wrong
+
+quick_calc.salary.yearly.sub_label=a_year
+quick_calc.salary.monthly.sub_label=a_month
+quick_calc.salary.weekly.sub_label=a_week
+quick_calc.salary.daily.sub_label=a_day
+quick_calc.salary.hourly.sub_label=an_hour
 
 quick_calc.salary.question.approximate=If you don’t know, an approximate number is fine
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
