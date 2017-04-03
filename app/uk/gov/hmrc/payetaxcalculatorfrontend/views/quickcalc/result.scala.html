@@ -50,7 +50,7 @@
           </ul>
 
           @{
-            if(summary.taxCode.head.equals('K')) result_detail_over_rate(quickCalcAggregateInput, taxYear, detailStatus)
+            if(summary.taxCode.contains('K')) result_detail_over_rate(quickCalcAggregateInput, taxYear, detailStatus)
             else result_detail(quickCalcAggregateInput, taxYear, detailStatus)
           }
 
