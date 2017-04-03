@@ -123,7 +123,14 @@ object TaxResult {
 
   def moneyFormatter(value: BigDecimal): String ={
     val formatter = java.text.NumberFormat.getInstance
+    val money = """(.*)\.(\d)""".r
+    val outValue = formatter.format(value)
 
-    formatter.format(value)
+    outValue match {
+      case money(pounds, pins) => {
+        formatter.format(value)+"0"
+      }
+      case _ => formatter.format(value)
+    }
   }
 }

@@ -5,11 +5,11 @@
 @(overStatePensionAgeForm: Form[OverStatePensionAge], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
 @labels = @{
-  List(Messages("quick_calc.salary.yearly"),
-    Messages("quick_calc.salary.monthly"),
-    Messages("quick_calc.salary.weekly"),
-    Messages("quick_calc.salary.daily"),
-    Messages("quick_calc.salary.hourly"))
+  List(Messages("quick_calc.salary.yearly.sub_label"),
+    Messages("quick_calc.salary.monthly.sub_label"),
+    Messages("quick_calc.salary.weekly.sub_label"),
+    Messages("quick_calc.salary.daily.sub_label"),
+    Messages("quick_calc.salary.hourly.sub_label"))
 }
 
 @radioField = @{ overStatePensionAgeForm("overStatePensionAge") }
