@@ -41,10 +41,11 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   private val startOfHardcodedTaxYear = LocalDate.of(2017, 4, 6)
 
+  val suffixKeys = List('L', 'M', 'N', 'T')
   val WRONG_TAX_CODE_SUFFIX_KEY = "quick_calc.about_tax_code.wrong_tax_code_suffix"
   val WRONG_TAX_CODE_KEY = "quick_calc.about_tax_code.wrong_tax_code"
   val WRONG_TAX_CODE_NUMBER = "quick_calc.about_tax_code.wrong_tax_code_number"
-  val charList = List('L', 'M', 'N', 'T')
+
 
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
 
@@ -70,7 +71,7 @@ object UserTaxCode extends TaxCalculatorHelper {
     if(!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{0,4}")) {
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_NUMBER)))
     }
-    else if (charList.contains(taxCode.last))
+    else if (suffixKeys.contains(taxCode.last))
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY)))
     else
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY)))
