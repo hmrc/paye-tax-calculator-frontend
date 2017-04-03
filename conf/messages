@@ -95,13 +95,17 @@ quick_calc.result.info_url_c=Claim for a tax refund
 
 quick_calc.salary.header=How much do you get paid?
 quick_calc.salary.description_a=For each job you have, use the amount before tax and National Insurance are deducted. You can use the calculator as many times as you need.
-quick_calc.salary.description_b=For example, £7.20 and hour or £26500 a year.
+quick_calc.salary.description_b=For example, £7.20 an hour or £26500 a year.
 
 quick_calc.salary.yearly.label=a year
 quick_calc.salary.monthly.label=a month
 quick_calc.salary.weekly.label=a week
 quick_calc.salary.daily.label=a day
 quick_calc.salary.hourly.label=an hour
+quick_calc.salary.option_error = Choose how often you get paid
+quick_calc.salary.option_error_link = You have not entered how much you get paid
+quick_calc.salary.amount_error_link = There is a problem with how much you have entered
+quick_calc.salary.error_header = Something is wrong
 
 quick_calc.salary.question.approximate=If you don’t know, an approximate number is fine
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
@@ -110,15 +114,19 @@ quick_calc.salary.question.state_pension_url_a=You can
 quick_calc.salary.question.state_pension_url_b=check your State Pension age (opens in a new tab)
 quick_calc.salary.question.state_pension_url_c=if you are not sure
 quick_calc.salary.question.state_pension_inf=Anyone over State Pension age doesn't pay National Insurance contributions.
+
 quick_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax Rate?
 quick_calc.salary.question.scottish_income_info=You usually pay Scottish Income Tax if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
 quick_calc.salary.question.scottish_income_url_a=You can check if you pay
 quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a new tab)
 quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
+quick_calc.salary.question.scottish_income_error_link = You have not told us if you pay Scottish Income Tax
+
 quick_calc.salary.question.tax_code_info=If you know it, your take-home pay estimate will be more accurate. If you don't, we'll use the most common tax code instead.
 quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
 quick_calc.salary.question.tax_code_info_url_b=recent payslip or P45 (opens in a new tab).
 
+quick_calc.salary.period_error_link = There is a problem with the amount you have entered
 quick_calc.salary.question.error.number_of_days.less_than_zero=Enter your days a week as a number between 1 and 7
 quick_calc.salary.question.error.number_of_days.more_than_seven=Enter your days a week as a number between 1 and 7
 quick_calc.salary.question.error.number_of_hours.less_than_one=Enter your hours a week as a number between 1 and 168
@@ -145,7 +153,10 @@ quick_calc.salary.question.error.minimum_daily_salary_input=Daily rate must be a
 quick_calc.over_state_pension_age.header=Are you over state pension age?
 quick_calc.over_state_pension_age.yes=Yes
 quick_calc.over_state_pension_age.no=No
+quick_calc.over_state_pension_age_error_link = You have not told us if your are over the state pension age
 
+quick_calc.about_tax_code_error_link = You have not told us your tax code
+quick_calc.about_has_tax_code_error_link = You have not told us if you want to us the current tax code
 quick_calc.about_tax_code.header=Do you want to use your current tax code?
 quick_calc.about_tax_code.has_tax_code=Enter your Tax Code
 quick_calc.about_tax_code.wrong_tax_code_suffix=Enter your current tax code, finishing with the letter L, M, N or T
