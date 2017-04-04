@@ -117,7 +117,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     val value = BigDecimal(valueInPence) / 100
     Salary.salaryInHoursForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
-        _ => BadRequest(hours_a_week(valueInPence, formWithErrors, url))
+        _ => BadRequest(hours_a_week(valueInPence, formWithErrors, routes.QuickCalcController.showSalaryForm().url))
       },
       hours => {
         val updatedAggregate = cache.fetchAndGetEntry()
@@ -146,7 +146,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     val value = BigDecimal(valueInPence) / 100
     Salary.salaryInDaysForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
-        _ => BadRequest(days_a_week(valueInPence, formWithErrors, url))
+        _ => BadRequest(days_a_week(valueInPence, formWithErrors, routes.QuickCalcController.showSalaryForm().url))
       },
       days => {
         val updatedAggregate = cache.fetchAndGetEntry()
