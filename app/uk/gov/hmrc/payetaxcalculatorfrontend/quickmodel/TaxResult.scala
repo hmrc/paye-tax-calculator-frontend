@@ -21,6 +21,8 @@ import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
 
 object TaxResult {
 
+  val SCOTTISH_TAX_CODE_PREFIX = "SK"
+
   private[quickmodel] def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput): String =
     quickCalcAggregateInput.savedTaxCode match {
       case Some(s) => s.taxCode match {
@@ -105,7 +107,7 @@ object TaxResult {
   }
 
   def isOverMaxRate(grossPay: BigDecimal, maxTaxRate: BigDecimal, taxablePay: BigDecimal): Boolean = {
-    (grossPay * maxTaxRate / 100) < taxablePay
+    (grossPay * maxTaxRate / 100) <= taxablePay
   }
 
   def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput): TaxCalc = {
