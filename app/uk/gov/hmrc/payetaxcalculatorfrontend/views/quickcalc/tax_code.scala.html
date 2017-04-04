@@ -9,14 +9,12 @@
 
 @(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
-@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+@main_template(title = Messages("quick_calc.about_tax_code.header"), mainClass = Some("full-width")) {
 
   <div class="grid-layout__column grid-layout__column--2-3">
 
     <a class="link-back" id="tc-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "over_state_pension_age") y.url else "")}">@Messages("back")</a>
 
-    <br>
-    <br>
     @if(userTaxCodeForm("hasTaxCode").hasErrors) {
       <div class="flash error-summary error-summary--show"
       id="error-summary-display"
@@ -105,16 +103,18 @@
               </div>
             }
             @Messages("quick_calc.about_tax_code.has_tax_code")<br>
-            <input type="text" id="taxCode" name="taxCode" value=@{
+            <input type="text" id="taxCode" name="taxCode" value="@{
               userTaxCodeForm.value match {
                 case Some(userTaxCode) => userTaxCode.taxCode.getOrElse("")
                 case _ => ""
               }
-            }>
+            }">
+          <fieldset>
           </fieldset>
 
           </div>
 
+          <fieldset>
         </fieldset>
       </div>
 

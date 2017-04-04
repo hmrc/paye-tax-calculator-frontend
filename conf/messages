@@ -1,4 +1,4 @@
-legacy.title=HMRC Tax Calculator
+legacy.title=HMRC Estimate your take-home pay calculator
 legacy.introduction=Estimate how much Income Tax and National Insurance contributions you can expect to pay on your income – and find out how this money gets spent by the Government. The calculator is aimed at people who pay tax through Pay As You Earn (the system used by employers and pension providers to deduct tax from your wages or pension). It’s free and easy to use.
 legacy.scottish_taxpayer_intro=If you are a Scottish taxpayer you will need to enter your Scottish tax code, fo example "S1100L". For further information on the Scottish rate of Income Tax go to  
 legacy.scottish_income_tax=Scottish Income Tax
@@ -36,7 +36,7 @@ feedback=Tell us what you think of this calculator (opens in a new tab)
 #TODO Allow formatting for quote marks
 select_one=Answer ’Yes’ or ’No’
 
-quick_calc.title=HMRC Quick calculator
+quick_calc.title=HMRC Estimate your take-home pay calculator
 quick_calc.header.title=Estimate your take-home pay
 
 quick_calc.you_have_told_us.header=Check your answers
@@ -71,6 +71,7 @@ quick_calc.result.income=Income
 quick_calc.result.tax_free_allowance=your tax-free allowance is
 quick_calc.result.tax_free_allowance_scottish=your Scottish tax-free allowance is
 quick_calc.result.k_code=your ’k code’ pay adjustment
+quick_calc.result.sk_code=your ’sk code’ pay adjustment
 quick_calc.result.taxable_pay=your taxable pay is
 quick_calc.result.deductions=in total you pay
 quick_calc.result.income_tax=your Income Tax is
@@ -87,7 +88,7 @@ quick_calc.result.adjusted.info=HMRC can’t take more than 50% of your total pa
 quick_calc.result.tabLabels.year=Year
 quick_calc.result.tabLabels.month=Month
 quick_calc.result.tabLabels.week=Week
-quick_calc.result.info_a=We have based your National Insurance estimate on the most common
+quick_calc.result.info_a=We’ve estimated your National Insurance contribution based on the most common
 quick_calc.result.info_b=Class 1 options: Categories A, H and M (opens in a new tab)
 quick_calc.result.info_e=HMRC won’t keep a record of your data for security reasons.
 quick_calc.result.info_print=Print my calculation
