@@ -6,6 +6,8 @@
 
 @main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
 
+  <a class="link-back" id="tc-back" href="@{items.flatMap(y => if (y.label == "scottish_rate") y.url else "")}">@Messages("back")</a>
+
   @if(items.nonEmpty) {
     <table class="check-your-answers">
       <thead>

@@ -24,7 +24,10 @@
         <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
         <ul>
           <li><a href="#howManyHoursAWeek">@{
-            Messages("quick_calc.salary.period_error_link")
+            if(hoursForm.errors.head.message == Messages("quick_calc.salary.question.error.number_of_hours.less_than_one")){
+              Messages("quick_calc.salary.period_error_link_a")
+            }
+            else Messages("quick_calc.salary.period_error_link_c")
           }</a></li>
         </ul>
       </div>
