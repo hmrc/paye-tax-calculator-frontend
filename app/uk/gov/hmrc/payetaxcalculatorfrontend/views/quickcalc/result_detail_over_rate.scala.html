@@ -83,26 +83,26 @@
           </thead>
           <tbody>
             <tr>
-              <td style="width:66%">@{
+              <td id="k-adj-key" style="width:66%">@{
                 if(summary.taxCode.contains("SK")) Messages("quick_calc.result.sk_code")
                 else Messages("quick_calc.result.k_code")
               }</td>
-              <td>£@{
+              <td id="k-adj-value">£@{
                 moneyFormatter(breakdown.additionalTaxablePay)
               }</td>
             </tr>
             <tr>
-              <td style="width:66%">@{
+              <td id="tax-free-key" style="width:66%">@{
                 if(summary.taxCode.contains("SK")) Messages("quick_calc.result.tax_free_allowance_scottish")
                 else Messages("quick_calc.result.tax_free_allowance")
               }
-              <td>£@{
+              <td id="tax-free-value">£@{
                 moneyFormatter(breakdown.taxFreePay)
               }</td>
             </tr>
             <tr>
-              <td style="width:66%">@{Messages("quick_calc.result.taxable_pay")}</td>
-              <td>£@{
+              <td id="taxable-pay-key" style="width:66%">@{Messages("quick_calc.result.taxable_pay")}</td>
+              <td id="taxable-pay-value">£@{
                 moneyFormatter(breakdown.taxablePay)
               }</td>
             </tr>

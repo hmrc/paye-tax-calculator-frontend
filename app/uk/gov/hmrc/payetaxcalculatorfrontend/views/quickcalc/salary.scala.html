@@ -22,18 +22,22 @@
       tabindex="-1">
         <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
         <ul>
-          @for(error <- salaryForm.errors){
-            <li><a href="#@{error.message}">@{
-              if(error.message == Messages("quick_calc.salary.option_error")){
-                Messages("quick_calc.salary.option_error_link")
-              } else {
-                Messages("quick_calc.salary.amount_error_link")
-              }
-            }</a></li>
+          @if(salaryForm("amount").hasErrors){
+            <li><a href="#pay-amount">@{
+              Messages("quick_calc.salary.amount_error_link")
+            }
+            </a></li>
+          }
+          @if(salaryForm("period").hasErrors){
+            <li><a href="#periodError">@{
+              Messages("quick_calc.salary.option_error_link")
+            }
+            </a></li>
           }
         </ul>
       </div>
     }
+
     <h1 class="heading-large">@Messages("quick_calc.salary.header")</h1>
     <p>@Messages("quick_calc.salary.description_a")</p>
     <p>@Messages("quick_calc.salary.description_b")</p>
@@ -63,7 +67,7 @@
 
           @if(salaryForm("period").hasErrors){
             <fieldset class="form-field--error">
-              <div class="error-notification" id="@{salaryForm("period").errors.head.message}">
+              <div class="error-notification" id="periodError">
               @{salaryForm("period").errors.head.message}
               </div>
             }

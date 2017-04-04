@@ -70,18 +70,18 @@
           </thead>
           <tbody>
             <tr>
-              <td style="width:66%">@{
+              <td id="tax-free-key" style="width:66%">@{
                 if(summary.taxCode.contains('S')) Messages("quick_calc.result.tax_free_allowance_scottish")
                 else Messages("quick_calc.result.tax_free_allowance")
               }
              </td>
-              <td>£@{
+              <td id="tax-free-value">£@{
                 moneyFormatter(breakdown.taxFreePay)
               }</td>
             </tr>
             <tr>
-              <td style="width:66%">@{Messages("quick_calc.result.taxable_pay")}</td>
-              <td>£@{
+              <td id="taxable-pay-key" style="width:66%">@{Messages("quick_calc.result.taxable_pay")}</td>
+              <td id="taxable-pay-value">£@{
                 moneyFormatter(breakdown.taxablePay)
               }</td>
             </tr>
