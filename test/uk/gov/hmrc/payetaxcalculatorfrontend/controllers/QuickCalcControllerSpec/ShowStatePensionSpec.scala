@@ -27,7 +27,7 @@ class ShowStatePensionSpec extends AppUnitGenerator{
     "return 200, with existing list of aggregate data" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
       val action = csrfAddToken(controller.showStatePensionForm())
-      val result = action.apply(request)
+      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
 
       status shouldBe 200
@@ -36,10 +36,19 @@ class ShowStatePensionSpec extends AppUnitGenerator{
     "return 200, with emtpy list of aggregate data" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val action = csrfAddToken(controller.showStatePensionForm())
-      val result = action.apply(request)
+      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
 
       status shouldBe 200
+    }
+
+    "return 303, when the user has no token" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val action = csrfAddToken(controller.showStatePensionForm())
+      val result = action.apply(request)
+      val status = result.header.status
+
+      status shouldBe 303
     }
   }
 

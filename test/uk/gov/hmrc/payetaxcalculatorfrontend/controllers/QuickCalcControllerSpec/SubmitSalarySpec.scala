@@ -34,7 +34,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
 
       val formData = Map("value" -> "", "period" -> "yearly")
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.bind(formData).data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -54,7 +54,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
 
       val formData = Map("value" -> "", "period" -> "yearly")
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.bind(formData).data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -72,7 +72,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val formSalary = Salary.salaryBaseForm.fill(Salary(9.999,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -90,7 +90,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val formSalary = Salary.salaryBaseForm.fill(Salary(-1,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -108,7 +108,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val formSalary = Salary.salaryBaseForm.fill(Salary(10000000.00,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -127,7 +127,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
       val result = action(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
-        .withSession(SessionKeys.sessionId -> "test-salary"))
+        .withSession(SessionKeys.sessionId -> "test-salary").withSession("csrfToken" -> "someToken"))
 
       val status = result.header.status
 
@@ -144,7 +144,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
       val result = action(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
-        .withSession(SessionKeys.sessionId -> "test-salary"))
+        .withSession(SessionKeys.sessionId -> "test-salary").withSession("csrfToken" -> "someToken"))
 
       val status = result.header.status
 
@@ -159,7 +159,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
       val formSalary = Salary.salaryBaseForm.fill(Salary(20000,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
-      val result = action(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*)
+      val result = action(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*).withSession("csrfToken" -> "someToken")
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
       val status = result.header.status

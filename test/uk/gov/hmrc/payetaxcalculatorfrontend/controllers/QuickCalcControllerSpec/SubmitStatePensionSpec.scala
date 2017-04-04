@@ -31,7 +31,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
       val formAge = OverStatePensionAge.form
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formAge.data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-state_pension"))
 
@@ -45,7 +45,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
       val formAge = OverStatePensionAge.form
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-state_pension")
 
@@ -59,7 +59,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-state_pension")
 
@@ -77,7 +77,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(true))
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-state_pension")
 
@@ -95,7 +95,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formAge.data.toSeq: _*))
         .withSession(SessionKeys.sessionId -> "test-state_pension")
 

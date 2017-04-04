@@ -34,7 +34,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
 
       val days = Map("amount" -> "1", "howManyAWeek" -> "0")
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -53,7 +53,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
       val formSalary = Salary.salaryInDaysForm.fill(Days(1,8))
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -73,7 +73,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
 
       val daily = Map("amount"->"1", "howManyAWeek" -> "1.5")
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -93,7 +93,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
 
       val daily = Map("amount"->"1", "howManyAWeek" -> "1")
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -114,7 +114,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
 
       val daily = Map("amount"->"1", "howManyAWeek" -> "5")
 
-      val result = action(request
+      val result = action(request.withSession("csrfToken" -> "someToken")
         .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
