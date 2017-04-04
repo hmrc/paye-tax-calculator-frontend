@@ -40,8 +40,11 @@
       tabindex="-1">
         <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
         <ul>
-          <li><a href="#taxCodeError">@{
-            Messages("quick_calc.about_tax_code_error_link")
+          <li><a href="#taxCodeError">
+          @if(userTaxCodeForm("taxCode").value.isEmpty){
+            @Messages("quick_calc.about_tax_code_error_link")
+          }else{
+            @Messages("quick_calc.about_tax_code.wrong_tax_code_error_link")
           }</a></li>
         </ul>
       </div>

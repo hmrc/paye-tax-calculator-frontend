@@ -41,10 +41,13 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   private val startOfHardcodedTaxYear = LocalDate.of(2017, 4, 6)
 
+  val prefixKeys = List('K', 'S')
   val suffixKeys = List('L', 'M', 'N', 'T')
   val WRONG_TAX_CODE_SUFFIX_KEY = "quick_calc.about_tax_code.wrong_tax_code_suffix"
   val WRONG_TAX_CODE_KEY = "quick_calc.about_tax_code.wrong_tax_code"
   val WRONG_TAX_CODE_NUMBER = "quick_calc.about_tax_code.wrong_tax_code_number"
+  val WRONG_TAX_CODE_PREFIX_KEY = "quick_calc.about_tax_code.wrong_tax_code_prefix"
+
 
 
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
@@ -71,11 +74,14 @@ object UserTaxCode extends TaxCalculatorHelper {
     if(!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}")) {
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_NUMBER)))
     }
-    else if (suffixKeys.contains(taxCode.last))
-      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY)))
-    else
+    else if(taxCode.substring(0,1).matches("[A-Z]"))
+      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_PREFIX_KEY)))
+    else if(!suffixKeys.contains(taxCode.last))
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY)))
+    else
+      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY)))
   }
+
 
   def form(implicit messages: Messages) = Form(
     mapping(

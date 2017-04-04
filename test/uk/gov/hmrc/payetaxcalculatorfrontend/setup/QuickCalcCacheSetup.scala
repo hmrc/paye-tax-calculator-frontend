@@ -197,6 +197,7 @@ object QuickCalcCacheSetup {
   val expectedWrongNumberTaxCodeErrorMessage = "Enter your current tax code as numbers and letters, making sure the number is between 0 and 9999"
   val expectedSuffixTaxCodeErrorMessage = "Enter your current tax code, finishing with the letter L, M, N or T"
   val expectedInvalidTaxCodeErrorMessage = "Enter your current tax code as numbers and letters, for example 1117L, K497, S1117L or SK497"
+  val expectedPrefixTaxCodeErrorMessage = "Enter your current tax code, starting with the letter S or K, or the letters SK, followed by numbers"
 
   val expectedGrossPayErrorMessage = "Enter how much you get paid"
   val expectedEmptyErrorMessage = "Please enter numbers and \".\" only"
