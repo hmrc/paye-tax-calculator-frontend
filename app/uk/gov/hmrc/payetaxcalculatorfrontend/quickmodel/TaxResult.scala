@@ -134,7 +134,7 @@ object TaxResult {
     }
   }
 
-  def getYear(value: String): String = {
+  def omitScotland(value: String): String = {
     value.replaceAll("Scotland ", "")
   }
 }
