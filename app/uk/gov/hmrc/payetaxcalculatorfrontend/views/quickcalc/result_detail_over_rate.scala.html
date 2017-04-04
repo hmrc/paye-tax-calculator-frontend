@@ -58,7 +58,7 @@
   </table>
 
   @{
-    if(isOverMaxRate(summary.taxBreakdown.head.grossPay, summary.maxTaxRate, incomeTax(breakdown))){
+    if(isOverMaxRate(summary, breakdown)){
       <span class="heading-small">{Messages("quick_calc.result.adjusted.head")}</span>
       <p>{Messages("quick_calc.result.adjusted.info")}</p>
     }

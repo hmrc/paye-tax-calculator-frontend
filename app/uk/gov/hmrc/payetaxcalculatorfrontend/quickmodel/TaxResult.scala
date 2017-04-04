@@ -110,6 +110,14 @@ object TaxResult {
     (grossPay * maxTaxRate / 100) <= taxablePay
   }
 
+  def isOverMaxRate(summary: TaxCalc, breakdown: TaxBreakdown): Boolean = {
+    val grossPay = summary.taxBreakdown.head.grossPay
+    val maxTaxRate = summary.maxTaxRate
+    val taxablePay = incomeTax(breakdown)
+
+    isOverMaxRate(grossPay, maxTaxRate, taxablePay)
+  }
+
   def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput): TaxCalc = {
 
     val taxCode = extractTaxCode(quickCalcAggregateInput)
