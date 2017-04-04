@@ -78,7 +78,13 @@ object YouHaveToldUs {
     def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
       val label = s"${detail.period.replace(" ","_")}_sub"
       val idSuffix = "salary_period"
-      val url = routes.QuickCalcController.showSalaryForm().url
+      val url = {
+        detail.period match {
+          case "a day" => routes.QuickCalcController.showDaysAWeek(detail.amount, detail.url).url
+          case "an hour" => routes.QuickCalcController.showHoursAWeek(detail.amount, detail.url).url
+        }
+      }
+
       YouHaveToldUsItem(
         detail.howManyAWeek.toString, label, url, idSuffix)
     }

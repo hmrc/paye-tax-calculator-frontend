@@ -96,8 +96,8 @@ object QuickCalcCacheSetup {
   val cacheTestYearlySalary = Some(Salary(20000, "a year", None))
   val cacheTestDailySalary = Some(Salary(40, "a day", None))
   val cacheTestHourlySalary = Some(Salary(8, "an hour", None))
-  val cacheTestSalaryPeriodDaily = Some(Detail(5, "a day"))
-  val cacheTestSalaryPeriodHourly = Some(Detail(40, "an hour"))
+  val cacheTestSalaryPeriodDaily = Some(Detail(1, 5, "a day", ""))
+  val cacheTestSalaryPeriodHourly = Some(Detail(1, 40, "an hour", ""))
 
   val cacheTaxCode = Some(
     QuickCalcAggregateInput.newInstance.copy(
