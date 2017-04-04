@@ -107,9 +107,11 @@ quick_calc.salary.weekly.label=a week
 quick_calc.salary.daily.label=a day
 quick_calc.salary.hourly.label=an hour
 quick_calc.salary.option_error = Choose how often you get paid
-quick_calc.salary.option_error_link = You haven’t chosen how often you get paid
-quick_calc.salary.amount_error_link = There’s a problem with the amount you’ve entered
+quick_calc.salary.option_error_link = You haven`t chosen how often you get paid
+quick_calc.salary.amount_error_link = You haven`t entered how much you get paid
 quick_calc.salary.error_header = Something’s wrong
+
+
 
 quick_calc.salary.yearly.sub_label=a_year
 quick_calc.salary.monthly.sub_label=a_month
