@@ -5,14 +5,12 @@
 @(scottishRate: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 @radioField = @{ scottishRate("scottishRate") }
 
-@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+@main_template(title = Messages("quick_calc.salary.question.scottish_income"), mainClass = Some("full-width")) {
 
   <div class="grid-layout__column grid-layout__column--2-3">
 
     <a class="link-back" id="sr-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "about_tax_code") y.url else "")}">@Messages("back")</a>
 
-    <br>
-    <br>
     @if(scottishRate.hasErrors) {
       <div class="flash error-summary error-summary--show"
       id="error-summary-display"
@@ -47,7 +45,6 @@
               <div class="error-notification" id="scottishRateError">
               @{scottishRate("scottishRate").errors.head.message}
               </div>
-
           }
 
           <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
@@ -65,6 +62,7 @@
             value="false"
               @if(radioField.value.contains("false")) { checked="checked" } />
           </label>
+        <fieldset>
         </fieldset>
         </fieldset>
       </div>

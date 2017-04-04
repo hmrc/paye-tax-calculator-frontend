@@ -14,7 +14,7 @@
 
 <ul>
 @for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
-  <li id=@{"tabContent"+breakdown.period}
+  <li style="margin:0;" id=@{"tabContent"+breakdown.period}
   data-tab-content=@{breakdown.period}
     class="tab-content"
     role="tabpanel"
@@ -27,10 +27,11 @@
   </div>
 </div>
   <br>
+  <p style="font-weight:normal">@{Messages("quick_calc.result.total_deductions.info")}</p>
   <table style="width:100%">
     <thead>
       <tr>
-        <th colspan="3"><h3 style="font-weight:normal">@{Messages("quick_calc.result.total_deductions.info")}</h3></th>
+        <th colspan="2"><span style="display: none">@{Messages("quick_calc.result.total_deductions.info")}</span></th>
       </tr>
     </thead>
     <tbody>
@@ -56,8 +57,12 @@
     </tbody>
   </table>
 
-  <span class="heading-small">@{Messages("quick_calc.result.adjusted.head")}</span>
-  <p>@{Messages("quick_calc.result.adjusted.info")}</p>
+  @{
+    if(isOverMaxRate(summary, breakdown)){
+      <span class="heading-small">{Messages("quick_calc.result.adjusted.head")}</span>
+      <p>{Messages("quick_calc.result.adjusted.info")}</p>
+    }
+  }
 
   <div class="form-group" style="margin-top:2em">
     <details @detailStatus>
@@ -78,14 +83,17 @@
           </thead>
           <tbody>
             <tr>
-              <td id="k-adj-key" style="width:66%">@{Messages("quick_calc.result.k_code")}</td>
+              <td id="k-adj-key" style="width:66%">@{
+                if(summary.taxCode.contains(SCOTTISH_TAX_CODE_PREFIX)) Messages("quick_calc.result.sk_code")
+                else Messages("quick_calc.result.k_code")
+              }</td>
               <td id="k-adj-value">£@{
                 moneyFormatter(breakdown.additionalTaxablePay)
               }</td>
             </tr>
             <tr>
               <td id="tax-free-key" style="width:66%">@{
-                if(summary.taxCode.contains('S')) Messages("quick_calc.result.tax_free_allowance_scottish")
+                if(summary.taxCode.contains(SCOTTISH_TAX_CODE_PREFIX)) Messages("quick_calc.result.tax_free_allowance_scottish")
                 else Messages("quick_calc.result.tax_free_allowance")
               }
               <td id="tax-free-value">£@{
@@ -103,6 +111,7 @@
       </div>
     </details>
   </div>
+  <p>
   </p>
   </li>
 }

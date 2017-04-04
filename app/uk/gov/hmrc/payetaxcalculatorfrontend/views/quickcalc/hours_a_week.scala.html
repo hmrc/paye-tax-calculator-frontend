@@ -7,13 +7,11 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.Hours
 
 @(valueInPence:Int, hoursForm: Form[Hours], url: String)(implicit request: Request[_], messages: Messages)
-@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+@main_template(title = Messages("quick_calc.salary.question.hours_a_week"), mainClass = Some("full-width")) {
 
   <div class="grid-layout__column grid-layout__column--2-3">
 
     <a class="link-back" id="ph-back" href="@url">@Messages("back")</a>
-    <br>
-    <br>
 
     @if(hoursForm.hasErrors) {
       <div class="flash error-summary error-summary--show"
@@ -47,7 +45,9 @@
             @{hoursForm("howManyAWeek").errors.head.message}
             </div>
             }
+        <label for="howManyHoursAWeek" style="display:none">Hours</label>
         <input style= "display:inline " type="text" id="howManyHoursAWeek" name="howManyAWeek" maxlength="3" size="3" />
+        <label>
       </label>
       </fieldset>
 

@@ -54,7 +54,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          Ok(result(aggregate, omitScotland(date.taxYear), "close", print = false))
+          Ok(result(aggregate, omitScotland(date.taxYear), "", print = false))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
@@ -125,7 +125,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
         val updatedAggregate = cache.fetchAndGetEntry()
           .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
             .map(_.copy(savedSalary = Some(Salary(value, Messages("quick_calc.salary.hourly.label"), Some(hours.howManyAWeek))),
-                        savedPeriod = Some(Detail(hours.howManyAWeek, Messages("quick_calc.salary.hourly.label")))))
+                        savedPeriod = Some(Detail(valueInPence, hours.howManyAWeek, Messages("quick_calc.salary.hourly.label"), url))))
 
         updatedAggregate.flatMap( agg => {
           cache.save(agg).map( _ =>
@@ -154,7 +154,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
         val updatedAggregate = cache.fetchAndGetEntry()
           .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
             .map(_.copy(savedSalary = Some(Salary(value, Messages("quick_calc.salary.daily.label"), Some(days.howManyAWeek))),
-                        savedPeriod = Some(Detail(days.howManyAWeek,Messages("quick_calc.salary.daily.label")))))
+                        savedPeriod = Some(Detail(valueInPence, days.howManyAWeek,Messages("quick_calc.salary.daily.label"), url))))
 
         updatedAggregate.flatMap{ agg => {
           cache.save(agg)

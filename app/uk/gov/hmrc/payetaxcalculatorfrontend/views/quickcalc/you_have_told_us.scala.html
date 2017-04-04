@@ -4,17 +4,16 @@
 
 @(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
-@main_template(title = Messages("quick_calc.title"), mainClass = Some("full-width")) {
+@main_template(title = Messages("quick_calc.you_have_told_us.header"), mainClass = Some("full-width")) {
 
   <a class="link-back" id="tc-back" href="@{items.flatMap(y => if (y.label == "scottish_rate") y.url else "")}">@Messages("back")</a>
 
   @if(items.nonEmpty) {
+    <h1 class="heading-large">@Messages("quick_calc.you_have_told_us.header")</h1>
     <table class="check-your-answers">
       <thead>
           <th colspan="3">
-            <h1 class="heading-large">
-              @Messages("quick_calc.you_have_told_us.header")
-            </h1>
+            <span style="display:none">@Messages("quick_calc.you_have_told_us.header")</span>
           </th>
       </thead>
       <tbody>
