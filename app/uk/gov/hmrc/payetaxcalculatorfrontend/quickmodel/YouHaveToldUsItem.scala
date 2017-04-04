@@ -80,8 +80,8 @@ object YouHaveToldUs {
       val idSuffix = "salary_period"
       val url = {
         detail.period match {
-          case "a day" => routes.QuickCalcController.showDaysAWeek(detail.amount, detail.url).url
-          case "an hour" => routes.QuickCalcController.showHoursAWeek(detail.amount, detail.url).url
+          case "a day" => routes.QuickCalcController.showDaysAWeek(detail.amount, detail.urlForChange).url
+          case "an hour" => routes.QuickCalcController.showHoursAWeek(detail.amount, detail.urlForChange).url
         }
       }
 
