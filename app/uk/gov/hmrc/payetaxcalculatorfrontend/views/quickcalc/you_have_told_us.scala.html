@@ -15,7 +15,11 @@
   </div>
 
   <a class="link-back" id="tc-back"
-     href="@{items.flatMap(y => if (y.label == "scottish_rate") y.url else "")}">
+     href="@{items.flatMap(y => if (y.label == "scottish_rate") y.url else "") match {
+       case v if v.nonEmpty => v
+       case _ => routes.QuickCalcController.showTaxCodeForm().url
+     }
+     }">
     @Messages("back")
   </a>
 
