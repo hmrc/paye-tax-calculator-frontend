@@ -69,7 +69,9 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("OO9999")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
-      val result = action(request.withFormUrlEncodedBody(formTax.data.toSeq: _*)).withSession(request.session + (SessionKeys.sessionId -> "test-tax"))
+      val result = action(request.withSession("csrfToken" -> "someToken")
+        .withFormUrlEncodedBody(formTax.data.toSeq: _*))
+        .withSession(request.session + (SessionKeys.sessionId -> "test-tax"))
       val status = result.header.status
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
