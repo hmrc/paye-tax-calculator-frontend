@@ -10,6 +10,13 @@
 
 @main_template(title = Messages("quick_calc.salary.header"), mainClass = Some("full-width")) {
 
+  <div class="beta-banner--borderless" style="overflow: auto;width: 100%">
+    <p style="margin-top: 0">
+      <strong class="phase-tag">BETA</strong>
+      <span style="font-size: 16px">This is a new service – your <a href="/contact/beta-feedback-unauthenticated?service=PayeTaxCalculator">feedback</a> will help us to improve it.</span>
+    </p>
+  </div>
+
   <a class="link-back" id="r-back" href="#">@Messages("back")</a>
 
   <div class="grid-layout__column grid-layout__column--2-3">
@@ -73,7 +80,7 @@
             </div>
           } else {<fieldset>}
 
-          <legend class="visuallyhidden">@Messages("quick_calc.salary.header")</legend>
+          <legend class="visuallyhidden">@Messages("quick_calc.salary.sub_header")</legend>
 
           @for(label <- periodLabels) {
             <label class="block-label selection-button-radio">@Messages(s"quick_calc.salary.$label.label")
