@@ -18,11 +18,11 @@
 
 @main_template(title = Messages("quick_calc.result.header"), mainClass = Some("full-width")) {
 
+  <a class="link-back" id="r-back" href="@routes.QuickCalcController.summary()">@Messages("back")</a>
+
   <div class="grid-layout--stacked">
 
     <div class="grid-layout__column grid-layout__column--2-3">
-
-      <a class="link-back" id="r-back" href="@routes.QuickCalcController.summary()">@Messages("back")</a>
 
       <h1 class="heading-large">@Messages("quick_calc.result.header")</h1>
 
@@ -52,18 +52,18 @@
             else result_detail(quickCalcAggregateInput, taxYear, detailStatus)
           }
 
-          <p class="no-print"><a href="@routes.QuickCalcController.showPrint()">@Messages("quick_calc.result.info_print")</a></p>
+          <p class="dont-print"><a href="@routes.QuickCalcController.showPrint()">@Messages("quick_calc.result.info_print")</a></p>
 
-          <ul class="no-print">
+          <ul class="dont-print">
             <li style="margin:0;">@Messages("quick_calc.result.info_a") <a href="https://www.gov.uk/national-insurance-rates-letters/category-letters" target="_blank">@Messages("quick_calc.result.info_b")</a></li>
             <li style="margin:0;">@Messages("quick_calc.result.info_e")</li>
           </ul>
 
         </div>
         <br>
-        <a class="no-print" href="@{FrontendAppConfig.betaFeedbackUrl}" target="_blank">@Messages("feedback")</a>
+        <a class="dont-print" href="@{FrontendAppConfig.betaFeedbackUrl}" target="_blank">@Messages("feedback")</a>
         <br><br>
-        <a class="no-print button" href="@routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart" type="submit">@Messages("restart")</a>
+        <a class="dont-print button" role="button" href="@routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart">@Messages("restart")</a>
     </div>
 
     <div class="grid-layout__column grid-layout__column--1-3">

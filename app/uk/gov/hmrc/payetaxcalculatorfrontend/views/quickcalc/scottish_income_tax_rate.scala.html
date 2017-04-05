@@ -7,9 +7,9 @@
 
 @main_template(title = Messages("quick_calc.salary.question.scottish_income"), mainClass = Some("full-width")) {
 
-  <div class="grid-layout__column grid-layout__column--2-3">
+  <a class="link-back" id="sr-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "about_tax_code") y.url else "")}">@Messages("back")</a>
 
-    <a class="link-back" id="sr-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "about_tax_code") y.url else "")}">@Messages("back")</a>
+  <div class="grid-layout__column grid-layout__column--2-3">
 
     @if(scottishRate.hasErrors) {
       <div class="flash error-summary error-summary--show"
@@ -40,30 +40,32 @@
       <div class="form-group">
         <fieldset class="inline form-field-group">
 
-          @if(scottishRate("scottishRate").hasErrors){
-            <fieldset class="form-field--error">
-              <div class="error-notification" id="scottishRateError">
-              @{scottishRate("scottishRate").errors.head.message}
-              </div>
-          }
+            @if(scottishRate("scottishRate").hasErrors){
+              <fieldset class="form-field--error">
+                <div class="error-notification" id="scottishRateError">
+                @{scottishRate("scottishRate").errors.head.message}
+                </div>
+            } else {<fieldset>}
 
-          <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
-            <input type="radio"
-            id="scottishRate-yes"
-            name="scottishRate"
-            value="true"
-              @if(radioField.value.contains("true")) { checked="checked" } />
-          </label>
+            <legend class="visuallyhidden">@Messages("quick_calc.salary.question.scottish_income")</legend>
 
-          <label class="block-label" for="scottishRate-no">@Messages("quick_calc.over_state_pension_age.no")
-            <input type="radio"
-            id="scottishRate-no"
-            name="scottishRate"
-            value="false"
-              @if(radioField.value.contains("false")) { checked="checked" } />
-          </label>
-        <fieldset>
-        </fieldset>
+            <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
+              <input type="radio"
+              id="scottishRate-yes"
+              name="scottishRate"
+              value="true"
+                @if(radioField.value.contains("true")) { checked="checked" } />
+            </label>
+
+            <label class="block-label" for="scottishRate-no">@Messages("quick_calc.over_state_pension_age.no")
+              <input type="radio"
+              id="scottishRate-no"
+              name="scottishRate"
+              value="false"
+                @if(radioField.value.contains("false")) { checked="checked" } />
+            </label>
+
+          </fieldset>
         </fieldset>
       </div>
 

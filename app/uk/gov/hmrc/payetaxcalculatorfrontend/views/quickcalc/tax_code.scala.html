@@ -11,9 +11,9 @@
 
 @main_template(title = Messages("quick_calc.about_tax_code.header"), mainClass = Some("full-width")) {
 
-  <div class="grid-layout__column grid-layout__column--2-3">
+  <a class="link-back" id="tc-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "over_state_pension_age") y.url else "")}">@Messages("back")</a>
 
-    <a class="link-back" id="tc-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "over_state_pension_age") y.url else "")}">@Messages("back")</a>
+  <div class="grid-layout__column grid-layout__column--2-3">
 
     @if(userTaxCodeForm("hasTaxCode").hasErrors) {
       <div class="flash error-summary error-summary--show"
@@ -67,7 +67,9 @@
               <div class="error-notification" id="hasTaxCodeError">
               @{userTaxCodeForm("hasTaxCode").errors.head.message}
               </div>
-          }
+          } else {<fieldset>}
+
+          <legend class="visuallyhidden">@Messages("quick_calc.about_tax_code.header")</legend>
 
           <label class="block-label" for="tax-code-yes">@Messages("quick_calc.about_tax_code.has_tax_code_yes")
             <input type="radio"
@@ -101,7 +103,7 @@
               <div class="error-notification" id="taxCodeError">
               @userTaxCodeForm("taxCode").errors.head.message
               </div>
-            }
+            } else {<fieldset>}
             @Messages("quick_calc.about_tax_code.has_tax_code")<br>
             <input type="text" id="taxCode" name="taxCode" value="@{
               userTaxCodeForm.value match {
@@ -109,12 +111,10 @@
                 case _ => ""
               }
             }">
-          <fieldset>
-          </fieldset>
+
+            </fieldset>
 
           </div>
-
-          <fieldset>
         </fieldset>
       </div>
 

@@ -16,9 +16,9 @@
 
 @main_template(title = Messages("quick_calc.over_state_pension_age.header"), mainClass = Some("full-width")) {
 
-  <div class="grid-layout__column grid-layout__column--2-3">
+  <a class="link-back" id="sp-back" href="@{youHaveToldUsItems.flatMap(y => if (labels.contains(y.label)) y.url else "")}">@Messages("back")</a>
 
-    <a class="link-back" id="sp-back" href="@{youHaveToldUsItems.flatMap(y => if (labels.contains(y.label)) y.url else "")}">@Messages("back")</a>
+  <div class="grid-layout__column grid-layout__column--2-3">
 
     @if(overStatePensionAgeForm.hasErrors) {
       <div class="flash error-summary error-summary--show"
@@ -53,25 +53,27 @@
               <div class="error-notification"  id="overStatePensionAgeError">
               @{overStatePensionAgeForm("overStatePensionAge").errors.head.message}
               </div>
-          }
+          } else {<fieldset>}
 
-          <label class="block-label">@Messages("quick_calc.over_state_pension_age.yes")
-            <input type="radio"
-            id="overStatePensionAgeYes"
-            name="overStatePensionAge"
-            value="true"
-              @if(radioField.value.contains("true")) { checked="checked" } />
-          </label>
+            <legend class="visuallyhidden">@Messages("quick_calc.over_state_pension_age.header")</legend>
 
-          <label class="block-label">@Messages("quick_calc.over_state_pension_age.no")
-            <input type="radio"
-            id="overStatePensionAgeNo"
-            name="overStatePensionAge"
-            value="false"
-              @if(radioField.value.contains("false")) { checked="checked" } />
-          </label>
-          <fieldset>
-        </fieldset>
+            <label class="block-label">@Messages("quick_calc.over_state_pension_age.yes")
+              <input type="radio"
+              id="overStatePensionAgeYes"
+              name="overStatePensionAge"
+              value="true"
+                @if(radioField.value.contains("true")) { checked="checked" } />
+            </label>
+
+            <label class="block-label">@Messages("quick_calc.over_state_pension_age.no")
+              <input type="radio"
+              id="overStatePensionAgeNo"
+              name="overStatePensionAge"
+              value="false"
+                @if(radioField.value.contains("false")) { checked="checked" } />
+            </label>
+
+          </fieldset>
         </fieldset>
       </div>
 

@@ -40,6 +40,9 @@ quick_calc.title=HMRC Estimate your take-home pay calculator
 quick_calc.header.title=Estimate your take-home pay
 
 quick_calc.you_have_told_us.header=Check your answers
+quick_calc.you_have_told_us.header_question=We asked
+quick_calc.you_have_told_us.header_answers=You answered
+quick_calc.you_have_told_us.header_change_link=You can
 quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=Do you want to use your current tax code?
@@ -70,8 +73,8 @@ quick_calc.result.total_deductions.info=Based on the information you’ve given 
 quick_calc.result.income=Income
 quick_calc.result.tax_free_allowance=your tax-free allowance is
 quick_calc.result.tax_free_allowance_scottish=your Scottish tax-free allowance is
-quick_calc.result.k_code=your ’k code’ pay adjustment
-quick_calc.result.sk_code=your ’sk code’ pay adjustment
+quick_calc.result.k_code=your ’K code’ pay adjustment
+quick_calc.result.sk_code=your ’SK code’ pay adjustment
 quick_calc.result.taxable_pay=your taxable pay is
 quick_calc.result.deductions=in total you pay
 quick_calc.result.income_tax=your Income Tax is
@@ -108,8 +111,8 @@ quick_calc.salary.weekly.label=a week
 quick_calc.salary.daily.label=a day
 quick_calc.salary.hourly.label=an hour
 quick_calc.salary.option_error = Choose how often you get paid
-quick_calc.salary.option_error_link = You haven`t chosen how often you get paid
-quick_calc.salary.amount_error_link = You haven`t entered how much you get paid
+quick_calc.salary.option_error_link = You haven’t chosen how often you get paid
+quick_calc.salary.amount_error_link = You haven’t entered how much you get paid
 quick_calc.salary.error_header = Something’s wrong
 
 quick_calc.salary.yearly.sub_label=a_year
