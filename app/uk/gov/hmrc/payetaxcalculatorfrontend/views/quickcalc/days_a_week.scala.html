@@ -8,9 +8,9 @@
 @(valueInPence:Int, daysForm: Form[Days], url: String)(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.salary.question.days_a_week"), mainClass = Some("full-width")) {
 
-  <div class="grid-layout__column grid-layout__column--2-3">
+  <a class="link-back" id="pd-back" href="@url">@Messages("back")</a>
 
-    <a class="link-back" id="pd-back" href="@url">@Messages("back")</a>
+  <div class="grid-layout__column grid-layout__column--2-3">
 
     @if(daysForm.hasErrors) {
       <div class="flash error-summary error-summary--show"
@@ -36,23 +36,24 @@
     @helper.form(action = controllers.routes.QuickCalcController.submitDaysAWeek(valueInPence)) {
       @helper.CSRF.formField
 
-      <fieldset class="form-field-group">
-        @if(daysForm("howManyAWeek").hasErrors){
-          <label class="form-field--error">
-            <div class="error-notification">
-            @{daysForm("howManyAWeek").errors.head.message}
-            </div>
+      <div class="form-group">
+        <fieldset class="form-field-group">
+          @if(daysForm("howManyAWeek").hasErrors){
+            <label class="form-field--error">
+              <span class="error-notification">
+              @{daysForm("howManyAWeek").errors.head.message}
+              </span>
+          } else {<label>}
 
-            }
+          <span class="visuallyhidden">Days</span>
+          <input style= "display:inline " type="text" id="howManyDaysAWeek" name="howManyAWeek" maxlength="1" size="1" />
 
-        <label for="howManyDaysAWeek" style="display:none">Days</label>
-        <input style= "display:inline " type="text" id="howManyDaysAWeek" name="howManyAWeek" maxlength="1" size="1" />
-        <label>
-      </label>
+          </label>
 
-      </fieldset>
+        </fieldset>
 
-      <input type="hidden" id="num-days" name="amount" value=@valueInPence>
+        <input type="hidden" id="num-days" name="amount" value=@valueInPence>
+      </div>
 
       <div class="form-group">
         <input type="submit" id="pd-continue" class="button" value="@Messages("continue")">

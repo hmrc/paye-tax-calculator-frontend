@@ -1,0 +1,11 @@
+@media print {
+  .print-hidden, .header-wrapper, .service-info, .report-error, a[href]:after {
+    display: none !important;
+  }
+  a:link, a:visited, a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.content__body {width:100%;}

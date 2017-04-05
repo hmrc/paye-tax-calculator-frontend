@@ -9,14 +9,13 @@
 @import uk.gov.hmrc.play.views.html.layouts
 
 @serviceInfoContent = {
-  <br />
-  <br />
-    <div class="no-print beta-banner beta-banner--borderless">
-    <p class="no-print" >
+
+  <div class="phase-banner beta-banner--borderless" style="overflow: auto;width: 100%">
+    <p>
       <strong class="phase-tag">BETA</strong>
-      <span>This is a new service – your <a href="@FrontendAppConfig.betaFeedbackUrl">feedback</a> will help us to improve it.</span>
+      <span>This is a new service – your <a href="/contact/beta-feedback-unauthenticated?service=PayeTaxCalculator">feedback</a> will help us to improve it.</span>
     </p>
-    </div>
+  </div>
 
 }
 
@@ -34,7 +33,6 @@
 
 @scriptElems = {
     <script src="@routes.Assets.at("javascripts/ga-events-emit.js")" type="text/javascript"></script>
-
     @if(scriptElem.isDefined){@scriptElem}
 }
 

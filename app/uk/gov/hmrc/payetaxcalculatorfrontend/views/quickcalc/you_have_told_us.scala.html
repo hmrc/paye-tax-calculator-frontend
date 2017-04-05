@@ -1,33 +1,52 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUsItem
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import play.api.i18n._
+@import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
 
 @(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
 @main_template(title = Messages("quick_calc.you_have_told_us.header"), mainClass = Some("full-width")) {
 
-  <a class="link-back" id="tc-back" href="@{items.flatMap(y => if (y.label == "scottish_rate") y.url else "")}">@Messages("back")</a>
+  <a class="link-back" id="tc-back"
+     href="@{items.flatMap(y => if (y.label == "scottish_rate") y.url else "")}">
+    @Messages("back")
+  </a>
 
   @if(items.nonEmpty) {
     <h1 class="heading-large">@Messages("quick_calc.you_have_told_us.header")</h1>
-    <table class="check-your-answers">
-      <thead>
-          <th colspan="3">
-            <span style="display:none">@Messages("quick_calc.you_have_told_us.header")</span>
-          </th>
-      </thead>
-      <tbody>
-      @items.map { item =>
-        <tr>
-          <td style="width:50%">@Messages(s"quick_calc.you_have_told_us.${item.label}.label")</td>
-          <td id="value-@item.idSuffix">@item.value</td>
-          <td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")</a></td>
-        </tr>
-      }
-      </tbody>
-    </table>
 
-    <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.showResult()" id="get-results" class="button" type="submit">@Messages("get_results")</a>
+    <div class="form-group">
+      <table class="check-your-answers">
+        <thead>
+          <tr>
+            <th>
+              <span class="visuallyhidden">@Messages("quick_calc.you_have_told_us.header_question")</span>
+            </th>
+            <th>
+              <span class="visuallyhidden">@Messages("quick_calc.you_have_told_us.header_answers")</span>
+            </th>
+            <th>
+              <span class="visuallyhidden">@Messages("quick_calc.you_have_told_us.header_change_link")</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+        @items.map { item =>
+          <tr>
+            <td style="width:50%">@Messages(s"quick_calc.you_have_told_us.${item.label}.label")</td>
+            <td id="value-@item.idSuffix">@item.value</td>
+            <td><a href="@item.url" id="edit-@item.idSuffix">@Messages("quick_calc.you_have_told_us.edit")
+              <span class="visuallyhidden">@{{Messages(s"quick_calc.you_have_told_us.${item.label}.label")}.replace("?","")}</span>
+            </a></td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-group">
+      <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.showResult()" id="get-results" role="button" class="button">@Messages("get_results")</a>
+    </div>
   }
 
 }

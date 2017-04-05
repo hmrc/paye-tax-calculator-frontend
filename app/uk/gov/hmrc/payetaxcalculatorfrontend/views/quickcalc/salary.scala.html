@@ -10,9 +10,9 @@
 
 @main_template(title = Messages("quick_calc.salary.header"), mainClass = Some("full-width")) {
 
-  <div class="grid-layout__column grid-layout__column--2-3">
+  <a class="link-back" id="r-back" href="#">@Messages("back")</a>
 
-    <a class="link-back" id="r-back" href="#">@Messages("back")</a>
+  <div class="grid-layout__column grid-layout__column--2-3">
 
     @if(salaryForm.hasErrors) {
       <div class="flash error-summary error-summary--show"
@@ -48,42 +48,43 @@
       <div class="form-group">
 
         <fieldset class="form-field-group">
-
           @if(salaryForm("amount").hasErrors){
             <label class="form-field--error">
-              <div class="error-notification" id="@{salaryForm("amount").errors.head.message}">
-              @{salaryForm("amount").errors.head.message}
-              </div>
-              }
+            <span class="error-notification" id="@{salaryForm("amount").errors.head.message.replaceAll(" ", "_")}">
+            @{salaryForm("amount").errors.head.message}
+            </span>
+          } else {<label>}
 
-              <label for="pay-amount" style="display:none">Amount</label>
-                <span>£</span>
-                <input type="text" id="pay-amount" name="amount" value="@{radioFieldAmount.value}" />
-              <label>
+          <span class="visuallyhidden">Amount</span>
+          <span>£</span>
+          <input type="number" id="pay-amount" name="amount" value="@{radioFieldAmount.value}" />
+
+          </label>
+
+        </fieldset>
+
+      </div>
+
+      <div class="form-group">
+        @if(salaryForm("period").hasErrors){
+          <fieldset class="form-field--error">
+            <div class="error-notification" id="periodError">
+            @{salaryForm("period").errors.head.message}
+            </div>
+          } else {<fieldset>}
+
+          <legend class="visuallyhidden">@Messages("quick_calc.salary.header")</legend>
+
+          @for(label <- periodLabels) {
+            <label class="block-label selection-button-radio">@Messages(s"quick_calc.salary.$label.label")
+            <input type="radio"
+            name="period"
+            id="@label"
+            value="@Messages(s"quick_calc.salary.$label.label")"
+              @if(radioFieldPeriod.value.contains(Messages(s"quick_calc.salary.$label.label"))) { checked="checked" } />
             </label>
-          <br>
-          <br>
+          }
 
-
-          @if(salaryForm("period").hasErrors){
-            <fieldset class="form-field--error">
-              <div class="error-notification" id="periodError">
-              @{salaryForm("period").errors.head.message}
-              </div>
-            }
-
-            @for(label <- periodLabels) {
-              <label class="block-label selection-button-radio">@Messages(s"quick_calc.salary.$label.label")
-              <input type="radio"
-              name="period"
-              id="@label"
-              value="@Messages(s"quick_calc.salary.$label.label")"
-                @if(radioFieldPeriod.value.contains(Messages(s"quick_calc.salary.$label.label"))) { checked="checked" } />
-              </label>
-
-            }
-            <fieldset>
-            </fieldset>
         </fieldset>
       </div>
 
