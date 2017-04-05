@@ -36,8 +36,6 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
 
   implicit val anyContentBodyParser: BodyParser[AnyContent] = parse.anyContent
 
-  val salaryUrl: String = routes.QuickCalcController.showSalaryForm().url
-
   def redirectToSalaryForm() = ActionWithSessionId { implicit request =>
     Redirect(routes.QuickCalcController.showSalaryForm())
   }
@@ -123,11 +121,11 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = tokenAction { implicit request =>
-    val url = request.uri
+    val url = routes.QuickCalcController.showSalaryForm().url
     val value = BigDecimal(valueInPence) / 100
     Salary.salaryInHoursForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
-        _ => BadRequest(hours_a_week(valueInPence, formWithErrors, salaryUrl))
+        _ => BadRequest(hours_a_week(valueInPence, formWithErrors, url))
       },
       hours => {
         val updatedAggregate = cache.fetchAndGetEntry()
@@ -152,11 +150,11 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = tokenAction { implicit request =>
-    val url = request.uri
+    val url = routes.QuickCalcController.showSalaryForm().url
     val value = BigDecimal(valueInPence) / 100
     Salary.salaryInDaysForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
-        _ => BadRequest(days_a_week(valueInPence, formWithErrors, salaryUrl))
+        _ => BadRequest(days_a_week(valueInPence, formWithErrors, url))
       },
       days => {
         val updatedAggregate = cache.fetchAndGetEntry()
