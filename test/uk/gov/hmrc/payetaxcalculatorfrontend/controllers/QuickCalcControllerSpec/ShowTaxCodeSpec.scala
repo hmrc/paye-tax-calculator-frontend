@@ -27,7 +27,7 @@ class ShowTaxCodeSpec extends AppUnitGenerator {
 
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val action = csrfAddToken(controller.showTaxCodeForm())
-      val result = action.apply(request)
+      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
 
       status shouldBe 200
@@ -36,10 +36,19 @@ class ShowTaxCodeSpec extends AppUnitGenerator {
     "return 200 and a list of current aggregate data containing Tax Code: 1150L" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val action = csrfAddToken(controller.showTaxCodeForm())
-      val result = action.apply(request)
+      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
 
       status shouldBe 200
+    }
+
+    "return 303, when the user has no token" in {
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
+      val action = csrfAddToken(controller.showTaxCodeForm())
+      val result = action.apply(request)
+      val status = result.header.status
+
+      status shouldBe 303
     }
   }
 

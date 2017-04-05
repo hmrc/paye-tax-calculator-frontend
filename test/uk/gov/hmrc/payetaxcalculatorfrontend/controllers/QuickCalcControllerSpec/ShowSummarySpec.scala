@@ -30,7 +30,7 @@ class ShowSummarySpec extends AppUnitGenerator {
 
       val controller = new QuickCalcController(messages.messages, cacheReturnCompleteYearly)
       val action = csrfAddToken(controller.summary())
-      val result = action.apply(request)
+      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
@@ -64,7 +64,7 @@ class ShowSummarySpec extends AppUnitGenerator {
 
       val controller = new QuickCalcController(messages.messages, cacheReturnCompleteDaily)
       val action = csrfAddToken(controller.summary())
-      val result = action.apply(request)
+      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
@@ -102,7 +102,7 @@ class ShowSummarySpec extends AppUnitGenerator {
 
       val controller = new QuickCalcController(messages.messages, cacheReturnCompleteHourly)
       val action = csrfAddToken(controller.summary())
-      val result = action.apply(request)
+      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
