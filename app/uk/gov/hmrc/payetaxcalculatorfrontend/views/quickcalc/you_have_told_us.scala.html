@@ -7,7 +7,6 @@
 
 @main_template(title = Messages("quick_calc.you_have_told_us.header"), mainClass = Some("full-width")) {
 
-  @items
   <a class="link-back" id="tc-back"
      href="@{items.flatMap(y => if (y.label == "scottish_rate") y.url else "")}">
     @Messages("back")
