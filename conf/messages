@@ -112,13 +112,11 @@ quick_calc.salary.option_error_link = You haven`t chosen how often you get paid
 quick_calc.salary.amount_error_link = You haven`t entered how much you get paid
 quick_calc.salary.error_header = Something’s wrong
 
-
-
 quick_calc.salary.yearly.sub_label=a_year
 quick_calc.salary.monthly.sub_label=a_month
 quick_calc.salary.weekly.sub_label=a_week
-quick_calc.salary.daily.sub_label=a_day
-quick_calc.salary.hourly.sub_label=an_hour
+quick_calc.salary.daily.sub_label=a_day_sub
+quick_calc.salary.hourly.sub_label=an_hour_sub
 
 quick_calc.salary.question.approximate=If you don’t know, an approximate number is fine.
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
