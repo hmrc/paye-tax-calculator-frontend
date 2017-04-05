@@ -41,7 +41,6 @@ object UserTaxCode extends TaxCalculatorHelper {
 
   private val startOfHardcodedTaxYear = LocalDate.of(2017, 4, 6)
 
-  val prefixKeys = List('K', 'S')
   val suffixKeys = List('L', 'M', 'N', 'T')
   val WRONG_TAX_CODE_SUFFIX_KEY = "quick_calc.about_tax_code.wrong_tax_code_suffix"
   val WRONG_TAX_CODE_KEY = "quick_calc.about_tax_code.wrong_tax_code"
