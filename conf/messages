@@ -179,3 +179,5 @@ quick_calc.about_tax_code.wrong_tax_code=Enter your current tax code as numbers 
 quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
 quick_calc.about_tax_code.wrong_tax_code_number=Enter your current tax code as numbers and letters, making sure the number is between 0 and 9999
+quick_calc.about_tax_code.wrong_tax_code_prefix = Enter your current tax code, starting with the letter S or K, or the letters SK, followed by numbers
+quick_calc.about_tax_code.wrong_tax_code_error_link = There`s a problem with the tax code you`ve entered

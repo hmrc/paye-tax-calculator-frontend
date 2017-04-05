@@ -65,6 +65,25 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       actualTableSize shouldBe 0
     }
 
+    "return 400, empty list of aggregate data and an error message for invalid Tax Code Prefix" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("OO9999")))
+      val action = await(csrfAddToken(controller.submitTaxCodeForm()))
+      val result = action(request.withFormUrlEncodedBody(formTax.data.toSeq: _*)).withSession(request.session + (SessionKeys.sessionId -> "test-tax"))
+      val status = result.header.status
+      val responseBody = contentAsString(result)
+      val parseHtml = Jsoup.parse(responseBody)
+
+      val expectedErrorMessage = "There`s a problem with the tax code you`ve entered"
+
+      val actualTableSize = parseHtml.getElementsByTag("tr").size()
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualErrorMessage shouldBe expectedPrefixTaxCodeErrorMessage
+      actualTableSize shouldBe 0
+    }
+
     "return 400, empty list of aggregate data and an error message when user selects \"Yes\" but did not enter Tax code" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, None))
