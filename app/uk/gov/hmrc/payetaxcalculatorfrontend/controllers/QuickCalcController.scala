@@ -44,9 +44,8 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
 
   private def tokenAction[T](furtherAction: Request[T] => Future[Result])(implicit bodyParser: BodyParser[T]): Action[T] =
     Action.async(bodyParser) { implicit request =>
-      request.session.get("csrfToken").map(token => {
-        furtherAction(request)
-      })
+      //leave "token" instead of "_", i don't why but if we use "_" the page will redirect many time.
+      request.session.get("csrfToken").map(token => furtherAction(request))
         .getOrElse(Future.successful(Redirect(routes.QuickCalcController.showSalaryForm())))
     }
 
