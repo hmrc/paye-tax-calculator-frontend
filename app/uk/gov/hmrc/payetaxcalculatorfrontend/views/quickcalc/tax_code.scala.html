@@ -11,6 +11,8 @@
 
 @main_template(title = Messages("quick_calc.about_tax_code.header"), mainClass = Some("full-width")) {
 
+  @beta_header()
+
   <a class="link-back" id="tc-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "over_state_pension_age") y.url else "")}">@Messages("back")</a>
 
   <div class="grid-layout__column grid-layout__column--2-3">

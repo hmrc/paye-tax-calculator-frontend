@@ -2,7 +2,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 
-@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String, detailStatus: String)(implicit request: Request[_], messages: Messages)
+@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String, detailStatus: String, print: Boolean)(implicit request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
 }
@@ -21,8 +21,8 @@
     aria-labelledby=@{breakdown.period}>
   <p class="tab-content__first">
 <div class="data">
-  <div class="transaction-banner--complete">
-<p style="margin:10px 0 15px">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear is"}</p>
+  <div class="transaction-banner--complete" style="text-align:center">
+  <p style="margin:10px 0 15px; text-align:center">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear is"}</p>
   <span class="data-item bold-xlarge">£@{s"${moneyFormatter(breakdown.takeHomePay)} ${Messages("a")} ${label.toLowerCase}"}</span>
   </div>
 </div>

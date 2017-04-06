@@ -10,6 +10,8 @@
 
 @main_template(title = Messages("quick_calc.salary.header"), mainClass = Some("full-width")) {
 
+  @beta_header()
+
   <a class="link-back" id="r-back" href="#">@Messages("back")</a>
 
   <div class="grid-layout__column grid-layout__column--2-3">
@@ -57,7 +59,7 @@
 
           <span class="visuallyhidden">Amount</span>
           <span>£</span>
-          <input type="number" id="pay-amount" name="amount" value="@{radioFieldAmount.value}" />
+          <input id="pay-amount" name="amount" value="@{radioFieldAmount.value}" />
 
           </label>
 
@@ -73,7 +75,7 @@
             </div>
           } else {<fieldset>}
 
-          <legend class="visuallyhidden">@Messages("quick_calc.salary.header")</legend>
+          <legend class="visuallyhidden">@Messages("quick_calc.salary.sub_header")</legend>
 
           @for(label <- periodLabels) {
             <label class="block-label selection-button-radio">@Messages(s"quick_calc.salary.$label.label")

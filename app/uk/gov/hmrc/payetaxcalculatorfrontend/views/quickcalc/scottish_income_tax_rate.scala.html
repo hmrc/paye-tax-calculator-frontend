@@ -7,6 +7,8 @@
 
 @main_template(title = Messages("quick_calc.salary.question.scottish_income"), mainClass = Some("full-width")) {
 
+  @beta_header()
+
   <a class="link-back" id="sr-back" href="@{youHaveToldUsItems.flatMap(y => if (y.label == "about_tax_code") y.url else "")}">@Messages("back")</a>
 
   <div class="grid-layout__column grid-layout__column--2-3">

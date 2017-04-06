@@ -18,16 +18,22 @@
 
 @main_template(title = Messages("quick_calc.result.header"), mainClass = Some("full-width")) {
 
-  <a class="link-back" id="r-back" href="@routes.QuickCalcController.summary()">@Messages("back")</a>
+  @if(print){
+    <body onload="window.print(); window.location.href='@routes.QuickCalcController.showResult()'">
+  }
+
+  @{if(!print){beta_header()}}
+
+  <a @if(print){style="display: none" } class="link-back" id="r-back" href="@routes.QuickCalcController.summary()">@Messages("back")</a>
 
   <div class="grid-layout--stacked">
 
     <div class="grid-layout__column grid-layout__column--2-3">
 
-      <h1 class="heading-large">@Messages("quick_calc.result.header")</h1>
+      <h1 @if(print){style="display: none" } class="heading-large">@Messages("quick_calc.result.header")</h1>
 
         <div data-tabs>
-          <ul class="tabs-nav" role="tablist" >
+          <ul @if(print){style="display: none" } else {class="tabs-nav" role="tablist"} >
           @for((breakdown, label) <- summary.taxBreakdown.zip(tabLabels)) {
             <li style="margin:0;"
             id=@{
@@ -48,23 +54,27 @@
           </ul>
 
           @{
-            if(summary.taxCode.contains('K')) result_detail_over_rate(quickCalcAggregateInput, taxYear, detailStatus)
-            else result_detail(quickCalcAggregateInput, taxYear, detailStatus)
+            if(summary.taxCode.contains('K')) result_detail_over_rate(quickCalcAggregateInput, taxYear, detailStatus, print)
+            else result_detail(quickCalcAggregateInput, taxYear, detailStatus, print)
           }
 
-          <p class="dont-print"><a href="@routes.QuickCalcController.showPrint()">@Messages("quick_calc.result.info_print")</a></p>
+          <p @if(print){style="display: none" }><a href="@routes.QuickCalcController.showPrint()">@Messages("quick_calc.result.info_print")</a></p>
 
-          <ul class="dont-print">
-            <li style="margin:0;">@Messages("quick_calc.result.info_a") <a href="https://www.gov.uk/national-insurance-rates-letters/category-letters" target="_blank">@Messages("quick_calc.result.info_b")</a></li>
-            <li style="margin:0;">@Messages("quick_calc.result.info_e")</li>
-          </ul>
-
+          <div class="form-group">
+            <ul @if(print){style="display: none" }>
+              <li style="margin:0;">@Messages("quick_calc.result.info_a") <a href="https://www.gov.uk/national-insurance-rates-letters/category-letters" target="_blank">@Messages("quick_calc.result.info_b")</a></li>
+              <li style="margin:0;">@Messages("quick_calc.result.info_e")</li>
+            </ul>
+          </div>
         </div>
-        <br>
-        <a class="print-hidden" href="@{FrontendAppConfig.betaFeedbackUrl}" target="_blank">@Messages("feedback")</a>
-        <br><br>
-        <a class="print-hidden button" role="button" href="@routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart">@Messages("restart")</a>
-    </div>
+
+        <div class="form-group">
+          <a @if(print){style="display: none" } href="@{FrontendAppConfig.betaFeedbackUrl}" target="_blank">@Messages("feedback")</a>
+        </div>
+        <div class="form-group">
+          <a @if(print){style="display: none" } class="print-hidden button" role="button" href="@routes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart">@Messages("restart")</a>
+        </div>
+      </div>
 
     <div class="grid-layout__column grid-layout__column--1-3">
       <div class="gutter-left">
@@ -80,8 +90,4 @@
     </div>
 
   </div>
-
-  @if(print){
-    <body id="print" onload="javascript:window.print()">
-  }
 }
