@@ -33,8 +33,8 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
 
 @Singleton
-class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
-                                    cache: QuickCalcCache)(csrfFilter: CSRFFilter) extends DefaultHttpFilters(csrfFilter)  with FrontendController with I18nSupport {
+class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache: QuickCalcCache)(csrfFilter: CSRFFilter)
+                                    extends DefaultHttpFilters(csrfFilter) with FrontendController with I18nSupport {
 
   implicit val anyContentBodyParser: BodyParser[AnyContent] = parse.anyContent
 
@@ -44,8 +44,10 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
 
   private def tokenAction[T](furtherAction: Request[T] => Future[Result])(implicit bodyParser: BodyParser[T]): Action[T] =
     Action.async(bodyParser) { implicit request =>
-      request.session.get("csrfToken").map(_ => furtherAction(request))
-        .getOrElse(Future.successful(Redirect(routes.QuickCalcController.showSalaryForm()).withNewSession))
+      request.session.get("csrfToken").map(token => {
+        furtherAction(request)
+      })
+        .getOrElse(Future.successful(Redirect(routes.QuickCalcController.showSalaryForm())))
     }
 
   def summary(): Action[AnyContent] = tokenAction { implicit request =>

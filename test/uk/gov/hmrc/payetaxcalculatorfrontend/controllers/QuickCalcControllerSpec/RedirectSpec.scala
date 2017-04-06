@@ -17,6 +17,7 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpec
 
 import play.api.test.Helpers._
+import play.filters.csrf.CSRFFilter
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
@@ -25,7 +26,7 @@ class RedirectSpec extends AppUnitGenerator {
 
   "Redirect to Salary Form" should {
     "return 303" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
       val result = controller.redirectToSalaryForm().apply(request)
       val status = result.header.status
 

@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpec
 
+import play.filters.csrf.CSRFFilter
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
@@ -25,7 +26,7 @@ class ShowStatePensionSpec extends AppUnitGenerator{
   "Show State Pension Form" should {
 
     "return 200, with existing list of aggregate data" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)(new CSRFFilter)
       val action = csrfAddToken(controller.showStatePensionForm())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
@@ -34,7 +35,7 @@ class ShowStatePensionSpec extends AppUnitGenerator{
     }
 
     "return 200, with emtpy list of aggregate data" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
       val action = csrfAddToken(controller.showStatePensionForm())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
@@ -43,7 +44,7 @@ class ShowStatePensionSpec extends AppUnitGenerator{
     }
 
     "return 303, when the user has no token" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
       val action = csrfAddToken(controller.showStatePensionForm())
       val result = action.apply(request)
       val status = result.header.status
