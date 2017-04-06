@@ -28,6 +28,8 @@ trait YouHaveToldUs[A] {
 object YouHaveToldUs {
   def apply[A : YouHaveToldUs](a: A): YouHaveToldUsItem = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
+  val SOTTISH_RATE = "scottish_rate"
+
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
       val label = "about_tax_code"
@@ -55,8 +57,8 @@ object YouHaveToldUs {
 
   implicit def scottishIncomeFormat(implicit messages: Messages) = new YouHaveToldUs[ScottishRate] {
     def toYouHaveToldUsItem(scottish: ScottishRate): YouHaveToldUsItem = {
-      val label = "scottish_rate"
-      val idSuffix = "scottish_rate"
+      val label = SOTTISH_RATE
+      val idSuffix = SOTTISH_RATE
       val url = routes.QuickCalcController.showScottishRateForm().url
       YouHaveToldUsItem(
         if(scottish.value) Messages("quick_calc.you_have_told_us.scottish_rate.yes")
@@ -95,7 +97,7 @@ object YouHaveToldUs {
   }
 
   def getGoBackLink(items: List[YouHaveToldUsItem]): String = {
-    items.flatMap(y => if (y.label == "scottish_rate") y.url else "") match {
+    items.flatMap(y => if (y.label == SOTTISH_RATE) y.url else "") match {
       case url if url.nonEmpty => (for(char <- url) yield char)(collection.breakOut)
       case _ => routes.QuickCalcController.showTaxCodeForm().url
     }
