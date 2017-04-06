@@ -1,4 +1,5 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUsItem
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUs.getGoBackLink
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 @import play.api.i18n._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
@@ -15,11 +16,7 @@
   </div>
 
   <a class="link-back" id="tc-back"
-     href="@{items.flatMap(y => if (y.label == "scottish_rate") y.url else "") match {
-       case v if v.nonEmpty => v
-       case _ => routes.QuickCalcController.showTaxCodeForm().url
-     }
-     }">
+     href="@{getGoBackLink(items)}">
     @Messages("back")
   </a>
 
@@ -56,7 +53,7 @@
     </div>
 
     <div class="form-group">
-      <a href="@uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.showResult()" id="get-results" role="button" class="button">@Messages("get_results")</a>
+      <a href="@routes.QuickCalcController.showResult()" id="get-results" role="button" class="button">@Messages("get_results")</a>
     </div>
   }
 
