@@ -19,10 +19,12 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.data.Form
+import play.api.http.DefaultHttpFilters
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc._
 import play.api.mvc._
+import play.filters.csrf.CSRFFilter
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult.omitScotland
@@ -32,7 +34,7 @@ import scala.concurrent.Future
 
 @Singleton
 class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
-                                    cache: QuickCalcCache) extends FrontendController with I18nSupport {
+                                    cache: QuickCalcCache)(csrfFilter: CSRFFilter) extends DefaultHttpFilters(csrfFilter)  with FrontendController with I18nSupport {
 
   implicit val anyContentBodyParser: BodyParser[AnyContent] = parse.anyContent
 
@@ -43,7 +45,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
   private def tokenAction[T](furtherAction: Request[T] => Future[Result])(implicit bodyParser: BodyParser[T]): Action[T] =
     Action.async(bodyParser) { implicit request =>
       request.session.get("csrfToken").map(_ => furtherAction(request))
-        .getOrElse(Future.successful(Redirect(routes.QuickCalcController.redirectToSalaryForm())))
+        .getOrElse(Future.successful(Redirect(routes.QuickCalcController.showSalaryForm()).withNewSession))
     }
 
   def summary(): Action[AnyContent] = tokenAction { implicit request =>
