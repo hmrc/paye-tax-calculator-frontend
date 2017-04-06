@@ -98,7 +98,7 @@ object YouHaveToldUs {
 
   def getGoBackLink(items: List[YouHaveToldUsItem]): String = {
     items.flatMap(y => if (y.label == SOTTISH_RATE) y.url else "") match {
-      case url if url.nonEmpty => (for(char <- url) yield char)(collection.breakOut)
+      case url if url.nonEmpty => url.mkString
       case _ => routes.QuickCalcController.showTaxCodeForm().url
     }
   }
