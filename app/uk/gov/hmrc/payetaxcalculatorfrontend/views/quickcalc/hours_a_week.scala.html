@@ -9,12 +9,7 @@
 @(valueInPence:Int, hoursForm: Form[Hours], url: String)(implicit request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.salary.question.hours_a_week"), mainClass = Some("full-width")) {
 
-  <div class="beta-banner--borderless" style="overflow: auto;width: 100%">
-    <p style="margin-top: 0">
-      <strong class="phase-tag">BETA</strong>
-      <span style="font-size: 16px">This is a new service – your <a href="/contact/beta-feedback-unauthenticated?service=PayeTaxCalculator">feedback</a> will help us to improve it.</span>
-    </p>
-  </div>
+  @beta_header()
 
   <a class="link-back" id="ph-back" href="@url">@Messages("back")</a>
 
