@@ -29,7 +29,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
 
   "Submit Tax Code Form" should {
     "return 400, current list of aggregate data and an error message for invalid Tax Code" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formTax = UserTaxCode.form.fill(
         UserTaxCode(gaveUsTaxCode = true, Some("110")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -46,7 +46,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, empty list of aggregate data and an error message for invalid Tax Code" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("110")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
       val result = action(request.withSession("csrfToken" -> "someToken")
@@ -66,7 +66,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, empty list of aggregate data and an error message for invalid Tax Code Prefix" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("OO9999")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
       val result = action(request.withSession("csrfToken" -> "someToken")
@@ -87,7 +87,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, empty list of aggregate data and an error message when user selects \"Yes\" but did not enter Tax code" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, None))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
       val result = action(request.withSession("csrfToken" -> "someToken")
@@ -105,7 +105,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, empty list of aggregate data and an error message when user selects \"Yes\" but Tax Code entered is 99999L" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("99999L")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
       val result = action(request.withSession("csrfToken" -> "someToken")
@@ -123,7 +123,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400 when Tax Code Form submission is empty" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
 
@@ -136,7 +136,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 303, when Tax Code Form submission, current list of aggregate and redirect to Is Over State Pension Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("K425")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
 
@@ -154,7 +154,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 303, when Tax Code Form submission, new list of aggregate and redirect to Is Over State Pension Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("K425")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
 
@@ -172,7 +172,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 303, when Tax Code form submission, the complete list of aggregate data and redirect to Summary Result Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("K425")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
 

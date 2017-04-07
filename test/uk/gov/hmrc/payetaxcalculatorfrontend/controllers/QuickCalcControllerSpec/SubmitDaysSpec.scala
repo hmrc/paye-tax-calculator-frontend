@@ -29,7 +29,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
 
   "Submit Days Form" should {
     "return 400 and error message when Days in a Week is 0" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 
@@ -50,7 +50,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
 
 
     "return 400 and error message when Days in a Week is 8" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm.fill(Days(1,8))
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 
@@ -68,7 +68,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
     }
 
     "return 400 and error message when Days in a Week is 1.5" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 
@@ -88,7 +88,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
     }
 
     "return 303, with new Days worked, 1 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 
@@ -109,7 +109,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
     }
 
     "return 303, with new Days worked, 5 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm
       val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
 

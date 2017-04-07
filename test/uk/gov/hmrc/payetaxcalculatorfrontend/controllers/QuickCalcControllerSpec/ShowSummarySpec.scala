@@ -29,7 +29,7 @@ class ShowSummarySpec extends AppUnitGenerator {
 
     "return aggregate data of : Earning £20000 Yearly Salary, NOT (Over State Pension), Tax Code: S1150L and IS Scottish Tax Payer"  in {
 
-      val controller = new QuickCalcController(messages.messages, cacheReturnCompleteYearly)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnCompleteYearly)
       val action = csrfAddToken(controller.summary())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
@@ -63,7 +63,7 @@ class ShowSummarySpec extends AppUnitGenerator {
 
     "return aggregate data of : Earning £40 Daily Salary, 5 Days a Week, NOT (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer"  in {
 
-      val controller = new QuickCalcController(messages.messages, cacheReturnCompleteDaily)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnCompleteDaily)
       val action = csrfAddToken(controller.summary())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
@@ -101,7 +101,7 @@ class ShowSummarySpec extends AppUnitGenerator {
 
     "return aggregate data of : Earning £8 Hourly Salary, YES (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer"  in {
 
-      val controller = new QuickCalcController(messages.messages, cacheReturnCompleteHourly)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnCompleteHourly)
       val action = csrfAddToken(controller.summary())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status

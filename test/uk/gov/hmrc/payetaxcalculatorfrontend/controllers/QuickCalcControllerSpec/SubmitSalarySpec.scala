@@ -29,7 +29,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
 
   "Submit Salary Form" should {
     "return 400, with current list of aggregate data and an error message for invalid Salary" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
       val formSalary = Salary.salaryBaseForm
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
@@ -49,7 +49,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
     }
 
     "return 400, with empty list of aggregate data and an error message for invalid Salary" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryBaseForm
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
@@ -69,7 +69,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
     }
 
     "return 400 and error message when Salary submitted is \"9.999\" " in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryBaseForm.fill(Salary(9.999,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
@@ -87,7 +87,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
     }
 
     "return 400 and error message when Salary submitted is \"-1\" " in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryBaseForm.fill(Salary(-1,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
@@ -105,7 +105,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
     }
 
     "return 400 and error message when Salary submitted is \"10,000,000.00\"" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryBaseForm.fill(Salary(10000000.00,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
@@ -123,7 +123,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
     }
 
     """return 303, with new Yearly Salary "£20000", current list of aggregate data without State Pension Answer and redirect to State Pension Page""" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formSalary = Salary.salaryBaseForm.fill(Salary(20000,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
@@ -140,7 +140,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
     }
 
     """return 303, with new Yearly Salary data "£20000" saved on a new list of aggregate data and redirect to State Pension Page""" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryBaseForm.fill(Salary(20000,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
 
@@ -157,7 +157,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
     }
 
     """return 303, with new Yearly Salary data "£20000" saved on the complete list of aggregate data and redirect to State Pension Page""" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
       val formSalary = Salary.salaryBaseForm.fill(Salary(20000,"yearly", None))
       val action = await(csrfAddToken(controller.submitSalaryAmount()))
       val result = action(request.withFormUrlEncodedBody(formSalary.data.toSeq:_*).withSession("csrfToken" -> "someToken")

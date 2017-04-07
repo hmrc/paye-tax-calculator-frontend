@@ -27,7 +27,7 @@ class ShowResultSpec extends AppUnitGenerator {
 
   "Show Result Page" should {
     "return 200, with current list of aggregate which contains all answers from previous questions" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
       val action = csrfAddToken(controller.showResult())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
@@ -38,7 +38,7 @@ class ShowResultSpec extends AppUnitGenerator {
     }
 
     "return 303, with current list of aggregate data and redirect to Tax Code Form if Tax Code is not provided" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnStatePensionSalary)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnStatePensionSalary)
       val action = csrfAddToken(controller.showResult())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
@@ -51,7 +51,7 @@ class ShowResultSpec extends AppUnitGenerator {
     }
 
     "return 303, with current list of aggregate data and redirect to Age Form if no answer is provided for \"Are you Over 65?\"" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeSalary)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeSalary)
       val action = csrfAddToken(controller.showResult())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
@@ -63,7 +63,7 @@ class ShowResultSpec extends AppUnitGenerator {
     }
 
     "return 303, with current list of aggregate data and redirect to Salary Form if Salary is not provided" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
       val action = csrfAddToken(controller.showResult())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status
@@ -76,7 +76,7 @@ class ShowResultSpec extends AppUnitGenerator {
     }
 
     "return 303, with empty list of aggregate data and redirect to Tax Code Form" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val action = csrfAddToken(controller.showResult())
       val result = action.apply(request.withSession("csrfToken" -> "someToken"))
       val status = result.header.status

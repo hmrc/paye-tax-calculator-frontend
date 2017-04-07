@@ -28,7 +28,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
 
   "Submit State Pension Form" should {
     "return 400 for invalid form answer and current list of aggregate data" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formAge = OverStatePensionAge.form
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 
@@ -42,7 +42,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
     }
 
     "return 400 for invalid form answer and empty list of aggregate data" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formAge = OverStatePensionAge.form
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 
@@ -56,7 +56,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
     }
 
     "return 303, with an answer \"No\" saved on existing list of aggregate data without Salary and redirect to Salary Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 
@@ -74,7 +74,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
     }
 
     "return 303, with an answer \"Yes\" for being Over 65 saved on a new list of aggregate data and redirect Salary Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(true))
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 
@@ -92,7 +92,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
     }
 
     "return 303, with an answer \"No\" saved on the current list of aggregate data of all answered questions and redirect to Summary-Result" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val action = await(csrfAddToken(controller.submitStatePensionForm()))
 

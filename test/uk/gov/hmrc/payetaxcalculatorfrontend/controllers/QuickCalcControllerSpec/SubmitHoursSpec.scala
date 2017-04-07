@@ -30,7 +30,7 @@ class SubmitHoursSpec extends AppUnitGenerator {
   "Submit Hours Form" should {
 
     "return 400 and error message when Hours in a Week is 0" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInHoursForm
       val action = await(csrfAddToken(controller.submitHoursAWeek(1)))
 
@@ -51,7 +51,7 @@ class SubmitHoursSpec extends AppUnitGenerator {
 
 
     "return 400 and error message when Hours in a Week is 169" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInHoursForm.fill(Hours(1,169))
       val action = await(csrfAddToken(controller.submitHoursAWeek(1)))
 
@@ -69,7 +69,7 @@ class SubmitHoursSpec extends AppUnitGenerator {
     }
 
     "return 400 and error message when Hours in a Week is 1.5" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInHoursForm
       val action = await(csrfAddToken(controller.submitHoursAWeek(1)))
 
@@ -89,7 +89,7 @@ class SubmitHoursSpec extends AppUnitGenerator {
     }
 
     "return 303, with new Hours worked, 40 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryBaseForm
       val action = await(csrfAddToken(controller.submitHoursAWeek(1)))
 
@@ -110,7 +110,7 @@ class SubmitHoursSpec extends AppUnitGenerator {
     }
 
     "return 303, with new Hours worked, 5 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)(new CSRFFilter)
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryBaseForm
       val action = await(csrfAddToken(controller.submitHoursAWeek(1)))
 
