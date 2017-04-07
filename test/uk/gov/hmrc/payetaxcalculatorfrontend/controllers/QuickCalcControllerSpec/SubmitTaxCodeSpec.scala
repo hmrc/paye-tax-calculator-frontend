@@ -18,6 +18,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpe
 
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
+import play.filters.csrf.CSRFFilter
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.UserTaxCode
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
@@ -28,8 +29,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
 
   "Submit Tax Code Form" should {
     "return 400, current list of aggregate data and an error message for invalid Tax Code" in {
-      val controller = new QuickCalcController(
-        messages.messages, cacheReturnTaxCode)
+      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formTax = UserTaxCode.form.fill(
         UserTaxCode(gaveUsTaxCode = true, Some("110")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))

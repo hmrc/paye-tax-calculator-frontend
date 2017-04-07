@@ -17,6 +17,7 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpec
 
 import play.api.test.Helpers._
+import play.filters.csrf.CSRFFilter
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.OverStatePensionAge
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator

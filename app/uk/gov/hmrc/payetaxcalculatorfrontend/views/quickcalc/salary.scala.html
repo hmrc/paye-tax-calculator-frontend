@@ -12,7 +12,7 @@
 
   @beta_header()
 
-  <a class="link-back" id="r-back" href="#">@Messages("back")</a>
+  <a class="link-back" id="r-back" href="https://www.gov.uk/estimate-income-tax">@Messages("back")</a>
 
   <div class="grid-layout__column grid-layout__column--2-3">
 
@@ -22,7 +22,7 @@
       role="alert"
       aria-labelledby="error-summary-heading"
       tabindex="-1">
-        <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
+        <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
           @if(salaryForm("amount").hasErrors){
             <li><a href="#pay-amount">@{

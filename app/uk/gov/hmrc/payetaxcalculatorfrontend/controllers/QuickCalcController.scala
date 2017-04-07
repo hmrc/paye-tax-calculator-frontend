@@ -20,31 +20,43 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.mvc._
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult.omitScotland
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
+import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc._
-import play.api.mvc._
-import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
-import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
-import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult.omitScotland
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 import scala.concurrent.Future
 
 @Singleton
-class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
-                                    cache: QuickCalcCache) extends FrontendController with I18nSupport {
+class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache: QuickCalcCache)
+                                    extends FrontendController with I18nSupport {
 
   implicit val anyContentBodyParser: BodyParser[AnyContent] = parse.anyContent
 
-  def redirectToSalaryForm() = ActionWithSessionId { implicit request =>
-    Redirect(routes.QuickCalcController.showSalaryForm())
+  def redirectToSalaryForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+    Future.successful(Redirect(routes.QuickCalcController.showSalaryForm()))
   }
 
   private def tokenAction[T](furtherAction: Request[T] => Future[Result])(implicit bodyParser: BodyParser[T]): Action[T] =
-    Action.async(bodyParser) { implicit request =>
+    ActionWithSessionId.async(bodyParser) { implicit request =>
       request.session.get("csrfToken").map(_ => furtherAction(request))
-        .getOrElse(Future.successful(Redirect(routes.QuickCalcController.redirectToSalaryForm())))
+        .getOrElse(Future.successful(Redirect(routes.QuickCalcController.showSalaryForm())))
     }
+
+  def showSalaryForm(): Action[AnyContent] = tokenAction { implicit request =>
+    cache.fetchAndGetEntry().map {
+      case Some(aggregate) =>
+        val form = {
+          aggregate.savedSalary.map(s => Salary.salaryBaseForm.fill(s)).getOrElse(Salary.salaryBaseForm)
+        }
+        Ok(salary(form))
+      case None =>
+        Ok(salary(Salary.salaryBaseForm))
+    }
+  }
 
   def summary(): Action[AnyContent] = tokenAction { implicit request =>
     cache.fetchAndGetEntry().map {
@@ -79,19 +91,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi,
     }
   }
 
-  def showSalaryForm(): Action[AnyContent] = tokenAction[AnyContent] { implicit request =>
-    cache.fetchAndGetEntry().map {
-      case Some(aggregate) =>
-        val form = {
-          aggregate.savedSalary.map(s => Salary.salaryBaseForm.fill(s)).getOrElse(Salary.salaryBaseForm)
-        }
-        Ok(salary(form))
-      case None =>
-        Ok(salary(Salary.salaryBaseForm))
-    }
-  }
-
-  def submitSalaryAmount(): Action[AnyContent] = tokenAction { implicit request =>
+  def submitSalaryAmount(): Action[AnyContent] = Action.async { implicit request =>
     val url = request.uri
     Salary.salaryBaseForm.bindFromRequest().fold(
       formWithErrors => Future(BadRequest(salary(formWithErrors))),
