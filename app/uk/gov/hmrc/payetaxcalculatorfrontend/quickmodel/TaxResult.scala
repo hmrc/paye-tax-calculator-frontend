@@ -147,4 +147,13 @@ object TaxResult {
   def omitScotland(value: String): String = {
     value.replaceAll("Scotland ", "")
   }
+
+  def getPeriodFromHtml(tab: String): String = {
+    tab match {
+      case "tabContentmonthly" => ???
+      case "tabContentweekly" => ???
+      case _ => ???
+    }
+
+  }
 }
