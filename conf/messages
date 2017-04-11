@@ -4,8 +4,8 @@ legacy.scottish_taxpayer_intro=If you are a Scottish taxpayer you will need to e
 legacy.scottish_income_tax=Scottish Income Tax
 index.use_the_detailed_calc_if=Notes for employees under the age of 21 and apprentices under the age of 25:
 index.use_the_detailed_calc_NI_select=You will need to select the National Insurance category letter:
-index.use_the_detailed_calc_NI_select_A=’A’ if your category letter is either ’H’ or ’M’
-index.use_the_detailed_calc_NI_select_D=’D’ if your category letter is ’I’
+index.use_the_detailed_calc_NI_select_A=‘A’ if your category letter is either ‘H’ or ‘M’
+index.use_the_detailed_calc_NI_select_D=‘D’ if your category letter is ‘I’
 index.use_the_detailed_calc_NI_select_Other=Selecting the alternative letter will not affect the amount of ’National Insurance’ estimated.
 index.use_the_detailed_calc_ENI=The ’Employer National Insurance’ estimate will not be correct. If you want to know the correct amount please use the
 index.use_the_detailed_calc_NIC_link=National Insurance Contributions calculator
@@ -18,7 +18,7 @@ index.detailed_calculation=Detailed calculation
 index.welsh_version=Welsh version
 index.welsh_version_description=Follow the link below to use the Welsh language version of the online calculator.
 index.welsh_version_link=Cyfrifiannell Treth CThEM
-index.use_the_quick_calc_if=Use the quick calculation if you can answer ’yes’ to the following:
+index.use_the_quick_calc_if=Use the quick calculation if you can answer ‘yes’ to the following:
 index.employment_only=you have employment income only
 index.dont_contribute_pension=you don’t contribute to a workplace or personal pension through your employer.
 index.language_version.header=Welsh version
@@ -34,7 +34,7 @@ a=a
 
 feedback=Tell us what you think of this calculator (opens in a new tab)
 #TODO Allow formatting for quote marks
-select_one=Answer ’Yes’ or ’No’
+select_one=Answer ‘Yes’ or ‘No’
 
 quick_calc.title=HMRC Estimate your take-home pay calculator
 quick_calc.header.title=Estimate your take-home pay
@@ -184,5 +184,5 @@ quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
 quick_calc.about_tax_code.wrong_tax_code_number=Enter your current tax code as numbers and letters, making sure the number is between 0 and 9999
 quick_calc.about_tax_code.wrong_tax_code_prefix = Enter your current tax code, starting with the letter S or K, or the letters SK, followed by numbers
-quick_calc.about_tax_code.wrong_tax_code_error_link = There`s a problem with the tax code you`ve entered
+quick_calc.about_tax_code.wrong_tax_code_error_link = There’s a problem with the tax code you’ve entered
 quick_calc.about_tax_code_empty_error = Enter your current tax code or change your answer to ‘No’

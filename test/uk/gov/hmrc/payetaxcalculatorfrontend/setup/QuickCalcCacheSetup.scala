@@ -214,5 +214,16 @@ object QuickCalcCacheSetup {
   val expectedMaxDaysAWeekErrorMessage = "Enter your days a week as a number between 1 and 7"
   val expectedMaxGrossPayErrorMessage = "Enter your pay in pounds and pence. Make sure it’s less than 10000000.00"
   val expectedMaxHourlyRateErrorMessage = "Enter your pay as a number less than 10000000.00"
-  val expectedYesNoAnswerErrorMessage = "Answer ’Yes’ or ’No’"
+
+  def expectedYesNoAnswerErrorMessage(implicit messages: Messages) =
+    messages("select_one")
+
+  def expectedInvalidTaxCodeHeaderMessage(implicit messages: Messages) =
+    messages("quick_calc.about_tax_code.wrong_tax_code_error_link")
+
+  def expectedEmptyTaxCodeHeaderMessage(implicit messages: Messages) =
+    messages("quick_calc.about_tax_code_error_link")
+
+  def expectedNotAnsweredTaxCodeHeaderMessage(implicit messages: Messages) =
+    messages("quick_calc.about_has_tax_code_error_link")
 }

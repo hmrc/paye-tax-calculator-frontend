@@ -214,22 +214,13 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
         Ok(tax_code(UserTaxCode.form, Nil))
     }
   }
-  // better design might obsoletes this need
-  private def recoverTheUserState(formWithErrors: Form[UserTaxCode])(implicit messages: Messages) = {
-    if (formWithErrors.errors.flatMap(_.messages).exists(er =>
-      (er == messages(UserTaxCode.WRONG_TAX_CODE_SUFFIX_KEY)) ||
-        (er == messages(UserTaxCode.WRONG_TAX_CODE_KEY))))
-      formWithErrors.fill(UserTaxCode(gaveUsTaxCode = true, None))
-    else formWithErrors
-  }
 
   def submitTaxCodeForm(): Action[AnyContent] = tokenAction { implicit request =>
     UserTaxCode.form.bindFromRequest().fold(
       formWithErrors =>
         cache.fetchAndGetEntry().map {
           case Some(aggregate) =>
-            val updatedForm: Form[UserTaxCode] = recoverTheUserState(formWithErrors)
-            BadRequest(tax_code(updatedForm, aggregate.youHaveToldUsItems))
+            BadRequest(tax_code(formWithErrors, aggregate.youHaveToldUsItems))
           case None => BadRequest(tax_code(formWithErrors, Nil))
       },
       newTaxCode => {
