@@ -25,9 +25,13 @@
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
           @if(salaryForm("amount").hasErrors){
-            <li><a href="#pay-amount">@{
-              Messages("quick_calc.salary.amount_error_link")
-            }
+            <li><a href="#pay-amount">
+              @if(salaryForm("amount").value.isEmpty) {
+                @Messages("quick_calc.salary.amount_empty_error_link")
+              } else {
+                @Messages("quick_calc.salary.amount_input_error_link")
+              }
+
             </a></li>
           }
           @if(salaryForm("period").hasErrors){

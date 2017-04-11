@@ -109,6 +109,8 @@ object CustomFormatters {
               Right(salary)
             }
           } catch {
+            case _:Throwable if !s.matches("([0-9])+(\\.\\d+)") => Left("quick_calc.salary.question_error_invalid_input")
+            case _:Throwable if !s.matches("([0-9])+(\\.\\d{1,2})") => Left("quick_calc.salary.question.error.maximum_salary_input")
             case _:Throwable => Left("quick_calc.salary.question.error.invalid_salary")
           }
         case None => Left("quick_calc.salary.question.error.empty_salary_input")

@@ -83,7 +83,7 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedInvalidSalaryErrorMessage
+      actualErrorMessage shouldBe expectedMaxGrossPayErrorMessage
     }
 
     "return 400 and error message when Salary submitted is \"-1\" " in {
