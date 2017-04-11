@@ -46,8 +46,7 @@ object UserTaxCode extends TaxCalculatorHelper {
   val WRONG_TAX_CODE_KEY = "quick_calc.about_tax_code.wrong_tax_code"
   val WRONG_TAX_CODE_NUMBER = "quick_calc.about_tax_code.wrong_tax_code_number"
   val WRONG_TAX_CODE_PREFIX_KEY = "quick_calc.about_tax_code.wrong_tax_code_prefix"
-
-
+  val WRONG_TAX_CODE_EMPTY = "quick_calc.about_tax_code_empty_error"
 
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
 
@@ -61,7 +60,7 @@ object UserTaxCode extends TaxCalculatorHelper {
             else {
               Left(wrongTaxCode(taxCode))
             }
-          case None => Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY))))
+          case None => Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_EMPTY))))
         }
       } else Right(Some(DEFAULT_TAX_CODE))
     }
@@ -70,17 +69,15 @@ object UserTaxCode extends TaxCalculatorHelper {
   }
 
   def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
-    if(!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}")) {
+    if(!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}"))
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_NUMBER)))
-    }
-    else if(taxCode.substring(0,1).matches("[A-Z]"))
+    else if(taxCode.replaceAll("([0-9])+([A-Z]?)+", "").matches("[A-JL-RT-Z]{1,2}"))
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_PREFIX_KEY)))
-    else if(!suffixKeys.contains(taxCode.last))
+    else if(taxCode.replaceAll("^([A-Z]?)+([0-9]?)+","").matches("[A-KO-SU-Z]"))
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY)))
     else
       Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY)))
   }
-
 
   def form(implicit messages: Messages) = Form(
     mapping(

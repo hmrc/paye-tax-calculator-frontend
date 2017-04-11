@@ -28,7 +28,7 @@ import uk.gov.hmrc.play.http.SessionKeys
 class SubmitTaxCodeSpec extends AppUnitGenerator {
 
   "Submit Tax Code Form" should {
-    "return 400, current list of aggregate data and an error message for invalid Tax Code" in {
+    "return 400, with aggregate data and an error message for invalid Tax Code" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
       val formTax = UserTaxCode.form.fill(
         UserTaxCode(gaveUsTaxCode = true, Some("110")))
@@ -42,10 +42,10 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedSuffixTaxCodeErrorMessage
+      actualErrorMessage shouldBe expectedInvalidTaxCodeErrorMessage
     }
 
-    "return 400, empty list of aggregate data and an error message for invalid Tax Code" in {
+    "return 400, with no aggregate data and an error message for invalid Tax Code" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("110")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -55,17 +55,13 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val expectedErrorMessage = "The tax code you have entered is not valid - it must end with the letter L, ‘M, ‘N, or T"
-
-      val actualTableSize = parseHtml.getElementsByTag("tr").size()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedSuffixTaxCodeErrorMessage
-      actualTableSize shouldBe 0
+      actualErrorMessage shouldBe expectedInvalidTaxCodeErrorMessage
     }
 
-    "return 400, empty list of aggregate data and an error message for invalid Tax Code Prefix" in {
+    "return 400, with no aggregate data and an error message for invalid Tax Code Prefix" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("OO9999")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -86,7 +82,24 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       actualTableSize shouldBe 0
     }
 
-    "return 400, empty list of aggregate data and an error message when user selects \"Yes\" but did not enter Tax code" in {
+    "return 400, with no aggregate data and an error message for invalid Tax Code Suffix" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("9999R")))
+      val action = await(csrfAddToken(controller.submitTaxCodeForm()))
+      val result = action(request.withSession("csrfToken" -> "someToken")
+        .withFormUrlEncodedBody(formTax.data.toSeq: _*))
+        .withSession(request.session + (SessionKeys.sessionId -> "test-tax"))
+      val status = result.header.status
+      val responseBody = contentAsString(result)
+      val parseHtml = Jsoup.parse(responseBody)
+
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualErrorMessage shouldBe expectedSuffixTaxCodeErrorMessage
+    }
+
+    "return 400, with no aggregate data and an error message when user selects \"Yes\" but did not enter Tax code" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, None))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -96,15 +109,13 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val actualTableSize = parseHtml.getElementsByTag("tr").size()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedInvalidTaxCodeErrorMessage
-      actualTableSize shouldBe 0
+      actualErrorMessage shouldBe expectedEmptyTaxCodeErrorMessage
     }
 
-    "return 400, empty list of aggregate data and an error message when user selects \"Yes\" but Tax Code entered is 99999L" in {
+    "return 400, with no aggregate data and an error message when user selects \"Yes\" but Tax Code entered is 99999L" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("99999L")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -114,15 +125,13 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val actualTableSize = parseHtml.getElementsByTag("tr").size()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
       actualErrorMessage shouldBe expectedWrongNumberTaxCodeErrorMessage
-      actualTableSize shouldBe 0
     }
 
-    "return 400 when Tax Code Form submission is empty" in {
+    "return 400, with no aggregate data when Tax Code Form submission is empty" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -132,10 +141,16 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
         .withSession(SessionKeys.sessionId -> "test-tax")
 
       val status = result.header.status
+      val responseBody = contentAsString(result)
+      val parseHtml = Jsoup.parse(responseBody)
+
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
       status shouldBe 400
+      actualErrorMessage shouldBe expectedYesNoAnswerErrorMessage
     }
 
-    "return 303, when Tax Code Form submission, current list of aggregate and redirect to Is Over State Pension Page" in {
+    "return 303, with current aggregate data and redirect to Is Over State Pension Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("K425")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -153,7 +168,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       actualRedirectUri shouldBe expectedRedirectUri
     }
 
-    "return 303, when Tax Code Form submission, new list of aggregate and redirect to Is Over State Pension Page" in {
+    "return 303, with no aggregate data and redirect to Is Over State Pension Page" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("K425")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))
@@ -171,7 +186,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       actualRedirectUri shouldBe expectedRedirectUri
     }
 
-    "return 303, when Tax Code form submission, the complete list of aggregate data and redirect to Summary Result Page" in {
+    "return 303, with current aggregate data and redirect to Summary Result Page" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("K425")))
       val action = await(csrfAddToken(controller.submitTaxCodeForm()))

@@ -198,6 +198,7 @@ object QuickCalcCacheSetup {
   val expectedSuffixTaxCodeErrorMessage = "Enter your current tax code, finishing with the letter L, M, N or T"
   val expectedInvalidTaxCodeErrorMessage = "Enter your current tax code as numbers and letters, for example 1117L, K497, S1117L or SK497"
   val expectedPrefixTaxCodeErrorMessage = "Enter your current tax code, starting with the letter S or K, or the letters SK, followed by numbers"
+  val expectedEmptyTaxCodeErrorMessage = "Enter your current tax code or change your answer to ‘No’"
 
   val expectedGrossPayErrorMessage = "Enter how much you get paid"
   val expectedEmptyErrorMessage = "Please enter numbers and \".\" only"
@@ -211,6 +212,7 @@ object QuickCalcCacheSetup {
   val expectedWholeNumberHourlyErrorMessage = "Enter your hours a week as a whole number"
   val expectedMaxHoursAWeekErrorMessage = "Enter your hours a week as a number between 1 and 168"
   val expectedMaxDaysAWeekErrorMessage = "Enter your days a week as a number between 1 and 7"
-  val expectedMaxGrossPayErrorMessage = "Enter your pay as a number less than £10,000,000.00"
-  val expectedMaxHourlyRateErrorMessage = "Enter your pay as a number less than £10,000,000.00"
+  val expectedMaxGrossPayErrorMessage = "Enter your pay in pounds and pence. Make sure it’s less than 10000000.00"
+  val expectedMaxHourlyRateErrorMessage = "Enter your pay as a number less than 10000000.00"
+  val expectedYesNoAnswerErrorMessage = "Answer ’Yes’ or ’No’"
 }
