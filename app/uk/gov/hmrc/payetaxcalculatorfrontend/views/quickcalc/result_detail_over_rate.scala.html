@@ -16,8 +16,6 @@
 @for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
   @if(print){
     <li>
-      <br>
-      <br>
   } else {
     <li style="margin:0;" id="@{"tabContent"+breakdown.period}"
     data-tab-content="@{breakdown.period}"
@@ -68,6 +66,17 @@
         <p>{Messages("quick_calc.result.adjusted.info")}</p>
       }
     }
+
+  <p class="heading-small">@Messages("quick_calc.about_k_code_a")
+    <a href="https://www.gov.uk/tax-codes/letters-in-your-tax-code-what-they-mean" target="_blank">
+      @{
+        if(summary.taxCode.contains('S')) Messages("quick_calc.about_k_code_b_sk")
+        else Messages("quick_calc.about_k_code_b_k")
+      }
+    </a>
+  </p>
+
+  <p>@Messages("quick_calc.about_k_code_c")</p>
 
     <div class="form-group" style="margin-top:2em">
       <details @detailStatus>
@@ -135,12 +144,6 @@
       <br>
       <br>
       <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
       <div role="banner" id="global-header" class=" with-proposition ">
         <div class="header-wrapper">
           <div class="header-global">
@@ -160,6 +163,9 @@
           </div>
         </div>
       </div>
+      <br>
+      <br>
+      <br>
     }
   }
 }
