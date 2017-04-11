@@ -149,18 +149,4 @@ object TaxResult {
     value.replaceAll("Scotland ", "")
   }
 
-  def getPeriodFromHtml(tab: scala.xml.Elem): String = {
-    println("")
-    println("")
-    println(tab)
-    println("")
-    println("")
-    tab.toString() match {
-      case "tabContentmonthly" => ""
-      case "tabContentweekly" => ""
-      case "tabContentmonthly" => "111"
-      case _ => "222"
-    }
-
-  }
 }
