@@ -94,7 +94,7 @@ quick_calc.result.tabLabels.week=Week
 quick_calc.result.info_a=We’ve estimated your National Insurance contribution based on the most common
 quick_calc.result.info_b=Class 1 options: Categories A, H and M (opens in a new tab)
 quick_calc.result.info_e=HMRC won’t keep a record of your data for security reasons.
-quick_calc.result.info_print=Print my calculation
+quick_calc.result.info_print=Print my calculation (3 pages: year, month and week)
 
 quick_calc.result.info_url_list=What to do now
 quick_calc.result.info_url_a=Check my tax for a previous year
@@ -186,3 +186,8 @@ quick_calc.about_tax_code.wrong_tax_code_number=Enter your current tax code as n
 quick_calc.about_tax_code.wrong_tax_code_prefix = Enter your current tax code, starting with the letter S or K, or the letters SK, followed by numbers
 quick_calc.about_tax_code.wrong_tax_code_error_link = There’s a problem with the tax code you’ve entered
 quick_calc.about_tax_code_empty_error = Enter your current tax code or change your answer to ‘No’
+
+quick_calc.about_k_code_a = Your adjusted Income Tax is an estimate including any changes indicated by
+quick_calc.about_k_code_b_k = the K at the beginning of your tax code (opens in a new tab)
+quick_calc.about_k_code_b_sk = the SK at the beginning of your tax code (opens in a new tab)
+quick_calc.about_k_code_c = If you have a K in your tax code it usually means you owe tax from a previous year, possibly from taxable State benefits (like the State Pension) or taxable work benefits (like a company car).
