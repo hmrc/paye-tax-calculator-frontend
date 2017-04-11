@@ -185,7 +185,7 @@ object QuickCalcCacheSetup {
   val expectedTaxCodeAnswer = "No - we’ll use the default (1150L)"
   val expectedStatePensionYES = "Yes"
   val expectedStatePensionNO = "No"
-  val expectedYearlySalaryAnswer = "£20000 a year"
+  val expectedYearlySalaryAnswer = "£20,000 a year"
   val expectedDailySalaryAnswer = "£40 a day"
   val expectedHourlySalaryAnswer = "£8 an hour"
   val expectedDailyPeriodAnswer = "5"

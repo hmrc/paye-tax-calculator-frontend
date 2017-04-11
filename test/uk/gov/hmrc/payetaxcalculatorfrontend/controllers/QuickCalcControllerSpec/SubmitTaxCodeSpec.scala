@@ -18,7 +18,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpe
 
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
-import play.filters.csrf.CSRFFilter
+
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.UserTaxCode
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator

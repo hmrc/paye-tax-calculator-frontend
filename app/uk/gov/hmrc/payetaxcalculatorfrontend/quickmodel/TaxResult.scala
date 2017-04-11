@@ -19,6 +19,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 import uk.gov.hmrc.payeestimator.domain.{TaxBreakdown, TaxCalc}
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
 
+
 object TaxResult {
 
   val SCOTTISH_TAX_CODE_PREFIX = "SK"
@@ -147,4 +148,5 @@ object TaxResult {
   def omitScotland(value: String): String = {
     value.replaceAll("Scotland ", "")
   }
+
 }
