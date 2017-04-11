@@ -61,7 +61,7 @@
           }
           <p @if(print){style="display: none" }>
             <a href="javascript:;" onclick="getPeriodTab()">
-              <a href="@prodRoutes.QuickCalcController.showPrint()">
+              <a id="print-calculation" href="@prodRoutes.QuickCalcController.showPrint()">
                 @Messages("quick_calc.result.info_print")
               </a>
             </a>
