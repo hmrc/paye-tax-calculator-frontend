@@ -70,9 +70,9 @@ object YouHaveToldUs {
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
       val url = routes.QuickCalcController.showSalaryForm().url
       val idSuffix = "income"
-      def asPounds(v: BigDecimal) = "£" + v
+      def asPounds(v: String) = "£" + v
 
-      YouHaveToldUsItem(s"${asPounds(s.amount)} ${s.period}", s.period.replace(" ","_"), url, idSuffix)
+      YouHaveToldUsItem(s"${asPounds(TaxResult.moneyFormatter(s.amount))} ${s.period}", s.period.replace(" ","_"), url, idSuffix)
     }
   }
 

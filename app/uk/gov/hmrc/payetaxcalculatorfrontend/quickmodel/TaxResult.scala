@@ -19,6 +19,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 import uk.gov.hmrc.payeestimator.domain.{TaxBreakdown, TaxCalc}
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
 
+
 object TaxResult {
 
   val SCOTTISH_TAX_CODE_PREFIX = "SK"
@@ -148,11 +149,17 @@ object TaxResult {
     value.replaceAll("Scotland ", "")
   }
 
-  def getPeriodFromHtml(tab: String): String = {
-    tab match {
-      case "tabContentmonthly" => ???
-      case "tabContentweekly" => ???
-      case _ => ???
+  def getPeriodFromHtml(tab: scala.xml.Elem): String = {
+    println("")
+    println("")
+    println(tab)
+    println("")
+    println("")
+    tab.toString() match {
+      case "tabContentmonthly" => ""
+      case "tabContentweekly" => ""
+      case "tabContentmonthly" => "111"
+      case _ => "222"
     }
 
   }

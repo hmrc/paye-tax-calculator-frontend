@@ -26,7 +26,7 @@ GET         /your-answers                 uk.gov.hmrc.payetaxcalculatorfrontend.
 
 GET         /your-results                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult
 
-GET         /print                        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showPrint(resp:String)
+GET         /print                        uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showPrint
 
 GET         /restart                      uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.restartQuickCalc
 

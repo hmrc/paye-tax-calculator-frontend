@@ -79,23 +79,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     }
   }
 
-  def showPrint(resp: String): Action[AnyContent] = tokenAction { implicit request =>
-
-    println("1111111111111111")
-    println("1111111111111111")
-    println("1111111111111111")
-    println("1111111111111111")
-    println("1111111111111111")
-    println(resp.trim)
-    println(request.body)
-    println(request.body.asText)
-    println(request.body.asRaw.get.initialData)
-    println(request.rawQueryString)
-    println("1111111111111111")
-    println("1111111111111111")
-    println("1111111111111111")
-    println("1111111111111111")
-    println("1111111111111111")
+  def showPrint(): Action[AnyContent] = tokenAction { implicit request =>
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {

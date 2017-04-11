@@ -1,10 +1,3 @@
-// slightly modified https://github.com/hmrc/assets-frontend/blob/master/assets/javascripts/modules/toggle.js
-// to be deleted once PR: https://github.com/hmrc/assets-frontend/pull/747/files is merged
-
-function updateTag() {
-  getPeriodTab();
-  alert(document.getElementById("getPeriodTab").innerHTML);
-}
 function getPeriodTab() {
   var getYearlyTabFromHtml = document.getElementById("tabContentannual").id;
   var getMonthlyTabFromHtml = document.getElementById("tabContentmonthly").id;
@@ -14,20 +7,20 @@ function getPeriodTab() {
   var getMonthlyTabAriaFromHtml = document.getElementById("tabContentmonthly").getAttribute('aria-hidden');
   var getWeeklyTabAriaFromHtml = document.getElementById("tabContentweekly").getAttribute('aria-hidden');
 
-  if (getYearlyTabAriaFromHtml == "false")
+  if (getYearlyTabAriaFromHtml === "false")
   {
-    document.getElementById("getPeriodTab").innerHTML = getYearlyTabFromHtml;
+    document.getElementById("getPeriodTab").setAttribute = ('value', getYearlyTabFromHtml);
+    document.getElementById("getPeriodTab").innerHTML = "getPeriodFromHtml(" + getYearlyTabFromHtml +")";
   }
-  else if (getMonthlyTabAriaFromHtml == "false")
+  else if (getMonthlyTabAriaFromHtml === "false")
   {
-    document.getElementById("getPeriodTab").innerHTML = getMonthlyTabFromHtml;
+    document.getElementById("getPeriodTab").setAttribute = ('value', getMonthlyTabFromHtml);
+    document.getElementById("getPeriodTab").innerHTML = "getPeriodFromHtml(" + getMonthlyTabFromHtml +")";
   }
-  else if (getWeeklyTabAriaFromHtml == "false")
+  else if (getWeeklyTabAriaFromHtml === "false")
   {
-      document.getElementById("getPeriodTab").innerHTML = getWeeklyTabFromHtml;
+      document.getElementById("getPeriodTab").setAttribute = ('value', getWeeklyTabFromHtml);
+      document.getElementById("getPeriodTab").innerHTML = "getPeriodFromHtml(" + getWeeklyTabFromHtml +")";
   }
-  return document.getElementById("getPeriodTab").innerHTML;
+  return document.getElementById("getPeriodTab").innerHTML.toString ;
 }
-
-
-

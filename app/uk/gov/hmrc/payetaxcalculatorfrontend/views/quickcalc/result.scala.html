@@ -5,7 +5,6 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.{routes => prodRoutes}
 @import uk.gov.hmrc.payetaxcalculatorfrontend.FrontendAppConfig
 
-
 @(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String, detailStatus: String, print: Boolean)(implicit request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
@@ -60,12 +59,13 @@
             if(summary.taxCode.contains('K')) result_detail_over_rate(quickCalcAggregateInput, taxYear, detailStatus, print)
             else result_detail(quickCalcAggregateInput, taxYear, detailStatus, print)
           }
-          <button onclick="getPeriodTab()">Test</button>
-          @periodTab
-
-          <p @if(print){style="display: none" }><a onclick="getPeriodTab()" href="@prodRoutes.QuickCalcController.showPrint(
-            ""
-          )">@Messages("quick_calc.result.info_print")</a></p>
+          <p @if(print){style="display: none" }>
+            <a href="javascript:;" onclick="getPeriodTab()">
+              <a href="@prodRoutes.QuickCalcController.showPrint()">
+                @Messages("quick_calc.result.info_print")
+              </a>
+            </a>
+          </p>
 
           <div class="form-group">
             <ul @if(print){style="display: none" }>
