@@ -52,7 +52,7 @@
 
           @if(overStatePensionAgeForm("overStatePensionAge").hasErrors){
             <fieldset class="form-field--error">
-              <div class="error-notification"  id="overStatePensionAgeError">
+              <div class="error-notification"  id="over-state-pension-age-error">
               @{overStatePensionAgeForm("overStatePensionAge").errors.head.message}
               </div>
           } else {<fieldset>}
@@ -61,7 +61,7 @@
 
             <label class="block-label">@Messages("quick_calc.over_state_pension_age.yes")
               <input type="radio"
-              id="overStatePensionAgeYes"
+              id="over-state-pension-age-yes"
               name="overStatePensionAge"
               value="true"
                 @if(radioField.value.contains("true")) { checked="checked" } />
@@ -69,7 +69,7 @@
 
             <label class="block-label">@Messages("quick_calc.over_state_pension_age.no")
               <input type="radio"
-              id="overStatePensionAgeNo"
+              id="over-state-pension-age-no"
               name="overStatePensionAge"
               value="false"
                 @if(radioField.value.contains("false")) { checked="checked" } />

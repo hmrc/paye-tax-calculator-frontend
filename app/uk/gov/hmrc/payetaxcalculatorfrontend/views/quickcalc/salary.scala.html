@@ -25,7 +25,7 @@
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
           @if(salaryForm("amount").hasErrors){
-            <li><a href="#pay-amount">
+            <li id="salary-amount-header-error"><a href="#pay-amount">
               @if(salaryForm("amount").value.isEmpty) {
                 @Messages("quick_calc.salary.amount_empty_error_link")
               } else {
@@ -35,7 +35,7 @@
             </a></li>
           }
           @if(salaryForm("period").hasErrors){
-            <li><a href="#periodError">@{
+            <li id="salary-period-header-error"><a href="#period-error">@{
               Messages("quick_calc.salary.option_error_link")
             }
             </a></li>
@@ -74,7 +74,7 @@
       <div class="form-group">
         @if(salaryForm("period").hasErrors){
           <fieldset class="form-field--error">
-            <div class="error-notification" id="periodError">
+            <div class="error-notification" id="period-error">
             @{salaryForm("period").errors.head.message}
             </div>
           } else {<fieldset>}

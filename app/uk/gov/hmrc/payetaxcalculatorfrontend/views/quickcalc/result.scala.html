@@ -47,9 +47,9 @@
             }
             aria-selected="true"
             aria-controls=@{
-              "tabContent" + breakdown.period
+              "tab-content-" + breakdown.period
             }>
-              <a class="tabs-nav__tab tabs-nav__tab--active"
+              <a id="label-@breakdown.period" class="tabs-nav__tab tabs-nav__tab--active"
               href="#">@label</a>
             </li>
           }
