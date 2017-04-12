@@ -18,7 +18,6 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult.omitScotland
@@ -72,19 +71,27 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          Ok(result(aggregate, omitScotland(date.taxYear), "", print = false))
+          Ok(result(TaxResult.tabForm, aggregate, omitScotland(date.taxYear), "", print = false, ""))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
     }
   }
 
-  def showPrint(): Action[AnyContent] = tokenAction { implicit request =>
+  def submitPrint(): Action[AnyContent] = tokenAction { implicit request =>
+    TaxResult.tabForm.bindFromRequest().get.tab match {
+      case "tab-content-monthly" => Future.successful(Redirect(routes.QuickCalcController.showPrint("monthly")))
+      case "tab-content-weekly" => Future.successful(Redirect(routes.QuickCalcController.showPrint("weekly")))
+      case _ => Future.successful(Redirect(routes.QuickCalcController.showPrint("annual")))
+    }
+  }
+
+  def showPrint(tab: String): Action[AnyContent] = tokenAction { implicit request =>
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          Ok(result(aggregate, date.taxYear, "open", print = true))
+          Ok(result(TaxResult.tabForm, aggregate, date.taxYear, "open", print = true, tab))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
@@ -99,17 +106,42 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
       salaryAmount => {
         val updatedAggregate = cache.fetchAndGetEntry()
                       .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-                        .map(_.copy(savedSalary = Some(salaryAmount), savedPeriod = None))
+                        .map(oldAggregate => {
+                          val newAggregate = oldAggregate.copy(savedSalary = Some(salaryAmount))
+                          newAggregate.savedSalary match {
+                            case Some(detail) if detail.period == (oldAggregate.savedSalary match {
+                              case Some(salary) => salary.period
+                              case _ => "" }) =>
+                              newAggregate.copy(
+                                savedSalary = Some(Salary(salaryAmount.amount, detail.period, detail.howManyAWeek)),
+                                savedPeriod = Some(Detail((salaryAmount.amount*100).toInt, oldAggregate.savedSalary.get.howManyAWeek.get, detail.period, url))
+                              )
+                            case _ => newAggregate.copy(savedPeriod = None)
+                          }
+                        })
 
         updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
-            salaryAmount.period match {
-              case "a day" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-              case "an hour" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-              case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
+          salaryAmount.period match {
+            case "a day" => if(agg.savedPeriod.map(_.period).contains("a day")){
+              nextPageOrSummaryIfAllQuestionsAnswered(agg) {
                 Redirect(routes.QuickCalcController.showStatePensionForm())
+              }
+            } else {
+              Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+            }
+            case "an hour" => if(agg.savedPeriod.map(_.period).contains("an hour")){
+              nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+                Redirect(routes.QuickCalcController.showStatePensionForm())
+              }
+            } else {
+              Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+            }
+            case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+              Redirect(routes.QuickCalcController.showStatePensionForm())
             }
           }
-        }))
+        }
+        ))
       }
     )
   }

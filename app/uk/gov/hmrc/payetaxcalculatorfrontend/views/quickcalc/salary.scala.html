@@ -3,6 +3,7 @@
 @import views.html.helper._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 
+@import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult
 @(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
 @periodLabels = @{List("hourly","daily","weekly","monthly","yearly")}
 @radioFieldAmount = @{ salaryForm("amount") }
@@ -63,7 +64,7 @@
 
           <span class="visuallyhidden">Amount</span>
           <span>£</span>
-          <input id="pay-amount" name="amount" value="@{radioFieldAmount.value}" />
+          <input id="pay-amount" name="amount" value="@{TaxResult.moneyFormatter(radioFieldAmount.value.getOrElse("").toString)}" />
 
           </label>
 

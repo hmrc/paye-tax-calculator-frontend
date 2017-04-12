@@ -1,0 +1,22 @@
+input[type="submit"], input[type="submit"]:focus, input[type="submit"]:active,
+button-h, button-h:focus, button-h:active {
+    /* Remove all decorations to look like normal text */
+    background: none;
+    border: none;
+    display: inline;
+    font: inherit;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    outline-offset: 0;
+    /* Additional styles to look like a link */
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}
+/* Remove extra space inside buttons in Firefox */
+input[type="submit"]::-moz-focus-inner,
+button-h::-moz-focus-inner {
+    border: none;
+    padding: 0;
+}

@@ -9,18 +9,15 @@ function getPeriodTab() {
 
   if (getYearlyTabAriaFromHtml === "false")
   {
-    document.getElementById("getPeriodTab").setAttribute = ('value', getYearlyTabFromHtml);
-    document.getElementById("getPeriodTab").innerHTML = "getPeriodFromHtml(" + getYearlyTabFromHtml +")";
+    document.getElementById("user-tab").value = getYearlyTabFromHtml;
   }
   else if (getMonthlyTabAriaFromHtml === "false")
   {
-    document.getElementById("getPeriodTab").setAttribute = ('value', getMonthlyTabFromHtml);
-    document.getElementById("getPeriodTab").innerHTML = "getPeriodFromHtml(" + getMonthlyTabFromHtml +")";
+    document.getElementById("user-tab").value = getMonthlyTabFromHtml;
   }
   else if (getWeeklyTabAriaFromHtml === "false")
   {
-      document.getElementById("getPeriodTab").setAttribute = ('value', getWeeklyTabFromHtml);
-      document.getElementById("getPeriodTab").innerHTML = "getPeriodFromHtml(" + getWeeklyTabFromHtml +")";
+      document.getElementById("user-tab").value = getWeeklyTabFromHtml;
   }
-  return document.getElementById("getPeriodTab").innerHTML.toString ;
+  return document.getElementById("user-tab").value.toString ;
 }

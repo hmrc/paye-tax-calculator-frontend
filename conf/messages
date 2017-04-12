@@ -94,7 +94,7 @@ quick_calc.result.tabLabels.week=Week
 quick_calc.result.info_a=We’ve estimated your National Insurance contribution based on the most common
 quick_calc.result.info_b=Class 1 options: Categories A, H and M (opens in a new tab)
 quick_calc.result.info_e=HMRC won’t keep a record of your data for security reasons.
-quick_calc.result.info_print=Print my calculation (3 pages: year, month and week)
+quick_calc.result.info_print=Print my calculation
 
 quick_calc.result.info_url_list=What to do now
 quick_calc.result.info_url_a=Check my tax for a previous year
