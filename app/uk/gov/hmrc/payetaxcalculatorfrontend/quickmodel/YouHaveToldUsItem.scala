@@ -28,7 +28,7 @@ trait YouHaveToldUs[A] {
 object YouHaveToldUs {
   def apply[A : YouHaveToldUs](a: A): YouHaveToldUsItem = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
-  val SOTTISH_RATE = "scottish_rate"
+  val SOTTISH_RATE = "scottish-rate"
 
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
@@ -79,7 +79,7 @@ object YouHaveToldUs {
   implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[Detail] {
     def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
       val label = s"${detail.period.replace(" ","_")}_sub"
-      val idSuffix = "salary_period"
+      val idSuffix = "salary-period"
       val url = {
         detail.period match {
           case "a day" => routes.QuickCalcController.showDaysAWeek(detail.amount, detail.urlForChange).url

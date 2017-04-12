@@ -21,7 +21,7 @@
       tabindex="-1">
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
-          <li><a href="#scottishRateError">@{
+          <li><a id="scottish-rate-error-link" href="#scottish-rate-inline-error">@{
             Messages("quick_calc.salary.question.scottish_income_error_link")
           }</a></li>
         </ul>
@@ -44,24 +44,24 @@
 
             @if(scottishRate("scottishRate").hasErrors){
               <fieldset class="form-field--error">
-                <div class="error-notification" id="scottishRateError">
+                <div class="error-notification" id="scottish-rate-inline-error">
                 @{scottishRate("scottishRate").errors.head.message}
                 </div>
             } else {<fieldset>}
 
             <legend class="visuallyhidden">@Messages("quick_calc.salary.question.scottish_income")</legend>
 
-            <label class="block-label" for="scottishRate-yes">@Messages("quick_calc.over_state_pension_age.yes")
+            <label class="block-label" for="scottish-rate-yes">@Messages("quick_calc.over_state_pension_age.yes")
               <input type="radio"
-              id="scottishRate-yes"
+              id="scottish-rate-yes"
               name="scottishRate"
               value="true"
                 @if(radioField.value.contains("true")) { checked="checked" } />
             </label>
 
-            <label class="block-label" for="scottishRate-no">@Messages("quick_calc.over_state_pension_age.no")
+            <label class="block-label" for="scottish-rate-no">@Messages("quick_calc.over_state_pension_age.no")
               <input type="radio"
-              id="scottishRate-no"
+              id="scottish-rate-no"
               name="scottishRate"
               value="false"
                 @if(radioField.value.contains("false")) { checked="checked" } />
