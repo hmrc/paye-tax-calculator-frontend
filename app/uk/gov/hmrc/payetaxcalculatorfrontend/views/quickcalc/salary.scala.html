@@ -27,7 +27,6 @@
           @if(salaryForm("amount").hasErrors){
             <li id="salary-amount-error-link"><a href="#pay-amount">
               @if(salaryForm("amount").value.filter(_.nonEmpty).isEmpty) {
-                @println(salaryForm("amount").value)
                 @Messages("quick_calc.salary.amount_empty_error_link")
               } else {
                 @Messages("quick_calc.salary.amount_input_error_link")
