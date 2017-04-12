@@ -29,6 +29,28 @@ class SubmitHoursSpec extends AppUnitGenerator {
 
   "Submit Hours Form" should {
 
+    "return 400 and error message when empty Hours Form submission" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.salaryInHoursForm
+      val action = await(csrfAddToken(controller.submitHoursAWeek(1)))
+
+      val days = Map("amount" -> "1", "howManyAWeek" -> "")
+
+      val result = action(request.withSession("csrfToken" -> "someToken")
+        .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
+
+      val actualHeaderMessage = parseHtml.getElementById("how-many-hours-a-week-error-link").text()
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
+      status shouldBe 400
+      actualErrorMessage shouldBe expectedEmptyHoursErrorMessage
+      actualHeaderMessage shouldBe expectedEmptyHoursHeaderMessage
+    }
+
     "return 400 and error message when Hours in a Week is 0" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInHoursForm
@@ -43,10 +65,12 @@ class SubmitHoursSpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
+      val actualHeaderMessage = parseHtml.getElementById("how-many-hours-a-week-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
       actualErrorMessage shouldBe expectedMinHoursAWeekErrorMessage
+      actualHeaderMessage shouldBe expectedInvalidPeriodAmountHeaderMessage
     }
 
 
@@ -62,10 +86,12 @@ class SubmitHoursSpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
+      val actualHeaderMessage = parseHtml.getElementById("how-many-hours-a-week-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
       actualErrorMessage shouldBe expectedMaxHoursAWeekErrorMessage
+      actualHeaderMessage shouldBe expectedInvalidPeriodAmountHeaderMessage
     }
 
     "return 400 and error message when Hours in a Week is 1.5" in {
@@ -82,10 +108,12 @@ class SubmitHoursSpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
+      val actualHeaderMessage = parseHtml.getElementById("how-many-hours-a-week-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
       actualErrorMessage shouldBe expectedWholeNumberHourlyErrorMessage
+      actualHeaderMessage shouldBe expectedEmptyHoursHeaderMessage
     }
 
     "return 303, with new Hours worked, 40 and non-existent aggregate" in {

@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpec
 
+import org.jsoup.Jsoup
 import play.api.test.Helpers._
-
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.OverStatePensionAge
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
@@ -38,7 +38,15 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
 
       val status = result.header.status
 
+      val responseBody = contentAsString(result)
+      val parseHtml = Jsoup.parse(responseBody)
+
+      val actualHeaderErrorMessage = parseHtml.getElementById("over-state-pension-age-error-link").text()
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
       status shouldBe 400
+      actualHeaderErrorMessage shouldBe expectedInvalidStatePensionAnswerHeaderMessage
+      actualErrorMessage shouldBe expectedYesNoAnswerErrorMessage
     }
 
     "return 400 for invalid form answer and empty list of aggregate data" in {
@@ -52,7 +60,15 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
 
       val status = result.header.status
 
+      val responseBody = contentAsString(result)
+      val parseHtml = Jsoup.parse(responseBody)
+
+      val actualHeaderErrorMessage = parseHtml.getElementById("over-state-pension-age-error-link").text()
+      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+
       status shouldBe 400
+      actualHeaderErrorMessage shouldBe expectedInvalidStatePensionAnswerHeaderMessage
+      actualErrorMessage shouldBe expectedYesNoAnswerErrorMessage
     }
 
     "return 303, with an answer \"No\" saved on existing list of aggregate data without Salary and redirect to Salary Page" in {

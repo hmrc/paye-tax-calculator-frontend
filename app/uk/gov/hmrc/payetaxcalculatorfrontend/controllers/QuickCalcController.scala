@@ -102,23 +102,25 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     val url = request.uri
     Salary.salaryBaseForm.bindFromRequest().fold(
       formWithErrors => Future(BadRequest(salary(formWithErrors))),
-
       salaryAmount => {
         val updatedAggregate = cache.fetchAndGetEntry()
-                      .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-                        .map(oldAggregate => {
-                          val newAggregate = oldAggregate.copy(savedSalary = Some(salaryAmount))
-                          newAggregate.savedSalary match {
-                            case Some(detail) if detail.period == (oldAggregate.savedSalary match {
-                              case Some(salary) => salary.period
-                              case _ => "" }) =>
-                              newAggregate.copy(
-                                savedSalary = Some(Salary(salaryAmount.amount, detail.period, detail.howManyAWeek)),
-                                savedPeriod = Some(Detail((salaryAmount.amount*100).toInt, oldAggregate.savedSalary.get.howManyAWeek.get, detail.period, url))
-                              )
-                            case _ => newAggregate.copy(savedPeriod = None)
-                          }
-                        })
+          .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+          .map(oldAggregate => {
+            val newAggregate = oldAggregate.copy(savedSalary = Some(salaryAmount))
+            newAggregate.savedSalary match {
+              case Some(detail)
+                if detail.period == (oldAggregate.savedSalary match {
+                  case Some(salary) => salary.period
+                  case _ => "" }) =>
+                  newAggregate.copy(
+                    savedSalary = Some(Salary(salaryAmount.amount, detail.period, detail.howManyAWeek)),
+                    savedPeriod = Some(Detail((salaryAmount.amount*100).toInt,
+                                      oldAggregate.savedSalary.getOrElse(Salary(salaryAmount.amount, detail.period, detail.howManyAWeek)).howManyAWeek.getOrElse(detail.howManyAWeek.get),
+                                      detail.period, url)))
+              case _ => newAggregate.copy(savedPeriod = None)
+            }
+          }
+          )
 
         updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
           salaryAmount.period match {

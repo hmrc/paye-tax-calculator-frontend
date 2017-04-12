@@ -1,11 +1,11 @@
 function getPeriodTab() {
-  var getYearlyTabFromHtml = document.getElementById("tabContentannual").id;
-  var getMonthlyTabFromHtml = document.getElementById("tabContentmonthly").id;
-  var getWeeklyTabFromHtml = document.getElementById("tabContentweekly").id;
+  var getYearlyTabFromHtml = document.getElementById("tab-content-annual").id;
+  var getMonthlyTabFromHtml = document.getElementById("tab-content-monthly").id;
+  var getWeeklyTabFromHtml = document.getElementById("tab-content-weekly").id;
 
-  var getYearlyTabAriaFromHtml = document.getElementById("tabContentannual").getAttribute('aria-hidden');
-  var getMonthlyTabAriaFromHtml = document.getElementById("tabContentmonthly").getAttribute('aria-hidden');
-  var getWeeklyTabAriaFromHtml = document.getElementById("tabContentweekly").getAttribute('aria-hidden');
+  var getYearlyTabAriaFromHtml = document.getElementById("tab-content-annual").getAttribute('aria-hidden');
+  var getMonthlyTabAriaFromHtml = document.getElementById("tab-content-monthly").getAttribute('aria-hidden');
+  var getWeeklyTabAriaFromHtml = document.getElementById("tab-content-weekly").getAttribute('aria-hidden');
 
   if (getYearlyTabAriaFromHtml === "false")
   {

@@ -28,6 +28,33 @@ import uk.gov.hmrc.play.http.SessionKeys
 class SubmitSalarySpec extends AppUnitGenerator {
 
   "Submit Salary Form" should {
+
+    "return 400, with no aggregate data and empty Salary Form submission" in {
+      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val formSalary = Salary.salaryBaseForm
+      val action = await(csrfAddToken(controller.submitSalaryAmount()))
+
+      val formData = Map("value" -> "", "period" -> "")
+
+      val result = action(request.withSession("csrfToken" -> "someToken")
+        .withFormUrlEncodedBody(formSalary.bind(formData).data.toSeq:_*)
+        .withSession(SessionKeys.sessionId -> "test-salary"))
+
+      val status = result.header.status
+      val parseHtml = Jsoup.parse(contentAsString(result))
+
+      val actualHeaderPeriodErrorMessage = parseHtml.getElementById("salary-period-error-link").text()
+      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
+      val actualGrossPayErrorMessage = parseHtml.getElementById("pay-amount-inline-error").text()
+      val actualPeriodPayErrorMessage =  parseHtml.getElementById("period-inline-error").text()
+
+      status shouldBe 400
+      actualHeaderPeriodErrorMessage shouldBe expectedNotChosenPeriodHeaderMesssage
+      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidEmptyGrossPayHeaderMessage
+      actualGrossPayErrorMessage shouldBe expectedEmptyGrossPayErrorMessage
+      actualPeriodPayErrorMessage shouldBe expectedNotChosenPeriodErrorMessage
+    }
+
     "return 400, with current list of aggregate data and an error message for invalid Salary" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
       val formSalary = Salary.salaryBaseForm
@@ -42,10 +69,12 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
+      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedGrossPayErrorMessage
+      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidEmptyGrossPayHeaderMessage
+      actualErrorMessage shouldBe expectedEmptyGrossPayErrorMessage
     }
 
     "return 400, with empty list of aggregate data and an error message for invalid Salary" in {
@@ -62,10 +91,12 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
+      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
-      actualErrorMessage shouldBe expectedGrossPayErrorMessage
+      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidEmptyGrossPayHeaderMessage
+      actualErrorMessage shouldBe expectedEmptyGrossPayErrorMessage
     }
 
     "return 400 and error message when Salary submitted is \"9.999\" " in {
@@ -80,10 +111,12 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
+      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
       actualErrorMessage shouldBe expectedMaxGrossPayErrorMessage
+      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidGrossPayHeaderMessage
     }
 
     "return 400 and error message when Salary submitted is \"-1\" " in {
@@ -98,10 +131,12 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
+      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
       actualErrorMessage shouldBe expectedNegativeNumberErrorMessage
+      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidGrossPayHeaderMessage
     }
 
     "return 400 and error message when Salary submitted is \"10,000,000.00\"" in {
@@ -116,10 +151,12 @@ class SubmitSalarySpec extends AppUnitGenerator {
       val status = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
+      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
       actualErrorMessage shouldBe expectedMaxGrossPayErrorMessage
+      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidGrossPayHeaderMessage
     }
 
     """return 303, with new Yearly Salary "£20000", current list of aggregate data without State Pension Answer and redirect to State Pension Page""" in {

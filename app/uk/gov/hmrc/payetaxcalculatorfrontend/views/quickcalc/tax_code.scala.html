@@ -25,7 +25,7 @@
       tabindex="-1">
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
-          <li><a id="hasTaxCodeErrorHeader" href="#hasTaxCodeError">@{
+          <li><a id="has-tax-code-error-link" href="#has-tax-code-inline-error">@{
             Messages("quick_calc.about_has_tax_code_error_link")
           }</a></li>
         </ul>
@@ -40,7 +40,7 @@
       tabindex="-1">
         <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
         <ul>
-          <li><a id="taxCodeErrorHeader" href="#taxCode">
+          <li><a id="tax-code-error-link" href="#tax-code">
           @if(userTaxCodeForm("taxCode").value.filter(_.nonEmpty).isEmpty){
               @Messages("quick_calc.about_tax_code_error_link")
           }else{
@@ -62,7 +62,7 @@
 
       <div class="form-group">
         <fieldset class="inline form-field-group js-visible js-aria-show js-toggle"
-        id="hasTaxCode"
+        id="has-tax-code"
         data-target="tax-code-yes-target"
         data-trigger="js-toggle-trigger"
         data-open="tax-code-yes"
@@ -70,7 +70,7 @@
 
           @if(userTaxCodeForm("hasTaxCode").hasErrors){
             <fieldset class="form-field--error">
-              <div class="error-notification" id="hasTaxCodeError">
+              <div class="error-notification" id="has-tax-code-inline-error">
               @{userTaxCodeForm("hasTaxCode").errors.head.message}
               </div>
           } else {<fieldset>}
@@ -106,12 +106,12 @@
 
             @if(userTaxCodeForm("taxCode").errors){
               <fieldset class="form-field--error">
-              <div class="error-notification" id="taxCodeError">
+              <div class="error-notification" id="tax-code-inline-error">
               @userTaxCodeForm("taxCode").errors.head.message
               </div>
             } else {<fieldset>}
             @Messages("quick_calc.about_tax_code.has_tax_code")<br>
-            <input type="text" id="taxCode" name="taxCode" value="@{
+            <input type="text" id="tax-code" name="taxCode" value="@{
               userTaxCodeForm.value match {
                 case Some(userTaxCode) => userTaxCode.taxCode
                 case _ => ""

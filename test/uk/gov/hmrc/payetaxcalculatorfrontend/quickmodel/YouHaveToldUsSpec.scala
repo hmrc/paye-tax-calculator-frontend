@@ -57,12 +57,12 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
   "getGoBackLink should give a go back url for the Check your answers page, " +
     "go back to scottish page if the user do not has a tax code, otherwise back to tax code" in {
     val itemsWithTaxCode = List(YouHaveToldUsItem("£400 an hour","an_hour","/estimate-paye-take-home-pay/your-pay","income"),
-                                YouHaveToldUsItem("7","an_hour_sub","","salary_period"),
+                                YouHaveToldUsItem("7","an_hour_sub","","salary-period"),
                                 YouHaveToldUsItem("No","over_state_pension_age","/estimate-paye-take-home-pay/state-pension","pension-state"),
                                 YouHaveToldUsItem("Yes (1150L)","about_tax_code","/estimate-paye-take-home-pay/tax-code","tax-code"))
 
     val itemsWithOutTaxCode = List(YouHaveToldUsItem("£400 an hour","an_hour","/estimate-paye-take-home-pay/your-pay","income"),
-                                   YouHaveToldUsItem("7","an_hour_sub","","salary_period"),
+                                   YouHaveToldUsItem("7","an_hour_sub","","salary-period"),
                                    YouHaveToldUsItem("No","over_state_pension_age","/estimate-paye-take-home-pay/state-pension","pension-state"),
                                    YouHaveToldUsItem("No - we’ll use the default  (1150L)","about_tax_code","/estimate-paye-take-home-pay/tax-code","tax-code"),
                                    YouHaveToldUsItem("No","scottish_rate","/estimate-paye-take-home-pay/scottish-tax","scottish_rate"))
