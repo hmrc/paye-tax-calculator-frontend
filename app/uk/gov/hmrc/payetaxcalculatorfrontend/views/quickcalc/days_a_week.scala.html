@@ -22,7 +22,7 @@
       tabindex="-1">
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
-          <li><a href="#how-many-days-a-week">@{
+          <li><a id="how-many-days-a-week-error-link" href="#how-many-days-a-week">@{
             if(daysForm.errors.head.message == Messages("quick_calc.salary.question.error.number_of_days.less_than_zero")){
               Messages("quick_calc.salary.period_error_link_a")
             }
@@ -42,7 +42,7 @@
         <fieldset class="form-field-group">
           @if(daysForm("howManyAWeek").hasErrors){
             <label class="form-field--error">
-              <span class="error-notification">
+              <span id="how-many-days-a-week-inline-error" class="error-notification">
               @{daysForm("howManyAWeek").errors.head.message}
               </span>
           } else {<label>}

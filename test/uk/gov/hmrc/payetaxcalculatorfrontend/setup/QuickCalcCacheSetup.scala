@@ -200,7 +200,6 @@ object QuickCalcCacheSetup {
   val expectedPrefixTaxCodeErrorMessage = "Enter your current tax code, starting with the letter S or K, or the letters SK, followed by numbers"
   val expectedEmptyTaxCodeErrorMessage = "Enter your current tax code or change your answer to ‘No’"
 
-  val expectedGrossPayErrorMessage = "Enter how much you get paid"
   val expectedEmptyErrorMessage = "Please enter numbers and \".\" only"
   val expectedNegativeNumberErrorMessage = "Enter your pay as a number more than £0.00"
   val expectedInvalidSalaryErrorMessage = "Please enter amount in pounds and pence e.g. 123.45"
@@ -215,9 +214,50 @@ object QuickCalcCacheSetup {
   val expectedMaxGrossPayErrorMessage = "Enter your pay in pounds and pence. Make sure it’s less than 10000000.00"
   val expectedMaxHourlyRateErrorMessage = "Enter your pay as a number less than 10000000.00"
 
+
+  //Generic
   def expectedYesNoAnswerErrorMessage(implicit messages: Messages) =
     messages("select_one")
 
+  //Salary
+  def expectedInvalidEmptyGrossPayHeaderMessage(implicit messages: Messages) =
+    messages("quick_calc.salary.amount_empty_error_link")
+
+  def expectedInvalidGrossPayHeaderMessage(implicit messages: Messages) =
+    messages("quick_calc.salary.amount_input_error_link")
+
+  def expectedNotChosenPeriodHeaderMesssage(implicit messages: Messages) =
+    messages("quick_calc.salary.option_error_link")
+
+  def expectedEmptyGrossPayErrorMessage(implicit messages: Messages) =
+    messages("quick_calc.salary.question.error.empty_salary_input")
+
+  def expectedNotChosenPeriodErrorMessage(implicit messages: Messages) =
+    messages("quick_calc.salary.option_error")
+
+  //Days and Hours
+  def expectedInvalidPeriodAmountHeaderMessage(implicit messages: Messages) =
+    messages("quick_calc.salary.period_error_link_a")
+
+  //Hours
+  def expectedEmptyHoursHeaderMessage(implicit messages: Messages) =
+    messages("quick_calc.salary.period_error_link_c")
+
+  def expectedEmptyHoursErrorMessage(implicit messages: Messages) =
+    messages("quick_calc.salary.question.error.empty_number_hourly")
+
+  //Days
+  def expectedEmptyDaysHeaderMessage(implicit messages: Messages) =
+    messages("quick_calc.salary.period_error_link_b")
+
+  def expectedEmptyDaysErrorMessage(implicit messages: Messages) =
+    messages("quick_calc.salary.question.error.empty_number_daily")
+
+  //Over State Pension
+  def expectedInvalidStatePensionAnswerHeaderMessage(implicit messages: Messages) =
+    messages("quick_calc.over_state_pension_age_error_link")
+
+  //Tax Code
   def expectedInvalidTaxCodeHeaderMessage(implicit messages: Messages) =
     messages("quick_calc.about_tax_code.wrong_tax_code_error_link")
 

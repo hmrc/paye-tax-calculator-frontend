@@ -30,7 +30,7 @@
       tabindex="-1">
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
-          <li><a href="#overStatePensionAgeError">@{
+          <li><a id="over-state-pension-age-error-link" href="#over-state-pension-age-inline-error">@{
             Messages("quick_calc.over_state_pension_age_error_link")
           }</a></li>
         </ul>
@@ -52,7 +52,7 @@
 
           @if(overStatePensionAgeForm("overStatePensionAge").hasErrors){
             <fieldset class="form-field--error">
-              <div class="error-notification"  id="over-state-pension-age-error">
+              <div class="error-notification"  id="over-state-pension-age-inline-error">
               @{overStatePensionAgeForm("overStatePensionAge").errors.head.message}
               </div>
           } else {<fieldset>}

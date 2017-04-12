@@ -25,7 +25,7 @@
       tabindex="-1">
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
-          <li><a id="has-tax-code-error-header" href="#has-tax-code-error">@{
+          <li><a id="has-tax-code-error-link" href="#has-tax-code-inline-error">@{
             Messages("quick_calc.about_has_tax_code_error_link")
           }</a></li>
         </ul>
@@ -40,7 +40,7 @@
       tabindex="-1">
         <h2 id="error-summary-heading" class="h3-heading">@Messages("quick_calc.salary.error_header")</h2>
         <ul>
-          <li><a id="tax-code-error-header" href="#tax-code">
+          <li><a id="tax-code-error-link" href="#tax-code">
           @if(userTaxCodeForm("taxCode").value.filter(_.nonEmpty).isEmpty){
               @Messages("quick_calc.about_tax_code_error_link")
           }else{
@@ -70,7 +70,7 @@
 
           @if(userTaxCodeForm("hasTaxCode").hasErrors){
             <fieldset class="form-field--error">
-              <div class="error-notification" id="has-tax-code-error">
+              <div class="error-notification" id="has-tax-code-inline-error">
               @{userTaxCodeForm("hasTaxCode").errors.head.message}
               </div>
           } else {<fieldset>}
@@ -106,7 +106,7 @@
 
             @if(userTaxCodeForm("taxCode").errors){
               <fieldset class="form-field--error">
-              <div class="error-notification" id="tax-code-error">
+              <div class="error-notification" id="tax-code-inline-error">
               @userTaxCodeForm("taxCode").errors.head.message
               </div>
             } else {<fieldset>}

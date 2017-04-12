@@ -39,7 +39,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val actualHeaderErrorMessage = parseHtml.getElementById("taxCodeErrorHeader").text()
+      val actualHeaderErrorMessage = parseHtml.getElementById("tax-code-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
@@ -57,7 +57,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val actualHeaderErrorMessage = parseHtml.getElementById("taxCodeErrorHeader").text()
+      val actualHeaderErrorMessage = parseHtml.getElementById("tax-code-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
@@ -76,7 +76,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val actualHeaderErrorMessage = parseHtml.getElementById("taxCodeErrorHeader").text()
+      val actualHeaderErrorMessage = parseHtml.getElementById("tax-code-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
@@ -95,7 +95,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val actualHeaderErrorMessage = parseHtml.getElementById("taxCodeErrorHeader").text()
+      val actualHeaderErrorMessage = parseHtml.getElementById("tax-code-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
@@ -114,7 +114,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val actualHeaderErrorMessage = parseHtml.getElementById("taxCodeErrorHeader").text()
+      val actualHeaderErrorMessage = parseHtml.getElementById("tax-code-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
@@ -132,10 +132,12 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
+      val actualHeaderErrorMessage = parseHtml.getElementById("tax-code-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400
       actualErrorMessage shouldBe expectedWrongNumberTaxCodeErrorMessage
+      actualHeaderErrorMessage shouldBe expectedInvalidTaxCodeHeaderMessage
     }
 
     "return 400, with no aggregate data when Tax Code Form submission is empty" in {
@@ -151,7 +153,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
       val responseBody = contentAsString(result)
       val parseHtml = Jsoup.parse(responseBody)
 
-      val actualHeaderErrorMessage = parseHtml.getElementById("hasTaxCodeErrorHeader").text()
+      val actualHeaderErrorMessage = parseHtml.getElementById("has-tax-code-error-link").text()
       val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
 
       status shouldBe 400

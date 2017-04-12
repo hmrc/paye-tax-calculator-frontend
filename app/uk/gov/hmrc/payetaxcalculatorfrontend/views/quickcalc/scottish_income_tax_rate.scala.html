@@ -21,7 +21,7 @@
       tabindex="-1">
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
-          <li><a href="#scottish-rate-error">@{
+          <li><a id="scottish-rate-error-link" href="#scottish-rate-inline-error">@{
             Messages("quick_calc.salary.question.scottish_income_error_link")
           }</a></li>
         </ul>
@@ -44,7 +44,7 @@
 
             @if(scottishRate("scottishRate").hasErrors){
               <fieldset class="form-field--error">
-                <div class="error-notification" id="scottish-rate-error">
+                <div class="error-notification" id="scottish-rate-inline-error">
                 @{scottishRate("scottishRate").errors.head.message}
                 </div>
             } else {<fieldset>}

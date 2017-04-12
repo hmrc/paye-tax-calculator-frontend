@@ -23,7 +23,7 @@
       tabindex="-1">
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
-          <li><a href="#how-many-hours-a-week">@{
+          <li><a id="how-many-hours-a-week-error-link" href="#how-many-hours-a-week">@{
             if(hoursForm.errors.head.message == Messages("quick_calc.salary.question.error.number_of_hours.less_than_one")){
               Messages("quick_calc.salary.period_error_link_a")
             }
@@ -44,7 +44,7 @@
         <fieldset class="form-field-group">
           @if(hoursForm("howManyAWeek").hasErrors){
             <label class="form-field--error">
-              <span class="error-notification">
+              <span id="how-many-hours-a-week-inline-error" class="error-notification">
               @{hoursForm("howManyAWeek").errors.head.message}
               </span>
           } else {<label>}
