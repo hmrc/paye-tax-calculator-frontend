@@ -2,7 +2,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 
-@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String, detailStatus: String, print: Boolean)(implicit request: Request[_], messages: Messages)
+@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
 }
@@ -10,6 +10,13 @@
   List(Messages("quick_calc.result.tabLabels.year"),
     Messages("quick_calc.result.tabLabels.month"),
     Messages("quick_calc.result.tabLabels.week"))
+}
+
+@adjustment = @{
+  if(isOverMaxRate(summary)){
+      <span class="heading-small">{Messages("quick_calc.result.adjusted.head")}</span>
+      <p>{Messages("quick_calc.result.adjusted.info")}</p>
+  }
 }
 
 <ul>
@@ -57,15 +64,12 @@
     </tbody>
   </table>
 
-  @{
-    if(isOverMaxRate(summary, breakdown)){
-        <span class="heading-small">{Messages("quick_calc.result.adjusted.head")}</span>
-        <p>{Messages("quick_calc.result.adjusted.info")}</p>
-    }
-  }
+  <div id="adjustment-inf-@{label.toLowerCase()}">
+    @adjustment
+  </div>
 
   <div class="form-group" style="margin-top:2em">
-    <details @detailStatus>
+    <details class="print-open">
       <summary class="summary">
       @{Messages("quick_calc.result.how_we_calculated")}
       </summary>

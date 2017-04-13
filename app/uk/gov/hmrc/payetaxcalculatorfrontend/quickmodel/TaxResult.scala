@@ -111,22 +111,14 @@ object TaxResult {
       .getOrElse(throw new AssertionError("Unknown Engine change"))
   }
 
-  def isOverMaxRate(summary: TaxCalc): Boolean = {
-    val grossPay = summary.taxBreakdown.head.grossPay
-    val maxTaxRate = summary.maxTaxRate
-    val taxablePay = summary.taxBreakdown.head.taxablePay
-
-    isOverMaxRate(grossPay, maxTaxRate, taxablePay)
-  }
-
   def isOverMaxRate(grossPay: BigDecimal, maxTaxRate: BigDecimal, taxablePay: BigDecimal): Boolean = {
     (grossPay * maxTaxRate / 100) <= taxablePay
   }
 
-  def isOverMaxRate(summary: TaxCalc, breakdown: TaxBreakdown): Boolean = {
+  def isOverMaxRate(summary: TaxCalc): Boolean = {
     val grossPay = summary.taxBreakdown.head.grossPay
     val maxTaxRate = summary.maxTaxRate
-    val taxablePay = incomeTax(breakdown)
+    val taxablePay = incomeTax(summary.taxBreakdown.head)
 
     isOverMaxRate(grossPay, maxTaxRate, taxablePay)
   }
@@ -157,11 +149,21 @@ object TaxResult {
     }
   }
 
-  def moneyFormatter(value: String): String ={
-    val money = """(.*)\.(\d)""".r
+  def moneyFormatter(value: Option[String]): Option[String] ={
     value match {
-      case money(pounds, pins) => value + "0"
-      case _ => value
+      case Some(v) if v.nonEmpty => {
+        val valueInBigDecimal = BigDecimal(v)
+        val formatter = java.text.NumberFormat.getInstance
+        val money = """(.*)\.(\d)""".r
+        val outValue = formatter.format(valueInBigDecimal)
+        outValue match {
+          case money(pounds, pins) => {
+            Some(formatter.format(valueInBigDecimal)+"0")
+          }
+          case _ => Some(formatter.format(valueInBigDecimal))
+        }
+      }
+      case _ => None
     }
   }
 

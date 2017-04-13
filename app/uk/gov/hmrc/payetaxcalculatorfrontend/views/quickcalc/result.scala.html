@@ -6,7 +6,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.{routes => prodRoutes}
 @import uk.gov.hmrc.payetaxcalculatorfrontend.FrontendAppConfig
 
-@(tabForm: Form[Tab], quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String, detailStatus: String, print: Boolean, tab: String)(implicit request: Request[_], messages: Messages)
+@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
 }
@@ -18,100 +18,85 @@
 }
 
 @scriptGetTab = {
-  <script src='@routes.Assets.at("javascripts/shame.js")' type="text/javascript"></script>
+
 }
 
 @main_template(title = Messages("quick_calc.result.header"), mainClass = Some("full-width"), scriptElem = Some(scriptGetTab)) {
 
-  @{if(!print){beta_header()}}
+  <div class="print-hidden">@{beta_header()}</div>
 
-  <a @if(print){style="display: none" } class="link-back" id="r-back" href="@prodRoutes.QuickCalcController.summary()">@Messages("back")</a>
+  <a class="link-back print-hidden" id="r-back" href="@prodRoutes.QuickCalcController.summary()">@Messages("back")</a>
 
   <div class="grid-layout--stacked">
 
     <div class="grid-layout__column grid-layout__column--2-3">
 
-      <h1 @if(print){style="display: none" } class="heading-large">@Messages("quick_calc.result.header")</h1>
+      <h1 class="heading-large print-hidden">@Messages("quick_calc.result.header")</h1>
 
-        <div data-tabs>
-          <ul @if(print){style="display: none" } else {class="tabs-nav" role="tablist"} >
-          @for((breakdown, label) <- summary.taxBreakdown.zip(tabLabels)) {
-            <li style="margin:0;"
-            id=@{
-              breakdown.period
-            }
-            role="tab"
-            data-tab-link=@{
-              breakdown.period
-            }
-            aria-selected="true"
-            aria-controls=@{
-              "tab-content-" + breakdown.period
-            }>
+      <div data-tabs>
+        <ul class="tabs-nav print-hidden" role="tablist" >
+        @for((breakdown, label) <- summary.taxBreakdown.zip(tabLabels)) {
+          <li style="margin:0;"
+          id=@{
+            breakdown.period
+          }
+          role="tab"
+          data-tab-link=@{
+            breakdown.period
+          }
+          aria-selected="true"
+          aria-controls=@{
+            "tab-content-" + breakdown.period
+          }>
 
-              <a id="label-@{breakdown.period}" class="tabs-nav__tab tabs-nav__tab--active"
-                @if(print){
-                  data-tab-link="@tab" aria-selected="true"
-                }
-              href="#">@label</a>
+            <a id="label-@{breakdown.period}" class="tabs-nav__tab tabs-nav__tab--active"
+
+            href="#">@label</a>
+          </li>
+        }
+        </ul>
+
+        @{
+          if(summary.taxCode.contains('K')) result_detail_over_rate(quickCalcAggregateInput, taxYear)
+          else result_detail(quickCalcAggregateInput, taxYear)
+        }
+
+        <div class="form-group">
+          <a  class="print-hidden" href="javascript:window.print();">@Messages("quick_calc.result.info_print")</a>
+        </div>
+
+        <div class="form-group">
+          <ul class="print-hidden">
+            <li style="margin:0;">@Messages("quick_calc.result.info_a")
+              <a href="https://www.gov.uk/national-insurance-rates-letters/category-letters" target="_blank">@Messages("quick_calc.result.info_b")
+              </a>
             </li>
-          }
+            <li style="margin:0;">@Messages("quick_calc.result.info_e")</li>
           </ul>
-
-          @{
-            if(summary.taxCode.contains('K')) result_detail_over_rate(quickCalcAggregateInput, taxYear, detailStatus, print)
-            else result_detail(quickCalcAggregateInput, taxYear, detailStatus, print)
-          }
-
-          @helper.form(action = prodRoutes.QuickCalcController.submitPrint) {
-            @helper.CSRF.formField
-
-            <p @if(print){style="display: none" }>
-
-              <input onclick="getPeriodTab()" type="submit" class="button" id="print-continue"
-                      value="@Messages("quick_calc.result.info_print")" />
-
-              <input class="visuallyhidden" id="user-tab" name="tab" value="" />
-
-            </p>
-
-          }
-
-          <div class="form-group">
-            <ul @if(print){style="display: none" }>
-              <li style="margin:0;">@Messages("quick_calc.result.info_a")
-                <a href="https://www.gov.uk/national-insurance-rates-letters/category-letters" target="_blank">@Messages("quick_calc.result.info_b")
-                </a>
-              </li>
-              <li style="margin:0;">@Messages("quick_calc.result.info_e")</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <a @if(print){style="display: none" } href="@{FrontendAppConfig.betaFeedbackUrl}" target="_blank">@Messages("feedback")</a>
-        </div>
-        <div class="form-group">
-          <a @if(print){style="display: none" } class="print-hidden button" role="button" href="@prodRoutes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart">@Messages("restart")</a>
         </div>
       </div>
+
+      <div class="form-group">
+        <a class="print-hidden" href="@{FrontendAppConfig.betaFeedbackUrl}" target="_blank">@Messages("feedback")</a>
+      </div>
+      <div class="form-group">
+        <a class="print-hidden button" role="button" href="@prodRoutes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart">@Messages("restart")</a>
+      </div>
+    </div>
 
     <div class="grid-layout__column grid-layout__column--1-3">
       <div class="gutter-left">
-      <div class="sidebar sidebar--full-width ">
-      <aside style="margin-top: 30px; border-top: 10px solid #005ea5; padding-top: 5px;">
-        <h2 class="heading-medium" id="subsection-title">@Messages("quick_calc.result.info_url_list")</h2>
-        <p><a href="https://www.gov.uk/check-income-tax-last-year" target="_blank">@Messages("quick_calc.result.info_url_a")</a></p>
-        <p><a href="https://www.gov.uk/tax-overpayments-and-underpayments" target="_blank">@Messages("quick_calc.result.info_url_b")</a></p>
-        <p><a href="https://www.gov.uk/claim-tax-refund" target="_blank">@Messages("quick_calc.result.info_url_c")</a></p>
-      </aside>
-      </div>
+        <div class="sidebar sidebar--full-width ">
+          <aside style="margin-top: 30px; border-top: 10px solid #005ea5; padding-top: 5px;">
+            <h2 class="heading-medium" id="subsection-title">@Messages("quick_calc.result.info_url_list")</h2>
+            <p><a href="https://www.gov.uk/check-income-tax-last-year" target="_blank">@Messages("quick_calc.result.info_url_a")</a></p>
+            <p><a href="https://www.gov.uk/tax-overpayments-and-underpayments" target="_blank">@Messages("quick_calc.result.info_url_b")</a></p>
+            <p><a href="https://www.gov.uk/claim-tax-refund" target="_blank">@Messages("quick_calc.result.info_url_c")</a></p>
+          </aside>
+        </div>
       </div>
     </div>
 
   </div>
 
-  @if(print){
-    <body onload="window.print(); window.location.href='@prodRoutes.QuickCalcController.showResult()'">
-  }
 }
