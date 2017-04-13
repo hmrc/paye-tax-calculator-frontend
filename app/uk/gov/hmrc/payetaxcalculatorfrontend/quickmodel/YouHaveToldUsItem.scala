@@ -28,7 +28,7 @@ trait YouHaveToldUs[A] {
 object YouHaveToldUs {
   def apply[A : YouHaveToldUs](a: A): YouHaveToldUsItem = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
-  val SOTTISH_RATE = "scottish-rate"
+  val SOTTISH_RATE = "scottish_rate"
 
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {

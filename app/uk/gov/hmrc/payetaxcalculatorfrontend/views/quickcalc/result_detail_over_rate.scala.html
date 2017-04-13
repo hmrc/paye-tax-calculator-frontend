@@ -14,156 +14,105 @@
 
 <ul>
 @for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
-  @if(print){
-    <li>
-      <br>
-      <br>
-  } else {
-    <li style="margin:0;" id="@{"tab-content-"+breakdown.period}"
-    data-tab-content="@{breakdown.period}"
+  <li style="margin:0;" id=@{"tab-content-"+breakdown.period}
+  data-tab-content=@{breakdown.period}
     class="tab-content"
-    aria-labelledby="@{breakdown.period}">
-    }
+    role="tabpanel"
+    aria-labelledby=@{breakdown.period}>
   <p class="tab-content__first">
     <div class="data">
       <div class="transaction-banner--complete" style="text-align:center">
-      <p style="margin:10px 0 15px; text-align:center">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear is"}</p>
-      <span class="data-item bold-xlarge">£@{s"${moneyFormatter(breakdown.takeHomePay)} ${Messages("a")} ${label.toLowerCase}"}</span>
-      </div>
-    </div>
-    <br>
-    <p style="font-weight:normal">@{Messages("quick_calc.result.total_deductions.info")}</p>
-    <table style="width:100%">
-      <thead>
-        <tr>
-          <th colspan="2"><span style="display: none">@{Messages("quick_calc.result.total_deductions.info")}</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td id="income-tax-key" style="width:66%">@{
-            if(summary.taxCode.contains('S')) Messages("quick_calc.result.income_tax_scottish_adjusted")
-            else Messages("quick_calc.result.income_tax_adjusted")
-          }</td>
-          <td id="income-tax-value">
-            £@{
-              moneyFormatter(incomeTax(breakdown))
-            }
-          </td>
-        </tr>
-        <tr>
-          <td id="national-insurance-key" style="width:66%">@{Messages("quick_calc.result.your_national_insurance")}</td>
-          <td id="national-insurance-value" >£@{moneyFormatter(breakdown.taxCategories(1).total)}</td>
-        </tr>
-        <tr>
-          <td id="total-deductions-key" style="font-weight: 700; width:66%">@{Messages("quick_calc.result.deductions")}</td>
-          <td id="total-deductions-value" style="font-weight: 700">£@{moneyFormatter(breakdown.totalDeductions)}</td>
-        </tr>
-      </tbody>
-    </table>
+<p style="margin:10px 0 15px; text-align:center">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear is"}</p>
+  <span id="your-take-home-pay-@{label}" class="data-item bold-xlarge">£@{s"${moneyFormatter(breakdown.takeHomePay)} ${Messages("a")} ${label.toLowerCase}"}</span>
+  </div>
+  </div>
+  <br>
+  <p style="font-weight:normal">@{Messages("quick_calc.result.total_deductions.info")}</p>
+  <table style="width:100%">
+    <thead>
+      <tr>
+        <th colspan="2"><span style="display: none">@{Messages("quick_calc.result.total_deductions.info")}</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td id="income-tax-key-@{label}" style="width:66%">@{
+          if(summary.taxCode.contains('S')) Messages("quick_calc.result.income_tax_scottish_adjusted")
+          else Messages("quick_calc.result.income_tax_adjusted")
+        }</td>
+        <td id="income-tax-value-@{label}">
+          £@{
+          moneyFormatter(incomeTax(breakdown))
+        }
+        </td>
+      </tr>
+      <tr>
+        <td id="national-insurance-key-@{label}" style="width:66%">@{Messages("quick_calc.result.your_national_insurance")}</td>
+        <td id="national-insurance-value-@{label}">£@{moneyFormatter(breakdown.taxCategories(1).total)}</td>
+      </tr>
+      <tr>
+        <td id="total-deductions-key-@{label}" style="font-weight: 700; width:66%">@{Messages("quick_calc.result.deductions")}</td>
+        <td id="total-deductions-value-@{label}" style="font-weight: 700">£@{moneyFormatter(breakdown.totalDeductions)}</td>
+      </tr>
+    </tbody>
+  </table>
 
-    @{
-      if(isOverMaxRate(summary, breakdown)){
+  @{
+    if(isOverMaxRate(summary, breakdown)){
         <span class="heading-small">{Messages("quick_calc.result.adjusted.head")}</span>
         <p>{Messages("quick_calc.result.adjusted.info")}</p>
-      }
-    }
-
-    <div class="form-group" style="margin-top:2em">
-      <details @detailStatus>
-        <summary class="summary">
-        @{Messages("quick_calc.result.how_we_calculated")}
-        </summary>
-        <div>
-          <table style="width:100%">
-            <thead >
-              <tr>
-                <th colspan="2" style="font-weight:normal">
-                  @{s"${Messages("quick_calc.result.how_we_calculated.you_earn_a")} " +
-                      s"${Messages("quick_calc.result.how_we_calculated.you_earn_b")} "
-                  }
-                <span id="gross-pay" style="font-weight: 700">£@{moneyFormatter(breakdown.grossPay)}</span>:
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td id="k-adj-key-@{label}" style="width:66%">@{
-                  if(summary.taxCode.contains(SCOTTISH_TAX_CODE_PREFIX)) Messages("quick_calc.result.sk_code")
-                  else Messages("quick_calc.result.k_code")
-                }</td>
-                <td id="k-adj-value-@{label}">£@{
-                  moneyFormatter(breakdown.additionalTaxablePay)
-                }</td>
-              </tr>
-              <tr>
-                <td id="tax-free-key-@{label}" style="width:66%">@{
-                  if(summary.taxCode.contains(SCOTTISH_TAX_CODE_PREFIX)) Messages("quick_calc.result.tax_free_allowance_scottish")
-                  else Messages("quick_calc.result.tax_free_allowance")
-                }
-                <td id="tax-free-value-@{label}">£@{
-                  moneyFormatter(breakdown.taxFreePay)
-                }</td>
-              </tr>
-              <tr>
-                <td id="taxable-pay-key-@{label}" style="width:66%">@{Messages("quick_calc.result.taxable_pay")}</td>
-                <td id="taxable-pay-value-@{label}">£@{
-                  moneyFormatter(breakdown.taxablePay)
-                }</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-    </div>
-    <p>
-  </p>
-  </li>
-
-  @if(print){
-    @if((breakdown,label) == summary.taxBreakdown.zip(tabLabels).last){
-    } else {
-      <div>
-        <aside style="margin-top: 30px; border-top: 10px solid #005ea5; padding-top: 5px;">
-          <h2 class="heading-medium" id="subsection-title">@Messages("quick_calc.result.info_url_list")</h2>
-          <p><a href="https://www.gov.uk/check-income-tax-last-year" target="_blank">@Messages("quick_calc.result.info_url_a")</a></p>
-          <p><a href="https://www.gov.uk/tax-overpayments-and-underpayments" target="_blank">@Messages("quick_calc.result.info_url_b")</a></p>
-          <p><a href="https://www.gov.uk/claim-tax-refund" target="_blank">@Messages("quick_calc.result.info_url_c")</a></p>
-        </aside>
-      </div>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <div role="banner" id="global-header" class=" with-proposition ">
-        <div class="header-wrapper">
-          <div class="header-global">
-            <div class="header-logo">
-              <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" data-journey-click="header:Click:GOV UK" id="logo" class="content">
-                 GOV.UK
-              </a>
-            </div>
-          </div>
-
-          <div class="header-proposition">
-            <div class="content">
-              <nav id="proposition-menu" class="header__menu" role="navigation">
-                <span class="header__menu__proposition-name">Estimate your take-home pay</span>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
     }
   }
+
+  <div class="form-group" style="margin-top:2em">
+    <details @detailStatus>
+      <summary class="summary">
+      @{Messages("quick_calc.result.how_we_calculated")}
+      </summary>
+      <div>
+        <table style="width:100%">
+          <thead >
+            <tr>
+              <th colspan="2" style="font-weight:normal">
+                @{s"${Messages("quick_calc.result.how_we_calculated.you_earn_a")} " +
+                    s"${Messages("quick_calc.result.how_we_calculated.you_earn_b")} "
+                }
+              <span id="gross-pay-@{label}" style="font-weight: 700">£@{moneyFormatter(breakdown.grossPay)}</span>:
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="k-adj-key-@{label}" style="width:66%">@{
+                if(summary.taxCode.contains(SCOTTISH_TAX_CODE_PREFIX)) Messages("quick_calc.result.sk_code")
+                else Messages("quick_calc.result.k_code")
+              }</td>
+              <td id="k-adj-value-@{label}">£@{
+                moneyFormatter(breakdown.additionalTaxablePay)
+              }</td>
+            </tr>
+            <tr>
+              <td id="tax-free-key-@{label}" style="width:66%">@{
+              if(summary.taxCode.contains(SCOTTISH_TAX_CODE_PREFIX)) Messages("quick_calc.result.tax_free_allowance_scottish")
+              else Messages("quick_calc.result.tax_free_allowance")
+            }
+              <td id="tax-free-value-@{label}">£@{
+                moneyFormatter(breakdown.taxFreePay)
+              }</td>
+            </tr>
+            <tr>
+              <td id="taxable-pay-key-@{label}" style="width:66%">@{Messages("quick_calc.result.taxable_pay")}</td>
+              <td id="taxable-pay-value-@{label}">£@{
+                moneyFormatter(breakdown.taxablePay)
+              }</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+  <p>
+  </p>
+  </li>
 }
 </ul>
-
-
-

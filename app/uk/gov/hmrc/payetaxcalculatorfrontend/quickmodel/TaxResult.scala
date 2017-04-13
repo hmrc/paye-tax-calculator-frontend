@@ -16,13 +16,25 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.libs.json.Json
 import uk.gov.hmrc.payeestimator.domain.{TaxBreakdown, TaxCalc}
 import uk.gov.hmrc.payeestimator.services.LiveTaxCalculatorService._
 
+case class Tab(tab: String)
 
 object TaxResult {
 
   val SCOTTISH_TAX_CODE_PREFIX = "SK"
+
+  implicit val format = Json.format[Tab]
+
+  def tabForm = Form(
+    mapping(
+      "tab" -> text
+    )(Tab.apply)(Tab.unapply)
+  )
 
   private[quickmodel] def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput): String =
     quickCalcAggregateInput.savedTaxCode match {
@@ -142,6 +154,16 @@ object TaxResult {
         formatter.format(value)+"0"
       }
       case _ => formatter.format(value)
+    }
+  }
+
+  def moneyFormatter(value: String): String ={
+    val money = """(.*)\.(\d)""".r
+    value match {
+      case money(pounds, pins) => {
+        value +"0"
+      }
+      case _ => value
     }
   }
 
