@@ -71,34 +71,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          Ok(result(TaxResult.tabForm, aggregate, omitScotland(date.taxYear), "", print = false, ""))
-        }
-        else redirectToNotYetDonePage(aggregate)
-      case None => Redirect(routes.QuickCalcController.showSalaryForm())
-    }
-  }
-
-  def submitPrint(): Action[AnyContent] = tokenAction { implicit request =>
-
-    def getPrintUrl(tab: String) = {
-      Future.successful(Redirect(routes.QuickCalcController.showPrint(tab)))
-    }
-    val tab = TaxResult.tabForm.bindFromRequest().get.tab match {
-      case "tab-content-monthly" => "monthly"
-      case "tab-content-weekly" => "weekly"
-      case _ => "annual"
-    }
-
-    getPrintUrl(tab)
-
-  }
-
-  def showPrint(tab: String): Action[AnyContent] = tokenAction { implicit request =>
-    cache.fetchAndGetEntry().map {
-      case Some(aggregate) =>
-        if (aggregate.allQuestionsAnswered) {
-          val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          Ok(result(TaxResult.tabForm, aggregate, date.taxYear, "open", print = true, tab))
+          Ok(result(aggregate, omitScotland(date.taxYear)))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())

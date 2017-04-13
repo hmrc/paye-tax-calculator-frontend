@@ -157,11 +157,21 @@ object TaxResult {
     }
   }
 
-  def moneyFormatter(value: String): String ={
-    val money = """(.*)\.(\d)""".r
+  def moneyFormatter(value: Option[String]): Option[String] ={
     value match {
-      case money(pounds, pins) => value + "0"
-      case _ => value
+      case Some(v) if v.nonEmpty => {
+        val valueInBigDecimal = BigDecimal(v)
+        val formatter = java.text.NumberFormat.getInstance
+        val money = """(.*)\.(\d)""".r
+        val outValue = formatter.format(valueInBigDecimal)
+        outValue match {
+          case money(pounds, pins) => {
+            Some(formatter.format(valueInBigDecimal)+"0")
+          }
+          case _ => Some(formatter.format(valueInBigDecimal))
+        }
+      }
+      case _ => None
     }
   }
 

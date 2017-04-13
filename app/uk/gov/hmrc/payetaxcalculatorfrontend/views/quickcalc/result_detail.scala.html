@@ -2,7 +2,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 
-@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String, detailStatus: String, print: Boolean)(implicit request: Request[_], messages: Messages)
+@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
 }
@@ -52,7 +52,7 @@
     </tbody>
   </table>
   <div class="form-group" style="margin-top:2em">
-    <details @detailStatus>
+    <details id="details">
       <summary class="summary">
       @{Messages("quick_calc.result.how_we_calculated")}
       </summary>
