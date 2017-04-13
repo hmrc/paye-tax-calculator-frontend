@@ -111,22 +111,14 @@ object TaxResult {
       .getOrElse(throw new AssertionError("Unknown Engine change"))
   }
 
-  def isOverMaxRate(summary: TaxCalc): Boolean = {
-    val grossPay = summary.taxBreakdown.head.grossPay
-    val maxTaxRate = summary.maxTaxRate
-    val taxablePay = summary.taxBreakdown.head.taxablePay
-
-    isOverMaxRate(grossPay, maxTaxRate, taxablePay)
-  }
-
   def isOverMaxRate(grossPay: BigDecimal, maxTaxRate: BigDecimal, taxablePay: BigDecimal): Boolean = {
     (grossPay * maxTaxRate / 100) <= taxablePay
   }
 
-  def isOverMaxRate(summary: TaxCalc, breakdown: TaxBreakdown): Boolean = {
+  def isOverMaxRate(summary: TaxCalc): Boolean = {
     val grossPay = summary.taxBreakdown.head.grossPay
     val maxTaxRate = summary.maxTaxRate
-    val taxablePay = incomeTax(breakdown)
+    val taxablePay = incomeTax(summary.taxBreakdown.head)
 
     isOverMaxRate(grossPay, maxTaxRate, taxablePay)
   }
