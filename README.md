@@ -16,17 +16,10 @@ sbt run
 
 ## Endpoints <a name="endpoints"></a>
 
-#### View landing Page
+#### Get to the first form page by a web browser
 ```
 GET   	/estimate-paye-take-home-pay/
 ```
-
-
-#### Change Language
-```
-GET      /estimate-paye-take-home-pay/language/:lang  
-```
-Currently the app supports English(:lang = english) and Welsh(:lang = welsh)
 
 ### License
 
