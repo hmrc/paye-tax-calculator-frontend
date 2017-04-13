@@ -65,7 +65,7 @@ class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
                                    YouHaveToldUsItem("7","an_hour_sub","","salary-period"),
                                    YouHaveToldUsItem("No","over_state_pension_age","/estimate-paye-take-home-pay/state-pension","pension-state"),
                                    YouHaveToldUsItem("No - we’ll use the default  (1150L)","about_tax_code","/estimate-paye-take-home-pay/tax-code","tax-code"),
-                                   YouHaveToldUsItem("No","scottish-rate","/estimate-paye-take-home-pay/scottish-tax","scottish-rate"))
+                                   YouHaveToldUsItem("No","scottish_rate","/estimate-paye-take-home-pay/scottish-tax","scottish_rate"))
     val taxCodeUrl = "/estimate-paye-take-home-pay/tax-code"
     val scottishUrl = "/estimate-paye-take-home-pay/scottish-tax"
     taxCodeUrl shouldBe YouHaveToldUs.getGoBackLink(itemsWithTaxCode)

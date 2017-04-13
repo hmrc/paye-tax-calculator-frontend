@@ -18,7 +18,6 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult.omitScotland
@@ -72,19 +71,34 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          Ok(result(aggregate, omitScotland(date.taxYear), "", print = false))
+          Ok(result(TaxResult.tabForm, aggregate, omitScotland(date.taxYear), "", print = false, ""))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
     }
   }
 
-  def showPrint(): Action[AnyContent] = tokenAction { implicit request =>
+  def submitPrint(): Action[AnyContent] = tokenAction { implicit request =>
+
+    def getPrintUrl(tab: String) = {
+      Future.successful(Redirect(routes.QuickCalcController.showPrint(tab)))
+    }
+    val tab = TaxResult.tabForm.bindFromRequest().get.tab match {
+      case "tab-content-monthly" => "monthly"
+      case "tab-content-weekly" => "weekly"
+      case _ => "annual"
+    }
+
+    getPrintUrl(tab)
+
+  }
+
+  def showPrint(tab: String): Action[AnyContent] = tokenAction { implicit request =>
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) {
           val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-          Ok(result(aggregate, date.taxYear, "open", print = true))
+          Ok(result(TaxResult.tabForm, aggregate, date.taxYear, "open", print = true, tab))
         }
         else redirectToNotYetDonePage(aggregate)
       case None => Redirect(routes.QuickCalcController.showSalaryForm())
@@ -98,15 +112,15 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
 
       salaryAmount => {
         val updatedAggregate = cache.fetchAndGetEntry()
-                      .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-                        .map(_.copy(savedSalary = Some(salaryAmount), savedPeriod = None))
+          .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+          .map(_.copy(savedSalary = Some(salaryAmount), savedPeriod = None))
 
         updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
-            salaryAmount.period match {
-              case "a day" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-              case "an hour" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-              case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
-                Redirect(routes.QuickCalcController.showStatePensionForm())
+          salaryAmount.period match {
+            case "a day" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+            case "an hour" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+            case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
+              Redirect(routes.QuickCalcController.showStatePensionForm())
             }
           }
         }))
