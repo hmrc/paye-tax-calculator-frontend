@@ -160,9 +160,7 @@ object TaxResult {
   def moneyFormatter(value: String): String ={
     val money = """(.*)\.(\d)""".r
     value match {
-      case money(pounds, pins) => {
-        value +"0"
-      }
+      case money(pounds, pins) => value + "0"
       case _ => value
     }
   }

@@ -102,48 +102,21 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     val url = request.uri
     Salary.salaryBaseForm.bindFromRequest().fold(
       formWithErrors => Future(BadRequest(salary(formWithErrors))),
+
       salaryAmount => {
         val updatedAggregate = cache.fetchAndGetEntry()
           .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-          .map(oldAggregate => {
-            val newAggregate = oldAggregate.copy(savedSalary = Some(salaryAmount))
-            newAggregate.savedSalary match {
-              case Some(detail)
-                if detail.period == (oldAggregate.savedSalary match {
-                  case Some(salary) => salary.period
-                  case _ => "" }) =>
-                  newAggregate.copy(
-                    savedSalary = Some(Salary(salaryAmount.amount, detail.period, detail.howManyAWeek)),
-                    savedPeriod = Some(Detail((salaryAmount.amount*100).toInt,
-                                      oldAggregate.savedSalary.getOrElse(Salary(salaryAmount.amount, detail.period, detail.howManyAWeek)).howManyAWeek.getOrElse(detail.howManyAWeek.get),
-                                      detail.period, url)))
-              case _ => newAggregate.copy(savedPeriod = None)
-            }
-          }
-          )
+          .map(_.copy(savedSalary = Some(salaryAmount), savedPeriod = None))
 
         updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
           salaryAmount.period match {
-            case "a day" => if(agg.savedPeriod.map(_.period).contains("a day")){
-              nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                Redirect(routes.QuickCalcController.showStatePensionForm())
-              }
-            } else {
-              Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-            }
-            case "an hour" => if(agg.savedPeriod.map(_.period).contains("an hour")){
-              nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                Redirect(routes.QuickCalcController.showStatePensionForm())
-              }
-            } else {
-              Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-            }
-            case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+            case "a day" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+            case "an hour" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+            case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
               Redirect(routes.QuickCalcController.showStatePensionForm())
             }
           }
-        }
-        ))
+        }))
       }
     )
   }
