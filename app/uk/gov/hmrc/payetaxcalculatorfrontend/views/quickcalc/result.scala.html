@@ -19,7 +19,6 @@
 
 @scriptGetTab = {
   <script src='@routes.Assets.at("javascripts/shame.js")' type="text/javascript"></script>
-  <link href="@routes.Assets.at("stylesheets/button_to_hyperlink.css")" rel="stylesheet" type="text/css">
 }
 
 @main_template(title = Messages("quick_calc.result.header"), mainClass = Some("full-width"), scriptElem = Some(scriptGetTab)) {
@@ -67,10 +66,9 @@
           @helper.form(action = prodRoutes.QuickCalcController.submitPrint) {
             @helper.CSRF.formField
 
-
             <p @if(print){style="display: none" }>
 
-              <input onclick="getPeriodTab()" type="submit" id="print-continue"
+              <input onclick="getPeriodTab()" type="submit" class="button" id="print-continue"
                       value="@Messages("quick_calc.result.info_print")" />
 
               <input class="visuallyhidden" id="user-tab" name="tab" value="" />
