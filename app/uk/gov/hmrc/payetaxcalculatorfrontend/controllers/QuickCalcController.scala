@@ -79,11 +79,18 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
   }
 
   def submitPrint(): Action[AnyContent] = tokenAction { implicit request =>
-    TaxResult.tabForm.bindFromRequest().get.tab match {
-      case "tab-content-monthly" => Future.successful(Redirect(routes.QuickCalcController.showPrint("monthly")))
-      case "tab-content-weekly" => Future.successful(Redirect(routes.QuickCalcController.showPrint("weekly")))
-      case _ => Future.successful(Redirect(routes.QuickCalcController.showPrint("annual")))
+
+    def getPrintUrl(tab: String) = {
+      Future.successful(Redirect(routes.QuickCalcController.showPrint(tab)))
     }
+    val tab = TaxResult.tabForm.bindFromRequest().get.tab match {
+      case "tab-content-monthly" => "monthly"
+      case "tab-content-weekly" => "weekly"
+      case _ => "annual"
+    }
+
+    getPrintUrl(tab)
+
   }
 
   def showPrint(tab: String): Action[AnyContent] = tokenAction { implicit request =>
