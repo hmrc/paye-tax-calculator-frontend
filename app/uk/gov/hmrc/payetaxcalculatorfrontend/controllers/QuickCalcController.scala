@@ -82,23 +82,50 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     val url = request.uri
     Salary.salaryBaseForm.bindFromRequest().fold(
       formWithErrors => Future(BadRequest(salary(formWithErrors))),
-
       salaryAmount => {
-        val updatedAggregate = cache.fetchAndGetEntry()
-          .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-          .map(_.copy(savedSalary = Some(salaryAmount), savedPeriod = None))
+        val updatedAggregate = updateSalaryAmount(salaryAmount, url)
 
         updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
           salaryAmount.period match {
-            case "a day" => Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-            case "an hour" => Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-            case _ => nextPageOrSummaryIfAllQuestionsAnswered(agg){
-              Redirect(routes.QuickCalcController.showStatePensionForm())
-            }
+            case "a day" =>
+              if(agg.savedPeriod.map(_.period).contains("a day")) tryGetShowStatePension(agg)
+              else Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+            case "an hour" =>
+              if(agg.savedPeriod.map(_.period).contains("an hour")) tryGetShowStatePension(agg)
+              else Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+            case _ => tryGetShowStatePension(agg)
           }
-        }))
+        }
+        ))
       }
     )
+  }
+
+  private def tryGetShowStatePension(agg: QuickCalcAggregateInput)(implicit request: Request[AnyContent]) = {
+    nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+      Redirect(routes.QuickCalcController.showStatePensionForm())
+    }
+  }
+
+  private def updateSalaryAmount(salaryAmount: Salary, url:String)(implicit request: Request[AnyContent]) = {
+    cache.fetchAndGetEntry()
+      .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+      .map(oldAggregate => {
+        val newAggregate = oldAggregate.copy(savedSalary = Some(salaryAmount))
+        (newAggregate.savedSalary, newAggregate.savedPeriod) match {
+          case (Some(salary), Some(detail)) =>
+            if (salary.period == (oldAggregate.savedSalary match {
+              case Some(oldSalary) => oldSalary.period
+              case _ => "" })) {
+              newAggregate.copy(
+                savedSalary = Some(Salary(salaryAmount.amount, salary.period, oldAggregate.savedSalary.get.howManyAWeek)),
+                savedPeriod = Some(Detail((salaryAmount.amount*100).toInt, detail.howManyAWeek, detail.period, url))
+              ) }
+            else newAggregate.copy(savedPeriod = None)
+          case _ => newAggregate.copy(savedPeriod = None)
+        }
+      }
+      )
   }
 
   def showHoursAWeek(valueInPence: Int, url: String): Action[AnyContent] = tokenAction { implicit request =>

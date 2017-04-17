@@ -12,12 +12,7 @@
     Messages("quick_calc.result.tabLabels.week"))
 }
 
-@adjustment = @{
-  if(isOverMaxRate(summary)){
-      <span class="heading-small">{Messages("quick_calc.result.adjusted.head")}</span>
-      <p>{Messages("quick_calc.result.adjusted.info")}</p>
-  }
-}
+@adjustment = @{isOverMaxRate(summary)}
 
 <ul>
 @for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
@@ -64,9 +59,12 @@
     </tbody>
   </table>
 
-  <div id="adjustment-inf-@{label.toLowerCase()}">
-    @adjustment
-  </div>
+  @if(adjustment){
+    <div id="adjustment-inf-@{label.toLowerCase()}">
+      <span class="heading-small">@Messages("quick_calc.result.adjusted.head")</span>
+      <p>@Messages("quick_calc.result.adjusted.info")</p>
+    </div>
+  }
 
   <div class="form-group" style="margin-top:2em">
     <details class="print-open">
