@@ -77,13 +77,15 @@ object YouHaveToldUs {
   }
 
   implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[Detail] {
+    val day: String = messages("quick_calc.salary.daily.label")
+    val hour: String = messages("quick_calc.salary.hourly.label")
     def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
       val label = s"${detail.period.replace(" ","_")}_sub"
       val idSuffix = "salary-period"
       val url = {
         detail.period match {
-          case "a day" => routes.QuickCalcController.showDaysAWeek(detail.amount, detail.urlForChange).url
-          case "an hour" => routes.QuickCalcController.showHoursAWeek(detail.amount, detail.urlForChange).url
+          case `day` => routes.QuickCalcController.showDaysAWeek(detail.amount, detail.urlForChange).url
+          case `hour` => routes.QuickCalcController.showHoursAWeek(detail.amount, detail.urlForChange).url
         }
       }
 

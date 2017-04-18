@@ -64,7 +64,7 @@
 
           <span class="visuallyhidden">Amount</span>
           <span>£</span>
-          <input id="pay-amount" name="amount" value="@{TaxResult.moneyFormatter(radioFieldAmount.value)}" />
+          <input id="pay-amount" name="amount" type="number" step="any" value="@{TaxResult.moneyFormatter(radioFieldAmount.value)}" />
 
           </label>
 
