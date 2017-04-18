@@ -22,6 +22,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult.omitScotland
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.Salary._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc._
@@ -49,11 +50,11 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         val form = {
-          aggregate.savedSalary.map(s => Salary.salaryBaseForm.fill(s)).getOrElse(Salary.salaryBaseForm)
+          aggregate.savedSalary.map(s => salaryBaseForm.fill(s)).getOrElse(salaryBaseForm)
         }
         Ok(salary(form))
       case None =>
-        Ok(salary(Salary.salaryBaseForm))
+        Ok(salary(salaryBaseForm))
     }
   }
 
@@ -80,19 +81,21 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
 
   def submitSalaryAmount(): Action[AnyContent] = Action.async { implicit request =>
     val url = request.uri
-    Salary.salaryBaseForm.bindFromRequest().fold(
+    val day: String = Messages("quick_calc.salary.daily.label")
+    val hour: String = Messages("quick_calc.salary.hourly.label")
+    salaryBaseForm.bindFromRequest().fold(
       formWithErrors => Future(BadRequest(salary(formWithErrors))),
       salaryAmount => {
         val updatedAggregate = updateSalaryAmount(salaryAmount, url)
 
         updatedAggregate.flatMap(agg => cache.save(agg).map( _ => {
           salaryAmount.period match {
-            case "a day" =>
-              if(agg.savedPeriod.map(_.period).contains("a day")) tryGetShowStatePension(agg)
-              else Redirect(routes.QuickCalcController.showDaysAWeek(Salary.salaryInPence(salaryAmount.amount), url))
-            case "an hour" =>
-              if(agg.savedPeriod.map(_.period).contains("an hour")) tryGetShowStatePension(agg)
-              else Redirect(routes.QuickCalcController.showHoursAWeek(Salary.salaryInPence(salaryAmount.amount), url))
+            case `day` =>
+              if(agg.savedPeriod.map(_.period).contains(day)) tryGetShowStatePension(agg)
+              else Redirect(routes.QuickCalcController.showDaysAWeek(salaryInPence(salaryAmount.amount), url))
+            case `hour` =>
+              if(agg.savedPeriod.map(_.period).contains(hour)) tryGetShowStatePension(agg)
+              else Redirect(routes.QuickCalcController.showHoursAWeek(salaryInPence(salaryAmount.amount), url))
             case _ => tryGetShowStatePension(agg)
           }
         }
@@ -114,9 +117,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
         val newAggregate = oldAggregate.copy(savedSalary = Some(salaryAmount))
         (newAggregate.savedSalary, newAggregate.savedPeriod) match {
           case (Some(salary), Some(detail)) =>
-            if (salary.period == (oldAggregate.savedSalary match {
-              case Some(oldSalary) => oldSalary.period
-              case _ => "" })) {
+            if (salary.period == oldAggregate.savedSalary.map(_.period).getOrElse("")) {
               newAggregate.copy(
                 savedSalary = Some(Salary(salaryAmount.amount, salary.period, oldAggregate.savedSalary.get.howManyAWeek)),
                 savedPeriod = Some(Detail((salaryAmount.amount*100).toInt, detail.howManyAWeek, detail.period, url))
@@ -130,14 +131,14 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
 
   def showHoursAWeek(valueInPence: Int, url: String): Action[AnyContent] = tokenAction { implicit request =>
     cache.fetchAndGetEntry().map {
-      _ => Ok(hours_a_week(valueInPence, Salary.salaryInHoursForm, url))
+      _ => Ok(hours_a_week(valueInPence, salaryInHoursForm, url))
     }
   }
 
   def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = tokenAction { implicit request =>
     val url = routes.QuickCalcController.showSalaryForm().url
     val value = BigDecimal(valueInPence) / 100
-    Salary.salaryInHoursForm.bindFromRequest().fold(
+    salaryInHoursForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
         _ => BadRequest(hours_a_week(valueInPence, formWithErrors, url))
       },
@@ -159,14 +160,14 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
 
   def showDaysAWeek(valueInPence: Int, url: String): Action[AnyContent] = tokenAction { implicit request =>
     cache.fetchAndGetEntry().map {
-      _ => Ok(days_a_week(valueInPence, Salary.salaryInDaysForm, url))
+      _ => Ok(days_a_week(valueInPence, salaryInDaysForm, url))
     }
   }
 
   def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = tokenAction { implicit request =>
     val url = routes.QuickCalcController.showSalaryForm().url
     val value = BigDecimal(valueInPence) / 100
-    Salary.salaryInDaysForm.bindFromRequest().fold(
+    salaryInDaysForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
         _ => BadRequest(days_a_week(valueInPence, formWithErrors, url))
       },
