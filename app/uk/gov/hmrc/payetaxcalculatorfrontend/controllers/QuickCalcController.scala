@@ -27,6 +27,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId
 import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.{QuickCalcController => qc}
 
 import scala.concurrent.Future
 
@@ -37,13 +38,13 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
   implicit val anyContentBodyParser: BodyParser[AnyContent] = parse.anyContent
 
   def redirectToSalaryForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    Future.successful(Redirect(routes.QuickCalcController.showSalaryForm()))
+    Future.successful(Redirect(qc.showSalaryForm()))
   }
 
   private def tokenAction[T](furtherAction: Request[T] => Future[Result])(implicit bodyParser: BodyParser[T]): Action[T] =
     ActionWithSessionId.async(bodyParser) { implicit request =>
       request.session.get("csrfToken").map(_ => furtherAction(request))
-        .getOrElse(Future.successful(Redirect(routes.QuickCalcController.showSalaryForm())))
+        .getOrElse(Future.successful(Redirect(qc.showSalaryForm())))
     }
 
   def showSalaryForm(): Action[AnyContent] = tokenAction { implicit request =>
@@ -63,7 +64,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
       case Some(aggregate) =>
         if (aggregate.allQuestionsAnswered) Ok(you_have_told_us(aggregate.youHaveToldUsItems))
         else redirectToNotYetDonePage(aggregate)
-      case None => Redirect(routes.QuickCalcController.showSalaryForm())
+      case None => Redirect(qc.showSalaryForm())
     }
   }
 
@@ -75,7 +76,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
           Ok(result(aggregate, omitScotland(date.taxYear)))
         }
         else redirectToNotYetDonePage(aggregate)
-      case None => Redirect(routes.QuickCalcController.showSalaryForm())
+      case None => Redirect(qc.showSalaryForm())
     }
   }
 
@@ -92,10 +93,10 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
           salaryAmount.period match {
             case `day` =>
               if(agg.savedPeriod.map(_.period).contains(day)) tryGetShowStatePension(agg)
-              else Redirect(routes.QuickCalcController.showDaysAWeek(salaryInPence(salaryAmount.amount), url))
+              else Redirect(qc.showDaysAWeek(salaryInPence(salaryAmount.amount), url))
             case `hour` =>
               if(agg.savedPeriod.map(_.period).contains(hour)) tryGetShowStatePension(agg)
-              else Redirect(routes.QuickCalcController.showHoursAWeek(salaryInPence(salaryAmount.amount), url))
+              else Redirect(qc.showHoursAWeek(salaryInPence(salaryAmount.amount), url))
             case _ => tryGetShowStatePension(agg)
           }
         }
@@ -106,7 +107,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
 
   private def tryGetShowStatePension(agg: QuickCalcAggregateInput)(implicit request: Request[AnyContent]) = {
     nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-      Redirect(routes.QuickCalcController.showStatePensionForm())
+      Redirect(qc.showStatePensionForm())
     }
   }
 
@@ -136,7 +137,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
   }
 
   def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = tokenAction { implicit request =>
-    val url = routes.QuickCalcController.showSalaryForm().url
+    val url = qc.showSalaryForm().url
     val value = BigDecimal(valueInPence) / 100
     salaryInHoursForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
@@ -151,7 +152,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
         updatedAggregate.flatMap( agg => {
           cache.save(agg).map( _ =>
             nextPageOrSummaryIfAllQuestionsAnswered(agg)(
-              Redirect(routes.QuickCalcController.showStatePensionForm())
+              Redirect(qc.showStatePensionForm())
           ))
         })
       }
@@ -165,7 +166,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
   }
 
   def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = tokenAction { implicit request =>
-    val url = routes.QuickCalcController.showSalaryForm().url
+    val url = qc.showSalaryForm().url
     val value = BigDecimal(valueInPence) / 100
     salaryInDaysForm.bindFromRequest().fold(
       formWithErrors => cache.fetchAndGetEntry().map {
@@ -181,7 +182,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
           cache.save(agg)
             .map( _ =>
               nextPageOrSummaryIfAllQuestionsAnswered(agg) (
-                Redirect(routes.QuickCalcController.showStatePensionForm())))
+                Redirect(qc.showStatePensionForm())))
         }}
       }
     )
@@ -212,9 +213,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
           val updatedAggregate = aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
           cache.save(updatedAggregate).map { _ =>
             nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-            Redirect(routes.QuickCalcController.showTaxCodeForm()) } }
+            Redirect(qc.showTaxCodeForm()) } }
         case None => cache.save(QuickCalcAggregateInput.newInstance.copy(savedIsOverStatePensionAge = Some(userAge))).map {
-          _ => Redirect(routes.QuickCalcController.showTaxCodeForm())
+          _ => Redirect(qc.showTaxCodeForm())
         }
       }
     )
@@ -248,9 +249,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
 
         updatedAggregate.flatMap(agg => cache.save(agg).map(_ =>
           if (newTaxCode.gaveUsTaxCode) {
-            nextPageOrSummaryIfAllQuestionsAnswered(agg) {Redirect(routes.QuickCalcController.summary())}
+            nextPageOrSummaryIfAllQuestionsAnswered(agg) {Redirect(qc.summary())}
           }
-          else Redirect(routes.QuickCalcController.showScottishRateForm())
+          else Redirect(qc.showScottishRateForm())
         ))
       }
     )
@@ -287,7 +288,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
           )
         updatedAggregate
           .map(cache.save)
-          .map( _ => Redirect(routes.QuickCalcController.summary()) )
+          .map( _ => Redirect(qc.summary()) )
       }
     )
   }
@@ -296,22 +297,22 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     cache.fetchAndGetEntry().flatMap {
       case Some(aggregate) =>
         val updatedAggregate = aggregate.copy(None, None, None, None, None)
-        cache.save(updatedAggregate).map { _ => Redirect(routes.QuickCalcController.showSalaryForm()) }
+        cache.save(updatedAggregate).map { _ => Redirect(qc.showSalaryForm()) }
       case None =>
-        Future.successful(Redirect(routes.QuickCalcController.showSalaryForm()))
+        Future.successful(Redirect(qc.showSalaryForm()))
     }
   }
 
   private def nextPageOrSummaryIfAllQuestionsAnswered(aggregate: QuickCalcAggregateInput)
                                                      (next: Result)
                                                      (implicit request: Request[_]): Result = {
-    if (aggregate.allQuestionsAnswered) Redirect(routes.QuickCalcController.summary())
+    if (aggregate.allQuestionsAnswered) Redirect(qc.summary())
     else next
   }
 
   private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result = {
-    if (aggregate.savedTaxCode.isEmpty) Redirect(routes.QuickCalcController.showTaxCodeForm())
-    else if (aggregate.savedSalary.isEmpty) Redirect(routes.QuickCalcController.showSalaryForm())
-    else Redirect(routes.QuickCalcController.showStatePensionForm())
+    if (aggregate.savedTaxCode.isEmpty) Redirect(qc.showTaxCodeForm())
+    else if (aggregate.savedSalary.isEmpty) Redirect(qc.showSalaryForm())
+    else Redirect(qc.showStatePensionForm())
   }
 }
