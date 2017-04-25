@@ -18,6 +18,8 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.Logger
+import play.api.http.Status
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult.omitScotland
@@ -48,6 +50,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     }
 
   def showSalaryForm(): Action[AnyContent] = tokenAction { implicit request =>
+    Logger.info("app started")
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         val form = {
