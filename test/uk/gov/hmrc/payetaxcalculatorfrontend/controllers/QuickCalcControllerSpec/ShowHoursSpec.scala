@@ -18,38 +18,29 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpe
 
 
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.{AppUnitGenerator, QuickCalcCacheSetup}
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
 class ShowHoursSpec extends AppUnitGenerator {
+  val controller = new QuickCalcController(messages.messages, null)
 
   "Show Hours Form" should {
     "return 200, with existing list of aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
-      val action = csrfAddToken(controller.showHoursAWeek(0, ""))
-      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
+      val agg = QuickCalcCacheSetup.cacheTaxCodeStatePensionSalary.get
+      val result = controller.showHoursAWeekTestable(0, "")(request)(agg)
       val status = result.header.status
 
       status shouldBe 200
     }
 
     "return 200, with non-existing list of aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
-      val action = csrfAddToken(controller.showHoursAWeek(0, ""))
-      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
+      val agg = QuickCalcAggregateInput.newInstance
+
+      val result = controller.showHoursAWeekTestable(0, "")(request)(agg)
       val status = result.header.status
 
       status shouldBe 200
     }
-
-    "return 303, when the user has no token" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
-      val action = csrfAddToken(controller.showHoursAWeek(0, ""))
-      val result = action.apply(request)
-      val status = result.header.status
-
-      status shouldBe 303
-    }
   }
-
 }

@@ -58,7 +58,6 @@
     <p class="faded-text faded-text--small">@Messages("quick_calc.salary.question.tax_code_info_url_a") <a href="https://www.gov.uk/tax-codes/overview" target="_blank">@Messages("quick_calc.salary.question.tax_code_info_url_b")</a></p>
 
     @helper.form(action = uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes.QuickCalcController.submitTaxCodeForm) {
-      @helper.CSRF.formField
 
       <div class="form-group">
         <fieldset class="inline form-field-group js-visible js-aria-show js-toggle"

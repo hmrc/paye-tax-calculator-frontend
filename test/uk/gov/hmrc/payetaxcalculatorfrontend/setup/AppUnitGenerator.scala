@@ -20,13 +20,11 @@ import akka.stream.Materializer
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.test.FakeRequest
-import play.filters.csrf.CSRFAddToken
 import uk.gov.hmrc.play.http.HeaderNames
 import uk.gov.hmrc.play.test.UnitSpec
 
 class AppUnitGenerator extends UnitSpec with OneAppPerSuite {
   val appInjector = app.injector
-  val csrfAddToken = appInjector.instanceOf[CSRFAddToken]
   implicit val materializer = appInjector.instanceOf[Materializer]
   implicit val request = FakeRequest()
     .withHeaders(HeaderNames.xSessionId -> "test")
