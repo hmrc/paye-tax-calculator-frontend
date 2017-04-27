@@ -19,7 +19,6 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.Logger
-import play.api.http.Status
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult.omitScotland
@@ -43,19 +42,6 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     Future.successful(Redirect(qc.showSalaryForm()))
   }
 
-  private def salaryRequired[T](furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result): Action[AnyContent] =
-    ActionWithSessionId.async { implicit request =>
-        cache.fetchAndGetEntry().map {
-          case Some(aggregate) =>
-              if (aggregate.savedSalary.isDefined)
-                furtherAction(request)(aggregate)
-              else
-                Redirect(qc.showSalaryForm())
-          case None =>
-            Redirect(qc.showSalaryForm())
-      }
-    }
-
   def showSalaryForm(): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     Logger.info("app started")
     cache.fetchAndGetEntry().map {
@@ -73,6 +59,12 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     if (aggregate.allQuestionsAnswered) Ok(you_have_told_us(aggregate.youHaveToldUsItems))
     else redirectToNotYetDonePage(aggregate)
   )
+
+  private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result = {
+    if (aggregate.savedTaxCode.isEmpty) Redirect(qc.showTaxCodeForm())
+    else if (aggregate.savedSalary.isEmpty) Redirect(qc.showSalaryForm())
+    else Redirect(qc.showStatePensionForm())
+  }
 
   def showResult(): Action[AnyContent] = salaryRequired( implicit request => aggregate =>
     if (aggregate.allQuestionsAnswered) {
@@ -141,6 +133,19 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
       Ok(hours_a_week(valueInPence, salaryInHoursForm, url))
   }
 
+  private def salaryRequired[T](furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result): Action[AnyContent] =
+    ActionWithSessionId.async { implicit request =>
+        cache.fetchAndGetEntry().map {
+          case Some(aggregate) =>
+              if (aggregate.savedSalary.isDefined)
+                furtherAction(request)(aggregate)
+              else
+                Redirect(qc.showSalaryForm())
+          case None =>
+            Redirect(qc.showSalaryForm())
+      }
+    }
+
   def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     val url = qc.showSalaryForm().url
     val value = BigDecimal(valueInPence) / 100
@@ -169,7 +174,6 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
 
   private[controllers] def showDaysAWeekTestable(valueInPence: Int, url: String): ShowForm =
     implicit request => agg => Ok(days_a_week(valueInPence, salaryInDaysForm, url))
-
 
   def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     val url = qc.showSalaryForm().url
@@ -264,6 +268,13 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     )
   }
 
+  private def nextPageOrSummaryIfAllQuestionsAnswered(aggregate: QuickCalcAggregateInput)
+                                                     (next: Result)
+                                                     (implicit request: Request[_]): Result = {
+    if (aggregate.allQuestionsAnswered) Redirect(qc.summary())
+    else next
+  }
+
   def showScottishRateForm(): Action[AnyContent] = salaryRequired( implicit request => aggregate => {
     val form = aggregate.savedScottishRate.map(ScottishRate.form.fill).getOrElse(ScottishRate.form)
     Ok(scottish_income_tax_rate(form, aggregate.youHaveToldUsItems))
@@ -303,18 +314,5 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
       case None =>
         Future.successful(Redirect(qc.showSalaryForm()))
     }
-  }
-
-  private def nextPageOrSummaryIfAllQuestionsAnswered(aggregate: QuickCalcAggregateInput)
-                                                     (next: Result)
-                                                     (implicit request: Request[_]): Result = {
-    if (aggregate.allQuestionsAnswered) Redirect(qc.summary())
-    else next
-  }
-
-  private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result = {
-    if (aggregate.savedTaxCode.isEmpty) Redirect(qc.showTaxCodeForm())
-    else if (aggregate.savedSalary.isEmpty) Redirect(qc.showSalaryForm())
-    else Redirect(qc.showStatePensionForm())
   }
 }
