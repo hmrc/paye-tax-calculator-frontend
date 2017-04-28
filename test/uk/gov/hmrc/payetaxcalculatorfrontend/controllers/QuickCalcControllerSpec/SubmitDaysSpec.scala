@@ -32,11 +32,11 @@ class SubmitDaysSpec extends AppUnitGenerator {
     "return 400 and error message when Empty Days Submission" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm
-      val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
+      val action = await(controller.submitDaysAWeek(1))
 
       val days = Map("amount" -> "1", "howManyAWeek" -> "")
 
-      val result = action(request.withSession("csrfToken" -> "someToken")
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -54,11 +54,11 @@ class SubmitDaysSpec extends AppUnitGenerator {
     "return 400 and error message when Days in a Week is 0" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm
-      val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
+      val action = await(controller.submitDaysAWeek(1))
 
       val days = Map("amount" -> "1", "howManyAWeek" -> "0")
 
-      val result = action(request.withSession("csrfToken" -> "someToken")
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -77,9 +77,9 @@ class SubmitDaysSpec extends AppUnitGenerator {
     "return 400 and error message when Days in a Week is 8" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm.fill(Days(1,8))
-      val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
+      val action = await(controller.submitDaysAWeek(1))
 
-      val result = action(request.withSession("csrfToken" -> "someToken")
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -97,11 +97,11 @@ class SubmitDaysSpec extends AppUnitGenerator {
     "return 303, with new Days worked, 1 and non-existent aggregate" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm
-      val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
+      val action = await(controller.submitDaysAWeek(1))
 
       val daily = Map("amount"->"1", "howManyAWeek" -> "1")
 
-      val result = action(request.withSession("csrfToken" -> "someToken")
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 
@@ -118,11 +118,11 @@ class SubmitDaysSpec extends AppUnitGenerator {
     "return 303, with new Days worked, 5 and non-existent aggregate" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryInDaysForm
-      val action = await(csrfAddToken(controller.submitDaysAWeek(1)))
+      val action = await(controller.submitDaysAWeek(1))
 
       val daily = Map("amount"->"1", "howManyAWeek" -> "5")
 
-      val result = action(request.withSession("csrfToken" -> "someToken")
+      val result = action(request
         .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
         .withSession(SessionKeys.sessionId -> "test-salary"))
 

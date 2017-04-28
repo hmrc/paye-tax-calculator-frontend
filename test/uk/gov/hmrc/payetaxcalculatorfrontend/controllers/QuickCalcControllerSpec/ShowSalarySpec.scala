@@ -26,8 +26,8 @@ class ShowSalarySpec extends AppUnitGenerator {
   "Show Salary Form" should {
     "return 200, with current list of aggregate data containing Tax Code: 1150L, \"YES\" for is not Over65, 20000 a Year for Salary" in {
       val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
-      val action = csrfAddToken(controller.showSalaryForm())
-      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
+      val action = controller.showSalaryForm()
+      val result = action.apply(request)
       val status = result.header.status
 
       status shouldBe 200
@@ -35,20 +35,11 @@ class ShowSalarySpec extends AppUnitGenerator {
 
     "return 200, with empty list of aggregate data" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
-      val action = csrfAddToken(controller.showSalaryForm())
-      val result = action.apply(request.withSession("csrfToken" -> "someToken"))
-      val status = result.header.status
-
-      status shouldBe 200
-    }
-
-    "return 303, when the user has no token" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
-      val action = csrfAddToken(controller.showSalaryForm())
+      val action = controller.showSalaryForm()
       val result = action.apply(request)
       val status = result.header.status
 
-      status shouldBe 303
+      status shouldBe 200
     }
   }
 

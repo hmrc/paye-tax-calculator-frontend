@@ -36,7 +36,6 @@
     <p>@Messages("quick_calc.salary.question.approximate")</p>
 
     @helper.form(action = controllers.routes.QuickCalcController.submitDaysAWeek(valueInPence)) {
-      @helper.CSRF.formField
 
       <div class="form-group">
         <fieldset class="form-field-group">

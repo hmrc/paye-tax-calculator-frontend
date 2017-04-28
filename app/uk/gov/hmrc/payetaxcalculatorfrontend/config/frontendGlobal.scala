@@ -24,6 +24,7 @@ import play.api.mvc.{EssentialFilter, Request}
 import play.api.{Application, Configuration, Play}
 import play.twirl.api.Html
 import uk.gov.hmrc.crypto.ApplicationCrypto
+import uk.gov.hmrc.payetaxcalculatorfrontend.config.CSRFBypassFilter
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.SessionIdFilter
 import uk.gov.hmrc.play.audit.filters.FrontendAuditFilter
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
@@ -44,7 +45,7 @@ object FrontendGlobal
     ApplicationCrypto.verifyConfiguration()
   }
 
-  override def filters: Seq[EssentialFilter] = super.filters ++ Seq(SessionIdFilter)
+  override def filters: Seq[EssentialFilter] = Seq(CSRFBypassFilter) ++ super.filters ++ Seq(SessionIdFilter)
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
     uk.gov.hmrc.payetaxcalculatorfrontend.views.html.error_template(pageTitle, heading, message)
