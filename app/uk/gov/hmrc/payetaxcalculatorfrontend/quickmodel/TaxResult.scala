@@ -40,9 +40,9 @@ object TaxResult {
     quickCalcAggregateInput.savedTaxCode match {
       case Some(s) => s.taxCode match {
         case Some(taxCode) => taxCode
-        case None => UserTaxCode.DEFAULT_TAX_CODE
+        case None => UserTaxCode.defaultUkTaxCode
       }
-      case None => UserTaxCode.DEFAULT_TAX_CODE
+      case None => UserTaxCode.defaultUkTaxCode
     }
 
   private[quickmodel] def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): String =

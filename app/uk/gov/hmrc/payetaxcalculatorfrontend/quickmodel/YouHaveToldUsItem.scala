@@ -36,10 +36,10 @@ object YouHaveToldUs {
       val idSuffix = "tax-code"
       val url = routes.QuickCalcController.showTaxCodeForm().url
       YouHaveToldUsItem(
-        if(t.gaveUsTaxCode) s"${Messages("quick_calc.you_have_told_us.about_tax_code.yes")} (${t.taxCode.getOrElse(UserTaxCode.DEFAULT_TAX_CODE)})"
+        if(t.gaveUsTaxCode) s"${Messages("quick_calc.you_have_told_us.about_tax_code.yes")} (${t.taxCode.getOrElse(UserTaxCode.defaultUkTaxCode)})"
         else s"${Messages("quick_calc.you_have_told_us.about_tax_code.no")}" +
           s" ${Messages("quick_calc.you_have_told_us.about_tax_code.default")} " + " (" +
-          s"${t.taxCode.getOrElse(UserTaxCode.DEFAULT_TAX_CODE)}" + ")",
+          s"${t.taxCode.getOrElse(UserTaxCode.defaultUkTaxCode)}" + ")",
         label, url, idSuffix)
     }
   }
