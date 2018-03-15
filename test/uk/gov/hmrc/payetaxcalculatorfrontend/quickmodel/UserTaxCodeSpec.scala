@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,19 +44,19 @@ class UserTaxCodeSpec extends UnitSpec with OneAppPerSuite {
       UserTaxCode.checkUserSelection(true, userTaxCodeForm) shouldBe ""
     }
     "set the yes option as checked, if user has checked yes in earlier operation" in {
-      UserTaxCode.checkUserSelection(true, userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.DEFAULT_TAX_CODE)))) shouldBe "checked"
+      UserTaxCode.checkUserSelection(true, userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultUkTaxCode)))) shouldBe "checked"
     }
     "set the no option as checked, if user has checked no in earlier operation" in {
-      UserTaxCode.checkUserSelection(false, userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.DEFAULT_TAX_CODE)))) shouldBe "checked"
+      UserTaxCode.checkUserSelection(false, userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultUkTaxCode)))) shouldBe "checked"
     }
   }
 
   "The hideTextField function" should {
     "keep the text field for tax code hidden when the user selects the no option" in {
-      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.DEFAULT_TAX_CODE)))) shouldBe "hidden"
+      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(false, Some(UserTaxCode.defaultUkTaxCode)))) shouldBe "hidden"
     }
     "show the text field when user selects the yes option" in {
-      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.DEFAULT_TAX_CODE)))) shouldBe ""
+      UserTaxCode.hideTextField(userTaxCodeForm.fill(UserTaxCode(true, Some(UserTaxCode.defaultUkTaxCode)))) shouldBe ""
     }
   }
 

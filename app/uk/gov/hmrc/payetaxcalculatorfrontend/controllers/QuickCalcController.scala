@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -278,7 +278,7 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
           .map(agg =>
             if (newTaxCode.gaveUsTaxCode) agg.copy(savedTaxCode = Some(newTaxCode), savedScottishRate = None)
             else agg.copy(savedTaxCode = Some(
-              UserTaxCode(gaveUsTaxCode = false, Some(UserTaxCode.DEFAULT_TAX_CODE)))
+              UserTaxCode(gaveUsTaxCode = false, Some(UserTaxCode.defaultUkTaxCode)))
             )
           )
 
@@ -318,9 +318,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
       },
       scottish => {
         val taxCode = if (scottish.value)
-          UserTaxCode.DEFAULT_SCOTTISH_TAC_CODE
+          UserTaxCode.defaultScottishTaxCode
         else
-          UserTaxCode.DEFAULT_TAX_CODE
+          UserTaxCode.defaultUkTaxCode
 
         val updatedAggregate = cache.fetchAndGetEntry()
           .map(_.getOrElse(QuickCalcAggregateInput.newInstance))

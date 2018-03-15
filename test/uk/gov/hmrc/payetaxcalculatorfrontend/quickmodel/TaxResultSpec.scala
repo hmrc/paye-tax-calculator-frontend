@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,33 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
-import uk.gov.hmrc.payeestimator.domain.{Aggregation, TaxBreakdown, TaxCalc, TaxCategory}
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatest.{Tag, TestData}
+import org.scalatestplus.play.OneAppPerTest
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
+import uk.gov.hmrc.play.test.UnitSpec
 
-class TaxResultSpec extends UnitSpec {
+class TaxResultSpec extends UnitSpec with OneAppPerTest {
 
   "Extracting Tax Code from user response" should {
 
     "return tax code that a user has provided" in {
-      extractTaxCode(QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = true,Some("K452"))), None)) shouldBe "K452"
+      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = true, Some("K452"))), None)
+
+      extractTaxCode(input) shouldBe "K452"
     }
 
-    "return default tax code: 1150L if a user does not provide one" in {
-      extractTaxCode(QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false,None)), None)) shouldBe "1150L"
+    "return default tax code for 2017-18 (1150L) if the user does not provide one" taggedAs Tag("2017") in {
+      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
+
+      extractTaxCode(input) shouldBe "1150L"
+    }
+
+    "return the default UK tax code for 2018-19 if the user does not provide one" taggedAs Tag("2018") in {
+      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
+
+      extractTaxCode(input) shouldBe "1185L"
     }
   }
 
@@ -44,7 +57,7 @@ class TaxResultSpec extends UnitSpec {
     }
 
     """return an error with message with "No answer has been provided for the question: Are you over state pension state_pension?" if no response""" in {
-      val thrown = intercept[Exception]{
+      val thrown = intercept[Exception] {
         extractOverStatePensionAge(QuickCalcAggregateInput(None, None, None, None, None))
       }
       thrown.getMessage shouldBe "No answer has been provided for the question: Are you over state pension age?"
@@ -74,7 +87,7 @@ class TaxResultSpec extends UnitSpec {
     }
 
     """return an error with message "No Salary has been provided" if no response""" in {
-      val thrown = intercept[Exception]{
+      val thrown = intercept[Exception] {
         extractSalary(QuickCalcAggregateInput(None, None, None, None, None))
       }
       thrown.getMessage shouldBe "No Salary has been provided."
@@ -107,15 +120,15 @@ class TaxResultSpec extends UnitSpec {
   "Extracting Hours from user response" should {
 
     "return if response is hours in Daily" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(40,"a day", None)), None, None, None, None)) shouldBe -1
+      extractHours(QuickCalcAggregateInput(Some(Salary(40, "a day", None)), None, None, None, None)) shouldBe -1
     }
 
     "return if response is hours in Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(20,"an hour", None)), None, None, None, None)) shouldBe -1
+      extractHours(QuickCalcAggregateInput(Some(Salary(20, "an hour", None)), None, None, None, None)) shouldBe -1
     }
 
     "return if response is not Daily or Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(-1,"an hour", None)), None, None, None, None)) shouldBe -1
+      extractHours(QuickCalcAggregateInput(Some(Salary(-1, "an hour", None)), None, None, None, None)) shouldBe -1
     }
   }
 
@@ -143,5 +156,11 @@ class TaxResultSpec extends UnitSpec {
       isOverMaxRate(grossPay = 10000, maxTaxRate = 50, taxablePay = 100) shouldBe false
     }
 
+  }
+
+  override def newAppForTest(testData: TestData): Application = if (testData.tags.contains("2018")) {
+    GuiceApplicationBuilder().configure("dateOverride" -> "2018-04-06").build()
+  } else {
+    GuiceApplicationBuilder().configure("dateOverride" -> "2017-04-06").build()
   }
 }

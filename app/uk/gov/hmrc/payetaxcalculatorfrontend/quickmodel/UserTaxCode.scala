@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
-import java.time.LocalDate
+import java.time.MonthDay
 
 import play.api.data.Forms._
 import play.api.data.format.Formatter
@@ -26,33 +26,43 @@ import play.api.libs.json._
 import uk.gov.hmrc.payeestimator.domain.{TaxCalcResource, TaxCalcResourceBuilder}
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
-
+import uk.gov.hmrc.payetaxcalculatorfrontend.utils.LocalDateProvider
 
 case class UserTaxCode(gaveUsTaxCode: Boolean, taxCode: Option[String])
 
 object UserTaxCode extends TaxCalculatorHelper {
 
-  implicit val format = Json.format[UserTaxCode]
+  implicit val format: OFormat[UserTaxCode] = Json.format[UserTaxCode]
 
-  val DEFAULT_SCOTTISH_TAC_CODE = "S1150L"
-  val DEFAULT_TAX_CODE = "1150L"
-  val HAS_TAX_CODE = "hasTaxCode"
-  val TAX_CODE = "taxCode"
+  def defaultScottishTaxCode: String = {
+    if (currentTaxYear == 2018) Default2018ScottishTaxCode else Default2017ScottishTaxCode
+  }
 
-  private val startOfHardcodedTaxYear = LocalDate.of(2017, 4, 6)
+  private lazy val Default2017ScottishTaxCode = "S1150L"
+  private lazy val Default2018ScottishTaxCode = "S1185L"
+
+  def defaultUkTaxCode: String = {
+    if (currentTaxYear == 2018) Default2018UkTaxCode else Default2017UkTaxCode
+  }
+
+  private lazy val Default2018UkTaxCode = "1185L"
+  private lazy val Default2017UkTaxCode = "1150L"
+
+  val HasTaxCode = "hasTaxCode"
+  val TaxCode = "taxCode"
 
   val suffixKeys = List('L', 'M', 'N', 'T')
-  val WRONG_TAX_CODE_SUFFIX_KEY = "quick_calc.about_tax_code.wrong_tax_code_suffix"
-  val WRONG_TAX_CODE_KEY = "quick_calc.about_tax_code.wrong_tax_code"
-  val WRONG_TAX_CODE_NUMBER = "quick_calc.about_tax_code.wrong_tax_code_number"
-  val WRONG_TAX_CODE_PREFIX_KEY = "quick_calc.about_tax_code.wrong_tax_code_prefix"
-  val WRONG_TAX_CODE_EMPTY = "quick_calc.about_tax_code_empty_error"
+  val WrongTaxCodeSuffixKey = "quick_calc.about_tax_code.wrong_tax_code_suffix"
+  val WrongTaxCodeKey = "quick_calc.about_tax_code.wrong_tax_code"
+  val WrongTaxCodeNumber = "quick_calc.about_tax_code.wrong_tax_code_number"
+  val WrongTaxCodePrefixKey = "quick_calc.about_tax_code.wrong_tax_code_prefix"
+  val WrongTaxCodeEmpty = "quick_calc.about_tax_code_empty_error"
 
   def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
-      if (data.getOrElse(HAS_TAX_CODE, "false") == "true") {
-        data.get(TAX_CODE).filter(_.nonEmpty)
+      if (data.getOrElse(HasTaxCode, "false") == "true") {
+        data.get(TaxCode).filter(_.nonEmpty)
           .map(_.toUpperCase()) match {
           case Some(taxCode) =>
             if (isValidTaxCode(taxCode, taxConfig(taxCode)))
@@ -60,29 +70,29 @@ object UserTaxCode extends TaxCalculatorHelper {
             else {
               Left(wrongTaxCode(taxCode))
             }
-          case None => Left(Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_EMPTY))))
+          case None => Left(Seq(FormError(TaxCode, messages(WrongTaxCodeEmpty))))
         }
-      } else Right(Some(DEFAULT_TAX_CODE))
+      } else Right(Some(defaultUkTaxCode))
     }
 
     override def unbind(key: String, value: Option[String]): Map[String, String] = Map(key -> value.getOrElse(""))
   }
 
   def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
-    if(!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}"))
-      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_NUMBER)))
-    else if(taxCode.replaceAll("([0-9])+([A-Z]?)+", "").matches("[A-JL-RT-Z]{1,2}"))
-      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_PREFIX_KEY)))
-    else if(taxCode.replaceAll("^([A-Z]?)+([0-9]?)+","").matches("[A-KO-SU-Z]"))
-      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_SUFFIX_KEY)))
+    if (!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}"))
+      Seq(FormError(TaxCode, messages(WrongTaxCodeNumber)))
+    else if (taxCode.replaceAll("([0-9])+([A-Z]?)+", "").matches("[A-JL-RT-Z]{1,2}"))
+      Seq(FormError(TaxCode, messages(WrongTaxCodePrefixKey)))
+    else if (taxCode.replaceAll("^([A-Z]?)+([0-9]?)+", "").matches("[A-KO-SU-Z]"))
+      Seq(FormError(TaxCode, messages(WrongTaxCodeSuffixKey)))
     else
-      Seq(FormError(TAX_CODE, messages(WRONG_TAX_CODE_KEY)))
+      Seq(FormError(TaxCode, messages(WrongTaxCodeKey)))
   }
 
   def form(implicit messages: Messages) = Form(
     mapping(
-      HAS_TAX_CODE -> of(requiredBooleanFormatter),
-      TAX_CODE -> of(taxCodeFormatter)
+      HasTaxCode -> of(requiredBooleanFormatter),
+      TaxCode -> of(taxCodeFormatter)
     )(UserTaxCode.apply)(UserTaxCode.unapply)
   )
 
@@ -93,7 +103,7 @@ object UserTaxCode extends TaxCalculatorHelper {
         .getOrElse("")
 
     def whatWasSelected(taxCode: Form[UserTaxCode]): Option[Boolean] = {
-      taxCode.value.map( formData => formData.gaveUsTaxCode)
+      taxCode.value.map(formData => formData.gaveUsTaxCode)
     }
     // Body
     htmlMapper(
@@ -111,7 +121,23 @@ object UserTaxCode extends TaxCalculatorHelper {
   }
 
   def taxConfig(taxCode: String): TaxCalcResource = TaxCalcResourceBuilder.resourceForDate(
-    startOfHardcodedTaxYear,
+    startOfCurrentTaxYear,
     isValidScottishTaxCode(taxCode)
   )
+
+  private def currentTaxYear: Int = {
+    val now = LocalDateProvider.now
+
+    if (now.isBefore(firstDayOfTaxYear.atYear(now.getYear))) {
+      now.getYear - 1
+    } else {
+      now.getYear
+    }
+  }
+
+  private def startOfCurrentTaxYear = {
+    firstDayOfTaxYear.atYear(currentTaxYear)
+  }
+
+  private lazy val firstDayOfTaxYear = MonthDay.of(4, 6)
 }

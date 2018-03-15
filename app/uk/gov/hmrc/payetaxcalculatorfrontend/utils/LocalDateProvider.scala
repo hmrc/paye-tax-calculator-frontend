@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.config
+package uk.gov.hmrc.payetaxcalculatorfrontend.utils
 
-import org.joda.time.{DateTime, DateTimeZone}
-import play.api.mvc.{Result, _}
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
+import java.time.LocalDate
 
-import scala.concurrent.Future
+import play.api.Play.current
 
-object CSRFBypassFilter extends Filter with MicroserviceFilterSupport {
-
-  def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] = {
-    f(filteredHeaders(rh))
+// ideally a Clock would be injected where LocalDate is used, but that would require
+// refitting the entire project to use DI
+object LocalDateProvider {
+  def now: LocalDate = current.configuration.getString("dateOverride") match {
+    case Some(s) => LocalDate.parse(s)
+    case None => LocalDate.now
   }
-
-  private[config] def filteredHeaders(
-   rh: RequestHeader,
-   now: () => DateTime = () => DateTime.now.withZone(DateTimeZone.UTC)) =
-      rh.copy(headers = rh.headers.add("Csrf-Token" -> "nocheck"))
-
 }
