@@ -29,7 +29,6 @@ class DetailedCalcEngineSpec extends FreeSpec with Matchers with PropertyChecks 
   import Engine.calculateTax
   implicit val taxYear2017 = TaxYear(2017)
 
-  // values for this spec reflect AC in: https://jira.tools.tax.service.gov.uk/browse/PAYEC-82
   "Total income tax should" - {
     "be 0 for earnings < personal allowance" in {
       implicit val region = EnglandWalesNI
@@ -110,7 +109,6 @@ class DetailedCalcEngineSpec extends FreeSpec with Matchers with PropertyChecks 
     val job2Earnings = 10000
     val job3Earnings = 80000
     val job4Earnings = 15000
-    //https://jira.tools.tax.service.gov.uk/browse/PAYEC-83
     "pass the examples for English/Welsh" - {
       implicit val region = EnglandWalesNI
 
