@@ -67,7 +67,6 @@ class TaxableIncomeSpec extends UnitSpec with Matchers with PropertyChecks {
       def taperedAllowanceLimit = 100000
       def defaultPersonalAllowance = 11509
 
-      //https://jira.tools.tax.service.gov.uk/browse/PAYEC-82
       "pass for example: User Information1.0" in {
         TaxableIncome.calculate(taperedAllowanceLimit, defaultPersonalAllowance)(32000) shouldBe 20491
       }
