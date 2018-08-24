@@ -23,7 +23,8 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
 import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent._
-import ExecutionContext.Implicits.global
+
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 @ImplementedBy(classOf[QuickCalcKeyStoreCache])
 trait QuickCalcCache {
