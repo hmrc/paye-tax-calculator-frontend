@@ -20,7 +20,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.http.{HeaderNames, SessionKeys}
+import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future

@@ -18,7 +18,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.mvc.{Result, _}
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
+import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
 
 import scala.concurrent.Future
 
