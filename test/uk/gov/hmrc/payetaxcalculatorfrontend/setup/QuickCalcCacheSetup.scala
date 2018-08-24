@@ -20,7 +20,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global

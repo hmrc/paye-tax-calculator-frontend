@@ -20,8 +20,8 @@ import java.util.UUID
 
 import play.api.mvc._
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.SessionIdSupport._
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
-import uk.gov.hmrc.play.http.{HeaderNames, SessionKeys}
+import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
+import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future

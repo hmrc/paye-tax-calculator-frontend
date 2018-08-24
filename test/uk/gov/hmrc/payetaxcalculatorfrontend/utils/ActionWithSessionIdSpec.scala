@@ -22,7 +22,7 @@ import play.api.http.HeaderNames._
 import play.api.mvc._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionId.SessionIdNotFoundException
-import uk.gov.hmrc.play.http.{HeaderNames, SessionKeys}
+import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class ActionWithSessionIdSpec extends UnitSpec with OneAppPerSuite with ScalaFutures with Results {

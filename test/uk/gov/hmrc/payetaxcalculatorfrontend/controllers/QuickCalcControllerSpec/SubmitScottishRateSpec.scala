@@ -29,7 +29,7 @@ import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.{QuickCalcController, r
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup.cacheCompleteYearly
-import uk.gov.hmrc.play.http.{HeaderCarrier, HeaderNames}
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future

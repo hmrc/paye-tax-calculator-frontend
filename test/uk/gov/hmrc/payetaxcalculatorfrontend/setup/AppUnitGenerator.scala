@@ -20,7 +20,7 @@ import akka.stream.Materializer
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.http.HeaderNames
+import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.play.test.UnitSpec
 
 class AppUnitGenerator extends UnitSpec with OneAppPerSuite {
