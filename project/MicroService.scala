@@ -47,6 +47,7 @@ trait MicroService {
     .settings(publishingSettings: _*)
     .settings(defaultSettings(): _*)
     .settings(
+      scalaVersion:= "2.11.12",
       libraryDependencies ++= appDependencies,
       retrieveManaged := true,
       evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
@@ -57,7 +58,6 @@ trait MicroService {
       Keys.fork in IntegrationTest := false,
       unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest)(base => Seq(base / "it")),
       addTestReportOption(IntegrationTest, "int-test-reports"),
-      testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
       parallelExecution in IntegrationTest := false)
       .settings(resolvers ++= Seq(
         Resolver.bintrayRepo("hmrc", "releases"),
