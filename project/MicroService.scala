@@ -1,23 +1,18 @@
-import sbt.Keys._
-import sbt.Tests.{SubProcess, Group}
-import sbt._
-import play.routes.compiler.StaticRoutesGenerator
-import scoverage.ScoverageKeys
 import play.sbt.PlayImport.PlayKeys
+import sbt.Keys._
+import sbt.Tests.{Group, SubProcess}
+import sbt._
+import scoverage.ScoverageKeys
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-
+import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 trait MicroService {
 
   import uk.gov.hmrc._
   import DefaultBuildSettings._
-  import uk.gov.hmrc.{SbtBuildInfo, ShellPrompt, SbtAutoBuildPlugin}
+  import uk.gov.hmrc.SbtAutoBuildPlugin
   import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
   import uk.gov.hmrc.versioning.SbtGitVersioning
-  import play.sbt.routes.RoutesKeys.routesGenerator
-
-
-  import TestPhases._
 
   val appName: String
 
@@ -39,11 +34,12 @@ trait MicroService {
 
 
   lazy val microservice = Project(appName, file("."))
-    .enablePlugins(Seq(play.sbt.PlayScala,SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin) ++ plugins : _*)
+    .enablePlugins(Seq(play.sbt.PlayScala,SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory) ++ plugins : _*)
     .settings(PlayKeys.playDefaultPort := 7788)
     .settings(playSettings ++ scoverageSettings: _*)
     .settings(playSettings : _*)
     .settings(scalaSettings: _*)
+    .settings(majorVersion := 0)
     .settings(publishingSettings: _*)
     .settings(defaultSettings(): _*)
     .settings(
@@ -59,10 +55,10 @@ trait MicroService {
       unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest)(base => Seq(base / "it")),
       addTestReportOption(IntegrationTest, "int-test-reports"),
       parallelExecution in IntegrationTest := false)
-      .settings(resolvers ++= Seq(
-        Resolver.bintrayRepo("hmrc", "releases"),
-        Resolver.jcenterRepo
-      ))
+    .settings(resolvers ++= Seq(
+      Resolver.bintrayRepo("hmrc", "releases"),
+      Resolver.jcenterRepo
+    ))
 }
 
 private object TestPhases {
