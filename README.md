@@ -18,7 +18,7 @@ sbt run
 
 #### Get to the first form page by a web browser
 ```
-GET   	/estimate-paye-take-home-pay/
+GET /estimate-paye-take-home-pay/
 ```
 
 ### License

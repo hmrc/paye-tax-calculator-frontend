@@ -19,9 +19,6 @@ package uk.gov.hmrc.payetaxcalculatorfrontend
 import play.api.mvc.{AnyContent, Request, Result}
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 
-/**
-  * Created by walidus on 26/04/17.
-  */
 package object controllers {
   type ShowForm = Request[AnyContent] => QuickCalcAggregateInput => Result
 }
