@@ -22,7 +22,7 @@ import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 
 import scala.concurrent.Future
 
-class CSRFBypassFilter extends Filter with MicroserviceFilterSupport {
+class CsrfBypassFilter extends Filter with MicroserviceFilterSupport {
 
   def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] = {
     f(filteredHeaders(rh))

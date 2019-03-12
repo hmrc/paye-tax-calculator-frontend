@@ -16,13 +16,10 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.utils
 
-import java.util.UUID
-
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.SessionIdSupport._
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 
 import scala.concurrent.Future
 
@@ -40,24 +37,6 @@ object SessionIdSupport {
     rh.session.get(SessionKeys.sessionId).orElse(rh.headers.get(HeaderNames.xSessionId))
 
   def hasSessionId(rh: RequestHeader): Boolean = maybeSessionId(rh).isDefined
-}
-
-class SessionIdFilter extends Filter with MicroserviceFilterSupport {
-  def apply(next: (RequestHeader) => Future[Result])
-           (rh: RequestHeader): Future[Result] = {
-    if (hasSessionId(rh)) {
-      next(rh)
-    } else {
-      next(addNewSessionIdToHeaders(rh))
-    }
-  }
-
-  def addNewSessionIdToHeaders(request: RequestHeader): RequestHeader = {
-    val newSessionId = s"session-${UUID.randomUUID().toString}"
-    val newSessionIdHeader = HeaderNames.xSessionId -> newSessionId
-    val newHeaders = request.headers.add(newSessionIdHeader)
-    request.copy(headers = newHeaders)
-  }
 }
 
 object ActionWithSessionId extends ActionBuilder[Request] {
