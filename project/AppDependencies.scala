@@ -5,11 +5,11 @@ import sbt._
 object AppDependencies {
 
   private val bootstrapPlay25Version = "4.9.0"
-  private val playPartialsVersion = "6.1.0"
-  private val playAuthorisedFrontendVersion = "7.0.0"
+  private val playPartialsVersion = "6.5.0"
+  private val playAuthorisedFrontendVersion = "7.1.0"
   private val playConfigVersion = "7.3.0"
-  private val logbackJsonLoggerVersion = "3.1.0"
-  private val govukTemplateVersion = "5.22.0"
+  private val logbackJsonLoggerVersion = "4.4.0"
+  private val govukTemplateVersion = "5.26.0-play-25"
   private val playHealthVersion = "3.9.0-play-25"
   private val playUiVersion = "7.27.0-play-25"
   private val playFilters = "5.15.0"
@@ -39,7 +39,7 @@ object AppDependencies {
     "org.typelevel" %% "cats-core" % catsCoreVersion
   )
 
-  private val hmrcTestVersion = "3.0.0"
+  private val hmrcTestVersion = "3.5.0-play-25"
   private val scalaTestVersion = "3.0.5"
   private val pegdownVersion = "1.6.0"
   private val jsoupVersion = "1.11.3"
