@@ -26,6 +26,7 @@ import play.api.libs.json._
 import uk.gov.hmrc.payeestimator.domain.{TaxCalcResource, TaxCalcResourceBuilder}
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
+import uk.gov.hmrc.payetaxcalculatorfrontend.utils.LocalDateProvider
 import uk.gov.hmrc.time.TaxYear
 
 case class UserTaxCode(gaveUsTaxCode: Boolean, taxCode: Option[String])
@@ -45,8 +46,8 @@ object UserTaxCode extends TaxCalculatorHelper {
     if (currentTaxYear == 2019) Default2019UkTaxCode else Default2018UkTaxCode
   }
 
-  private lazy val Default2019UkTaxCode = "1250L"
   private lazy val Default2018UkTaxCode = "1185L"
+  private lazy val Default2019UkTaxCode = "1250L"
 
   val HasTaxCode = "hasTaxCode"
   val TaxCode = "taxCode"
@@ -124,7 +125,15 @@ object UserTaxCode extends TaxCalculatorHelper {
     isValidScottishTaxCode(taxCode)
   )
 
-  private def currentTaxYear: Int = TaxYear.current.currentYear
+  private def currentTaxYear: Int = {
+    val now = LocalDateProvider.now
+
+    if (now.isBefore(firstDayOfTaxYear.atYear(now.getYear))) {
+      now.getYear - 1
+    } else {
+      now.getYear
+    }
+  }
 
   private def startOfCurrentTaxYear = {
     firstDayOfTaxYear.atYear(currentTaxYear)

@@ -21,11 +21,14 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
+import uk.gov.hmrc.payetaxcalculatorfrontend.config.SessionIdFilter
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
 class SessionIdFilterSpec extends UnitSpec with OneAppPerSuite with ScalaFutures {
+
+  val testSessionIdFilter = new SessionIdFilter
 
   "SessionIdFilter" should {
     "add a newly generated session-id to a request that didn't have one before" in new Setup {
@@ -64,7 +67,7 @@ class SessionIdFilterSpec extends UnitSpec with OneAppPerSuite with ScalaFutures
     }
 
     def executeFilteredAction(rh: RequestHeader)(assertion:  RequestHeader => Unit) =
-      SessionIdFilter(action(assertion))(rh).futureValue
+      testSessionIdFilter(action(assertion))(rh).futureValue
 
     def getSessionIdFromHeaders(rh: RequestHeader): Option[String] = rh.headers.get(HeaderNames.xSessionId)
 

@@ -33,16 +33,16 @@ class TaxResultSpec extends UnitSpec with OneAppPerTest {
       extractTaxCode(input) shouldBe "K452"
     }
 
-    "return default tax code for 2017-18 (1150L) if the user does not provide one" taggedAs Tag("2017") in {
-      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
-
-      extractTaxCode(input) shouldBe "1150L"
-    }
-
-    "return the default UK tax code for 2018-19 if the user does not provide one" taggedAs Tag("2018") in {
+    "return default tax code for 2018-19 (1150L) if the user does not provide one" taggedAs Tag("2018") in {
       val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
 
       extractTaxCode(input) shouldBe "1185L"
+    }
+
+    "return the default UK tax code for 2019-20 if the user does not provide one" taggedAs Tag("2019") in {
+      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
+
+      extractTaxCode(input) shouldBe "1250L"
     }
   }
 
@@ -158,9 +158,9 @@ class TaxResultSpec extends UnitSpec with OneAppPerTest {
 
   }
 
-  override def newAppForTest(testData: TestData): Application = if (testData.tags.contains("2018")) {
-    GuiceApplicationBuilder().configure("dateOverride" -> "2018-04-06").build()
+  override def newAppForTest(testData: TestData): Application = if (testData.tags.contains("2019")) {
+    GuiceApplicationBuilder().configure("dateOverride" -> "2019-04-06").build()
   } else {
-    GuiceApplicationBuilder().configure("dateOverride" -> "2017-04-06").build()
+    GuiceApplicationBuilder().configure("dateOverride" -> "2018-04-06").build()
   }
 }

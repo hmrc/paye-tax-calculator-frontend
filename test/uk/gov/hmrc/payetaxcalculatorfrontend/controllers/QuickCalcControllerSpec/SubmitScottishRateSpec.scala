@@ -25,11 +25,12 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
+import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.{QuickCalcController, routes}
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup.cacheCompleteYearly
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
@@ -58,24 +59,6 @@ class SubmitScottishRateSpec extends UnitSpec with MockFactory with OneAppPerTes
       redirectLocation(res) shouldBe Some(routes.QuickCalcController.summary().url)
     }
 
-    "set the user's tax code to the 2017-18 default UK tax code " +
-      "if the user does not pay the Scottish rate" taggedAs Tag("2017") in new Test {
-
-      val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(
-        savedScottishRate = Some(ScottishRate(false)),
-        savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("1150L")))
-      )
-
-      (mockCache.save(_: QuickCalcAggregateInput)(_: HeaderCarrier))
-        .expects(expectedAggregate, *)
-        .once()
-        .returning(emptyCacheMap)
-
-      val req = fakeRequest.withFormUrlEncodedBody("scottishRate" -> "false")
-      val res = testController.submitScottishRateForm()(req)
-      status(res) shouldBe SEE_OTHER
-    }
-
     "set the user's tax code to the 2018-19 default UK tax code " +
       "if the user does not pay the Scottish rate" taggedAs Tag("2018") in new Test {
 
@@ -94,12 +77,12 @@ class SubmitScottishRateSpec extends UnitSpec with MockFactory with OneAppPerTes
       status(res) shouldBe SEE_OTHER
     }
 
-    "set the user's tax code to the 2017-18 default Scottish tax code " +
-      "if the user pays the Scottish rate" taggedAs Tag("2017") in new Test {
+    "set the user's tax code to the 2019-20 default UK tax code " +
+      "if the user does not pay the Scottish rate" taggedAs Tag("2019") in new Test {
 
       val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(
-        savedScottishRate = Some(ScottishRate(true)),
-        savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1150L")))
+        savedScottishRate = Some(ScottishRate(false)),
+        savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
       )
 
       (mockCache.save(_: QuickCalcAggregateInput)(_: HeaderCarrier))
@@ -107,7 +90,7 @@ class SubmitScottishRateSpec extends UnitSpec with MockFactory with OneAppPerTes
         .once()
         .returning(emptyCacheMap)
 
-      val req = fakeRequest.withFormUrlEncodedBody("scottishRate" -> "true")
+      val req = fakeRequest.withFormUrlEncodedBody("scottishRate" -> "false")
       val res = testController.submitScottishRateForm()(req)
       status(res) shouldBe SEE_OTHER
     }
@@ -131,18 +114,37 @@ class SubmitScottishRateSpec extends UnitSpec with MockFactory with OneAppPerTes
     }
   }
 
+  "set the user's tax code to the 2019-20 default Scottish tax code " +
+    "if the user pays the Scottish rate" taggedAs Tag("2019") in new Test {
+
+    val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(
+      savedScottishRate = Some(ScottishRate(true)),
+      savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
+    )
+
+    (mockCache.save(_: QuickCalcAggregateInput)(_: HeaderCarrier))
+      .expects(expectedAggregate, *)
+      .once()
+      .returning(emptyCacheMap)
+
+    val req = fakeRequest.withFormUrlEncodedBody("scottishRate" -> "true")
+    val res = testController.submitScottishRateForm()(req)
+    status(res) shouldBe SEE_OTHER
+  }
+
   lazy val mockCache: QuickCalcCache = mock[QuickCalcCache]
 
+  lazy implicit val appConfig = app.injector.instanceOf[AppConfig]
   lazy val testController = new QuickCalcController(app.injector.instanceOf[MessagesApi], mockCache)
   lazy val fakeRequest = FakeRequest().withHeaders(HeaderNames.xSessionId -> "some-session-id")
 
   lazy val emptyCacheMap: Future[CacheMap] = Future.successful(CacheMap("", Map.empty))
 
   override def newAppForTest(testData: TestData) = {
-    if (testData.tags.contains("2018")) {
-      GuiceApplicationBuilder().configure("dateOverride" -> "2018-04-06").build()
+    if (testData.tags.contains("2019")) {
+      GuiceApplicationBuilder().configure("dateOverride" -> "2019-04-06").build()
     } else {
-      GuiceApplicationBuilder().configure("dateOverride" -> "2017-04-06").build()
+      GuiceApplicationBuilder().configure("dateOverride" -> "2018-04-06").build()
     }
   }
 

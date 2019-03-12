@@ -17,15 +17,10 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc
 
 import org.jsoup.Jsoup
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.i18n.Messages.Implicits._
-import play.api.test.FakeRequest
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUsItem
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
 
-class YouHaveToldUsHtmlSpec extends UnitSpec with OneAppPerSuite {
-
-  implicit val request = FakeRequest()
+class YouHaveToldUsHtmlSpec extends AppUnitGenerator {
 
   "Html snippet for the `You Have Told Us` section" should {
     "not appear if there are no items" in {

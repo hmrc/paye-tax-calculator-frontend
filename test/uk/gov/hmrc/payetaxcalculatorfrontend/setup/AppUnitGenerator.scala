@@ -17,17 +17,21 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.setup
 
 import akka.stream.Materializer
+import org.scalamock.scalatest.MockFactory
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderNames
+import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
 import uk.gov.hmrc.play.test.UnitSpec
 
-class AppUnitGenerator extends UnitSpec with OneAppPerSuite {
+class AppUnitGenerator extends UnitSpec with MockFactory with OneAppPerSuite {
   val appInjector = app.injector
   implicit val materializer = appInjector.instanceOf[Materializer]
   implicit val request = FakeRequest()
     .withHeaders(HeaderNames.xSessionId -> "test")
+
+  implicit def appConfig: AppConfig = appInjector.instanceOf[AppConfig]
   implicit val messages = Messages(Lang.defaultLang, appInjector.instanceOf[MessagesApi])
 
 }
