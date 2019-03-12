@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
-@(pageTitle: String, heading: String, message: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
+package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
-@contentHeader = {
-  <h1>@heading</h1>
-}
+import javax.inject.Inject
+import play.api.http.DefaultHttpFilters
+import uk.gov.hmrc.payetaxcalculatorfrontend.utils.SessionIdFilter
+import uk.gov.hmrc.play.bootstrap.filters.MicroserviceFilters
 
-@mainContent = {
-  <p>@message</p>
-}
-
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+class Filters @Inject()(defaultFilters: MicroserviceFilters,
+                        sessionIdFilter: SessionIdFilter,
+                        csrfBypassFilter: CSRFBypassFilter) extends DefaultHttpFilters(defaultFilters.filters :+ sessionIdFilter :+ csrfBypassFilter: _*)

@@ -22,7 +22,8 @@
 
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.Hours
 
-@(valueInPence:Int, hoursForm: Form[Hours], url: String)(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+@(valueInPence:Int, hoursForm: Form[Hours], url: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.salary.question.hours_a_week"), mainClass = Some("full-width")) {
 
   @beta_header()

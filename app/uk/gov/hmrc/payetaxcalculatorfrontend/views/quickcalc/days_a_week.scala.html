@@ -21,7 +21,8 @@
 
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.Days
 
-@(valueInPence:Int, daysForm: Form[Days], url: String)(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+@(valueInPence:Int, daysForm: Form[Days], url: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.salary.question.days_a_week"), mainClass = Some("full-width")) {
 
   @beta_header()

@@ -20,9 +20,9 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.{routes => prodRoutes}
-@import uk.gov.hmrc.payetaxcalculatorfrontend.FrontendAppConfig
 
-@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
 }
@@ -93,7 +93,7 @@
       </div>
 
       <div class="form-group">
-        <a class="print-hidden" href="@{FrontendAppConfig.betaFeedbackUrl}" target="_blank">@Messages("feedback")</a>
+        <a class="print-hidden" href="@{appConfig.betaFeedbackUrl}" target="_blank">@Messages("feedback")</a>
       </div>
       <div class="form-group">
         <a class="print-hidden button" role="button" href="@prodRoutes.QuickCalcController.restartQuickCalc()" style="margin-top: 15px" id="restart">@Messages("restart")</a>

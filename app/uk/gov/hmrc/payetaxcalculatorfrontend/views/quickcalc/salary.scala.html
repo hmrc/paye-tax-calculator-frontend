@@ -20,7 +20,8 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult
-@(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+@(salaryForm: Form[Salary])(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 @periodLabels = @{List("hourly","daily","weekly","monthly","yearly")}
 @radioFieldAmount = @{ salaryForm("amount") }
 @radioFieldPeriod = @{ salaryForm("period") }

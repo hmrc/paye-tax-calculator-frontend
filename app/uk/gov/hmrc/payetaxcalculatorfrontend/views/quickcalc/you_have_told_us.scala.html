@@ -20,7 +20,8 @@
 @import play.api.i18n._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
 
-@(items: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+@(items: List[YouHaveToldUsItem])(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 
 @main_template(title = Messages("quick_calc.you_have_told_us.header"), mainClass = Some("full-width")) {
 

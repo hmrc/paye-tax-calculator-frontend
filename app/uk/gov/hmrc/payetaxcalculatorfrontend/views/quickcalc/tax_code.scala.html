@@ -22,8 +22,8 @@
 @import views.html.helper._
 @import uk.gov.hmrc.play.views.html._
 
-
-@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 
 @main_template(title = Messages("quick_calc.about_tax_code.header"), mainClass = Some("full-width")) {
 

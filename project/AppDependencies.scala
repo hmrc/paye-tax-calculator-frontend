@@ -4,16 +4,17 @@ import sbt._
 
 object AppDependencies {
 
-  private val frontendBootstrapVersion = "10.1.0"
+  private val bootstrapPlay25Version = "4.9.0"
   private val playPartialsVersion = "6.1.0"
   private val playAuthorisedFrontendVersion = "7.0.0"
-  private val playConfigVersion = "4.3.3"
+  private val playConfigVersion = "7.3.0"
   private val logbackJsonLoggerVersion = "3.1.0"
   private val govukTemplateVersion = "5.22.0"
-  private val playHealthVersion = "2.2.0"
-  private val playUiVersion = "7.21.0"
+  private val playHealthVersion = "3.9.0-play-25"
+  private val playUiVersion = "7.27.0-play-25"
+  private val playFilters = "5.15.0"
   private val payeEstimatorVersion = "2.0.0"
-  private val httpCachingClientVersion = "7.1.0"
+  private val httpCachingClientVersion = "8.1.0"
   private val playConditionalFormMappingVersion = "0.2.0"
   private val urlBuilderVersion = "2.1.0"
   private val taxYearVersion = "0.4.0"
@@ -21,10 +22,11 @@ object AppDependencies {
 
   val compile = Seq(
     ws,
-    "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
+    "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapPlay25Version,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
+    "uk.gov.hmrc" %% "play-filters" % playFilters,
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,

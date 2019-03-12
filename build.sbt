@@ -14,7 +14,6 @@ val appName: String = "paye-tax-calculator-frontend"
 
 lazy val scoverageSettings = {
   Seq(
-    // Semicolon-separated list of regexs matching classes to exclude
     ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models/.data/..*;view.*",
     ScoverageKeys.coverageMinimum := 25,
     ScoverageKeys.coverageFailOnMinimum := false,
