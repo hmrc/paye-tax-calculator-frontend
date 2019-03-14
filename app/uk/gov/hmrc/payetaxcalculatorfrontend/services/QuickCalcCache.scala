@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,15 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.services
 
 import com.google.inject.{ImplementedBy, Singleton}
-import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
-import uk.gov.hmrc.payetaxcalculatorfrontend.WSHttp
-import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
-import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
-import uk.gov.hmrc.http.HeaderCarrier
-import scala.concurrent._
-
+import javax.inject.Inject
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
+import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
+
+import scala.concurrent._
 
 @ImplementedBy(classOf[QuickCalcKeyStoreCache])
 trait QuickCalcCache {
@@ -34,7 +35,8 @@ trait QuickCalcCache {
 }
 
 @Singleton
-class QuickCalcKeyStoreCache extends QuickCalcCache {
+class QuickCalcKeyStoreCache @Inject()(httpClient: HttpClient, appConfig: AppConfig) extends QuickCalcCache {
+
   val id = "quick-calc-aggregate-input"
 
   def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]] = {
@@ -43,11 +45,11 @@ class QuickCalcKeyStoreCache extends QuickCalcCache {
 
   def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[CacheMap] = sessionCache.cache(id, o)
 
-  private object sessionCache extends SessionCache with AppName with ServicesConfig {
-    override lazy val http = WSHttp
-    override lazy val defaultSource = appName
-    override lazy val baseUri = baseUrl("cachable.session-cache")
-    override lazy val domain = getConfString("cachable.session-cache.domain",
+  private object sessionCache extends SessionCache {
+    override lazy val http = httpClient
+    override lazy val defaultSource = "paye-tax-calculator-frontend"
+    override lazy val baseUri = appConfig.baseUrl("cachable.session-cache")
+    override lazy val domain = appConfig.getConfString("cachable.session-cache.domain",
       throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
   }
 

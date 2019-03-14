@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
+package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import play.api.http.DefaultHttpFilters
+import uk.gov.hmrc.play.bootstrap.filters.MicroserviceFilters
 
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Action
-import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.legacyIndex
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-
-@Singleton
-class IndexController @Inject() (override val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
-
-  def legacy() = Action { implicit request =>
-    Ok(legacyIndex())
-  }
-
-}
+class Filters @Inject()(defaultFilters: MicroserviceFilters,
+                        sessionIdFilter: SessionIdFilter,
+                        csrfBypassFilter: CsrfBypassFilter) extends DefaultHttpFilters(defaultFilters.filters :+ sessionIdFilter :+ csrfBypassFilter: _*)

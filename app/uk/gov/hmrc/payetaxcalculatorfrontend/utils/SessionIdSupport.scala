@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,10 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.utils
 
-import java.util.UUID
-
-import play.api.mvc._
-import uk.gov.hmrc.payetaxcalculatorfrontend.utils.SessionIdSupport._
-import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
-import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc._
+import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
+import uk.gov.hmrc.payetaxcalculatorfrontend.utils.SessionIdSupport._
 
 import scala.concurrent.Future
 
@@ -42,24 +39,6 @@ object SessionIdSupport {
   def hasSessionId(rh: RequestHeader): Boolean = maybeSessionId(rh).isDefined
 }
 
-object SessionIdFilter extends Filter with MicroserviceFilterSupport{
-  def apply(next: (RequestHeader) => Future[Result])
-           (rh: RequestHeader): Future[Result] = {
-    if (hasSessionId(rh)) {
-      next(rh)
-    } else {
-      next(addNewSessionIdToHeaders(rh))
-    }
-  }
-
-  def addNewSessionIdToHeaders(request: RequestHeader): RequestHeader = {
-    val newSessionId = s"session-${UUID.randomUUID().toString}"
-    val newSessionIdHeader = HeaderNames.xSessionId -> newSessionId
-    val newHeaders = request.headers.add(newSessionIdHeader)
-    request.copy(headers = newHeaders)
-  }
-}
-
 object ActionWithSessionId extends ActionBuilder[Request] {
   def invokeBlock[A](request: Request[A],
                      block: (Request[A]) => Future[Result]): Future[Result] = {
@@ -77,4 +56,5 @@ object ActionWithSessionId extends ActionBuilder[Request] {
   case class SessionIdNotFoundException() extends Exception(
     "Session id not found in headers or session as expected. Have you enabled SessionIdFilter?"
   )
+
 }

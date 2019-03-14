@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,6 @@ package uk.gov.hmrc.payetaxcalculatorfrontend
 import play.api.mvc.{AnyContent, Request, Result}
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 
-/**
-  * Created by walidus on 26/04/17.
-  */
 package object controllers {
   type ShowForm = Request[AnyContent] => QuickCalcAggregateInput => Result
 }

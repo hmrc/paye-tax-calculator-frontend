@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import uk.gov.hmrc.payeestimator.domain.{TaxCalcResource, TaxCalcResourceBuilder
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.LocalDateProvider
+import uk.gov.hmrc.time.TaxYear
 
 case class UserTaxCode(gaveUsTaxCode: Boolean, taxCode: Option[String])
 
@@ -35,18 +36,18 @@ object UserTaxCode extends TaxCalculatorHelper {
   implicit val format: OFormat[UserTaxCode] = Json.format[UserTaxCode]
 
   def defaultScottishTaxCode: String = {
-    if (currentTaxYear == 2018) Default2018ScottishTaxCode else Default2017ScottishTaxCode
+    if (currentTaxYear == 2019) Default2019ScottishTaxCode else Default2018ScottishTaxCode
   }
 
-  private lazy val Default2017ScottishTaxCode = "S1150L"
   private lazy val Default2018ScottishTaxCode = "S1185L"
+  private lazy val Default2019ScottishTaxCode = "S1250L"
 
   def defaultUkTaxCode: String = {
-    if (currentTaxYear == 2018) Default2018UkTaxCode else Default2017UkTaxCode
+    if (currentTaxYear == 2019) Default2019UkTaxCode else Default2018UkTaxCode
   }
 
   private lazy val Default2018UkTaxCode = "1185L"
-  private lazy val Default2017UkTaxCode = "1150L"
+  private lazy val Default2019UkTaxCode = "1250L"
 
   val HasTaxCode = "hasTaxCode"
   val TaxCode = "taxCode"
@@ -105,7 +106,6 @@ object UserTaxCode extends TaxCalculatorHelper {
     def whatWasSelected(taxCode: Form[UserTaxCode]): Option[Boolean] = {
       taxCode.value.map(formData => formData.gaveUsTaxCode)
     }
-    // Body
     htmlMapper(
       whatWasSelected(taxCodeFromServer).map(_ == checkFor))
   }

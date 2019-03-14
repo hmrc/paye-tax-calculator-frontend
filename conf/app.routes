@@ -1,7 +1,5 @@
 # microservice specific routes
 
-GET         /legacy                       uk.gov.hmrc.payetaxcalculatorfrontend.controllers.IndexController.legacy()
-
 GET         /                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.redirectToSalaryForm
 
 GET         /your-pay                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showSalaryForm

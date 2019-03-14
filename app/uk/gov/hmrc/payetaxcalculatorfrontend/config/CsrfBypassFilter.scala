@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,18 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.mvc.{Result, _}
-import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
+import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 
 import scala.concurrent.Future
 
-object CSRFBypassFilter extends Filter with MicroserviceFilterSupport {
+class CsrfBypassFilter extends Filter with MicroserviceFilterSupport {
 
   def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] = {
     f(filteredHeaders(rh))
   }
 
-  private[config] def filteredHeaders(
-   rh: RequestHeader,
-   now: () => DateTime = () => DateTime.now.withZone(DateTimeZone.UTC)) =
-      rh.copy(headers = rh.headers.add("Csrf-Token" -> "nocheck"))
+  private[config] def filteredHeaders(rh: RequestHeader,
+                                      now: () => DateTime = () => DateTime.now.withZone(DateTimeZone.UTC)): RequestHeader =
+    rh.copy(headers = rh.headers.add("Csrf-Token" -> "nocheck"))
 
 }
