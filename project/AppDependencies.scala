@@ -10,17 +10,17 @@ object AppDependencies {
   private val playConfigVersion = "7.3.0"
   private val logbackJsonLoggerVersion = "4.4.0"
   private val govukTemplateVersion = "5.26.0-play-25"
-  private val playHealthVersion = "3.9.0-play-25"
-  private val playUiVersion = "7.27.0-play-25"
-  private val playFilters = "5.15.0"
-  private val payeEstimatorVersion = "2.13.0-play-25"
+  private val playHealthVersion = "3.12.0-play-25"
+  private val playUiVersion = "7.33.0-play-25"
+  private val playFilters = "5.18.0"
+  private val payeEstimatorVersion = "2.16.0-play-25"
   private val httpCachingClientVersion = "8.1.0"
   private val playConditionalFormMappingVersion = "0.2.0"
   private val urlBuilderVersion = "2.1.0"
-  private val taxYearVersion = "0.4.0"
+  private val taxYearVersion = "0.5.0"
   private val catsCoreVersion = "1.2.0"
 
-  val compile = Seq(
+  val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapPlay25Version,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
@@ -39,7 +39,7 @@ object AppDependencies {
     "org.typelevel" %% "cats-core" % catsCoreVersion
   )
 
-  private val hmrcTestVersion = "3.5.0-play-25"
+  private val hmrcTestVersion = "3.6.0-play-25"
   private val scalaTestVersion = "3.0.5"
   private val pegdownVersion = "1.6.0"
   private val jsoupVersion = "1.11.3"
@@ -48,7 +48,7 @@ object AppDependencies {
   private val scalacheckVersion = "1.14.0"
   private val scalamockScalaTestSupportVersion = "3.6.0"
 
-  def test(scope: String = "test") = Seq(
+  def test(scope: String = "test"): Seq[ModuleID] = Seq(
     "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
     "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
     "org.pegdown" % "pegdown" % pegdownVersion % scope,
