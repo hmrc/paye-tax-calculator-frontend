@@ -66,9 +66,7 @@ object UserTaxCode extends TaxCalculatorHelper {
         data.get(TaxCode).filter(_.nonEmpty)
           .map(_.toUpperCase()) match {
           case Some(taxCode) =>
-            val taxCodeStripped = removeCountryElementFromTaxCode(taxCode)
-
-            if (isValidTaxCode(taxCodeStripped, taxConfig(taxCode)))
+            if (isValidTaxCode(removeCountryElementFromTaxCode(taxCode), taxConfig(taxCode)))
               Right(Some(taxCode))
             else {
               Left(wrongTaxCode(taxCode))
