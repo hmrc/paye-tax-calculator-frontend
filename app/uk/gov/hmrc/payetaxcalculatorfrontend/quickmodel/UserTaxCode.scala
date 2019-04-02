@@ -59,14 +59,14 @@ object UserTaxCode extends TaxCalculatorHelper {
   val WrongTaxCodePrefixKey = "quick_calc.about_tax_code.wrong_tax_code_prefix"
   val WrongTaxCodeEmpty = "quick_calc.about_tax_code_empty_error"
 
-  def taxCodeFormatter(implicit messages: Messages) = new Formatter[Option[String]] {
+  def taxCodeFormatter(implicit messages: Messages): Formatter[Option[String]] = new Formatter[Option[String]] {
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
       if (data.getOrElse(HasTaxCode, "false") == "true") {
         data.get(TaxCode).filter(_.nonEmpty)
           .map(_.toUpperCase()) match {
           case Some(taxCode) =>
-            if (isValidTaxCode(taxCode, taxConfig(taxCode)))
+            if (isValidTaxCode(removeCountryElementFromTaxCode(taxCode), taxConfig(taxCode)))
               Right(Some(taxCode))
             else {
               Left(wrongTaxCode(taxCode))
