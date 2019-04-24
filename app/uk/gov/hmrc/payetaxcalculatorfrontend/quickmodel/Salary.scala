@@ -20,9 +20,10 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.libs.json._
+import play.api.data.format.Formats._
 
-case class Salary(amount: BigDecimal, period: String, howManyAWeek:Option[Int])
-case class Hours(amount: Int, howManyAWeek: Int)
+case class Salary(amount: BigDecimal, period: String, howManyAWeek:Option[Double])
+case class Hours(amount: Double, howManyAWeek: Double)
 case class Days(amount: Int, howManyAWeek: Int)
 case class Detail(amount: Int, howManyAWeek: Int, period: String, urlForChange: String)
 
@@ -51,8 +52,8 @@ object Salary {
 
   def salaryInHoursForm(implicit messages: Messages) = Form(
     mapping(
-      "amount" -> number,
-      "howManyAWeek" -> of(CustomFormatters.hoursValidation)
+      a1 = "amount" -> of[Double],
+      a2 = "howManyAWeek" -> of(CustomFormatters.hoursValidation)
     )(Hours.apply)(Hours.unapply)
   )
 

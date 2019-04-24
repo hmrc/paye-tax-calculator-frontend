@@ -70,15 +70,15 @@ object CustomFormatters {
     override def unbind(key: String, value: Int): Map[String, String] = Map(key -> value.toString)
   }
 
-  def hoursValidation(implicit messages: Messages): Formatter[Int] = new Formatter[Int] {
-    override def bind(key: String, data: Map[String, String]) = {
+  def hoursValidation(implicit messages: Messages): Formatter[Double] = new Formatter[Double] {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Double] = {
       Right(data.getOrElse(key,"")).right.flatMap {
         case s if s.nonEmpty  =>
           try {
-            val hours = s.toInt
-            if(hours < 1) {
+            val hours: Double = s.toDouble
+            if(hours < 1.0) {
               Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.less_than_one"))))
-            } else if(hours > 168) {
+            } else if(hours > 168.0) {
               Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.more_than_168"))))
             } else {
               Right(hours)
@@ -91,12 +91,12 @@ object CustomFormatters {
       }
     }
 
-    override def unbind(key: String, value: Int): Map[String, String] = Map(key -> value.toString)
+    override def unbind(key: String, value: Double): Map[String, String] = Map(key -> value.toString)
 
   }
 
   def salaryValidation(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
-    override def bind(key: String, data: Map[String, String]) = {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] = {
       (data.get(key).filter(_.nonEmpty) match {
         case Some(s) =>
           try{
