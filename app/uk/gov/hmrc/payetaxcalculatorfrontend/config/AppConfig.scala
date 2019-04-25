@@ -18,8 +18,11 @@ package uk.gov.hmrc.payetaxcalculatorfrontend
 
 import javax.inject.Inject
 import play.api.Mode.Mode
+import play.api.i18n.Lang
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
+import play.api.mvc.Call
+import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
 
 class AppConfig @Inject()(override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
 
@@ -38,4 +41,11 @@ class AppConfig @Inject()(override val runModeConfiguration: Configuration, envi
 
   lazy val cacheUrl: String = baseUrl("cachable.session-cache")
 
+  def languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy")
+  )
+
+  def routeToSwitchLanguage: String => Call =
+    (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
 }

@@ -28,8 +28,8 @@
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
-
-@head = {
+    @import uk.gov.hmrc.payetaxcalculatorfrontend.views
+    @head = {
     @uiLayouts.head(
       linkElem = None,
       headScripts = None)
@@ -67,7 +67,12 @@
 }
 
 @mainContentHeader = {
-    @if(contentHeader.isDefined) {
+@views.html.components.language_selection(
+    appConfig.languageMap,
+    appConfig.routeToSwitchLanguage,
+    Some("translate u-align--right")
+)
+@if(contentHeader.isDefined) {
         @uiLayouts.main_content_header(contentHeader = contentHeader.get)
     }
 }

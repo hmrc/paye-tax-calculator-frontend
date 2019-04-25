@@ -87,8 +87,9 @@ class QuickCalcController @Inject()(override val messagesApi: MessagesApi, cache
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     val url = request.uri
-    val day: String = Messages("quick_calc.salary.daily.label")
-    val hour: String = Messages("quick_calc.salary.hourly.label")
+    val day: String = "a day" //Messages("quick_calc.salary.daily.label")
+    val hour: String = "an hour" //Messages("quick_calc.salary.hourly.label")
+
     salaryBaseForm.bindFromRequest().fold(
       formWithErrors => Future(BadRequest(salary(formWithErrors))),
       salaryAmount => {

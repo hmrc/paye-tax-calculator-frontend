@@ -19,6 +19,7 @@ object AppDependencies {
   private val urlBuilderVersion = "2.1.0"
   private val taxYearVersion = "0.5.0"
   private val catsCoreVersion = "1.2.0"
+  private val playLangVersion = "3.4.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
@@ -36,7 +37,8 @@ object AppDependencies {
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
     "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,
     "uk.gov.hmrc" %% "tax-year" % taxYearVersion,
-    "org.typelevel" %% "cats-core" % catsCoreVersion
+    "org.typelevel" %% "cats-core" % catsCoreVersion,
+    "uk.gov.hmrc" %% "play-language" % playLangVersion
   )
 
   private val hmrcTestVersion = "3.6.0-play-25"

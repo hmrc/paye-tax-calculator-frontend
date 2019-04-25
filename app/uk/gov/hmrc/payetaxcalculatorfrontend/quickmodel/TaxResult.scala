@@ -62,7 +62,7 @@ object TaxResult {
       case "a week" => s.amount * 100
       case "a day" => s.amount * 100
       case "an hour" => s.amount * 100
-      case _ => throw new Exception("No Salary has been provided.")
+      case other => throw new Exception(s"No Salary has been provided ($other)")
     }
     case None => throw new Exception("No Salary has been provided.")
   }

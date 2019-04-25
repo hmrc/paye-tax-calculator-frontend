@@ -1,30 +1,32 @@
 # microservice specific routes
 
-GET         /                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.redirectToSalaryForm
+GET         /                      uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.redirectToSalaryForm
 
-GET         /your-pay                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showSalaryForm
-POST        /your-pay                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitSalaryAmount
+GET         /your-pay              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showSalaryForm
+POST        /your-pay              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitSalaryAmount
 
-GET         /hours/:value                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showHoursAWeek(value: Int, url: String)
-POST        /hours/:value                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitHoursAWeek(value: Int)
+GET         /hours/:value          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showHoursAWeek(value: Int, url: String)
+POST        /hours/:value          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitHoursAWeek(value: Int)
 
-GET         /days/:value                  uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showDaysAWeek(value: Int, url: String)
-POST        /days/:value                  uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitDaysAWeek(value: Int)
+GET         /days/:value           uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showDaysAWeek(value: Int, url: String)
+POST        /days/:value           uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitDaysAWeek(value: Int)
 
-GET         /state-pension                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showStatePensionForm
-POST        /state-pension                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitStatePensionForm
+GET         /state-pension         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showStatePensionForm
+POST        /state-pension         uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitStatePensionForm
 
-GET         /scottish-tax                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showScottishRateForm
-POST        /scottish-tax                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitScottishRateForm
+GET         /scottish-tax          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showScottishRateForm
+POST        /scottish-tax          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitScottishRateForm
 
-GET         /tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
-POST        /tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitTaxCodeForm
+GET         /tax-code              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
+POST        /tax-code              uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitTaxCodeForm
 
-GET         /your-answers                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.summary
+GET         /your-answers          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.summary
 
-GET         /your-results                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult
+GET         /your-results          uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult
 
-GET         /restart                      uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.restartQuickCalc
+GET         /restart               uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.restartQuickCalc
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                                   controllers.Assets.at(path="/public", file)
+GET         /assets/*file          controllers.Assets.at(path="/public", file)
+
+GET         /language/:lang        @uk.gov.hmrc.payetaxcalculatorfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
