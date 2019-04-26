@@ -84,14 +84,14 @@ object TaxResult {
     * "hoursIn" does not only means hours but can also mean days.
     * buildTaxCalc will use the number returned to calculate the weekly gross pay from Daily or Hourly via those case classes.
     **/
-  private[quickmodel] def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput): Int =
+  private[quickmodel] def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput): Double =
     quickCalcAggregateInput.savedSalary match {
       case Some(s) => s.period match {
-        case "a day" => s.howManyAWeek.getOrElse(-1)
-        case "an hour" => s.howManyAWeek.getOrElse(-1)
-        case _ => -1
+        case "a day" => s.howManyAWeek.getOrElse(-1.0)
+        case "an hour" => s.howManyAWeek.getOrElse(-1.0)
+        case _ => -1.0
       }
-      case _ => -1
+      case _ => -1.0
     }
 
   def incomeTax(breakdown : TaxBreakdown): BigDecimal = {
@@ -143,7 +143,7 @@ object TaxResult {
 
     outValue match {
       case money(pounds, pins) => {
-        formatter.format(value)+"0"
+        formatter.format(value) + "0"
       }
       case _ => formatter.format(value)
     }
