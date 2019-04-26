@@ -94,34 +94,12 @@ class SubmitHoursSpec extends AppUnitGenerator {
       actualHeaderMessage shouldBe expectedInvalidPeriodAmountHeaderMessage
     }
 
-    "return 400 and error message when Hours in a Week is 1.5" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
-      val formSalary = Salary.salaryInHoursForm
-      val action = await(controller.submitHoursAWeek(1))
-
-      val daily = Map("amount"->"1", "howManyAWeek" -> "1.5")
-
-      val result = action(request
-        .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
-        .withSession(SessionKeys.sessionId -> "test-salary"))
-
-      val status = result.header.status
-      val parseHtml = Jsoup.parse(contentAsString(result))
-
-      val actualHeaderMessage = parseHtml.getElementById("how-many-hours-a-week-error-link").text()
-      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
-
-      status shouldBe 400
-      actualErrorMessage shouldBe expectedWholeNumberHourlyErrorMessage
-      actualHeaderMessage shouldBe expectedEmptyHoursHeaderMessage
-    }
-
-    "return 303, with new Hours worked, 40 and non-existent aggregate" in {
+    "return 303, with new Hours worked, 40.5 and non-existent aggregate" in {
       val controller = new QuickCalcController(messages.messages, cacheEmpty)
       val formSalary = Salary.salaryBaseForm
       val action = await(controller.submitHoursAWeek(1))
 
-      val daily = Map("amount"->"1", "howManyAWeek" -> "40")
+      val daily = Map("amount"->"1", "howManyAWeek" -> "40.5")
 
       val result = action(request
         .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)

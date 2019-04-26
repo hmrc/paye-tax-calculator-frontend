@@ -188,8 +188,8 @@ object QuickCalcCacheSetup {
   val expectedYearlySalaryAnswer = "£20,000 a year"
   val expectedDailySalaryAnswer = "£40 a day"
   val expectedHourlySalaryAnswer = "£8 an hour"
-  val expectedDailyPeriodAnswer = "5"
-  val expectedHourlyPeriodAnswer = "40"
+  val expectedDailyPeriodAnswer = "5.0"
+  val expectedHourlyPeriodAnswer = "40.0"
   val expectedYearlySalaryTypeAnswer = "Per year"
   val expectedScottishAnswer = "No"
 
