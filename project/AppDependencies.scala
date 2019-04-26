@@ -13,7 +13,7 @@ object AppDependencies {
   private val playHealthVersion = "3.12.0-play-25"
   private val playUiVersion = "7.33.0-play-25"
   private val playFilters = "5.18.0"
-  private val payeEstimatorVersion = "2.18.0-play-25"
+  private val payeEstimatorVersion = "2.20.0-play-25"
   private val httpCachingClientVersion = "8.1.0"
   private val playConditionalFormMappingVersion = "0.2.0"
   private val urlBuilderVersion = "2.1.0"

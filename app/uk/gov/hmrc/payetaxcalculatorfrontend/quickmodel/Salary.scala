@@ -20,39 +20,40 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.libs.json._
+import play.api.data.format.Formats._
 
-case class Salary(amount: BigDecimal, period: String, howManyAWeek:Option[Int])
-case class Hours(amount: Int, howManyAWeek: Int)
-case class Days(amount: Int, howManyAWeek: Int)
-case class Detail(amount: Int, howManyAWeek: Int, period: String, urlForChange: String)
+case class Salary(amount: BigDecimal, period: String, howManyAWeek:Option[Double])
+case class Hours(amount: Double, howManyAWeek: Double)
+case class Days(amount: Double, howManyAWeek: Double)
+case class Detail(amount: Int, howManyAWeek: Double, period: String, urlForChange: String)
 
 object Detail {
-  implicit val format = Json.format[Detail]
+  implicit val format: OFormat[Detail] = Json.format[Detail]
 }
 
 object Salary {
 
-  implicit val format = Json.format[Salary]
+  implicit val format: OFormat[Salary] = Json.format[Salary]
 
   def salaryBaseForm(implicit messages: Messages) = Form(
     mapping(
       "amount" -> of(CustomFormatters.salaryValidation),
       "period" -> of(CustomFormatters.requiredSalaryPeriodFormatter),
-      "howManyAWeek" -> optional(number)
+      "howManyAWeek" -> optional(of[Double])
     )(Salary.apply)(Salary.unapply)
   )
 
   def salaryInDaysForm(implicit messages: Messages) = Form(
     mapping(
-      "amount" -> number,
+      "amount" -> of[Double],
       "howManyAWeek" -> of(CustomFormatters.dayValidation)
     )(Days.apply)(Days.unapply)
   )
 
   def salaryInHoursForm(implicit messages: Messages) = Form(
     mapping(
-      "amount" -> number,
-      "howManyAWeek" -> of(CustomFormatters.hoursValidation)
+      a1 = "amount" -> of[Double],
+      a2 = "howManyAWeek" -> of(CustomFormatters.hoursValidation)
     )(Hours.apply)(Hours.unapply)
   )
 
@@ -62,9 +63,9 @@ object Salary {
 }
 
 object Days {
-  implicit val daysFormat = Json.format[Days]
+  implicit val daysFormat: OFormat[Days] = Json.format[Days]
 }
 
 object Hours {
-  implicit val hoursFormat = Json.format[Hours]
+  implicit val hoursFormat: OFormat[Hours] = Json.format[Hours]
 }

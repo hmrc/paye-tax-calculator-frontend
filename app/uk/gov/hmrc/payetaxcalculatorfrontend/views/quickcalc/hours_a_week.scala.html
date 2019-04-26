@@ -66,9 +66,9 @@
           } else {<label>}
 
           <span class="visuallyhidden">Hours</span>
-          <input style= "display:inline " type="number" id="how-many-hours-a-week" name="howManyAWeek" maxlength="3" size="3" />
+          <input style= "display:inline " type="number" id="how-many-hours-a-week" min="1" step="0.25" name="howManyAWeek" maxlength="3" size="3" />
 
-          </label>
+           </label>
         </fieldset>
 
         <input type="hidden" id="num-hours" name="amount" value=@valueInPence>
