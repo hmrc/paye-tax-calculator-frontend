@@ -14,8 +14,8 @@ val appName: String = "paye-tax-calculator-frontend"
 
 lazy val scoverageSettings = {
   Seq(
-    ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models/.data/..*;view.*",
-    ScoverageKeys.coverageMinimum := 25,
+    ScoverageKeys.coverageExcludedFiles := "<empty>;com.kenshoo.play.metrics.*;.*definition.*;prod.*;testOnlyDoNotUseInAppConf.*;app.*;.*BuildInfo.*;.*Routes.*",
+    ScoverageKeys.coverageMinimum := 79,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true,
     parallelExecution in Test := false
@@ -45,6 +45,7 @@ lazy val microservice = Project(appName, file("."))
     parallelExecution in IntegrationTest := false)
   .settings(resolvers ++= Seq(
     Resolver.bintrayRepo("hmrc", "releases"),
+    Resolver.bintrayRepo("hmrc", "mobile-releases"),
     Resolver.jcenterRepo
   ))
 

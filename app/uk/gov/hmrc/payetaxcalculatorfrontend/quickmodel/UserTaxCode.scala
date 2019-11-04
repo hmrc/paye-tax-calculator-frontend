@@ -27,7 +27,6 @@ import uk.gov.hmrc.payeestimator.domain.{TaxCalcResource, TaxCalcResourceBuilder
 import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.LocalDateProvider
-import uk.gov.hmrc.time.TaxYear
 
 case class UserTaxCode(gaveUsTaxCode: Boolean, taxCode: Option[String])
 
