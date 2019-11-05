@@ -18,9 +18,11 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.controllers
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import play.api.mvc.ControllerComponents
+import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
 
-class WelshLanguageController @Inject()(implicit val messagesApi: MessagesApi) extends BaseController with I18nSupport {
+class WelshLanguageController @Inject()(implicit override val messagesApi: MessagesApi, val controllerComponents: ControllerComponents)     extends BackendBaseController
+  with I18nSupport {
 
   val englishLang = Lang("en")
   val welshLang = Lang("cy")

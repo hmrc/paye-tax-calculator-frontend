@@ -16,19 +16,22 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
+import akka.stream.Materializer
 import javax.inject.Inject
-import play.api.Configuration
-import play.api.i18n.MessagesApi
-import play.api.mvc.Request
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import org.joda.time.{DateTime, DateTimeZone}
+import play.api.mvc.{Result, _}
 
-class ErrorHandler @Inject()(val messagesApi: MessagesApi, val configuration: Configuration)
-                            (implicit val appConfig: AppConfig) extends FrontendErrorHandler {
+import scala.concurrent.Future
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): HtmlFormat.Appendable = {
-    uk.gov.hmrc.payetaxcalculatorfrontend.views.html.error_template(pageTitle, heading, message)
-  }
+class CsrfBypassFilter @Inject() (implicit val mat: Materializer) extends Filter {
+
+  def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] =
+    f(filteredHeaders(rh))
+
+  private[config] def filteredHeaders(
+    rh:  RequestHeader,
+    now: () => DateTime = () => DateTime.now.withZone(DateTimeZone.UTC)
+  ): RequestHeader =
+    rh.copy(headers = rh.headers.add("Csrf-Token" -> "nocheck"))
 
 }

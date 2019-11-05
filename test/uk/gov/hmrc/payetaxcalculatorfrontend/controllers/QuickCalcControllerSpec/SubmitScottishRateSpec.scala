@@ -26,7 +26,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
-import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.{QuickCalcController, routes}
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
 import uk.gov.hmrc.payetaxcalculatorfrontend.services.QuickCalcCache

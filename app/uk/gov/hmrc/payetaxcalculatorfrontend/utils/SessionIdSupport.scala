@@ -21,7 +21,7 @@ import play.api.mvc._
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.SessionIdSupport._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 /*
  * These utils provide session-id that is required by http-caching-client / keystore.
@@ -39,22 +39,34 @@ object SessionIdSupport {
   def hasSessionId(rh: RequestHeader): Boolean = maybeSessionId(rh).isDefined
 }
 
-object ActionWithSessionId extends ActionBuilder[Request] {
-  def invokeBlock[A](request: Request[A],
-                     block: (Request[A]) => Future[Result]): Future[Result] = {
-    maybeSessionId(request).map { sessionId =>
-      block(request).map(addSessionIdToSession(request, sessionId))
-    }.getOrElse {
-      throw SessionIdNotFoundException()
+trait ActionWithSessionId {
+  outer =>
+  def parser: BodyParser[AnyContent]
+
+  def executionContext: ExecutionContext
+
+  def validateAcceptWithSessionId: ActionBuilder[Request, AnyContent] =
+    new ActionBuilder[Request, AnyContent] {
+
+      def invokeBlock[A](request: Request[A],
+                         block: (Request[A]) => Future[Result]): Future[Result] = {
+        maybeSessionId(request).map { sessionId =>
+          block(request).map(addSessionIdToSession(request, sessionId))
+        }.getOrElse {
+          throw SessionIdNotFoundException()
+        }
+      }
+
+      def addSessionIdToSession[A](request: Request[A], sessionId: String)
+                                  (result: Result): Result =
+        result.withSession(request.session + (SessionKeys.sessionId -> sessionId))
+
+      case class SessionIdNotFoundException() extends Exception(
+        "Session id not found in headers or session as expected. Have you enabled SessionIdFilter?"
+      )
+
+      override def parser: BodyParser[AnyContent] = outer.parser
+
+      override protected def executionContext: ExecutionContext = outer.executionContext
     }
-  }
-
-  def addSessionIdToSession[A](request: Request[A], sessionId: String)
-                              (result: Result): Result =
-    result.withSession(request.session + (SessionKeys.sessionId -> sessionId))
-
-  case class SessionIdNotFoundException() extends Exception(
-    "Session id not found in headers or session as expected. Have you enabled SessionIdFilter?"
-  )
-
 }

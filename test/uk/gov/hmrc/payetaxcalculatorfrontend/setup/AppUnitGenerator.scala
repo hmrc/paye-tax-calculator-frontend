@@ -22,7 +22,7 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderNames
-import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
 import uk.gov.hmrc.play.test.UnitSpec
 
 class AppUnitGenerator extends UnitSpec with MockFactory with OneAppPerSuite {

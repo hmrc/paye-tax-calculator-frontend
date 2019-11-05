@@ -17,18 +17,14 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
 import javax.inject.Inject
-import play.api.Configuration
-import play.api.i18n.MessagesApi
-import play.api.mvc.Request
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import play.api.http.DefaultHttpFilters
+import play.filters.csrf.CSRFFilter
+import uk.gov.hmrc.play.bootstrap.filters.FrontendFilters
 
-class ErrorHandler @Inject()(val messagesApi: MessagesApi, val configuration: Configuration)
-                            (implicit val appConfig: AppConfig) extends FrontendErrorHandler {
-
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): HtmlFormat.Appendable = {
-    uk.gov.hmrc.payetaxcalculatorfrontend.views.html.error_template(pageTitle, heading, message)
-  }
-
-}
+class Filters @Inject() (
+  frontendFilters:  FrontendFilters,
+  sessionIdFilter:  SessionIdFilter,
+  csrfBypassFilter: CsrfBypassFilter)
+    extends DefaultHttpFilters({
+      frontendFilters.filters.filterNot(f => f.isInstanceOf[CSRFFilter]) :+ csrfBypassFilter :+ sessionIdFilter
+    }: _*)

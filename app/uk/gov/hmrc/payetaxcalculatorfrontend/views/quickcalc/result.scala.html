@@ -21,7 +21,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.{routes => prodRoutes}
 
-@import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+@import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
 @(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 @summary = @{
   taxCalculation(quickCalcAggregateInput)
