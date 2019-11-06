@@ -24,12 +24,6 @@ class AppConfig @Inject() (
   config:         Configuration,
   servicesConfig: ServicesConfig) {
 
-  private def loadConfig(key: String): String =
-    config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
-
-  private val contactHost:                  String = loadConfig(s"contact-frontend.host")
-  private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
-
   lazy val analyticsToken: String = loadConfig(s"google-analytics.token")
   lazy val analyticsHost:  String = loadConfig(s"google-analytics.host")
   lazy val betaFeedbackUrl: String =
@@ -38,10 +32,14 @@ class AppConfig @Inject() (
     s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl: String =
     s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-
   lazy val cacheUrl: String = servicesConfig.baseUrl("cachable.session-cache")
   lazy val domain: String = config
     .getOptional[String]("microservice.services.cachable.session-cache.domain")
     .getOrElse(throw new Exception(s"Could not find config 'services.cachable.session-cache.domain'"))
+  private val contactHost:                  String = loadConfig(s"contact-frontend.host")
+  private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
+
+  private def loadConfig(key: String): String =
+    config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
 }

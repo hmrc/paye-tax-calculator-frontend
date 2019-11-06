@@ -46,6 +46,13 @@ class QuickCalcController @Inject() (
     with ActionWithSessionId {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
+  private[controllers] val showTacCodeFormTestable: ShowForm =
+    implicit request =>
+      aggregate => {
+        val form = aggregate.savedTaxCode.map(UserTaxCode.form.fill).getOrElse(UserTaxCode.form)
+        Ok(tax_code(form, aggregate.youHaveToldUsItems))
+      }
+
   def redirectToSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
@@ -77,14 +84,6 @@ class QuickCalcController @Inject() (
             redirectToNotYetDonePage(aggregate)
     )
 
-  private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result =
-    if (aggregate.savedTaxCode.isEmpty)
-      Redirect(routes.QuickCalcController.showTaxCodeForm())
-    else if (aggregate.savedSalary.isEmpty)
-      Redirect(routes.QuickCalcController.showSalaryForm())
-    else
-      Redirect(routes.QuickCalcController.showStatePensionForm())
-
   def showResult(): Action[AnyContent] =
     salaryRequired(
       implicit request =>
@@ -94,6 +93,14 @@ class QuickCalcController @Inject() (
             Ok(result(aggregate, omitScotland(date.taxYear)))
           } else redirectToNotYetDonePage(aggregate)
     )
+
+  private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result =
+    if (aggregate.savedTaxCode.isEmpty)
+      Redirect(routes.QuickCalcController.showTaxCodeForm())
+    else if (aggregate.savedSalary.isEmpty)
+      Redirect(routes.QuickCalcController.showSalaryForm())
+    else
+      Redirect(routes.QuickCalcController.showStatePensionForm())
 
   def submitSalaryAmount(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
@@ -177,23 +184,6 @@ class QuickCalcController @Inject() (
     Ok(hours_a_week(valueInPence, salaryInHoursForm, url))
   }
 
-  private def salaryRequired[T](
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.QuickCalcController.showSalaryForm())
-        case None =>
-          Redirect(routes.QuickCalcController.showSalaryForm())
-      }
-    }
-
   def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
@@ -237,6 +227,23 @@ class QuickCalcController @Inject() (
     url:          String
   ): Action[AnyContent] =
     salaryRequired(showDaysAWeekTestable(valueInPence, url))
+
+  private def salaryRequired[T](
+    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
+  ): Action[AnyContent] =
+    validateAcceptWithSessionId.async { implicit request =>
+      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+
+      cache.fetchAndGetEntry().map {
+        case Some(aggregate) =>
+          if (aggregate.savedSalary.isDefined)
+            furtherAction(request)(aggregate)
+          else
+            Redirect(routes.QuickCalcController.showSalaryForm())
+        case None =>
+          Redirect(routes.QuickCalcController.showSalaryForm())
+      }
+    }
 
   private[controllers] def showDaysAWeekTestable(
     valueInPence: Int,
@@ -327,13 +334,6 @@ class QuickCalcController @Inject() (
   }
 
   def showTaxCodeForm(): Action[AnyContent] = salaryRequired(showTacCodeFormTestable)
-
-  private[controllers] val showTacCodeFormTestable: ShowForm =
-    implicit request =>
-      aggregate => {
-        val form = aggregate.savedTaxCode.map(UserTaxCode.form.fill).getOrElse(UserTaxCode.form)
-        Ok(tax_code(form, aggregate.youHaveToldUsItems))
-      }
 
   def submitTaxCodeForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))

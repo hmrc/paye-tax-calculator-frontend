@@ -27,8 +27,10 @@ case class ScottishRate(value: Boolean) extends AnyVal
 object ScottishRate {
 
   implicit val format = Json.format[ScottishRate]
-  def form(implicit messages: Messages) = Form(
-    mapping(
-      "scottishRate" -> of(requiredBooleanFormatter)
-    )(ScottishRate.apply)(ScottishRate.unapply))
+  def form(implicit messages: Messages) =
+    Form(
+      mapping(
+        "scottishRate" -> of(requiredBooleanFormatter)
+      )(ScottishRate.apply)(ScottishRate.unapply)
+    )
 }

@@ -22,10 +22,21 @@ import play.api.i18n.Messages
 import play.api.libs.json._
 import play.api.data.format.Formats._
 
-case class Salary(amount: BigDecimal, period: String, howManyAWeek:Option[Double])
-case class Hours(amount: Double, howManyAWeek: Double)
-case class Days(amount: Double, howManyAWeek: Double)
-case class Detail(amount: Int, howManyAWeek: Double, period: String, urlForChange: String)
+case class Salary(
+  amount:       BigDecimal,
+  period:       String,
+  howManyAWeek: Option[Double])
+case class Hours(
+  amount:       Double,
+  howManyAWeek: Double)
+case class Days(
+  amount:       Double,
+  howManyAWeek: Double)
+case class Detail(
+  amount:       Int,
+  howManyAWeek: Double,
+  period:       String,
+  urlForChange: String)
 
 object Detail {
   implicit val format: OFormat[Detail] = Json.format[Detail]
@@ -37,29 +48,28 @@ object Salary {
 
   def salaryBaseForm(implicit messages: Messages) = Form(
     mapping(
-      "amount" -> of(CustomFormatters.salaryValidation),
-      "period" -> of(CustomFormatters.requiredSalaryPeriodFormatter),
+      "amount"       -> of(CustomFormatters.salaryValidation),
+      "period"       -> of(CustomFormatters.requiredSalaryPeriodFormatter),
       "howManyAWeek" -> optional(of[Double])
     )(Salary.apply)(Salary.unapply)
   )
 
   def salaryInDaysForm(implicit messages: Messages) = Form(
     mapping(
-      "amount" -> of[Double],
+      "amount"       -> of[Double],
       "howManyAWeek" -> of(CustomFormatters.dayValidation)
     )(Days.apply)(Days.unapply)
   )
 
   def salaryInHoursForm(implicit messages: Messages) = Form(
     mapping(
-      a1 = "amount" -> of[Double],
+      a1 = "amount"       -> of[Double],
       a2 = "howManyAWeek" -> of(CustomFormatters.hoursValidation)
     )(Hours.apply)(Hours.unapply)
   )
 
-  def salaryInPence(value: BigDecimal): Int = {
+  def salaryInPence(value: BigDecimal): Int =
     (value * 100).toInt
-  }
 }
 
 object Days {

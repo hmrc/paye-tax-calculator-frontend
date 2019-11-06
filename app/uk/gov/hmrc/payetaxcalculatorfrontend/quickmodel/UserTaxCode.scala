@@ -28,101 +28,29 @@ import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.LocalDateProvider
 
-case class UserTaxCode(gaveUsTaxCode: Boolean, taxCode: Option[String])
+case class UserTaxCode(
+  gaveUsTaxCode: Boolean,
+  taxCode:       Option[String])
 
 object UserTaxCode extends TaxCalculatorHelper {
 
   implicit val format: OFormat[UserTaxCode] = Json.format[UserTaxCode]
-
-  def defaultScottishTaxCode: String = {
-    if (currentTaxYear == 2019) Default2019ScottishTaxCode else Default2018ScottishTaxCode
-  }
-
   private lazy val Default2018ScottishTaxCode = "S1185L"
   private lazy val Default2019ScottishTaxCode = "S1250L"
-
-  def defaultUkTaxCode: String = {
-    if (currentTaxYear == 2019) Default2019UkTaxCode else Default2018UkTaxCode
-  }
-
   private lazy val Default2018UkTaxCode = "1185L"
   private lazy val Default2019UkTaxCode = "1250L"
-
+  private lazy val firstDayOfTaxYear = MonthDay.of(4, 6)
   val HasTaxCode = "hasTaxCode"
-  val TaxCode = "taxCode"
-
-  val suffixKeys = List('L', 'M', 'N', 'T')
+  val TaxCode    = "taxCode"
+  val suffixKeys            = List('L', 'M', 'N', 'T')
   val WrongTaxCodeSuffixKey = "quick_calc.about_tax_code.wrong_tax_code_suffix"
-  val WrongTaxCodeKey = "quick_calc.about_tax_code.wrong_tax_code"
-  val WrongTaxCodeNumber = "quick_calc.about_tax_code.wrong_tax_code_number"
+  val WrongTaxCodeKey       = "quick_calc.about_tax_code.wrong_tax_code"
+  val WrongTaxCodeNumber    = "quick_calc.about_tax_code.wrong_tax_code_number"
   val WrongTaxCodePrefixKey = "quick_calc.about_tax_code.wrong_tax_code_prefix"
-  val WrongTaxCodeEmpty = "quick_calc.about_tax_code_empty_error"
+  val WrongTaxCodeEmpty     = "quick_calc.about_tax_code_empty_error"
 
-  def taxCodeFormatter(implicit messages: Messages): Formatter[Option[String]] = new Formatter[Option[String]] {
-
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] = {
-      if (data.getOrElse(HasTaxCode, "false") == "true") {
-        data.get(TaxCode).filter(_.nonEmpty)
-          .map(_.toUpperCase()) match {
-          case Some(taxCode) =>
-            if (isValidTaxCode(removeCountryElementFromTaxCode(taxCode), taxConfig(taxCode)))
-              Right(Some(taxCode.replaceAll("\\s", "")))
-            else {
-              Left(wrongTaxCode(taxCode))
-            }
-          case None => Left(Seq(FormError(TaxCode, messages(WrongTaxCodeEmpty))))
-        }
-      } else Right(Some(defaultUkTaxCode))
-    }
-
-    override def unbind(key: String, value: Option[String]): Map[String, String] = Map(key -> value.getOrElse(""))
-  }
-
-  def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
-    if (!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}"))
-      Seq(FormError(TaxCode, messages(WrongTaxCodeNumber)))
-    else if (taxCode.replaceAll("([0-9])+([A-Z]?)+", "").matches("[A-JL-RT-Z]{1,2}"))
-      Seq(FormError(TaxCode, messages(WrongTaxCodePrefixKey)))
-    else if (taxCode.replaceAll("^([A-Z]?)+([0-9]?)+", "").matches("[A-KO-SU-Z]"))
-      Seq(FormError(TaxCode, messages(WrongTaxCodeSuffixKey)))
-    else
-      Seq(FormError(TaxCode, messages(WrongTaxCodeKey)))
-  }
-
-  def form(implicit messages: Messages) = Form(
-    mapping(
-      HasTaxCode -> of(requiredBooleanFormatter),
-      TaxCode -> of(taxCodeFormatter)
-    )(UserTaxCode.apply)(UserTaxCode.unapply)
-  )
-
-  def checkUserSelection(checkFor: Boolean, taxCodeFromServer: Form[UserTaxCode]): String = {
-    def htmlMapper(bO: Option[Boolean]): String =
-      bO.filter(identity)
-        .map(_ => "checked")
-        .getOrElse("")
-
-    def whatWasSelected(taxCode: Form[UserTaxCode]): Option[Boolean] = {
-      taxCode.value.map(formData => formData.gaveUsTaxCode)
-    }
-    htmlMapper(
-      whatWasSelected(taxCodeFromServer).map(_ == checkFor))
-  }
-
-  def hideTextField(taxCode: Form[UserTaxCode]): String = {
-    if (taxCode("taxCode").hasErrors) ""
-    else {
-      taxCode.value match {
-        case Some(v) => if (v.gaveUsTaxCode) "" else "hidden"
-        case _ => "hidden"
-      }
-    }
-  }
-
-  def taxConfig(taxCode: String): TaxCalcResource = TaxCalcResourceBuilder.resourceForDate(
-    startOfCurrentTaxYear,
-    isValidScottishTaxCode(taxCode)
-  )
+  def defaultScottishTaxCode: String =
+    if (currentTaxYear == 2019) Default2019ScottishTaxCode else Default2018ScottishTaxCode
 
   private def currentTaxYear: Int = {
     val now = LocalDateProvider.now
@@ -134,9 +62,81 @@ object UserTaxCode extends TaxCalculatorHelper {
     }
   }
 
-  private def startOfCurrentTaxYear = {
-    firstDayOfTaxYear.atYear(currentTaxYear)
+  def form(implicit messages: Messages) = Form(
+    mapping(
+      HasTaxCode -> of(requiredBooleanFormatter),
+      TaxCode    -> of(taxCodeFormatter)
+    )(UserTaxCode.apply)(UserTaxCode.unapply)
+  )
+
+  def taxCodeFormatter(implicit messages: Messages): Formatter[Option[String]] = new Formatter[Option[String]] {
+
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], Option[String]] =
+      if (data.getOrElse(HasTaxCode, "false") == "true") {
+        data
+          .get(TaxCode)
+          .filter(_.nonEmpty)
+          .map(_.toUpperCase()) match {
+          case Some(taxCode) =>
+            if (isValidTaxCode(removeCountryElementFromTaxCode(taxCode), taxConfig(taxCode)))
+              Right(Some(taxCode.replaceAll("\\s", "")))
+            else {
+              Left(wrongTaxCode(taxCode))
+            }
+          case None => Left(Seq(FormError(TaxCode, messages(WrongTaxCodeEmpty))))
+        }
+      } else Right(Some(defaultUkTaxCode))
+
+    override def unbind(
+      key:   String,
+      value: Option[String]
+    ): Map[String, String] = Map(key -> value.getOrElse(""))
   }
 
-  private lazy val firstDayOfTaxYear = MonthDay.of(4, 6)
+  def defaultUkTaxCode: String =
+    if (currentTaxYear == 2019) Default2019UkTaxCode else Default2018UkTaxCode
+
+  def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] =
+    if (!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}"))
+      Seq(FormError(TaxCode, messages(WrongTaxCodeNumber)))
+    else if (taxCode.replaceAll("([0-9])+([A-Z]?)+", "").matches("[A-JL-RT-Z]{1,2}"))
+      Seq(FormError(TaxCode, messages(WrongTaxCodePrefixKey)))
+    else if (taxCode.replaceAll("^([A-Z]?)+([0-9]?)+", "").matches("[A-KO-SU-Z]"))
+      Seq(FormError(TaxCode, messages(WrongTaxCodeSuffixKey)))
+    else
+      Seq(FormError(TaxCode, messages(WrongTaxCodeKey)))
+
+  def taxConfig(taxCode: String): TaxCalcResource = TaxCalcResourceBuilder.resourceForDate(
+    startOfCurrentTaxYear,
+    isValidScottishTaxCode(taxCode)
+  )
+
+  private def startOfCurrentTaxYear =
+    firstDayOfTaxYear.atYear(currentTaxYear)
+
+  def checkUserSelection(
+    checkFor:          Boolean,
+    taxCodeFromServer: Form[UserTaxCode]
+  ): String = {
+    def htmlMapper(bO: Option[Boolean]): String =
+      bO.filter(identity)
+        .map(_ => "checked")
+        .getOrElse("")
+
+    def whatWasSelected(taxCode: Form[UserTaxCode]): Option[Boolean] =
+      taxCode.value.map(formData => formData.gaveUsTaxCode)
+    htmlMapper(whatWasSelected(taxCodeFromServer).map(_ == checkFor))
+  }
+
+  def hideTextField(taxCode: Form[UserTaxCode]): String =
+    if (taxCode("taxCode").hasErrors) ""
+    else {
+      taxCode.value match {
+        case Some(v) => if (v.gaveUsTaxCode) "" else "hidden"
+        case _       => "hidden"
+      }
+    }
 }

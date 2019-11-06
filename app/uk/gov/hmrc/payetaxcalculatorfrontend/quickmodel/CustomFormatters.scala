@@ -24,30 +24,43 @@ import play.api.i18n.Messages
 object CustomFormatters {
 
   def requiredBooleanFormatter(implicit messages: Messages): Formatter[Boolean] = new Formatter[Boolean] {
-    override def bind(key: String, data: Map[String, String]) = {
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
-        case "true" => Right(true)
+        case "true"  => Right(true)
         case "false" => Right(false)
-        case _ => Left(Seq(FormError(key, Messages("select_one"))))
+        case _       => Left(Seq(FormError(key, Messages("select_one"))))
       }
-    }
 
-    override def unbind(key: String, value: Boolean) = Map(key -> value.toString)
+    override def unbind(
+      key:   String,
+      value: Boolean
+    ) = Map(key -> value.toString)
   }
 
   def requiredSalaryPeriodFormatter(implicit messages: Messages): Formatter[String] = new Formatter[String] {
-    override def bind(key: String, data: Map[String, String]) = {
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
         case "" => Left(Seq(FormError(key, Messages("quick_calc.salary.option_error"))))
-        case p => Right(p)
+        case p  => Right(p)
       }
-    }
 
-    override def unbind(key: String, value: String) = Map(key -> value.toString)
+    override def unbind(
+      key:   String,
+      value: String
+    ) = Map(key -> value.toString)
   }
 
   def dayValidation(implicit messages: Messages): Formatter[Double] = new Formatter[Double] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Double] = {
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], Double] =
       Right(data.getOrElse(key, "")).right.flatMap {
         case s if s.nonEmpty =>
           try {
@@ -59,19 +72,24 @@ object CustomFormatters {
             } else {
               Right(days)
             }
-          }
-          catch {
-            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_number_daily"))))
+          } catch {
+            case _: Throwable =>
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_number_daily"))))
           }
         case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_daily"))))
       }
-    }
 
-    override def unbind(key: String, value: Double): Map[String, String] = Map(key -> value.toString)
+    override def unbind(
+      key:   String,
+      value: Double
+    ): Map[String, String] = Map(key -> value.toString)
   }
 
   def hoursValidation(implicit messages: Messages): Formatter[Double] = new Formatter[Double] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Double] = {
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], Double] =
       Right(data.getOrElse(key, "")).right.flatMap {
         case s if s.nonEmpty =>
           try {
@@ -83,20 +101,25 @@ object CustomFormatters {
             } else {
               Right(hours)
             }
-          }
-          catch {
-            case _: Throwable => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_number_hourly"))))
+          } catch {
+            case _: Throwable =>
+              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_number_hourly"))))
           }
         case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_hourly"))))
       }
-    }
 
-    override def unbind(key: String, value: Double): Map[String, String] = Map(key -> value.toString)
+    override def unbind(
+      key:   String,
+      value: Double
+    ): Map[String, String] = Map(key -> value.toString)
 
   }
 
   def salaryValidation(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] = {
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], BigDecimal] =
       (data.get(key).filter(_.nonEmpty) match {
         case Some(s) =>
           try {
@@ -109,18 +132,27 @@ object CustomFormatters {
               Right(salary)
             }
           } catch {
-            case _: Throwable if !s.matches("([0-9])+(\\.\\d+)") => Left("quick_calc.salary.question_error_invalid_input")
-            case _: Throwable if !s.matches("([0-9])+(\\.\\d{1,2})") => Left("quick_calc.salary.question.error.maximum_salary_input")
+            case _: Throwable if !s.matches("([0-9])+(\\.\\d+)") =>
+              Left("quick_calc.salary.question_error_invalid_input")
+            case _: Throwable if !s.matches("([0-9])+(\\.\\d{1,2})") =>
+              Left("quick_calc.salary.question.error.maximum_salary_input")
             case _: Throwable => Left("quick_calc.salary.question.error.invalid_salary")
           }
         case None => Left("quick_calc.salary.question.error.empty_salary_input")
       }).leftMap(translationKey => Seq(FormError(key, Messages(translationKey))))
-    }
 
-    override def unbind(key: String, value: BigDecimal): Map[String, String] = Map(key -> value.toString)
+    override def unbind(
+      key:   String,
+      value: BigDecimal
+    ): Map[String, String] = Map(key -> value.toString)
   }
 
-  def hourlySalaryValidation(key: String, data: Map[String, String])(implicit messages: Messages): Either[Seq[FormError], BigDecimal] = {
+  def hourlySalaryValidation(
+    key:  String,
+    data: Map[String, String]
+  )(
+    implicit messages: Messages
+  ): Either[Seq[FormError], BigDecimal] =
     Right(data.getOrElse(key, "")).right.flatMap {
       case s if s.nonEmpty =>
         try {
@@ -138,9 +170,13 @@ object CustomFormatters {
 
       case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_hourly_salary_input"))))
     }
-  }
 
-  def dailySalaryValidation(key: String, data: Map[String, String])(implicit messages: Messages) = {
+  def dailySalaryValidation(
+    key:  String,
+    data: Map[String, String]
+  )(
+    implicit messages: Messages
+  ) =
     Right(data.getOrElse(key, "")).right.flatMap {
       case s if s.nonEmpty =>
         try {
@@ -158,5 +194,4 @@ object CustomFormatters {
 
       case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_daily_salary_input"))))
     }
-  }
 }

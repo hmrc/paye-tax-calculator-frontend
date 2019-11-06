@@ -23,11 +23,20 @@ import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 
-class ErrorHandler @Inject()(val messagesApi: MessagesApi, val configuration: Configuration)
-                            (implicit val appConfig: AppConfig) extends FrontendErrorHandler {
+class ErrorHandler @Inject() (
+  val messagesApi:   MessagesApi,
+  val configuration: Configuration
+)(
+  implicit val appConfig: AppConfig)
+    extends FrontendErrorHandler {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): HtmlFormat.Appendable = {
+  override def standardErrorTemplate(
+    pageTitle: String,
+    heading:   String,
+    message:   String
+  )(
+    implicit request: Request[_]
+  ): HtmlFormat.Appendable =
     uk.gov.hmrc.payetaxcalculatorfrontend.views.html.error_template(pageTitle, heading, message)
-  }
 
 }
