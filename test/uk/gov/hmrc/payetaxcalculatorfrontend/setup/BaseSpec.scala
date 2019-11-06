@@ -18,20 +18,40 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.setup
 
 import akka.stream.Materializer
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestData
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.OneAppPerSuite
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import org.scalatestplus.play.guice.{GuiceOneAppPerSuite, GuiceOneAppPerTest}
+import play.api.Application
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
 import uk.gov.hmrc.play.test.UnitSpec
 
-class AppUnitGenerator extends UnitSpec with MockFactory with OneAppPerSuite {
-  val appInjector = app.injector
-  implicit val materializer = appInjector.instanceOf[Materializer]
+class BaseSpec
+    extends UnitSpec
+    with MockFactory
+    with ScalaFutures
+    with GuiceOneAppPerSuite
+    with MetricClearSpec {
+
+  val appInjector               = app.injector
+  implicit val materializer     = appInjector.instanceOf[Materializer]
+  implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
+
   implicit val request = FakeRequest()
     .withHeaders(HeaderNames.xSessionId -> "test")
 
-  implicit def appConfig: AppConfig = appInjector.instanceOf[AppConfig]
-  implicit val messages = Messages(Lang.defaultLang, appInjector.instanceOf[MessagesApi])
+  implicit def appConfig:   AppConfig   = appInjector.instanceOf[AppConfig]
+  implicit val messagesApi: MessagesApi = appInjector.instanceOf[MessagesApi]
+  implicit val messages:    Messages    = MessagesImpl(Lang("en-GB"), messagesApi)
 
+}
+
+import com.codahale.metrics.SharedMetricRegistries
+
+trait MetricClearSpec {
+  SharedMetricRegistries.clear()
 }

@@ -20,14 +20,14 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-class ShowResultSpec extends AppUnitGenerator {
+class ShowResultSpec extends BaseSpec {
 
   "Show Result Page" should {
     "return 200, with current list of aggregate which contains all answers from previous questions" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents())
       val action = controller.showResult()
       val result = action.apply(request)
       val status = result.header.status
@@ -38,7 +38,7 @@ class ShowResultSpec extends AppUnitGenerator {
     }
 
     "return 303, with current list of aggregate data and redirect to Tax Code Form if Tax Code is not provided" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnStatePensionSalary)
+      val controller = new QuickCalcController(messagesApi, cacheReturnStatePensionSalary, stubControllerComponents())
       val action = controller.showResult()
       val result = action.apply(request)
       val status = result.header.status
@@ -51,7 +51,7 @@ class ShowResultSpec extends AppUnitGenerator {
     }
 
     "return 303, with current list of aggregate data and redirect to Age Form if no answer is provided for \"Are you Over 65?\"" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeSalary)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeSalary, stubControllerComponents())
       val action = controller.showResult()
       val result = action.apply(request)
       val status = result.header.status
@@ -63,7 +63,7 @@ class ShowResultSpec extends AppUnitGenerator {
     }
 
     "return 303, with current list of aggregate data and redirect to Salary Form if Salary is not provided" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePension, stubControllerComponents())
       val action = controller.showResult()
       val result = action.apply(request)
       val status = result.header.status
@@ -76,7 +76,7 @@ class ShowResultSpec extends AppUnitGenerator {
     }
 
     "return 303, with empty list of aggregate data and redirect to Tax Code Form" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val action = controller.showResult()
       val result = action.apply(request)
       val status = result.header.status

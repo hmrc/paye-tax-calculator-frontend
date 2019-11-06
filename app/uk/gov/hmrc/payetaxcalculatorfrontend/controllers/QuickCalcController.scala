@@ -39,9 +39,11 @@ class QuickCalcController @Inject() (
   cache:                    QuickCalcCache,
   val controllerComponents: ControllerComponents
 )(
-  implicit val appConfig: AppConfig, implicit val executionContext: ExecutionContext)
+  implicit val appConfig:        AppConfig,
+  implicit val executionContext: ExecutionContext)
     extends BackendBaseController
-    with I18nSupport with ActionWithSessionId {
+    with I18nSupport
+    with ActionWithSessionId {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
   def redirectToSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>

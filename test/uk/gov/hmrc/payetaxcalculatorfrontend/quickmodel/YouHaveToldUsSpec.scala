@@ -22,8 +22,9 @@ import uk.gov.hmrc.play.test.UnitSpec
 import play.api.i18n.Messages.Implicits._
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUs.salaryFormat
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 
-class YouHaveToldUsSpec extends UnitSpec with OneAppPerSuite {
+class YouHaveToldUsSpec extends BaseSpec{
 
   "Converting Salary to YouHaveToldUsItem" in {
     val salaryUrl =  routes.QuickCalcController.showSalaryForm().url

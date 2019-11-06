@@ -42,7 +42,7 @@ object AppDependencies {
   private val pegdownVersion = "1.6.0"
   private val jsoupVersion = "1.11.3"
   private val playTestVersion = PlayVersion.current
-  private val scalaTestPlusPlayVersion = "2.0.1"
+  private val scalaTestPlusPlayVersion = "3.1.2"
   private val scalacheckVersion = "1.14.0"
   private val scalamockScalaTestSupportVersion = "3.6.0"
 

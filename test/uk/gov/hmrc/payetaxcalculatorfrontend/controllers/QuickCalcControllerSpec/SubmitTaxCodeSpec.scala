@@ -21,15 +21,17 @@ import play.api.test.Helpers._
 
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.UserTaxCode
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.SessionKeys
+import scala.concurrent.{ExecutionContext, Future}
 
-class SubmitTaxCodeSpec extends AppUnitGenerator {
+class SubmitTaxCodeSpec extends BaseSpec {
 
   "Submit Tax Code Form" should {
     "return 400, with aggregate data and an error message for invalid Tax Code" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCode,      stubControllerComponents()
+      )
       val formTax = UserTaxCode.form.fill(
         UserTaxCode(gaveUsTaxCode = true, Some("110")))
       val action = await(controller.submitTaxCodeForm())
@@ -48,7 +50,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, with no aggregate data and an error message for invalid Tax Code" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty,      stubControllerComponents())
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("110")))
       val action = await(controller.submitTaxCodeForm())
       val result = action(request
@@ -66,7 +68,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, with no aggregate data and an error message for invalid Tax Code Prefix" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty,      stubControllerComponents())
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("OO9999")))
       val action = await(controller.submitTaxCodeForm())
       val result = action(request
@@ -85,7 +87,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, with no aggregate data and an error message for invalid Tax Code Suffix" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty,      stubControllerComponents())
       val formTax = UserTaxCode.form.fill(UserTaxCode(true, Some("9999R")))
       val action = await(controller.submitTaxCodeForm())
       val result = action(request
@@ -105,7 +107,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, with no aggregate data and an error message when user selects \"Yes\" but did not enter Tax code" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty,      stubControllerComponents())
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, None))
       val action = await(controller.submitTaxCodeForm())
       val result = action(request
@@ -123,7 +125,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, with no aggregate data and an error message when user selects \"Yes\" but Tax Code entered is 99999L" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty,      stubControllerComponents())
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("99999L")))
       val action = await(controller.submitTaxCodeForm())
       val result = action(request
@@ -141,7 +143,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 400, with no aggregate data when Tax Code Form submission is empty" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty,      stubControllerComponents())
       val formTax = UserTaxCode.form
       val action = await(controller.submitTaxCodeForm())
 
@@ -162,7 +164,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 303, with current aggregate data and redirect to Is Over State Pension Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePension)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePension,      stubControllerComponents())
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("K425")))
       val action = await(controller.submitTaxCodeForm())
 
@@ -180,7 +182,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 303, with no aggregate data and redirect to Is Over State Pension Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("K425")))
       val action = await(controller.submitTaxCodeForm())
 
@@ -198,7 +200,7 @@ class SubmitTaxCodeSpec extends AppUnitGenerator {
     }
 
     "return 303, with current aggregate data and redirect to Summary Result Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary,      stubControllerComponents())
       val formTax = UserTaxCode.form.fill(UserTaxCode(gaveUsTaxCode = true, Some("K425")))
       val action = await(controller.submitTaxCodeForm())
 

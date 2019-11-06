@@ -18,9 +18,9 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc
 
 import org.jsoup.Jsoup
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.YouHaveToldUsItem
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 
-class YouHaveToldUsHtmlSpec extends AppUnitGenerator {
+class YouHaveToldUsHtmlSpec extends BaseSpec {
 
   "Html snippet for the `You Have Told Us` section" should {
     "not appear if there are no items" in {

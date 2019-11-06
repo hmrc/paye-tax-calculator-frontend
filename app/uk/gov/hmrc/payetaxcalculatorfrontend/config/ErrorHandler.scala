@@ -21,7 +21,6 @@ import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 
 class ErrorHandler @Inject()(val messagesApi: MessagesApi, val configuration: Configuration)

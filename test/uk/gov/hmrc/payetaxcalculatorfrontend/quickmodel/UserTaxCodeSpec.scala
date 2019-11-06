@@ -20,8 +20,10 @@ import play.api.data.Form
 import uk.gov.hmrc.play.test.UnitSpec
 import play.api.i18n.Messages.Implicits._
 import org.scalatestplus.play.OneAppPerSuite
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 
-class UserTaxCodeSpec extends UnitSpec with OneAppPerSuite {
+class UserTaxCodeSpec extends BaseSpec {
+
 
   val userTaxCodeForm: Form[UserTaxCode] = UserTaxCode.form
 

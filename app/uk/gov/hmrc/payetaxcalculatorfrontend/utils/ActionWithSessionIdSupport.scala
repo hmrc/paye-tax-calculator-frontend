@@ -19,7 +19,7 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.utils
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
-import uk.gov.hmrc.payetaxcalculatorfrontend.utils.SessionIdSupport._
+import uk.gov.hmrc.payetaxcalculatorfrontend.utils.ActionWithSessionIdSupport._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
  * ActionWithSessionId will make sure it stays saved in the session.
  */
 
-object SessionIdSupport {
+object ActionWithSessionIdSupport {
   def maybeSessionId(rh: RequestHeader): Option[String] =
     rh.session.get(SessionKeys.sessionId).orElse(rh.headers.get(HeaderNames.xSessionId))
 
@@ -48,25 +48,31 @@ trait ActionWithSessionId {
   def validateAcceptWithSessionId: ActionBuilder[Request, AnyContent] =
     new ActionBuilder[Request, AnyContent] {
 
-      def invokeBlock[A](request: Request[A],
-                         block: (Request[A]) => Future[Result]): Future[Result] = {
-        maybeSessionId(request).map { sessionId =>
-          block(request).map(addSessionIdToSession(request, sessionId))
-        }.getOrElse {
-          throw SessionIdNotFoundException()
-        }
-      }
+      def invokeBlock[A](
+        request: Request[A],
+        block:   (Request[A]) => Future[Result]
+      ): Future[Result] =
+        maybeSessionId(request)
+          .map { sessionId =>
+            block(request).map(addSessionIdToSession(request, sessionId))
+          }
+          .getOrElse {
+            throw SessionIdNotFoundException()
+          }
 
-      def addSessionIdToSession[A](request: Request[A], sessionId: String)
-                                  (result: Result): Result =
+      def addSessionIdToSession[A](
+        request:   Request[A],
+        sessionId: String
+      )(result:    Result
+      ): Result =
         result.withSession(request.session + (SessionKeys.sessionId -> sessionId))
-
-      case class SessionIdNotFoundException() extends Exception(
-        "Session id not found in headers or session as expected. Have you enabled SessionIdFilter?"
-      )
 
       override def parser: BodyParser[AnyContent] = outer.parser
 
       override protected def executionContext: ExecutionContext = outer.executionContext
     }
 }
+case class SessionIdNotFoundException()
+    extends Exception(
+      "Session id not found in headers or session as expected. Have you enabled SessionIdFilter?"
+    )
