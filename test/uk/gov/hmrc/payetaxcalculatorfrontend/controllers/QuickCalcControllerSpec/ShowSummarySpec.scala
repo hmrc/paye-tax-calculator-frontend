@@ -20,16 +20,16 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-class ShowSummarySpec extends AppUnitGenerator {
+class ShowSummarySpec extends BaseSpec {
 
   "Show Summary Page" should {
 
     "return aggregate data of : Earning £20000 Yearly Salary, NOT (Over State Pension), Tax Code: S1150L and IS Scottish Tax Payer"  in {
 
-      val controller = new QuickCalcController(messages.messages, cacheReturnCompleteYearly)
+      val controller = new QuickCalcController(messagesApi, cacheReturnCompleteYearly, stubControllerComponents())
       val action = controller.summary()
       val result = action.apply(request)
       val status = result.header.status
@@ -63,7 +63,7 @@ class ShowSummarySpec extends AppUnitGenerator {
 
     "return aggregate data of : Earning £40 Daily Salary, 5 Days a Week, NOT (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer"  in {
 
-      val controller = new QuickCalcController(messages.messages, cacheReturnCompleteDaily)
+      val controller = new QuickCalcController(messagesApi, cacheReturnCompleteDaily, stubControllerComponents())
       val action = controller.summary()
       val result = action.apply(request)
       val status = result.header.status
@@ -101,7 +101,7 @@ class ShowSummarySpec extends AppUnitGenerator {
 
     "return aggregate data of : Earning £8 Hourly Salary, YES (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer"  in {
 
-      val controller = new QuickCalcController(messages.messages, cacheReturnCompleteHourly)
+      val controller = new QuickCalcController(messagesApi, cacheReturnCompleteHourly, stubControllerComponents())
       val action = controller.summary()
       val result = action.apply(request)
       val status = result.header.status

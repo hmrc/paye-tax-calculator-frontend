@@ -18,8 +18,13 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
 import javax.inject.Inject
 import play.api.http.DefaultHttpFilters
-import uk.gov.hmrc.play.bootstrap.filters.MicroserviceFilters
+import play.filters.csrf.CSRFFilter
+import uk.gov.hmrc.play.bootstrap.filters.FrontendFilters
 
-class Filters @Inject()(defaultFilters: MicroserviceFilters,
-                        sessionIdFilter: SessionIdFilter,
-                        csrfBypassFilter: CsrfBypassFilter) extends DefaultHttpFilters(defaultFilters.filters :+ sessionIdFilter :+ csrfBypassFilter: _*)
+class Filters @Inject() (
+  frontendFilters:  FrontendFilters,
+  sessionIdFilter:  SessionIdFilter,
+  csrfBypassFilter: CsrfBypassFilter)
+    extends DefaultHttpFilters({
+      frontendFilters.filters.filterNot(f => f.isInstanceOf[CSRFFilter]) :+ csrfBypassFilter :+ sessionIdFilter
+    }: _*)

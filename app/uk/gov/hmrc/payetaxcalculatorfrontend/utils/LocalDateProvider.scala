@@ -25,6 +25,6 @@ import play.api.Play.current
 object LocalDateProvider {
   def now: LocalDate = current.configuration.getString("dateOverride") match {
     case Some(s) => LocalDate.parse(s)
-    case None => LocalDate.now
+    case None    => LocalDate.now
   }
 }

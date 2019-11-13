@@ -36,92 +36,40 @@ object TaxResult {
     )(Tab.apply)(Tab.unapply)
   )
 
-  private[quickmodel] def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput): String =
-    quickCalcAggregateInput.savedTaxCode match {
-      case Some(s) => s.taxCode match {
-        case Some(taxCode) => taxCode
-        case None => UserTaxCode.defaultUkTaxCode
-      }
-      case None => UserTaxCode.defaultUkTaxCode
-    }
+  def isOverMaxRate(summary: TaxCalc): Boolean = {
+    val grossPay   = summary.taxBreakdown.head.grossPay
+    val maxTaxRate = summary.maxTaxRate
+    val taxablePay = incomeTax(summary.taxBreakdown.head)
 
-  private[quickmodel] def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): String =
-    quickCalcAggregateInput.savedIsOverStatePensionAge match {
-      case Some(s) => if (s.value) {
-        "true"
-      } else {
-        "false"
-      }
-      case None => throw new Exception("No answer has been provided for the question: Are you over state pension age?")
-    }
-
-  def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput): BigDecimal = quickCalcAggregateInput.savedSalary match {
-    case Some(s) => s.period match {
-      case "a year" => s.amount * 100
-      case "a month" => s.amount * 100
-      case "a week" => s.amount * 100
-      case "a day" => s.amount * 100
-      case "an hour" => s.amount * 100
-      case _ => throw new Exception("No Salary has been provided.")
-    }
-    case None => throw new Exception("No Salary has been provided.")
+    isOverMaxRate(grossPay, maxTaxRate, taxablePay)
   }
 
-  private[quickmodel] def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput): String =
-    quickCalcAggregateInput.savedSalary match {
-      case Some(s) => s.period match {
-        case "a year" => "annual"
-        case "a month" => "monthly"
-        case "a week" => "weekly"
-        case _ => ""
-      }
-      case _ => ""
-    }
-
-
-  /**
-    * This function is called "extractHours" because in "buildTaxCalc" function, the last parameter is called "hoursIn".
-    * "hoursIn" does not only means hours but can also mean days.
-    * buildTaxCalc will use the number returned to calculate the weekly gross pay from Daily or Hourly via those case classes.
-    **/
-  private[quickmodel] def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput): Double =
-    quickCalcAggregateInput.savedSalary match {
-      case Some(s) => s.period match {
-        case "a day" => s.howManyAWeek.getOrElse(-1.0)
-        case "an hour" => s.howManyAWeek.getOrElse(-1.0)
-        case _ => -1.0
-      }
-      case _ => -1.0
-    }
-
-  def incomeTax(breakdown : TaxBreakdown): BigDecimal = {
+  def incomeTax(breakdown: TaxBreakdown): BigDecimal = {
     val maxTaxAmount = breakdown.maxTaxAmount
     val stdIncomeTax: BigDecimal = extractIncomeTax(breakdown)
 
     incomeTax(maxTaxAmount: BigDecimal, stdIncomeTax)
   }
 
-  def incomeTax(maxTaxAmount: BigDecimal, stdIncomeTax: BigDecimal): BigDecimal = {
-    if(maxTaxAmount >= 0) stdIncomeTax min maxTaxAmount
+  def incomeTax(
+    maxTaxAmount: BigDecimal,
+    stdIncomeTax: BigDecimal
+  ): BigDecimal =
+    if (maxTaxAmount >= 0) stdIncomeTax min maxTaxAmount
     else stdIncomeTax
-  }
 
-  def extractIncomeTax( breakdown : TaxBreakdown): BigDecimal = {
-    breakdown.taxCategories.find(_.taxType == "incomeTax").map(_.total)
+  def extractIncomeTax(breakdown: TaxBreakdown): BigDecimal =
+    breakdown.taxCategories
+      .find(_.taxType == "incomeTax")
+      .map(_.total)
       .getOrElse(throw new AssertionError("Unknown Engine change"))
-  }
 
-  def isOverMaxRate(grossPay: BigDecimal, maxTaxRate: BigDecimal, taxablePay: BigDecimal): Boolean = {
+  def isOverMaxRate(
+    grossPay:   BigDecimal,
+    maxTaxRate: BigDecimal,
+    taxablePay: BigDecimal
+  ): Boolean =
     (grossPay * maxTaxRate / 100) <= taxablePay
-  }
-
-  def isOverMaxRate(summary: TaxCalc): Boolean = {
-    val grossPay = summary.taxBreakdown.head.grossPay
-    val maxTaxRate = summary.maxTaxRate
-    val taxablePay = incomeTax(summary.taxBreakdown.head)
-
-    isOverMaxRate(grossPay, maxTaxRate, taxablePay)
-  }
 
   def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput): TaxCalc = {
 
@@ -133,13 +81,77 @@ object TaxResult {
       extractTaxCode(quickCalcAggregateInput),
       extractSalary(quickCalcAggregateInput).toInt,
       extractPayPeriod(quickCalcAggregateInput),
-      extractHours(quickCalcAggregateInput))
+      extractHours(quickCalcAggregateInput)
+    )
   }
 
-  def moneyFormatter(value: BigDecimal): String ={
+  private[quickmodel] def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput): String =
+    quickCalcAggregateInput.savedTaxCode match {
+      case Some(s) =>
+        s.taxCode match {
+          case Some(taxCode) => taxCode
+          case None          => UserTaxCode.defaultUkTaxCode
+        }
+      case None => UserTaxCode.defaultUkTaxCode
+    }
+
+  private[quickmodel] def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): String =
+    quickCalcAggregateInput.savedIsOverStatePensionAge match {
+      case Some(s) =>
+        if (s.value) {
+          "true"
+        } else {
+          "false"
+        }
+      case None => throw new Exception("No answer has been provided for the question: Are you over state pension age?")
+    }
+
+  def extractSalary(quickCalcAggregateInput: QuickCalcAggregateInput): BigDecimal =
+    quickCalcAggregateInput.savedSalary match {
+      case Some(s) =>
+        s.period match {
+          case "a year"  => s.amount * 100
+          case "a month" => s.amount * 100
+          case "a week"  => s.amount * 100
+          case "a day"   => s.amount * 100
+          case "an hour" => s.amount * 100
+          case _         => throw new Exception("No Salary has been provided.")
+        }
+      case None => throw new Exception("No Salary has been provided.")
+    }
+
+  private[quickmodel] def extractPayPeriod(quickCalcAggregateInput: QuickCalcAggregateInput): String =
+    quickCalcAggregateInput.savedSalary match {
+      case Some(s) =>
+        s.period match {
+          case "a year"  => "annual"
+          case "a month" => "monthly"
+          case "a week"  => "weekly"
+          case _         => ""
+        }
+      case _ => ""
+    }
+
+  /**
+    * This function is called "extractHours" because in "buildTaxCalc" function, the last parameter is called "hoursIn".
+    * "hoursIn" does not only means hours but can also mean days.
+    * buildTaxCalc will use the number returned to calculate the weekly gross pay from Daily or Hourly via those case classes.
+    **/
+  private[quickmodel] def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput): Double =
+    quickCalcAggregateInput.savedSalary match {
+      case Some(s) =>
+        s.period match {
+          case "a day"   => s.howManyAWeek.getOrElse(-1.0)
+          case "an hour" => s.howManyAWeek.getOrElse(-1.0)
+          case _         => -1.0
+        }
+      case _ => -1.0
+    }
+
+  def moneyFormatter(value: BigDecimal): String = {
     val formatter = java.text.NumberFormat.getInstance
-    val money = """(.*)\.(\d)""".r
-    val outValue = formatter.format(value)
+    val money     = """(.*)\.(\d)""".r
+    val outValue  = formatter.format(value)
 
     outValue match {
       case money(pounds, pins) => {
@@ -149,19 +161,19 @@ object TaxResult {
     }
   }
 
-  def moneyFormatter(value: Option[String]): String ={
+  def moneyFormatter(value: Option[String]): String = {
     val money = """(.*)\.(\d)""".r
     value match {
-      case Some(v) => v match {
-        case money(pounds, pins) => v + "0"
-        case _ => v
-      }
+      case Some(v) =>
+        v match {
+          case money(pounds, pins) => v + "0"
+          case _                   => v
+        }
       case _ => ""
     }
   }
 
-  def omitScotland(value: String): String = {
+  def omitScotland(value: String): String =
     value.replaceAll("Scotland ", "")
-  }
 
 }

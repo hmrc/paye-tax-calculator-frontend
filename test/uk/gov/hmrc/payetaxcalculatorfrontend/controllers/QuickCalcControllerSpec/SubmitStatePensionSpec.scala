@@ -20,15 +20,15 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.OverStatePensionAge
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.SessionKeys
 
-class SubmitStatePensionSpec extends AppUnitGenerator {
+class SubmitStatePensionSpec extends BaseSpec {
 
   "Submit State Pension Form" should {
     "return 400 for invalid form answer and current list of aggregate data" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCode, stubControllerComponents())
       val formAge = OverStatePensionAge.form
       val action = await(controller.submitStatePensionForm())
 
@@ -50,7 +50,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
     }
 
     "return 400 for invalid form answer and empty list of aggregate data" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formAge = OverStatePensionAge.form
       val action = await(controller.submitStatePensionForm())
 
@@ -72,7 +72,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
     }
 
     "return 303, with an answer \"No\" saved on existing list of aggregate data without Salary and redirect to Salary Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCode)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCode, stubControllerComponents())
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val action = await(controller.submitStatePensionForm())
 
@@ -90,7 +90,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
     }
 
     "return 303, with an answer \"Yes\" for being Over 65 saved on a new list of aggregate data and redirect Salary Page" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(true))
       val action = await(controller.submitStatePensionForm())
 
@@ -108,7 +108,7 @@ class SubmitStatePensionSpec extends AppUnitGenerator {
     }
 
     "return 303, with an answer \"No\" saved on the current list of aggregate data of all answered questions and redirect to Summary-Result" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents())
       val formAge = OverStatePensionAge.form.fill(OverStatePensionAge(false))
       val action = await(controller.submitStatePensionForm())
 

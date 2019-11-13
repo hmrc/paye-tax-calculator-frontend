@@ -17,13 +17,13 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
 import org.scalatest.{Tag, TestData}
-import org.scalatestplus.play.OneAppPerTest
+import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 import uk.gov.hmrc.play.test.UnitSpec
 
-class TaxResultSpec extends UnitSpec with OneAppPerTest {
+class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
 
   "Extracting Tax Code from user response" should {
 

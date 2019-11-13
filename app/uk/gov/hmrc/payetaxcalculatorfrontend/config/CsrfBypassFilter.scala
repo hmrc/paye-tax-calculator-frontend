@@ -16,20 +16,22 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
+import akka.stream.Materializer
+import javax.inject.Inject
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.mvc.{Result, _}
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 
 import scala.concurrent.Future
 
-class CsrfBypassFilter extends Filter with MicroserviceFilterSupport {
+class CsrfBypassFilter @Inject() (implicit val mat: Materializer) extends Filter {
 
-  def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] = {
+  def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] =
     f(filteredHeaders(rh))
-  }
 
-  private[config] def filteredHeaders(rh: RequestHeader,
-                                      now: () => DateTime = () => DateTime.now.withZone(DateTimeZone.UTC)): RequestHeader =
+  private[config] def filteredHeaders(
+    rh:  RequestHeader,
+    now: () => DateTime = () => DateTime.now.withZone(DateTimeZone.UTC)
+  ): RequestHeader =
     rh.copy(headers = rh.headers.add("Csrf-Token" -> "nocheck"))
 
 }

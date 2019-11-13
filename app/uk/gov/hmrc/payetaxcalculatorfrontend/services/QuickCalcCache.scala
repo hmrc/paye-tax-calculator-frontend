@@ -21,7 +21,7 @@ import javax.inject.Inject
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
-import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -35,22 +35,24 @@ trait QuickCalcCache {
 }
 
 @Singleton
-class QuickCalcKeyStoreCache @Inject()(httpClient: HttpClient, appConfig: AppConfig) extends QuickCalcCache {
+class QuickCalcKeyStoreCache @Inject() (
+  httpClient: HttpClient,
+  appConfig:  AppConfig)
+    extends QuickCalcCache {
 
   val id = "quick-calc-aggregate-input"
 
-  def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]] = {
+  def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]] =
     sessionCache.fetchAndGetEntry[QuickCalcAggregateInput](id)
-  }
 
   def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[CacheMap] = sessionCache.cache(id, o)
 
   private object sessionCache extends SessionCache {
-    override lazy val http = httpClient
+    override lazy val http          = httpClient
     override lazy val defaultSource = "paye-tax-calculator-frontend"
-    override lazy val baseUri = appConfig.baseUrl("cachable.session-cache")
-    override lazy val domain = appConfig.getConfString("cachable.session-cache.domain",
-      throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
+    override lazy val baseUri       = appConfig.cacheUrl
+    override lazy val domain        = appConfig.domain
+
   }
 
 }

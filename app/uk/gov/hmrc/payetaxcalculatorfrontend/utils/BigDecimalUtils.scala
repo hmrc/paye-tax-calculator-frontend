@@ -17,7 +17,13 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.utils
 
 object BigDecimalUtils {
-  def min(a: BigDecimal, b: BigDecimal): BigDecimal = a.min(b)
+  def min(
+    a: BigDecimal,
+    b: BigDecimal
+  ): BigDecimal = a.min(b)
 
-  def max(a: BigDecimal, b: BigDecimal): BigDecimal = a.max(b)
+  def max(
+    a: BigDecimal,
+    b: BigDecimal
+  ): BigDecimal = a.max(b)
 }

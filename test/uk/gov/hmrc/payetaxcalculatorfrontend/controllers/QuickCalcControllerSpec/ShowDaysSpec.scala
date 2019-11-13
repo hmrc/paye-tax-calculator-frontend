@@ -17,16 +17,17 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpec
 
 
+import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-class ShowDaysSpec extends AppUnitGenerator {
+class ShowDaysSpec extends BaseSpec {
 
   "Show Days Form" should {
     "return 200, with existing list of aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheReturnTaxCodeStatePensionSalary)
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents())
       val action = controller.showDaysAWeek(0,"")
       val result = action.apply(request)
       val status = result.header.status
@@ -35,7 +36,7 @@ class ShowDaysSpec extends AppUnitGenerator {
     }
 
     "return 200, with non-existing list of aggregate" in {
-      val controller = new QuickCalcController(messages.messages, null)
+      val controller = new QuickCalcController(messagesApi, null, stubControllerComponents())
       val agg = QuickCalcAggregateInput.newInstance
       val result = controller.showDaysAWeekTestable(0,"")(request)(agg)
       val status = result.header.status

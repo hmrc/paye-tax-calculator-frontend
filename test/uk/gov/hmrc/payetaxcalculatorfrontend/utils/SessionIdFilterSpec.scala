@@ -15,70 +15,112 @@
  */
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.utils
+import java.util.UUID
 
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.mvc.{RequestHeader, Result, Results}
+import akka.stream.Materializer
+import com.google.inject.Inject
+import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.http.DefaultHttpFilters
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
+import play.api.mvc.{DefaultActionBuilder, Results, SessionCookieBaker}
+import play.api.routing.Router
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import uk.gov.hmrc.payetaxcalculatorfrontend.config.SessionIdFilter
-import uk.gov.hmrc.play.test.UnitSpec
 
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
-class SessionIdFilterSpec extends UnitSpec with OneAppPerSuite with ScalaFutures {
+object SessionIdFilterSpec {
 
-  val testSessionIdFilter = new SessionIdFilter
+  val sessionId = "28836767-a008-46be-ac18-695ab140e705"
 
-  "SessionIdFilter" should {
-    "add a newly generated session-id to a request that didn't have one before" in new Setup {
-      executeFilteredAction(FakeRequest()) { rh =>
-        if(!sessionIdFoundInHeaders(rh)) {
-          fail("session-id not added to headers as expected")
-        }
+  class Filters @Inject() (sessionId: SessionIdFilter) extends DefaultHttpFilters(sessionId)
+
+  class TestSessionIdFilter @Inject() (
+                                        override val mat: Materializer,
+                                        ec: ExecutionContext,
+                                        sessionCookieBaker: SessionCookieBaker
+                                      ) extends SessionIdFilter(mat, UUID.fromString(sessionId), sessionCookieBaker = sessionCookieBaker, ec)
+}
+
+class SessionIdFilterSpec @Inject() (actionBuilder: DefaultActionBuilder) extends WordSpec with MustMatchers with GuiceOneAppPerSuite {
+
+  import SessionIdFilterSpec._
+
+  val router: Router = {
+
+    import play.api.routing.sird._
+
+    Router.from {
+      case GET(p"/test") => actionBuilder {
+        request =>
+          val fromHeader = request.headers.get(HeaderNames.xSessionId).getOrElse("")
+          val fromSession = request.session.get(SessionKeys.sessionId).getOrElse("")
+          Results.Ok(
+            Json.obj(
+              "fromHeader" -> fromHeader,
+              "fromSession" -> fromSession
+            )
+          )
       }
-    }
-    "not modify headers if session-id was present already in headers" in new Setup {
-      val existingSessionId = "foo"
-      executeFilteredAction(FakeRequest().withHeaders(HeaderNames.xSessionId -> existingSessionId)) { rh =>
-        if (!sessionIdFoundInHeaders(rh)) {
-          fail("session-id removed from headers")
-        } else if (!sessionIdEquals(existingSessionId, rh)) {
-          fail(s"session-id was modified, expected: $existingSessionId but got: ${rh.headers.headers.map(_._2)}")
-        }
-      }
-    }
-    "not modify headers and session if session-id was present already in session" in new Setup {
-      val existingSessionId = "foo"
-      executeFilteredAction(FakeRequest().withSession(SessionKeys.sessionId -> existingSessionId)) { rh =>
-        if (!sessionIdFoundInSession(rh)) {
-          fail("session-id not longer found in session")
-        } else if (sessionIdFoundInHeaders(rh)) {
-          fail("session-id found in headers but shouldn't have been added as it was already in session")
-        }
+      case GET(p"/test2") => actionBuilder {
+        implicit request =>
+          Results.Ok.addingToSession("foo" -> "bar")
       }
     }
   }
 
-  trait Setup extends Results {
-    def action(assertion: RequestHeader => Unit): RequestHeader => Future[Result] = { rh =>
-      assertion(rh)
-      Future.successful(Ok)
+  override lazy val app: Application = {
+
+    import play.api.inject._
+
+    new GuiceApplicationBuilder()
+      .overrides(
+        bind[SessionIdFilter].to[TestSessionIdFilter]
+      )
+      .configure(
+        "play.filters.disabled" -> List("uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCryptoFilter")
+      )
+      .router(router)
+      .build()
+  }
+
+  ".apply" must {
+
+    "add a sessionId if one doesn't already exist" in {
+
+      val Some(result) = route(app, FakeRequest(GET, "/test"))
+
+      val body = contentAsJson(result)
+
+      (body \ "fromHeader").as[String] mustEqual s"session-$sessionId"
+      (body \ "fromSession").as[String] mustEqual s"session-$sessionId"
     }
 
-    def executeFilteredAction(rh: RequestHeader)(assertion:  RequestHeader => Unit) =
-      testSessionIdFilter(action(assertion))(rh).futureValue
+    "not override a sessionId if one doesn't already exist" in {
 
-    def getSessionIdFromHeaders(rh: RequestHeader): Option[String] = rh.headers.get(HeaderNames.xSessionId)
+      val Some(result) = route(app, FakeRequest(GET, "/test").withSession(SessionKeys.sessionId -> "foo"))
 
-    def sessionIdFoundInHeaders(rh: RequestHeader): Boolean = getSessionIdFromHeaders(rh).isDefined
+      val body = contentAsJson(result)
 
-    def sessionIdFoundInSession(rh: RequestHeader): Boolean = rh.session.get(SessionKeys.sessionId).isDefined
+      (body \ "fromHeader").as[String] mustEqual ""
+      (body \ "fromSession").as[String] mustEqual "foo"
+    }
 
-    def sessionIdEquals(expectedValue: String, rh: RequestHeader): Boolean = {
-      rh.headers.headers
-        .filter { case (k, v) => k == HeaderNames.xSessionId }
-        .forall { case (k, v) => v == expectedValue }
+    "not override other session values from the response" in {
+
+      val Some(result) = route(app, FakeRequest(GET, "/test2"))
+      session(result).data must contain("foo" -> "bar")
+    }
+
+    "not override other session values from the request" in {
+
+      val Some(result) = route(app, FakeRequest(GET, "/test").withSession("foo" -> "bar"))
+      session(result).data must contain("foo" -> "bar")
     }
   }
 }

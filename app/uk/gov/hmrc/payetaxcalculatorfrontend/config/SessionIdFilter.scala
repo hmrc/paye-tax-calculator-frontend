@@ -18,27 +18,53 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
 import java.util.UUID
 
-import play.api.mvc.{Filter, RequestHeader, Result}
-import uk.gov.hmrc.http.HeaderNames
-import uk.gov.hmrc.payetaxcalculatorfrontend.utils.SessionIdSupport.hasSessionId
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
+import akka.stream.Materializer
+import com.google.inject.Inject
+import play.api.mvc._
+import play.api.mvc.request.{Cell, RequestAttrKey}
+import uk.gov.hmrc.http.{SessionKeys, HeaderNames => HMRCHeaderNames}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class SessionIdFilter extends Filter with MicroserviceFilterSupport {
-  def apply(next: (RequestHeader) => Future[Result])
-           (rh: RequestHeader): Future[Result] = {
-    if (hasSessionId(rh)) {
-      next(rh)
-    } else {
-      next(addNewSessionIdToHeaders(rh))
-    }
+class SessionIdFilter(
+  override val mat:   Materializer,
+  uuid:               => UUID,
+  sessionCookieBaker: SessionCookieBaker,
+  implicit val ec:    ExecutionContext)
+    extends Filter {
+
+  @Inject
+  def this(
+    mat:                Materializer,
+    ec:                 ExecutionContext,
+    sessionCookieBaker: SessionCookieBaker
+  ) {
+    this(mat, UUID.randomUUID(), sessionCookieBaker, ec)
   }
 
-  def addNewSessionIdToHeaders(request: RequestHeader): RequestHeader = {
-    val newSessionId = s"session-${UUID.randomUUID().toString}"
-    val newSessionIdHeader = HeaderNames.xSessionId -> newSessionId
-    val newHeaders = request.headers.add(newSessionIdHeader)
-    request.copy(headers = newHeaders)
+  override def apply(f: RequestHeader => Future[Result])(rh: RequestHeader): Future[Result] = {
+    lazy val sessionId: String = s"session-$uuid"
+
+    if (rh.session.get(SessionKeys.sessionId).isEmpty) {
+      val headers = rh.headers.add(
+        HMRCHeaderNames.xSessionId -> sessionId
+      )
+
+      val session = rh.session + (SessionKeys.sessionId -> sessionId)
+
+      f(rh.withHeaders(headers).addAttr(RequestAttrKey.Session, Cell(session)))
+        .map { result =>
+          val updatedSession =
+            if (result.session(rh).get(SessionKeys.sessionId).isDefined) {
+              result.session(rh)
+            } else {
+              result.session(rh) + (SessionKeys.sessionId -> sessionId)
+            }
+
+          result.withSession(updatedSession)
+        }
+    } else {
+      f(rh)
+    }
   }
 }

@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{OverStatePensionAge, YouHaveToldUsItem}
 @import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.main_template
 
-@import uk.gov.hmrc.payetaxcalculatorfrontend.AppConfig
+@import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
 @(overStatePensionAgeForm: Form[OverStatePensionAge], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 
 @labels = @{

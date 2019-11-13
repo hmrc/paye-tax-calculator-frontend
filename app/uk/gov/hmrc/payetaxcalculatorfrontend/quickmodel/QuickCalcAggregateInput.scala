@@ -19,32 +19,32 @@ package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 
-case class QuickCalcAggregateInput(savedSalary: Option[Salary],
-                                   savedPeriod: Option[Detail],
-                                   savedIsOverStatePensionAge: Option[OverStatePensionAge],
-                                   savedTaxCode: Option[UserTaxCode],
-                                   savedScottishRate: Option[ScottishRate]
-                                  ){
+case class QuickCalcAggregateInput(
+  savedSalary:                Option[Salary],
+  savedPeriod:                Option[Detail],
+  savedIsOverStatePensionAge: Option[OverStatePensionAge],
+  savedTaxCode:               Option[UserTaxCode],
+  savedScottishRate:          Option[ScottishRate]) {
 
-  def allQuestionsAnswered: Boolean = List(
-    savedSalary,
-    savedIsOverStatePensionAge,
-    savedTaxCode
-  ).forall(_.isDefined)
+  def allQuestionsAnswered: Boolean =
+    List(
+      savedSalary,
+      savedIsOverStatePensionAge,
+      savedTaxCode
+    ).forall(_.isDefined)
 
-  def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] = {
+  def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] =
     List(
       savedSalary.map { YouHaveToldUs(_) },
       savedPeriod.map { YouHaveToldUs(_) },
       savedIsOverStatePensionAge.map { YouHaveToldUs(_) },
       savedTaxCode.map { YouHaveToldUs(_) },
-      savedScottishRate.map {YouHaveToldUs(_)}
+      savedScottishRate.map { YouHaveToldUs(_) }
     ).flatten
-  }
 
 }
 
 object QuickCalcAggregateInput {
-  def newInstance = QuickCalcAggregateInput(None, None, None, None, None)
+  def newInstance     = QuickCalcAggregateInput(None, None, None, None, None)
   implicit val format = Json.format[QuickCalcAggregateInput]
 }

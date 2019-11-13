@@ -21,16 +21,16 @@ import play.api.test.Helpers._
 
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{Hours, Salary}
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.SessionKeys
 
-class SubmitHoursSpec extends AppUnitGenerator {
+class SubmitHoursSpec extends BaseSpec {
 
   "Submit Hours Form" should {
 
     "return 400 and error message when empty Hours Form submission" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryInHoursForm
       val action = await(controller.submitHoursAWeek(1))
 
@@ -52,7 +52,7 @@ class SubmitHoursSpec extends AppUnitGenerator {
     }
 
     "return 400 and error message when Hours in a Week is 0" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryInHoursForm
       val action = await(controller.submitHoursAWeek(1))
 
@@ -75,7 +75,7 @@ class SubmitHoursSpec extends AppUnitGenerator {
 
 
     "return 400 and error message when Hours in a Week is 169" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryInHoursForm.fill(Hours(1,169))
       val action = await(controller.submitHoursAWeek(1))
 
@@ -95,7 +95,7 @@ class SubmitHoursSpec extends AppUnitGenerator {
     }
 
     "return 303, with new Hours worked, 40.5 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryBaseForm
       val action = await(controller.submitHoursAWeek(1))
 
@@ -116,7 +116,7 @@ class SubmitHoursSpec extends AppUnitGenerator {
     }
 
     "return 303, with new Hours worked, 5 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryBaseForm
       val action = await(controller.submitHoursAWeek(1))
 

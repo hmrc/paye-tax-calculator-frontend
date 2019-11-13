@@ -14,28 +14,32 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.payetaxcalculatorfrontend
+package uk.gov.hmrc.payetaxcalculatorfrontend.config
 
 import javax.inject.Inject
-import play.api.Mode.Mode
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.config.ServicesConfig
+import play.api.Configuration
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-class AppConfig @Inject()(override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
-
-  override protected def mode: Mode = environment.mode
-
-  private def loadConfig(key: String): String = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
-
-  private val contactHost: String = loadConfig(s"contact-frontend.host")
-  private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
+class AppConfig @Inject() (
+  config:         Configuration,
+  servicesConfig: ServicesConfig) {
 
   lazy val analyticsToken: String = loadConfig(s"google-analytics.token")
-  lazy val analyticsHost: String = loadConfig(s"google-analytics.host")
-  lazy val betaFeedbackUrl: String = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
-  lazy val reportAProblemPartialUrl: String = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  lazy val reportAProblemNonJSUrl: String = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  lazy val analyticsHost:  String = loadConfig(s"google-analytics.host")
+  lazy val betaFeedbackUrl: String =
+    s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  lazy val reportAProblemPartialUrl: String =
+    s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
+  lazy val reportAProblemNonJSUrl: String =
+    s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  lazy val cacheUrl: String = servicesConfig.baseUrl("cachable.session-cache")
+  lazy val domain: String = config
+    .getOptional[String]("microservice.services.cachable.session-cache.domain")
+    .getOrElse(throw new Exception(s"Could not find config 'services.cachable.session-cache.domain'"))
+  private val contactHost:                  String = loadConfig(s"contact-frontend.host")
+  private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
 
-  lazy val cacheUrl: String = baseUrl("cachable.session-cache")
+  private def loadConfig(key: String): String =
+    config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
 }

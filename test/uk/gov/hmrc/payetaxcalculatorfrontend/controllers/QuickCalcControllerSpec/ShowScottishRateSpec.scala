@@ -20,15 +20,15 @@ import org.jsoup.Jsoup
 import org.scalatest.AppendedClues
 import play.api.test.Helpers._
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.routes
 
-class ShowScottishRateSpec extends AppUnitGenerator with AppendedClues {
+class ShowScottishRateSpec extends BaseSpec with AppendedClues {
 
   "The show Scottish rate page" should {
     "return 200 - OK with existing aggregate data" in {
-      val testController = new QuickCalcController(messages.messages, cacheReturnCompleteYearly)
+      val testController = new QuickCalcController(messagesApi, cacheReturnCompleteYearly, stubControllerComponents())
 
       val res = testController.showScottishRateForm()(request)
       status(res) shouldBe OK
@@ -39,7 +39,7 @@ class ShowScottishRateSpec extends AppUnitGenerator with AppendedClues {
     }
 
     "return 303 See Other and redirect to the salary page with no aggregate data" in {
-      val testController = new QuickCalcController(messages.messages, cacheEmpty)
+      val testController = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
 
       val res = testController.showScottishRateForm()(request)
       status(res) shouldBe SEE_OTHER

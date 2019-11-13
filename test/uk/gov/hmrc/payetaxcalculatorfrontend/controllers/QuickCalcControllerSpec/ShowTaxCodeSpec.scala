@@ -17,13 +17,14 @@
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpec
 
 
+import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.{AppUnitGenerator, QuickCalcCacheSetup}
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.{BaseSpec, QuickCalcCacheSetup}
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 
-class ShowTaxCodeSpec extends AppUnitGenerator {
-  val controller = new QuickCalcController(messages.messages, null)
+class ShowTaxCodeSpec extends BaseSpec {
+  val controller = new QuickCalcController(messagesApi, null, stubControllerComponents())
 
   "Show Tax Code Form" should {
     "return 200 and an empty list of aggregate data" in {

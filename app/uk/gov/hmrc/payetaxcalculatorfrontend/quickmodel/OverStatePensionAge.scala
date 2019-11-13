@@ -27,8 +27,10 @@ case class OverStatePensionAge(value: Boolean) extends AnyVal
 object OverStatePensionAge {
 
   implicit val format = Json.format[OverStatePensionAge]
-  def form(implicit messages: Messages) = Form(
-    mapping(
-      "overStatePensionAge" -> of(requiredBooleanFormatter)
-    )(OverStatePensionAge.apply)(OverStatePensionAge.unapply))
+  def form(implicit messages: Messages) =
+    Form(
+      mapping(
+        "overStatePensionAge" -> of(requiredBooleanFormatter)
+      )(OverStatePensionAge.apply)(OverStatePensionAge.unapply)
+    )
 }

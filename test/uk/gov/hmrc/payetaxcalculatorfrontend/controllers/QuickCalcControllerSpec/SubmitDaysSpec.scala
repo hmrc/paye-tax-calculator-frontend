@@ -21,16 +21,16 @@ import play.api.test.Helpers._
 
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.{Days, Salary}
-import uk.gov.hmrc.payetaxcalculatorfrontend.setup.AppUnitGenerator
+import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.SessionKeys
 
-class SubmitDaysSpec extends AppUnitGenerator {
+class SubmitDaysSpec extends BaseSpec {
 
   "Submit Days Form" should {
 
     "return 400 and error message when Empty Days Submission" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryInDaysForm
       val action = await(controller.submitDaysAWeek(1))
 
@@ -52,7 +52,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
     }
 
     "return 400 and error message when Days in a Week is 0" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryInDaysForm
       val action = await(controller.submitDaysAWeek(1))
 
@@ -75,7 +75,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
 
 
     "return 400 and error message when Days in a Week is 8" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryInDaysForm.fill(Days(1,8))
       val action = await(controller.submitDaysAWeek(1))
 
@@ -95,7 +95,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
     }
 
     "return 303, with new Days worked, 1 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryInDaysForm
       val action = await(controller.submitDaysAWeek(1))
 
@@ -116,7 +116,7 @@ class SubmitDaysSpec extends AppUnitGenerator {
     }
 
     "return 303, with new Days worked, 5 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messages.messages, cacheEmpty)
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
       val formSalary = Salary.salaryInDaysForm
       val action = await(controller.submitDaysAWeek(1))
 
