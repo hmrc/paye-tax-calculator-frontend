@@ -33,7 +33,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
     "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,
     "uk.gov.hmrc" %% "tax-year" % taxYearVersion,
-    "uk.gov.hmrc" % "tax-kalculator-jvm" % taxKalcVersion,
+//    "uk.gov.hmrc" % "tax-kalculator-jvm" % taxKalcVersion,
     "org.typelevel" %% "cats-core" % catsCoreVersion
   )
 
