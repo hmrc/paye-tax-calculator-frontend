@@ -20,6 +20,7 @@ import cats.syntax.either._
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.i18n.Messages
+import uk.gov.hmrc.calculator.Validator
 
 object CustomFormatters {
 
@@ -94,9 +95,9 @@ object CustomFormatters {
         case s if s.nonEmpty =>
           try {
             val hours: Double = s.toDouble
-            if (hours < 1.0) {
+            if (!Validator.INSTANCE.isAboveMinimumHoursPerWeek(hours)) {
               Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.less_than_one"))))
-            } else if (hours > 168.0) {
+            } else if (!Validator.INSTANCE.isBelowMaximumHoursPerWeek(hours)) {
               Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.more_than_168"))))
             } else {
               Right(hours)
@@ -124,9 +125,9 @@ object CustomFormatters {
         case Some(s) =>
           try {
             val salary = BigDecimal(s).setScale(2)
-            if (salary < 0.01) {
+            if (!Validator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
               Left("quick_calc.salary.question.error.minimum_salary_input")
-            } else if (salary > 9999999.99) {
+            } else if (!Validator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
               Left("quick_calc.salary.question.error.maximum_salary_input")
             } else {
               Right(salary)
@@ -157,9 +158,9 @@ object CustomFormatters {
       case s if s.nonEmpty =>
         try {
           val salary = BigDecimal(s).setScale(2)
-          if (salary < 0.01) {
+          if (!Validator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
             Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_hourly_salary_input"))))
-          } else if (salary > 9999999.99) {
+          } else if (!Validator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
             Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
           } else {
             Right(salary)
@@ -181,9 +182,9 @@ object CustomFormatters {
       case s if s.nonEmpty =>
         try {
           val salary = BigDecimal(s).setScale(2)
-          if (salary < 0.01) {
+          if (!Validator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
             Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_daily_salary_input"))))
-          } else if (salary > 9999999.99) {
+          } else if (!Validator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
             Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
           } else {
             Right(salary)

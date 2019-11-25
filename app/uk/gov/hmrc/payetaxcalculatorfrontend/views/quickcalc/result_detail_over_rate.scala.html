@@ -18,30 +18,41 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.QuickCalcAggregateInput
 
-@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.calculator.model.CalculatorResponse
+@(calculatorResponse: CalculatorResponse, taxYear: Int)(implicit request: Request[_], messages: Messages)
 @summary = @{
-  taxCalculation(quickCalcAggregateInput)
+  calculatorResponse
 }
+
+@breakdowns = @{
+  List(
+    summary.getYearly,
+    summary.getMonthly,
+    summary.getWeekly
+  )
+}
+
+
 @tabLabels = @{
   List(Messages("quick_calc.result.tabLabels.year"),
     Messages("quick_calc.result.tabLabels.month"),
     Messages("quick_calc.result.tabLabels.week"))
 }
 
-@adjustment = @{isOverMaxRate(summary)}
-@isSKcode = @{summary.taxCode.contains(SCOTTISH_TAX_CODE_PREFIX)}
+@isSKcode = @{summary.getTaxCode.contains(SCOTTISH_TAX_CODE_PREFIX)}
 
 <ul>
-@for((breakdown,label)<- summary.taxBreakdown.zip(tabLabels)) {
-  <li style="margin:0;" id=@{"tab-content-"+breakdown.period}
-  data-tab-content=@{breakdown.period}
-    class="tab-content"
-    aria-labelledby=@{breakdown.period}>
+@for((breakdown,label)<- breakdowns.zip(tabLabels)) {
+
+  <li style="margin:0;" id="@{"tab-content-"+breakdown.getPayPeriod}"
+  data-tab-content="@{breakdown.getPayPeriod}"
+    class="tab-content-@{breakdown.getPayPeriod}"
+    aria-labelledby=@{breakdown.getPayPeriod}>
   <p class="tab-content__first">
     <div class="data">
       <div class="transaction-banner--complete" style="text-align:center">
 <p style="margin:10px 0 15px; text-align:center">@{s"${Messages("quick_calc.result.you_take_home")} $taxYear is"}</p>
-  <span id="your-take-home-pay-@{label}" class="data-item bold-xlarge">£@{s"${moneyFormatter(breakdown.takeHomePay)} ${Messages("a")} ${label.toLowerCase}"}</span>
+  <span id="your-take-home-pay-@{label}" class="data-item bold-xlarge">£@{s"${moneyFormatter(breakdown.getTakeHome)} ${Messages("a")} ${label.toLowerCase}"}</span>
   </div>
   </div>
   <br>
@@ -66,16 +77,16 @@
       </tr>
       <tr>
         <td id="national-insurance-key-@{label}" style="width:60%">@{Messages("quick_calc.result.your_national_insurance")}</td>
-        <td id="national-insurance-value-@{label}">£@{moneyFormatter(breakdown.taxCategories(1).total)}</td>
+        <td id="national-insurance-value-@{label}">£@{moneyFormatter(breakdown.getEmployeesNI)}</td>
       </tr>
       <tr>
         <td id="total-deductions-key-@{label}" style="font-weight: 700; width:56%">@{Messages("quick_calc.result.deductions")}</td>
-        <td id="total-deductions-value-@{label}" style="font-weight: 700">£@{moneyFormatter(breakdown.totalDeductions)}</td>
+        <td id="total-deductions-value-@{label}" style="font-weight: 700">£@{moneyFormatter(breakdown.getTotalDeductions)}</td>
       </tr>
     </tbody>
   </table>
 
-  @if(adjustment){
+  @if(breakdown.getMaxTaxAmountExceeded){
     <div id="adjustment-inf-@{label.toLowerCase()}">
       <span class="heading-small">@Messages("quick_calc.result.adjusted.head")</span>
       <p>@Messages("quick_calc.result.adjusted.info")</p>
@@ -118,7 +129,7 @@
                 @Messages("quick_calc.result.how_we_calculated.you_earn_a")
               </td>
               <td id="gross-pay-@{label}">
-                £@{moneyFormatter(breakdown.grossPay)} @Messages("quick_calc.result.how_we_calculated.you_earn_b")
+                £@{moneyFormatter(breakdown.getWages)} @Messages("quick_calc.result.how_we_calculated.you_earn_b")
               </td>
             </tr>
             <tr>
@@ -127,7 +138,7 @@
                 else Messages("quick_calc.result.k_code")
               }</td>
               <td id="k-adj-value-@{label}">£@{
-                moneyFormatter(breakdown.additionalTaxablePay)
+                moneyFormatter(breakdown.getKCodeAdjustment.doubleValue())
               }</td>
             </tr>
             <tr>
@@ -136,13 +147,13 @@
               else Messages("quick_calc.result.tax_free_allowance")
               }</td>
               <td id="tax-free-value-@{label}">£@{
-                moneyFormatter(breakdown.taxFreePay)
+                moneyFormatter(breakdown.getTaxFree)
               }</td>
             </tr>
             <tr>
               <td id="taxable-pay-key-@{label}" style="font-weight: 700">@{Messages("quick_calc.result.adjusted_taxable_pay")}</td>
               <td id="taxable-pay-value-@{label}" style="font-weight: 700">£@{
-                moneyFormatter(breakdown.taxablePay)
+                moneyFormatter(breakdown.getKCodeAdjustment + breakdown.getWages)
               }</td>
             </tr>
           </tbody>

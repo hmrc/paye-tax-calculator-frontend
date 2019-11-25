@@ -16,15 +16,15 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel
 
-import java.time.MonthDay
+import java.time.{LocalDate, MonthDay}
 
 import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.libs.json._
-import uk.gov.hmrc.payeestimator.domain.{TaxCalcResource, TaxCalcResourceBuilder}
-import uk.gov.hmrc.payeestimator.services.TaxCalculatorHelper
+import uk.gov.hmrc.calculator.Validator
+import uk.gov.hmrc.calculator.model.{TaxCodeValidationResponse, ValidationError}
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.LocalDateProvider
 
@@ -32,22 +32,22 @@ case class UserTaxCode(
   gaveUsTaxCode: Boolean,
   taxCode:       Option[String])
 
-object UserTaxCode extends TaxCalculatorHelper {
+object UserTaxCode {
 
   implicit val format: OFormat[UserTaxCode] = Json.format[UserTaxCode]
   private lazy val Default2018ScottishTaxCode = "S1185L"
   private lazy val Default2019ScottishTaxCode = "S1250L"
-  private lazy val Default2018UkTaxCode = "1185L"
-  private lazy val Default2019UkTaxCode = "1250L"
-  private lazy val firstDayOfTaxYear = MonthDay.of(4, 6)
-  val HasTaxCode = "hasTaxCode"
-  val TaxCode    = "taxCode"
-  val suffixKeys            = List('L', 'M', 'N', 'T')
-  val WrongTaxCodeSuffixKey = "quick_calc.about_tax_code.wrong_tax_code_suffix"
-  val WrongTaxCodeKey       = "quick_calc.about_tax_code.wrong_tax_code"
-  val WrongTaxCodeNumber    = "quick_calc.about_tax_code.wrong_tax_code_number"
-  val WrongTaxCodePrefixKey = "quick_calc.about_tax_code.wrong_tax_code_prefix"
-  val WrongTaxCodeEmpty     = "quick_calc.about_tax_code_empty_error"
+  private lazy val Default2018UkTaxCode       = "1185L"
+  private lazy val Default2019UkTaxCode       = "1250L"
+  private lazy val firstDayOfTaxYear          = MonthDay.of(4, 6)
+  val HasTaxCode                              = "hasTaxCode"
+  val TaxCode                                 = "taxCode"
+  val suffixKeys                              = List('L', 'M', 'N', 'T')
+  val WrongTaxCodeSuffixKey                   = "quick_calc.about_tax_code.wrong_tax_code_suffix"
+  val WrongTaxCodeKey                         = "quick_calc.about_tax_code.wrong_tax_code"
+  val WrongTaxCodeNumber                      = "quick_calc.about_tax_code.wrong_tax_code_number"
+  val WrongTaxCodePrefixKey                   = "quick_calc.about_tax_code.wrong_tax_code_prefix"
+  val WrongTaxCodeEmpty                       = "quick_calc.about_tax_code_empty_error"
 
   def defaultScottishTaxCode: String =
     if (currentTaxYear == 2019) Default2019ScottishTaxCode else Default2018ScottishTaxCode
@@ -81,7 +81,7 @@ object UserTaxCode extends TaxCalculatorHelper {
           .filter(_.nonEmpty)
           .map(_.toUpperCase()) match {
           case Some(taxCode) =>
-            if (isValidTaxCode(removeCountryElementFromTaxCode(taxCode), taxConfig(taxCode)))
+            if (Validator.INSTANCE.isValidTaxCode(taxCode).isValid)
               Right(Some(taxCode.replaceAll("\\s", "")))
             else {
               Left(wrongTaxCode(taxCode))
@@ -99,23 +99,19 @@ object UserTaxCode extends TaxCalculatorHelper {
   def defaultUkTaxCode: String =
     if (currentTaxYear == 2019) Default2019UkTaxCode else Default2018UkTaxCode
 
-  def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] =
-    if (!taxCode.replaceAll("[^\\d.]", "").matches("^[0-9]{1,4}"))
-      Seq(FormError(TaxCode, messages(WrongTaxCodeNumber)))
-    else if (taxCode.replaceAll("([0-9])+([A-Z]?)+", "").matches("[A-JL-RT-Z]{1,2}"))
-      Seq(FormError(TaxCode, messages(WrongTaxCodePrefixKey)))
-    else if (taxCode.replaceAll("^([A-Z]?)+([0-9]?)+", "").matches("[A-KO-SU-Z]"))
-      Seq(FormError(TaxCode, messages(WrongTaxCodeSuffixKey)))
-    else
-      Seq(FormError(TaxCode, messages(WrongTaxCodeKey)))
+  def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
+    val res = Validator.INSTANCE.isValidTaxCode(taxCode)
 
-  def taxConfig(taxCode: String): TaxCalcResource = TaxCalcResourceBuilder.resourceForDate(
-    startOfCurrentTaxYear,
-    isValidScottishTaxCode(taxCode)
-  )
+    (res.isValid, res.getErrorType) match {
+      case (false, ValidationError.WrongTaxCodeNumber) => Seq(FormError(TaxCode, messages(WrongTaxCodeNumber)))
+      case (false, ValidationError.WrongTaxCodePrefix) => Seq(FormError(TaxCode, messages(WrongTaxCodePrefixKey)))
+      case (false, ValidationError.WrongTaxCodeSuffix) => Seq(FormError(TaxCode, messages(WrongTaxCodeSuffixKey)))
+      case _                                           => Seq(FormError(TaxCode, messages(WrongTaxCodeKey)))
+    }
+  }
 
-  private def startOfCurrentTaxYear =
-    firstDayOfTaxYear.atYear(currentTaxYear)
+  def startOfCurrentTaxYear: Int =
+    firstDayOfTaxYear.atYear(currentTaxYear).getYear
 
   def checkUserSelection(
     checkFor:          Boolean,

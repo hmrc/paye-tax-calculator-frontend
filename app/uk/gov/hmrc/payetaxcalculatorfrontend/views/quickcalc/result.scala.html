@@ -22,15 +22,26 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.{routes => prodRoutes}
 
 @import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
-@(quickCalcAggregateInput: QuickCalcAggregateInput, taxYear: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.beta_header
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.result_detail
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.result_detail_over_rate
+@import uk.gov.hmrc.calculator.model.CalculatorResponse
+@import uk.gov.hmrc.calculator.model.PayPeriod
+@(calculatorResponse: CalculatorResponse, taxYear: Int)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 @summary = @{
-  taxCalculation(quickCalcAggregateInput)
+  calculatorResponse
 }
 
 @tabLabels = @{
   List(Messages("quick_calc.result.tabLabels.year"),
     Messages("quick_calc.result.tabLabels.month"),
     Messages("quick_calc.result.tabLabels.week"))
+}
+
+@payPeriods = @{
+  List(PayPeriod.YEARLY,
+    PayPeriod.MONTHLY,
+    PayPeriod.WEEKLY)
 }
 
 @scriptGetTab = {
@@ -51,30 +62,31 @@
 
       <div data-tabs>
         <ul class="tabs-nav print-hidden" role="tablist" >
-        @for((breakdown, label) <- summary.taxBreakdown.zip(tabLabels)) {
+        @for((payPeriod, label) <- payPeriods.zip(tabLabels)) {
           <li style="margin:0;"
           id=@{
-            breakdown.period
+            payPeriod
           }
           role="tab"
           data-tab-link=@{
-            breakdown.period
+            payPeriod
           }
           aria-selected="true"
           aria-controls=@{
-            "tab-content-" + breakdown.period
+            "tab-content-" + payPeriod
           }>
 
-            <a id="label-@{breakdown.period}" class="tabs-nav__tab tabs-nav__tab--active"
+            <a id="label-@{payPeriod}" class="tabs-nav__tab tabs-nav__tab--active"
 
             href="#">@label</a>
           </li>
         }
+
         </ul>
 
         @{
-          if(summary.taxCode.contains('K')) result_detail_over_rate(quickCalcAggregateInput, taxYear)
-          else result_detail(quickCalcAggregateInput, taxYear)
+          if(summary.getTaxCode.contains('K')) result_detail_over_rate(summary, taxYear)
+          else result_detail(summary, taxYear)
         }
 
         <div class="form-group">

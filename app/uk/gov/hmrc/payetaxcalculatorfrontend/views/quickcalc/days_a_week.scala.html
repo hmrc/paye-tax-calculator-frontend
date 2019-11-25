@@ -22,6 +22,7 @@
 @import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.Days
 
 @import uk.gov.hmrc.payetaxcalculatorfrontend.config.AppConfig
+@import uk.gov.hmrc.payetaxcalculatorfrontend.views.html.quickcalc.beta_header
 @(valueInPence:Int, daysForm: Form[Days], url: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 @main_template(title = Messages("quick_calc.salary.question.days_a_week"), mainClass = Some("full-width")) {
 
@@ -61,13 +62,14 @@
               <span id="how-many-days-a-week-inline-error" class="error-notification">
               @{daysForm("howManyAWeek").errors.head.message}
               </span>
-          } else {<label>}
+          } else {
+              <label>
+              }
 
           <span class="visuallyhidden">Days</span>
           <input style= "display:inline " type="number" id="how-many-days-a-week" name="howManyAWeek" maxlength="1" size="1" />
 
           </label>
-
         </fieldset>
 
         <input type="hidden" id="num-days" name="amount" value=@valueInPence>

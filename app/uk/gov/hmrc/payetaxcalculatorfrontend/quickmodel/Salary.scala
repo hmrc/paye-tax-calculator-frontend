@@ -69,7 +69,7 @@ object Salary {
   )
 
   def salaryInPence(value: BigDecimal): Int =
-    (value * 100).toInt
+    (value).toInt
 }
 
 object Days {

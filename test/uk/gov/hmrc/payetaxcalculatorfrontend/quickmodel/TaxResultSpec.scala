@@ -20,6 +20,7 @@ import org.scalatest.{Tag, TestData}
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
+import uk.gov.hmrc.calculator.model.{CalculatorResponsePayPeriod, PayPeriod}
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.TaxResult._
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -49,11 +50,11 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
   "Extracting OverStatePensionAge answer from user response" should {
 
     "return true if the response is user is over state pension state_pension" in {
-      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(true)), None, None)) shouldBe "true"
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(true)), None, None)) shouldBe true
     }
 
     "return false if the response is user is not over state pension state_pension" in {
-      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(false)), None, None)) shouldBe "false"
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(OverStatePensionAge(false)), None, None)) shouldBe false
     }
 
     """return an error with message with "No answer has been provided for the question: Are you over state pension state_pension?" if no response""" in {
@@ -66,24 +67,24 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
 
   "Extracting Salary from user response" should {
 
-    "return if response provided is the Yearly Salary: £20000 in pence" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(20000, "a year", None)), None, None, None, None)) shouldBe 2000000
+    "return if response provided is the Yearly Salary: £20000" in {
+      extractSalary(QuickCalcAggregateInput(Some(Salary(20000, "a year", None)), None, None, None, None)) shouldBe 20000
     }
 
-    "return if response provided is the Monthly Salary: £2000 in pence" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(2000, "a month", None)), None, None, None, None)) shouldBe 200000
+    "return if response provided is the Monthly Salary: £2000" in {
+      extractSalary(QuickCalcAggregateInput(Some(Salary(2000, "a month", None)), None, None, None, None)) shouldBe 2000
     }
 
-    "return if response provided is the Weekly Salary: £200 in pence" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(200, "a week", None)), None, None, None, None)) shouldBe 20000
+    "return if response provided is the Weekly Salary: £200" in {
+      extractSalary(QuickCalcAggregateInput(Some(Salary(200, "a week", None)), None, None, None, None)) shouldBe 200
     }
 
-    "return if response provided is the Daily Salary: £20 in pence" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(20, "a day", None)), None, None, None, None)) shouldBe 2000
+    "return if response provided is the Daily Salary: £20" in {
+      extractSalary(QuickCalcAggregateInput(Some(Salary(20, "a day", None)), None, None, None, None)) shouldBe 20
     }
 
     "return if response provided is the Hourly Salary: £2 in pence" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(2, "an hour", None)), None, None, None, None)) shouldBe 200
+      extractSalary(QuickCalcAggregateInput(Some(Salary(2, "an hour", None)), None, None, None, None)) shouldBe 2
     }
 
     """return an error with message "No Salary has been provided" if no response""" in {
@@ -97,38 +98,44 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
   "Extracting Pay Period from user response" should {
 
     "return  if response provided is Yearly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "a year", None)), None, None, None, None)) shouldBe "annual"
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "a year", None)), None, None, None, None)) shouldBe PayPeriod.YEARLY
     }
 
     "return if response provided is Monthly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "a month", None)), None, None, None, None)) shouldBe "monthly"
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "a month", None)), None, None, None, None)) shouldBe PayPeriod.MONTHLY
     }
 
     "return if response provided is Weekly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "a week", None)), None, None, None, None)) shouldBe "weekly"
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "a week", None)), None, None, None, None)) shouldBe PayPeriod.WEEKLY
     }
 
     "return empty string if response is Daily" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "a day", None)), None, None, None, None)) shouldBe ""
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "a day", None)), None, None, None, None)) shouldBe PayPeriod.DAILY
     }
 
     "return empty string if response is Hourly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "an hour", None)), None, None, None, None)) shouldBe ""
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "an hour", None)), None, None, None, None)) shouldBe PayPeriod.HOURLY
     }
   }
 
   "Extracting Hours from user response" should {
 
     "return if response is hours in Daily" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(40, "a day", None)), None, None, None, None)) shouldBe -1
+      extractHours(QuickCalcAggregateInput(Some(Salary(40, "a day", None)), None, None, None, None)) shouldBe Right(
+        null
+      )
     }
 
     "return if response is hours in Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(20, "an hour", None)), None, None, None, None)) shouldBe -1
+      extractHours(QuickCalcAggregateInput(Some(Salary(20, "an hour", None)), None, None, None, None)) shouldBe Right(
+        null
+      )
     }
 
     "return if response is not Daily or Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(-1, "an hour", None)), None, None, None, None)) shouldBe -1
+      extractHours(QuickCalcAggregateInput(Some(Salary(-1, "an hour", None)), None, None, None, None)) shouldBe Right(
+        null
+      )
     }
   }
 
@@ -136,31 +143,60 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
 
     "return the maxTaxAmount if the tax is over 50% of the gross income" in {
       val expectedTaxAmount = 10400.00
+      val response =
+        new CalculatorResponsePayPeriod(
+          PayPeriod.YEARLY,
+          expectedTaxAmount,
+          1000.0,
+          500.0,
+          100000.0,
+          null,
+          12509.0,
+          null
+        )
 
-      incomeTax(maxTaxAmount = expectedTaxAmount, stdIncomeTax = 41619.60) shouldBe expectedTaxAmount
+      incomeTax(response) shouldBe expectedTaxAmount
     }
 
     "return the standard TaxAmount if the tax is not over 50% of the gross income" in {
       val expectedTaxAmount = 4359.8
+      val response =
+        new CalculatorResponsePayPeriod(
+          PayPeriod.YEARLY,
+          expectedTaxAmount,
+          1000.0,
+          500.0,
+          50000.0,
+          null,
+          12509.0,
+          null
+        )
 
-      incomeTax(maxTaxAmount = 10400.00, stdIncomeTax = 4359.80) shouldBe expectedTaxAmount
+      incomeTax(response) shouldBe expectedTaxAmount
     }
   }
 
   "Check isOverMaxRate or not" should {
     "return true if income tax is more than 50% of the total (gross) pay entered" in {
-      isOverMaxRate(grossPay = 10000, maxTaxRate = 50, taxablePay = 10000) shouldBe true
+      val response =
+        new CalculatorResponsePayPeriod(PayPeriod.YEARLY, 10000.0, 1000.0, 500.0, 10000.0, null, 12509.0, null)
+
+      isOverMaxRate(response) shouldBe true
     }
 
     "return false if income tax is not more than 50% of the total (gross) pay entered" in {
-      isOverMaxRate(grossPay = 10000, maxTaxRate = 50, taxablePay = 100) shouldBe false
+      val response =
+        new CalculatorResponsePayPeriod(PayPeriod.YEARLY, 4999.0, 1000.0, 500.0, 10000.0, null, 12509.0, null)
+
+      isOverMaxRate(response) shouldBe false
     }
 
   }
 
-  override def newAppForTest(testData: TestData): Application = if (testData.tags.contains("2019")) {
-    GuiceApplicationBuilder().configure("dateOverride" -> "2019-04-06").build()
-  } else {
-    GuiceApplicationBuilder().configure("dateOverride" -> "2018-04-06").build()
-  }
+  override def newAppForTest(testData: TestData): Application =
+    if (testData.tags.contains("2019")) {
+      GuiceApplicationBuilder().configure("dateOverride" -> "2019-04-06").build()
+    } else {
+      GuiceApplicationBuilder().configure("dateOverride" -> "2018-04-06").build()
+    }
 }

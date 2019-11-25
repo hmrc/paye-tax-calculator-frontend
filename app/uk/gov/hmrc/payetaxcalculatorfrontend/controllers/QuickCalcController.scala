@@ -89,8 +89,7 @@ class QuickCalcController @Inject() (
       implicit request =>
         aggregate =>
           if (aggregate.allQuestionsAnswered) {
-            val date = UserTaxCode.taxConfig(aggregate.savedTaxCode.get.taxCode.get)
-            Ok(result(aggregate, omitScotland(date.taxYear)))
+            Ok(result(TaxResult.taxCalculation(aggregate), UserTaxCode.startOfCurrentTaxYear))
           } else redirectToNotYetDonePage(aggregate)
     )
 
@@ -163,7 +162,7 @@ class QuickCalcController @Inject() (
               newAggregate.copy(
                 savedSalary =
                   Some(Salary(salaryAmount.amount, salary.period, oldAggregate.savedSalary.get.howManyAWeek)),
-                savedPeriod = Some(Detail((salaryAmount.amount * 100).toInt, detail.howManyAWeek, detail.period, url))
+                savedPeriod = Some(Detail((salaryAmount.amount).toInt, detail.howManyAWeek, detail.period, url))
               )
             } else newAggregate.copy(savedPeriod = None)
           case _ => newAggregate.copy(savedPeriod = None)
@@ -188,7 +187,7 @@ class QuickCalcController @Inject() (
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     val url   = routes.QuickCalcController.showSalaryForm().url
-    val value = BigDecimal(valueInPence) / 100
+    val value = BigDecimal(valueInPence)
     salaryInHoursForm
       .bindFromRequest()
       .fold(
@@ -255,7 +254,7 @@ class QuickCalcController @Inject() (
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     val url   = routes.QuickCalcController.showSalaryForm().url
-    val value = BigDecimal(valueInPence) / 100
+    val value = BigDecimal(valueInPence)
     salaryInDaysForm
       .bindFromRequest()
       .fold(
