@@ -121,21 +121,15 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
   "Extracting Hours from user response" should {
 
     "return if response is hours in Daily" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(40, "a day", None)), None, None, None, None)) shouldBe Right(
-        null
-      )
+      extractHours(QuickCalcAggregateInput(Some(Salary(40, "a day", None)), None, None, None, None)) shouldBe None
     }
 
     "return if response is hours in Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(20, "an hour", None)), None, None, None, None)) shouldBe Right(
-        null
-      )
+      extractHours(QuickCalcAggregateInput(Some(Salary(20, "an hour", None)), None, None, None, None)) shouldBe None
     }
 
     "return if response is not Daily or Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(-1, "an hour", None)), None, None, None, None)) shouldBe Right(
-        null
-      )
+      extractHours(QuickCalcAggregateInput(Some(Salary(-1, "an hour", None)), None, None, None, None)) shouldBe None
     }
   }
 
