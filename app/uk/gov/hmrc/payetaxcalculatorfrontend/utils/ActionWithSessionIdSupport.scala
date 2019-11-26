@@ -35,8 +35,6 @@ import scala.concurrent.{ExecutionContext, Future}
 object ActionWithSessionIdSupport {
   def maybeSessionId(rh: RequestHeader): Option[String] =
     rh.session.get(SessionKeys.sessionId).orElse(rh.headers.get(HeaderNames.xSessionId))
-
-  def hasSessionId(rh: RequestHeader): Boolean = maybeSessionId(rh).isDefined
 }
 
 trait ActionWithSessionId {

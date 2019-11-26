@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcControllerSpec
 
-
 import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController
 import uk.gov.hmrc.payetaxcalculatorfrontend.setup.BaseSpec
@@ -26,7 +25,8 @@ class ShowSalarySpec extends BaseSpec {
 
   "Show Salary Form" should {
     "return 200, with current list of aggregate data containing Tax Code: 1150L, \"YES\" for is not Over65, 20000 a Year for Salary" in {
-      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents())
+      val controller =
+        new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents())
       val action = controller.showSalaryForm()
       val result = action.apply(request)
       val status = result.header.status
@@ -36,9 +36,9 @@ class ShowSalarySpec extends BaseSpec {
 
     "return 200, with empty list of aggregate data" in {
       val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
-      val action = controller.showSalaryForm()
-      val result = action.apply(request)
-      val status = result.header.status
+      val action     = controller.showSalaryForm()
+      val result     = action.apply(request)
+      val status     = result.header.status
 
       status shouldBe 200
     }
