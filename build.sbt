@@ -9,6 +9,8 @@ import uk.gov.hmrc._
 import DefaultBuildSettings._
 import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
+import uk.gov.hmrc.versioning.SbtGitVersioning
+import uk.gov.hmrc.SbtArtifactory
 
 val appName: String = "paye-tax-calculator-frontend"
 
@@ -23,15 +25,20 @@ lazy val scoverageSettings = {
 }
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(
-    Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory): _*
-  )
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
   .settings(PlayKeys.playDefaultPort := 7788)
   .settings(scoverageSettings: _*)
   .settings(scalaSettings: _*)
   .settings(majorVersion := 0)
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
+  .settings(
+    resolvers ++= Seq(
+      Resolver.bintrayRepo("hmrc", "releases"),
+      Resolver.bintrayRepo("hmrc", "mobile-releases"),
+      Resolver.jcenterRepo
+    )
+  )
   .settings(
     scalaVersion := "2.11.12",
     libraryDependencies ++= AppDependencies(),
@@ -46,15 +53,8 @@ lazy val microservice = Project(appName, file("."))
     addTestReportOption(IntegrationTest, "int-test-reports"),
     parallelExecution in IntegrationTest := false
   )
-  .settings(
-    resolvers ++= Seq(
-      Resolver.bintrayRepo("hmrc", "releases"),
-      Resolver.bintrayRepo("hmrc", "mobile-releases"),
-      Resolver.jcenterRepo
-    )
-  )
 
 def oneForkedJvmPerTest(tests: Seq[TestDefinition]) =
   tests map { test =>
-    new Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
+    Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
   }
