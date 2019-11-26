@@ -27,9 +27,9 @@ class WelshLanguageController @Inject() (
     extends BackendBaseController
     with I18nSupport {
 
-  val englishLang = Lang("en")
-  val welshLang   = Lang("cy")
-  val languageMap = Map("english" -> englishLang, "welsh" -> welshLang)
+//  val englishLang = Lang("en")
+//  val welshLang   = Lang("cy")
+//  val languageMap = Map("english" -> englishLang, "welsh" -> welshLang)
   //val rootUrl = routes.IndexController.index().url
 
 //  def switchToLanguage(language: String) = Action { implicit request =>
