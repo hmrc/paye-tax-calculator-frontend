@@ -23,8 +23,8 @@ import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.libs.json._
-import uk.gov.hmrc.calculator.Validator
 import uk.gov.hmrc.calculator.model.{TaxCodeValidationResponse, ValidationError}
+import uk.gov.hmrc.calculator.utils.validation.TaxCodeValidator
 import uk.gov.hmrc.payetaxcalculatorfrontend.quickmodel.CustomFormatters._
 import uk.gov.hmrc.payetaxcalculatorfrontend.utils.LocalDateProvider
 
@@ -81,7 +81,7 @@ object UserTaxCode {
           .filter(_.nonEmpty)
           .map(_.toUpperCase()) match {
           case Some(taxCode) =>
-            if (Validator.INSTANCE.isValidTaxCode(taxCode).isValid)
+            if (TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode).isValid)
               Right(Some(taxCode.replaceAll("\\s", "")))
             else {
               Left(wrongTaxCode(taxCode))
@@ -100,7 +100,7 @@ object UserTaxCode {
     if (currentTaxYear == 2019) Default2019UkTaxCode else Default2018UkTaxCode
 
   def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
-    val res = Validator.INSTANCE.isValidTaxCode(taxCode)
+    val res = TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode)
 
     (res.isValid, res.getErrorType) match {
       case (false, ValidationError.WrongTaxCodeNumber) => Seq(FormError(TaxCode, messages(WrongTaxCodeNumber)))

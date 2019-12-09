@@ -20,7 +20,7 @@ import cats.syntax.either._
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.i18n.Messages
-import uk.gov.hmrc.calculator.Validator
+import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, WageValidator}
 
 object CustomFormatters {
 
@@ -95,9 +95,9 @@ object CustomFormatters {
         case s if s.nonEmpty =>
           try {
             val hours: Double = s.toDouble
-            if (!Validator.INSTANCE.isAboveMinimumHoursPerWeek(hours)) {
+            if (!HoursDaysValidator.INSTANCE.isAboveMinimumHoursPerWeek(hours)) {
               Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.less_than_one"))))
-            } else if (!Validator.INSTANCE.isBelowMaximumHoursPerWeek(hours)) {
+            } else if (!HoursDaysValidator.INSTANCE.isBelowMaximumHoursPerWeek(hours)) {
               Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.more_than_168"))))
             } else {
               Right(hours)
@@ -125,9 +125,9 @@ object CustomFormatters {
         case Some(s) =>
           try {
             val salary = BigDecimal(s).setScale(2)
-            if (!Validator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
+            if (!WageValidator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
               Left("quick_calc.salary.question.error.minimum_salary_input")
-            } else if (!Validator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
+            } else if (!WageValidator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
               Left("quick_calc.salary.question.error.maximum_salary_input")
             } else {
               Right(salary)
@@ -158,9 +158,9 @@ object CustomFormatters {
       case s if s.nonEmpty =>
         try {
           val salary = BigDecimal(s).setScale(2)
-          if (!Validator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
+          if (!WageValidator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
             Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_hourly_salary_input"))))
-          } else if (!Validator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
+          } else if (!WageValidator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
             Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
           } else {
             Right(salary)
@@ -182,9 +182,9 @@ object CustomFormatters {
       case s if s.nonEmpty =>
         try {
           val salary = BigDecimal(s).setScale(2)
-          if (!Validator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
+          if (!WageValidator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
             Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.minimum_daily_salary_input"))))
-          } else if (!Validator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
+          } else if (!WageValidator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
             Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.maximum_salary_input"))))
           } else {
             Right(salary)
