@@ -45,6 +45,12 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
 
       extractTaxCode(input) shouldBe "1250L"
     }
+
+    "return the default UK tax code for 2020-21 if the user does not provide one" taggedAs Tag("2020") in {
+      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
+
+      extractTaxCode(input) shouldBe "1250L"
+    }
   }
 
   "Extracting OverStatePensionAge answer from user response" should {
@@ -188,7 +194,9 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
   }
 
   override def newAppForTest(testData: TestData): Application =
-    if (testData.tags.contains("2019")) {
+    if (testData.tags.contains("2020")) {
+      GuiceApplicationBuilder().configure("dateOverride" -> "2020-04-06").build()
+    } else if (testData.tags.contains("2019")) {
       GuiceApplicationBuilder().configure("dateOverride" -> "2019-04-06").build()
     } else {
       GuiceApplicationBuilder().configure("dateOverride" -> "2018-04-06").build()

@@ -4,18 +4,18 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay26Version            = "1.1.0"
+  private val bootstrapPlay26Version            = "1.5.0"
   private val playPartialsVersion               = "6.9.0-play-26"
   private val playConfigVersion                 = "7.5.0"
-  private val logbackJsonLoggerVersion          = "4.4.0"
-  private val govukTemplateVersion              = "5.26.0-play-26"
+  private val logbackJsonLoggerVersion          = "4.6.0"
+  private val govukTemplateVersion              = "5.52.0-play-26"
   private val playHealthVersion                 = "3.14.0-play-26"
-  private val playUiVersion                     = "7.33.0-play-26"
+  private val playUiVersion                     = "7.33.0-play-26" //REvisit
   private val httpCachingClientVersion          = "9.0.0-play-26"
-  private val playConditionalFormMappingVersion = "0.2.0"
-  private val urlBuilderVersion                 = "2.1.0"
+  private val playConditionalFormMappingVersion = "0.2.0" //Revisit
+  private val urlBuilderVersion                 = "3.3.0-play-26"
   private val taxYearVersion                    = "0.6.0"
-  private val taxKalcVersion                    = "0.7.5"
+  private val taxKalcVersion                    = "0.8.0"
   private val catsCoreVersion                   = "1.2.0"
 
   val compile: Seq[ModuleID] = Seq(

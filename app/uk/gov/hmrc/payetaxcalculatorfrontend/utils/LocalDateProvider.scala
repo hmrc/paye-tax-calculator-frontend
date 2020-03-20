@@ -23,7 +23,8 @@ import play.api.Play.current
 // ideally a Clock would be injected where LocalDate is used, but that would require
 // refitting the entire project to use DI
 object LocalDateProvider {
-  def now: LocalDate = current.configuration.getString("dateOverride") match {
+
+  def now: LocalDate = current.configuration.getOptional[String]("dateOverride") match {
     case Some(s) => LocalDate.parse(s)
     case None    => LocalDate.now
   }

@@ -50,7 +50,7 @@ object UserTaxCode {
   val WrongTaxCodeEmpty                       = "quick_calc.about_tax_code_empty_error"
 
   def defaultScottishTaxCode: String =
-    if (currentTaxYear == 2019) Default2019ScottishTaxCode else Default2018ScottishTaxCode
+    if (currentTaxYear == 2019 || currentTaxYear == 2020) Default2019ScottishTaxCode else Default2018ScottishTaxCode
 
   private def currentTaxYear: Int = {
     val now = LocalDateProvider.now
@@ -97,7 +97,7 @@ object UserTaxCode {
   }
 
   def defaultUkTaxCode: String =
-    if (currentTaxYear == 2019) Default2019UkTaxCode else Default2018UkTaxCode
+    if (currentTaxYear == 2019 || currentTaxYear == 2020) Default2019UkTaxCode else Default2018UkTaxCode
 
   def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
     val res = TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode)
