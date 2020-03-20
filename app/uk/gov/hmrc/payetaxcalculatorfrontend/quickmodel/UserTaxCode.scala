@@ -35,22 +35,22 @@ case class UserTaxCode(
 object UserTaxCode {
 
   implicit val format: OFormat[UserTaxCode] = Json.format[UserTaxCode]
-  private lazy val Default2018ScottishTaxCode = "S1185L"
-  private lazy val Default2019ScottishTaxCode = "S1250L"
-  private lazy val Default2018UkTaxCode       = "1185L"
-  private lazy val Default2019UkTaxCode       = "1250L"
-  private lazy val firstDayOfTaxYear          = MonthDay.of(4, 6)
-  val HasTaxCode                              = "hasTaxCode"
-  val TaxCode                                 = "taxCode"
-  val suffixKeys                              = List('L', 'M', 'N', 'T')
-  val WrongTaxCodeSuffixKey                   = "quick_calc.about_tax_code.wrong_tax_code_suffix"
-  val WrongTaxCodeKey                         = "quick_calc.about_tax_code.wrong_tax_code"
-  val WrongTaxCodeNumber                      = "quick_calc.about_tax_code.wrong_tax_code_number"
-  val WrongTaxCodePrefixKey                   = "quick_calc.about_tax_code.wrong_tax_code_prefix"
-  val WrongTaxCodeEmpty                       = "quick_calc.about_tax_code_empty_error"
+  private lazy val Default2018ScottishTaxCode     = "S1185L"
+  private lazy val Default20192020ScottishTaxCode = "S1250L"
+  private lazy val Default2018UkTaxCode           = "1185L"
+  private lazy val Default20192020UkTaxCode       = "1250L"
+  private lazy val firstDayOfTaxYear              = MonthDay.of(4, 6)
+  val HasTaxCode                                  = "hasTaxCode"
+  val TaxCode                                     = "taxCode"
+  val suffixKeys                                  = List('L', 'M', 'N', 'T')
+  val WrongTaxCodeSuffixKey                       = "quick_calc.about_tax_code.wrong_tax_code_suffix"
+  val WrongTaxCodeKey                             = "quick_calc.about_tax_code.wrong_tax_code"
+  val WrongTaxCodeNumber                          = "quick_calc.about_tax_code.wrong_tax_code_number"
+  val WrongTaxCodePrefixKey                       = "quick_calc.about_tax_code.wrong_tax_code_prefix"
+  val WrongTaxCodeEmpty                           = "quick_calc.about_tax_code_empty_error"
 
   def defaultScottishTaxCode: String =
-    if (currentTaxYear == 2019 || currentTaxYear == 2020) Default2019ScottishTaxCode else Default2018ScottishTaxCode
+    if (currentTaxYear == 2019 || currentTaxYear == 2020) Default20192020ScottishTaxCode else Default2018ScottishTaxCode
 
   private def currentTaxYear: Int = {
     val now = LocalDateProvider.now
@@ -97,7 +97,7 @@ object UserTaxCode {
   }
 
   def defaultUkTaxCode: String =
-    if (currentTaxYear == 2019 || currentTaxYear == 2020) Default2019UkTaxCode else Default2018UkTaxCode
+    if (currentTaxYear == 2019 || currentTaxYear == 2020) Default20192020UkTaxCode else Default2018UkTaxCode
 
   def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
     val res = TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode)
