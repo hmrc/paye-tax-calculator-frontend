@@ -10,9 +10,9 @@ object AppDependencies {
   private val logbackJsonLoggerVersion          = "4.6.0"
   private val govukTemplateVersion              = "5.52.0-play-26"
   private val playHealthVersion                 = "3.14.0-play-26"
-  private val playUiVersion                     = "7.33.0-play-26" //REvisit
+  private val playUiVersion                     = "7.33.0-play-26"
   private val httpCachingClientVersion          = "9.0.0-play-26"
-  private val playConditionalFormMappingVersion = "0.2.0" //Revisit
+  private val playConditionalFormMappingVersion = "0.2.0"
   private val urlBuilderVersion                 = "3.3.0-play-26"
   private val taxYearVersion                    = "0.6.0"
   private val taxKalcVersion                    = "0.8.0"
