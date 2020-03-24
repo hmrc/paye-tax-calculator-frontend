@@ -52,7 +52,7 @@ object UserTaxCode {
   def defaultScottishTaxCode: String =
     if (currentTaxYear == 2019 || currentTaxYear == 2020) Default20192020ScottishTaxCode else Default2018ScottishTaxCode
 
-  private def currentTaxYear: Int = {
+  def currentTaxYear: Int = {
     val now = LocalDateProvider.now
 
     if (now.isBefore(firstDayOfTaxYear.atYear(now.getYear))) {

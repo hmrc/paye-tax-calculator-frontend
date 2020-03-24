@@ -57,7 +57,8 @@ object TaxResult {
       extractHours(quickCalcAggregateInput) match {
         case Some(number) => number
         case None         => null
-      }
+      },
+      UserTaxCode.currentTaxYear
     ).run()
 
   private[quickmodel] def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput): String =
