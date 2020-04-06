@@ -46,7 +46,15 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
       extractTaxCode(input) shouldBe "1250L"
     }
 
-    "return the default UK tax code for 2020-21 if the user does not provide one" taggedAs Tag("2020") in {
+    "return the default UK tax code for 2020-21 if the user does not provide one" taggedAs Tag("2020_1") in {
+      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
+
+      extractTaxCode(input) shouldBe "1250L"
+    }
+
+    "return the default UK tax code for 2020-21 (if in May onwards as this has new bands for scotland if the user does not provide one" taggedAs Tag(
+      "2020_2"
+    ) in {
       val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
 
       extractTaxCode(input) shouldBe "1250L"
@@ -194,7 +202,9 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
   }
 
   override def newAppForTest(testData: TestData): Application =
-    if (testData.tags.contains("2020")) {
+    if (testData.tags.contains("2020_2")) {
+      GuiceApplicationBuilder().configure("dateOverride" -> "2020-05-12").build()
+    } else if (testData.tags.contains("2020_1")) {
       GuiceApplicationBuilder().configure("dateOverride" -> "2020-04-06").build()
     } else if (testData.tags.contains("2019")) {
       GuiceApplicationBuilder().configure("dateOverride" -> "2019-04-06").build()
