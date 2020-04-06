@@ -293,3 +293,89 @@ class SubmitScottishRate2020Spec extends BaseSpec {
     lazy val emptyCacheMap: Future[CacheMap] = Future.successful(CacheMap("", Map.empty))
   }
 }
+
+class SubmitScottishRate2020MayOnwradsSpec extends BaseSpec {
+  "Submitting the Scottish rate form 2020 May 11th Onwards" should {
+    "set the user's tax code to the 2020-21 default UK tax code " +
+    "if the user does not pay the Scottish rate" taggedAs Tag("2020") in new Test {
+
+      val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(
+        savedScottishRate = Some(ScottishRate(false)),
+        savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
+      )
+
+      (mockCache
+        .save(_: QuickCalcAggregateInput)(_: HeaderCarrier))
+        .expects(expectedAggregate, *)
+        .once()
+        .returning(emptyCacheMap)
+
+      val req = fakeRequest.withFormUrlEncodedBody("scottishRate" -> "false")
+      val res = testController.submitScottishRateForm()(req)
+      status(res) shouldBe SEE_OTHER
+    }
+
+    "return 400 Bad Request if the user does not select whether they pay the Scottish rate or not" in new Test {
+      val res = testController.submitScottishRateForm()(fakeRequest)
+      status(res) shouldBe BAD_REQUEST
+
+      val html     = Jsoup.parse(contentAsString(res))
+      val errorDiv = html.select("div#scottish-rate-inline-error")
+      errorDiv should not be 'isEmpty
+    }
+
+    "return 303 See Other and redirect to the Check Your Answers page if they submit valid form data" in new Test {
+      (mockCache
+        .save(_: QuickCalcAggregateInput)(_: HeaderCarrier))
+        .expects(*, *)
+        .once()
+        .returning(emptyCacheMap)
+
+      val res = testController.submitScottishRateForm()(fakeRequest.withFormUrlEncodedBody("scottishRate" -> "true"))
+      status(res) shouldBe SEE_OTHER
+
+      redirectLocation(res) shouldBe Some(routes.QuickCalcController.summary().url)
+    }
+  }
+  "set the user's tax code to the 2020-21 default Scottish tax code " +
+  "if the user pays the Scottish rate" taggedAs Tag("2020") in new Test {
+
+    val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(
+      savedScottishRate = Some(ScottishRate(true)),
+      savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
+    )
+
+    (mockCache
+      .save(_: QuickCalcAggregateInput)(_: HeaderCarrier))
+      .expects(expectedAggregate, *)
+      .once()
+      .returning(emptyCacheMap)
+
+    val req = fakeRequest.withFormUrlEncodedBody("scottishRate" -> "true")
+    val res = testController.submitScottishRateForm()(req)
+    status(res) shouldBe SEE_OTHER
+  }
+
+  override implicit lazy val app: Application = GuiceApplicationBuilder()
+    .configure("dateOverride" -> "2020-05-11")
+    .disable[com.kenshoo.play.metrics.PlayModule]
+    .configure("metrics.enabled" -> false)
+    .build()
+
+  // mock expectations are automatically reset after each test
+  trait Test {
+    (mockCache
+      .fetchAndGetEntry()(_: HeaderCarrier))
+      .expects(*)
+      .anyNumberOfTimes()
+      .returning(Future.successful(cacheCompleteYearly))
+
+    lazy val mockCache: QuickCalcCache = mock[QuickCalcCache]
+
+    lazy val testController =
+      new QuickCalcController(app.injector.instanceOf[MessagesApi], mockCache, stubControllerComponents())
+    lazy val fakeRequest = FakeRequest().withHeaders(HeaderNames.xSessionId -> "some-session-id")
+
+    lazy val emptyCacheMap: Future[CacheMap] = Future.successful(CacheMap("", Map.empty))
+  }
+}
