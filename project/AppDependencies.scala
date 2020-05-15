@@ -4,25 +4,24 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay26Version            = "1.5.0"
-  private val playPartialsVersion               = "6.9.0-play-26"
-  private val playConfigVersion                 = "7.5.0"
-  private val logbackJsonLoggerVersion          = "4.6.0"
-  private val govukTemplateVersion              = "5.52.0-play-26"
-  private val playHealthVersion                 = "3.14.0-play-26"
+  private val bootstrapPlay26Version            = "1.7.0"
+  private val playPartialsVersion               = "6.11.0-play-26"
+  private val logbackJsonLoggerVersion          = "4.8.0"
+  private val govukTemplateVersion              = "5.55.0-play-26"
+  private val playHealthVersion                 = "3.15.0-play-26"
   private val playUiVersion                     = "7.33.0-play-26"
   private val httpCachingClientVersion          = "9.0.0-play-26"
-  private val playConditionalFormMappingVersion = "0.2.0"
+  private val playConditionalFormMappingVersion = "1.2.0-play-26"
   private val urlBuilderVersion                 = "3.3.0-play-26"
-  private val taxYearVersion                    = "0.6.0"
+  private val taxYearVersion                    = "1.1.0"
   private val taxKalcVersion                    = "0.9.0"
   private val catsCoreVersion                   = "1.2.0"
+  private val govUkTemplate                   = "0.44.0-play-26"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc"   %% "bootstrap-play-26"             % bootstrapPlay26Version,
     "uk.gov.hmrc"   %% "play-partials"                 % playPartialsVersion,
-    "uk.gov.hmrc"   %% "play-config"                   % playConfigVersion,
     "uk.gov.hmrc"   %% "logback-json-logger"           % logbackJsonLoggerVersion,
     "uk.gov.hmrc"   %% "govuk-template"                % govukTemplateVersion,
     "uk.gov.hmrc"   %% "play-health"                   % playHealthVersion,
@@ -32,7 +31,8 @@ object AppDependencies {
     "uk.gov.hmrc"   %% "url-builder"                   % urlBuilderVersion,
     "uk.gov.hmrc"   %% "tax-year"                      % taxYearVersion,
     "uk.gov.hmrc"   % "tax-kalculator-jvm"             % taxKalcVersion,
-    "org.typelevel" %% "cats-core"                     % catsCoreVersion
+    "org.typelevel" %% "cats-core"                     % catsCoreVersion,
+    "uk.gov.hmrc" %% "play-frontend-govuk" % govUkTemplate
   )
 
   private val hmrcTestVersion                  = "3.9.0-play-26"

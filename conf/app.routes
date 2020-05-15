@@ -1,30 +1,34 @@
 # microservice specific routes
 
-GET         /                             uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.redirectToSalaryForm
+->          /govuk-frontend                                             govuk.Routes
 
-GET         /your-pay                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showSalaryForm
-POST        /your-pay                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitSalaryAmount
+GET         /                      controllers.QuickCalcController.redirectToSalaryForm
 
-GET         /hours/:value                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showHoursAWeek(value: Int, url: String)
-POST        /hours/:value                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitHoursAWeek(value: Int)
+GET         /your-pay              controllers.QuickCalcController.showSalaryForm
+POST        /your-pay              controllers.QuickCalcController.submitSalaryAmount
 
-GET         /days/:value                  uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showDaysAWeek(value: Int, url: String)
-POST        /days/:value                  uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitDaysAWeek(value: Int)
+GET         /hours/:value          controllers.QuickCalcController.showHoursAWeek(value: Int, url: String)
+POST        /hours/:value          controllers.QuickCalcController.submitHoursAWeek(value: Int)
 
-GET         /state-pension                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showStatePensionForm
-POST        /state-pension                uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitStatePensionForm
+GET         /days/:value           controllers.QuickCalcController.showDaysAWeek(value: Int, url: String)
+POST        /days/:value           controllers.QuickCalcController.submitDaysAWeek(value: Int)
 
-GET         /scottish-tax                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showScottishRateForm
-POST        /scottish-tax                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitScottishRateForm
+GET         /state-pension         controllers.QuickCalcController.showStatePensionForm
+POST        /state-pension         controllers.QuickCalcController.submitStatePensionForm
 
-GET         /tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showTaxCodeForm
-POST        /tax-code                     uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.submitTaxCodeForm
+GET         /scottish-tax          controllers.QuickCalcController.showScottishRateForm
+POST        /scottish-tax          controllers.QuickCalcController.submitScottishRateForm
 
-GET         /your-answers                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.summary
+GET         /tax-code              controllers.QuickCalcController.showTaxCodeForm
+POST        /tax-code              controllers.QuickCalcController.submitTaxCodeForm
 
-GET         /your-results                 uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.showResult
+GET         /your-answers          controllers.QuickCalcController.summary
 
-GET         /restart                      uk.gov.hmrc.payetaxcalculatorfrontend.controllers.QuickCalcController.restartQuickCalc
+GET         /your-results          controllers.QuickCalcController.showResult
+
+GET         /restart               controllers.QuickCalcController.restartQuickCalc
+
+GET         /language/:lang        controllers.LanguageSwitchController.switchToLanguage(lang: Language)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                                   controllers.Assets.at(path="/public", file)
+GET         /assets/*file          controllers.Assets.at(path="/public", file)
