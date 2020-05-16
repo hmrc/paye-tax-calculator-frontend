@@ -192,3 +192,38 @@ quick_calc.about_k_code_a = Your adjusted Income Tax is an estimate including an
 quick_calc.about_k_code_b_k = the K in your tax code (opens in a new tab)
 quick_calc.about_k_code_b_sk = the SK in your tax code (opens in a new tab)
 quick_calc.about_k_code_c = The K code is used across the UK and usually indicates you owe tax from a previous year.
+
+
+#######################################################
+## Beta Banner
+#######################################################
+feedback.before = This is a new service - your
+feedback.link = feedback
+feedback.after = will help us to improve it.
+
+#######################################################
+## Languages
+#######################################################
+language.cymraeg = Cymraeg
+language.change.cymraeg = Newid yr iaith i’r Gymraeg
+language.english = English
+language.change.english = Change the language to English
+language.switcher = Language switcher
+
+#######################################################
+## Footer
+#######################################################
+footer.accessibility   = Accessibility Statement
+footer.cookies         = Cookies
+footer.privacy         = Privacy policy
+footer.termsConditions = Terms and conditions
+footer.govukHelp       = Help using GOV.UK
+
+#######################################################
+## error Messages
+#######################################################
+error.browser.title.prefix = Error:
+error.boolean = Please give an answer
+error.number = Please enter a valid number
+error.required = Please enter a value
+error.summary.title = There is a problem

@@ -54,4 +54,11 @@ class AppConfig @Inject()(
   lazy val timeout: Int = config.get[Int]("timeout.timeout")
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
 
+  def feedbackUrl(signedInUser: Boolean) = if (signedInUser) {
+    s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
+  } else {
+    s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  }
+
+
 }

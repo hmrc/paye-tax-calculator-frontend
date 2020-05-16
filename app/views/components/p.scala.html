@@ -14,16 +14,8 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukHeader
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.header.Header
+@this()
 
-@this(govukHeader: GovukHeader)
+@(content: Html)(implicit messages: Messages)
 
-@()(implicit messages: Messages)
-
-@govukHeader(Header(
-    homepageUrl = Some(controllers.routes.QuickCalcController.redirectToSalaryForm().url),
-    serviceName = Some(messages("quick_calc.header.title")),
-    serviceUrl = Some(controllers.routes.QuickCalcController.redirectToSalaryForm.url),
-    containerClasses = Some("govuk-width-container")
-))
+<p class="govuk-body">@content</p>

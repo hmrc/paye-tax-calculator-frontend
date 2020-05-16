@@ -26,6 +26,7 @@ import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, TaxCodeValid
 object CustomFormatters {
 
   def requiredBooleanFormatter(implicit messages: Messages): Formatter[Boolean] = new Formatter[Boolean] {
+
     override def bind(
       key:  String,
       data: Map[String, String]
@@ -43,6 +44,7 @@ object CustomFormatters {
   }
 
   def requiredSalaryPeriodFormatter(implicit messages: Messages): Formatter[String] = new Formatter[String] {
+
     override def bind(
       key:  String,
       data: Map[String, String]
@@ -59,6 +61,7 @@ object CustomFormatters {
   }
 
   def dayValidation(implicit messages: Messages): Formatter[Double] = new Formatter[Double] {
+
     override def bind(
       key:  String,
       data: Map[String, String]
@@ -88,6 +91,7 @@ object CustomFormatters {
   }
 
   def hoursValidation(implicit messages: Messages): Formatter[Double] = new Formatter[Double] {
+
     override def bind(
       key:  String,
       data: Map[String, String]
@@ -118,6 +122,7 @@ object CustomFormatters {
   }
 
   def salaryValidation(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
+
     override def bind(
       key:  String,
       data: Map[String, String]
@@ -150,10 +155,9 @@ object CustomFormatters {
   }
 
   def hourlySalaryValidation(
-    key:  String,
-    data: Map[String, String]
-  )(
-    implicit messages: Messages
+    key:               String,
+    data:              Map[String, String]
+  )(implicit messages: Messages
   ): Either[Seq[FormError], BigDecimal] =
     Right(data.getOrElse(key, "")).right.flatMap {
       case s if s.nonEmpty =>
@@ -174,10 +178,9 @@ object CustomFormatters {
     }
 
   def dailySalaryValidation(
-    key:  String,
-    data: Map[String, String]
-  )(
-    implicit messages: Messages
+    key:               String,
+    data:              Map[String, String]
+  )(implicit messages: Messages
   ) =
     Right(data.getOrElse(key, "")).right.flatMap {
       case s if s.nonEmpty =>
@@ -197,13 +200,12 @@ object CustomFormatters {
       case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_daily_salary_input"))))
     }
 
-
   def taxCodeFormatter(implicit messages: Messages): Formatter[Option[String]] = new Formatter[Option[String]] {
 
     override def bind(
-                       key:  String,
-                       data: Map[String, String]
-                     ): Either[Seq[FormError], Option[String]] =
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], Option[String]] =
       if (data.getOrElse(HasTaxCode, "false") == "true") {
         data
           .get(TaxCode)
@@ -220,9 +222,9 @@ object CustomFormatters {
       } else Right(Some(defaultUkTaxCode))
 
     override def unbind(
-                         key:   String,
-                         value: Option[String]
-                       ): Map[String, String] = Map(key -> value.getOrElse(""))
+      key:   String,
+      value: Option[String]
+    ): Map[String, String] = Map(key -> value.getOrElse(""))
   }
 
 }

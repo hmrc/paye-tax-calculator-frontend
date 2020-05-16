@@ -23,24 +23,23 @@ import config.AppConfig
 import models.Language
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
-class LanguageSwitchController @Inject()(
-                                          appConfig: AppConfig,
-                                          override implicit val messagesApi: MessagesApi,
-                                          val controllerComponents: MessagesControllerComponents
-                                        ) extends FrontendBaseController with I18nSupport {
+class LanguageSwitchController @Inject() (
+  appConfig:                         AppConfig,
+  override implicit val messagesApi: MessagesApi,
+  val controllerComponents:          MessagesControllerComponents)
+    extends FrontendBaseController
+    with I18nSupport {
 
   private def fallbackURL: String = routes.QuickCalcController.redirectToSalaryForm().url
 
-  def switchToLanguage(language: Language): Action[AnyContent] = Action {
-    implicit request =>
+  def switchToLanguage(language: Language): Action[AnyContent] = Action { implicit request =>
+    val languageToUse = if (appConfig.languageTranslationEnabled) {
+      language
+    } else {
+      Language.English
+    }
 
-      val languageToUse = if (appConfig.languageTranslationEnabled) {
-        language
-      } else {
-        Language.English
-      }
-
-      val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
-      Redirect(redirectURL).withLang(languageToUse.lang)
+    val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
+    Redirect(redirectURL).withLang(languageToUse.lang)
   }
 }

@@ -24,11 +24,11 @@ class SalarySerializationSpec extends UnitSpec {
 
   "Salary marshalling" should {
     "work for all salary types" in {
-      jsonOf(Salary(1, "yearly", None)) shouldBe yearlyJson
+      jsonOf(Salary(1, "yearly", None))  shouldBe yearlyJson
       jsonOf(Salary(1, "monthly", None)) shouldBe monthlyJson
-      jsonOf(Salary(1, "weekly", None)) shouldBe weeklyJson
-      jsonOf(Days(1,2)) shouldBe dailyJson
-      jsonOf(Hours(1,2)) shouldBe hourlyJson
+      jsonOf(Salary(1, "weekly", None))  shouldBe weeklyJson
+      jsonOf(Days(1, 2))                 shouldBe dailyJson
+      jsonOf(Hours(1, 2))                shouldBe hourlyJson
     }
   }
 
@@ -42,17 +42,17 @@ class SalarySerializationSpec extends UnitSpec {
     }
   }
 
-  def yearlyJson = s"""{"amount":1,"period":"yearly"}"""
+  def yearlyJson  = s"""{"amount":1,"period":"yearly"}"""
   def monthlyJson = s"""{"amount":1,"period":"monthly"}"""
-  def weeklyJson = s"""{"amount":1,"period":"weekly"}"""
-  def dailyJson = s"""{"amount":1,"howManyAWeek":2}"""
-  def hourlyJson = s"""{"amount":1,"howManyAWeek":2}"""
+  def weeklyJson  = s"""{"amount":1,"period":"weekly"}"""
+  def dailyJson   = s"""{"amount":1,"howManyAWeek":2}"""
+  def hourlyJson  = s"""{"amount":1,"howManyAWeek":2}"""
 
-  def jsonOf[T : Writes](t: T): String = Json.stringify(Json.toJson(t))
+  def jsonOf[T: Writes](t: T): String = Json.stringify(Json.toJson(t))
 
-  def unmarshalAndVerifyType[T](s: String)(implicit m: Manifest[T]) = Json.parse(s).as[Salary] shouldBe a[T]
-  def unmarshalAndVerifyTypeDay[T](s: String)(implicit m: Manifest[T]) = Json.parse(s).as[Days] shouldBe a[T]
-  def unmarshalAndVerifyTypeHour[T](s: String)(implicit m: Manifest[T]) = Json.parse(s).as[Hours] shouldBe a[T]
+  def unmarshalAndVerifyType[T](s:     String)(implicit m: Manifest[T]) = Json.parse(s).as[Salary] shouldBe a[T]
+  def unmarshalAndVerifyTypeDay[T](s:  String)(implicit m: Manifest[T]) = Json.parse(s).as[Days]   shouldBe a[T]
+  def unmarshalAndVerifyTypeHour[T](s: String)(implicit m: Manifest[T]) = Json.parse(s).as[Hours]  shouldBe a[T]
 
   def unmarshal(s: String) = Json.parse(s).as[Salary]
 

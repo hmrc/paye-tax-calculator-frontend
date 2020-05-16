@@ -36,12 +36,12 @@ object AppDependencies {
   )
 
   private val hmrcTestVersion                  = "3.9.0-play-26"
-  private val scalaTestVersion                 = "3.0.5"
+  private val scalaTestVersion                 = "3.0.8"
   private val pegdownVersion                   = "1.6.0"
   private val jsoupVersion                     = "1.11.3"
   private val playTestVersion                  = PlayVersion.current
   private val scalaTestPlusPlayVersion         = "3.1.2"
-  private val scalacheckVersion                = "1.14.0"
+  private val scalacheckVersion                = "1.14.1"
   private val scalamockScalaTestSupportVersion = "3.6.0"
 
   def test(scope: String = "test"): Seq[ModuleID] = Seq(
@@ -52,6 +52,7 @@ object AppDependencies {
     "com.typesafe.play"      %% "play-test"                   % playTestVersion,
     "org.scalatestplus.play" %% "scalatestplus-play"          % scalaTestPlusPlayVersion % scope,
     "org.scalacheck"         %% "scalacheck"                  % scalacheckVersion % scope,
+    "org.mockito"                 %  "mockito-all"          % "1.10.19" % scope,
     "org.scalamock"          %% "scalamock-scalatest-support" % scalamockScalaTestSupportVersion % scope
   )
 

@@ -22,7 +22,7 @@ import setup.{BaseSpec, QuickCalcCacheSetup}
 
 class ShowStatePensionSpec extends BaseSpec {
 
-  val controller = new QuickCalcController(messagesApi, null, stubControllerComponents())
+  val controller = new QuickCalcController(messagesApi, null, stubControllerComponents(), navigator)
 
   "Show State Pension Form" should {
 

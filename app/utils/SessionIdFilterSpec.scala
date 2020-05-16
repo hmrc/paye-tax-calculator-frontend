@@ -15,6 +15,7 @@
  */
 
 package utils
+
 import java.util.UUID
 
 import akka.stream.Materializer
@@ -41,13 +42,16 @@ object SessionIdFilterSpec {
   class Filters @Inject() (sessionId: SessionIdFilter) extends DefaultHttpFilters(sessionId)
 
   class TestSessionIdFilter @Inject() (
-                                        override val mat: Materializer,
-                                        ec: ExecutionContext,
-                                        sessionCookieBaker: SessionCookieBaker
-                                      ) extends SessionIdFilter(mat, UUID.fromString(sessionId), sessionCookieBaker = sessionCookieBaker, ec)
+    override val mat:   Materializer,
+    ec:                 ExecutionContext,
+    sessionCookieBaker: SessionCookieBaker)
+      extends SessionIdFilter(mat, UUID.fromString(sessionId), sessionCookieBaker = sessionCookieBaker, ec)
 }
 
-class SessionIdFilterSpec @Inject() (actionBuilder: DefaultActionBuilder) extends WordSpec with MustMatchers with GuiceOneAppPerSuite {
+class SessionIdFilterSpec @Inject() (actionBuilder: DefaultActionBuilder)
+    extends WordSpec
+    with MustMatchers
+    with GuiceOneAppPerSuite {
 
   import SessionIdFilterSpec._
 
@@ -56,21 +60,21 @@ class SessionIdFilterSpec @Inject() (actionBuilder: DefaultActionBuilder) extend
     import play.api.routing.sird._
 
     Router.from {
-      case GET(p"/test") => actionBuilder {
-        request =>
-          val fromHeader = request.headers.get(HeaderNames.xSessionId).getOrElse("")
+      case GET(p"/test") =>
+        actionBuilder { request =>
+          val fromHeader  = request.headers.get(HeaderNames.xSessionId).getOrElse("")
           val fromSession = request.session.get(SessionKeys.sessionId).getOrElse("")
           Results.Ok(
             Json.obj(
-              "fromHeader" -> fromHeader,
+              "fromHeader"  -> fromHeader,
               "fromSession" -> fromSession
             )
           )
-      }
-      case GET(p"/test2") => actionBuilder {
-        implicit request =>
+        }
+      case GET(p"/test2") =>
+        actionBuilder { implicit request =>
           Results.Ok.addingToSession("foo" -> "bar")
-      }
+        }
     }
   }
 

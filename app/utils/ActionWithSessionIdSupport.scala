@@ -33,6 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
  */
 
 object ActionWithSessionIdSupport {
+
   def maybeSessionId(rh: RequestHeader): Option[String] =
     rh.session.get(SessionKeys.sessionId).orElse(rh.headers.get(HeaderNames.xSessionId))
 }
@@ -70,6 +71,7 @@ trait ActionWithSessionId {
       override protected def executionContext: ExecutionContext = outer.executionContext
     }
 }
+
 case class SessionIdNotFoundException()
     extends Exception(
       "Session id not found in headers or session as expected. Have you enabled SessionIdFilter?"

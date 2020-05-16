@@ -25,64 +25,65 @@ class ShowResultSpec extends BaseSpec {
 
   "Show Result Page" should {
     "return 200, with current list of aggregate which contains all answers from previous questions" in {
-      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents())
-      val action = controller.showResult()
-      val result = action.apply(request)
-      val status = result.header.status
+      val controller =
+        new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents(), navigator)
+      val action       = controller.showResult()
+      val result       = action.apply(request)
+      val status       = result.header.status
       val responseBody = contentAsString(result)
-      val parseHtml = Jsoup.parse(responseBody)
+      val parseHtml    = Jsoup.parse(responseBody)
 
       status shouldBe 200
     }
 
     "return 303, with current list of aggregate data and redirect to Tax Code Form if Tax Code is not provided" in {
-      val controller = new QuickCalcController(messagesApi, cacheReturnStatePensionSalary, stubControllerComponents())
-      val action = controller.showResult()
-      val result = action.apply(request)
-      val status = result.header.status
+      val controller = new QuickCalcController(messagesApi, cacheReturnStatePensionSalary, stubControllerComponents(), navigator)
+      val action     = controller.showResult()
+      val result     = action.apply(request)
+      val status     = result.header.status
 
-      val actualRedirect = redirectLocation(result).get
+      val actualRedirect   = redirectLocation(result).get
       val expectedRedirect = s"${baseURL}tax-code"
 
-      status shouldBe 303
+      status         shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
 
     "return 303, with current list of aggregate data and redirect to Age Form if no answer is provided for \"Are you Over 65?\"" in {
-      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeSalary, stubControllerComponents())
-      val action = controller.showResult()
-      val result = action.apply(request)
-      val status = result.header.status
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeSalary, stubControllerComponents(), navigator)
+      val action     = controller.showResult()
+      val result     = action.apply(request)
+      val status     = result.header.status
 
-      val actualRedirect = redirectLocation(result).get
+      val actualRedirect   = redirectLocation(result).get
       val expectedRedirect = s"${baseURL}state-pension"
-      status shouldBe 303
+      status         shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
 
     "return 303, with current list of aggregate data and redirect to Salary Form if Salary is not provided" in {
-      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePension, stubControllerComponents())
-      val action = controller.showResult()
-      val result = action.apply(request)
-      val status = result.header.status
+      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePension, stubControllerComponents(), navigator)
+      val action     = controller.showResult()
+      val result     = action.apply(request)
+      val status     = result.header.status
 
-      val actualRedirect = redirectLocation(result).get
+      val actualRedirect   = redirectLocation(result).get
       val expectedRedirect = s"${baseURL}your-pay"
 
-      status shouldBe 303
+      status         shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
 
     "return 303, with empty list of aggregate data and redirect to Tax Code Form" in {
-      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
-      val action = controller.showResult()
-      val result = action.apply(request)
-      val status = result.header.status
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
+      val action     = controller.showResult()
+      val result     = action.apply(request)
+      val status     = result.header.status
 
       val expectedRedirect = s"${baseURL}your-pay"
-      val actualRedirect = redirectLocation(result).get
+      val actualRedirect   = redirectLocation(result).get
 
-      status shouldBe 303
+      status         shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
   }

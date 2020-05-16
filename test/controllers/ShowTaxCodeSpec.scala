@@ -21,12 +21,12 @@ import play.api.test.Helpers.stubControllerComponents
 import setup.{BaseSpec, QuickCalcCacheSetup}
 
 class ShowTaxCodeSpec extends BaseSpec {
-  val controller = new QuickCalcController(messagesApi, null, stubControllerComponents())
+  val controller = new QuickCalcController(messagesApi, null, stubControllerComponents(), navigator)
 
   "Show Tax Code Form" should {
     "return 200 and an empty list of aggregate data" in {
 
-      val agg = QuickCalcAggregateInput.newInstance
+      val agg    = QuickCalcAggregateInput.newInstance
       val result = controller.showTacCodeFormTestable(request)(agg)
       val status = result.header.status
 
@@ -34,7 +34,7 @@ class ShowTaxCodeSpec extends BaseSpec {
     }
 
     "return 200 and a list of current aggregate data containing Tax Code: 1150L" in {
-      val agg = QuickCalcCacheSetup.cacheTaxCode.get
+      val agg    = QuickCalcCacheSetup.cacheTaxCode.get
       val result = controller.showTacCodeFormTestable(request)(agg)
       val status = result.header.status
 

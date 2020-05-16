@@ -25,8 +25,9 @@ class ShowDaysSpec extends BaseSpec {
 
   "Show Days Form" should {
     "return 200, with existing list of aggregate" in {
-      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents())
-      val action = controller.showDaysAWeek(0,"")
+      val controller =
+        new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents(), navigator)
+      val action = controller.showDaysAWeek(0, "")
       val result = action.apply(request)
       val status = result.header.status
 
@@ -34,10 +35,10 @@ class ShowDaysSpec extends BaseSpec {
     }
 
     "return 200, with non-existing list of aggregate" in {
-      val controller = new QuickCalcController(messagesApi, null, stubControllerComponents())
-      val agg = QuickCalcAggregateInput.newInstance
-      val result = controller.showDaysAWeekTestable(0,"")(request)(agg)
-      val status = result.header.status
+      val controller = new QuickCalcController(messagesApi, null, stubControllerComponents(), navigator)
+      val agg        = QuickCalcAggregateInput.newInstance
+      val result     = controller.showDaysAWeekTestable(0, "")(request)(agg)
+      val status     = result.header.status
 
       status shouldBe 200
     }

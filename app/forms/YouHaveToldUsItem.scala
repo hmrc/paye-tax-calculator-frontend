@@ -36,6 +36,7 @@ object YouHaveToldUs {
   def apply[A: YouHaveToldUs](a: A): YouHaveToldUsItem = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
   implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
+
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
       val label    = "about_tax_code"
       val idSuffix = "tax-code"
@@ -45,8 +46,8 @@ object YouHaveToldUs {
           s"${Messages("quick_calc.you_have_told_us.about_tax_code.yes")} (${t.taxCode.getOrElse(UserTaxCode.defaultUkTaxCode)})"
         else
           s"${Messages("quick_calc.you_have_told_us.about_tax_code.no")}" +
-            s" ${Messages("quick_calc.you_have_told_us.about_tax_code.default")} " + " (" +
-            s"${t.taxCode.getOrElse(UserTaxCode.defaultUkTaxCode)}" + ")",
+          s" ${Messages("quick_calc.you_have_told_us.about_tax_code.default")} " + " (" +
+          s"${t.taxCode.getOrElse(UserTaxCode.defaultUkTaxCode)}" + ")",
         label,
         url,
         idSuffix
@@ -55,6 +56,7 @@ object YouHaveToldUs {
   }
 
   implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[OverStatePensionAge] {
+
     def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {
       val label    = "over_state_pension_age"
       val idSuffix = "pension-state"
@@ -70,6 +72,7 @@ object YouHaveToldUs {
   }
 
   implicit def scottishIncomeFormat(implicit messages: Messages) = new YouHaveToldUs[ScottishRate] {
+
     def toYouHaveToldUsItem(scottish: ScottishRate): YouHaveToldUsItem = {
       val label    = SOTTISH_RATE
       val idSuffix = SOTTISH_RATE
@@ -85,8 +88,9 @@ object YouHaveToldUs {
   }
 
   implicit def salaryFormat(implicit messages: Messages) = new YouHaveToldUs[Salary] {
+
     def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
-      val url      = routes.QuickCalcController.showSalaryForm().url
+      val url      = routes.SalaryController.showSalaryForm().url
       val idSuffix = "income"
       def asPounds(v: String) = "£" + v
 
@@ -102,6 +106,7 @@ object YouHaveToldUs {
   implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[Detail] {
     val day:  String = messages("quick_calc.salary.daily.label")
     val hour: String = messages("quick_calc.salary.hourly.label")
+
     def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
       val label    = s"${detail.period.replace(" ", "_")}_sub"
       val idSuffix = "salary-period"

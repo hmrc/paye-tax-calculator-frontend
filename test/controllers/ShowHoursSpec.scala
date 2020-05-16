@@ -21,11 +21,11 @@ import play.api.test.Helpers.stubControllerComponents
 import setup.{BaseSpec, QuickCalcCacheSetup}
 
 class ShowHoursSpec extends BaseSpec {
-  val controller = new QuickCalcController(messagesApi, null, stubControllerComponents())
+  val controller = new QuickCalcController(messagesApi, null, stubControllerComponents(), navigator)
 
   "Show Hours Form" should {
     "return 200, with existing list of aggregate" in {
-      val agg = QuickCalcCacheSetup.cacheTaxCodeStatePensionSalary.get
+      val agg    = QuickCalcCacheSetup.cacheTaxCodeStatePensionSalary.get
       val result = controller.showHoursAWeekTestable(0, "")(request)(agg)
       val status = result.header.status
 

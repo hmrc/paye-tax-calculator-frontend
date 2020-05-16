@@ -24,14 +24,14 @@ class RedirectSpec extends BaseSpec {
 
   "Redirect to Salary Form" should {
     "return 303" in {
-      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
-      val result = controller.redirectToSalaryForm().apply(request)
-      val status = result.header.status
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
+      val result     = controller.redirectToSalaryForm().apply(request)
+      val status     = result.header.status
 
-      val actualRedirect = redirectLocation(result).get
+      val actualRedirect   = redirectLocation(result).get
       val expectedRedirect = s"${baseURL}your-pay"
 
-      status shouldBe 303
+      status         shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
   }

@@ -1,7 +1,5 @@
-$govuk-assets-path: "/self-employment-support/assets/lib/govuk-frontend/govuk/assets/";
-//$hmrc-assets-path: "/self-employment-support/assets/lib/hmrc-frontend/hmrc/assets/";
+$govuk-assets-path: "/paye-tax-calculator-frontend/assets/lib/govuk-frontend/govuk/assets/";
 @import "lib/govuk-frontend/govuk/all";
-//@import "lib/hmrc-frontend/hmrc/all";
 
 @import "timeout-dialog";
 @import "language-selection";

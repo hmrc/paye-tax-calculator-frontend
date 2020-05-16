@@ -27,12 +27,15 @@ case class Salary(
   amount:       BigDecimal,
   period:       String,
   howManyAWeek: Option[Double])
+
 case class Hours(
   amount:       Double,
   howManyAWeek: Double)
+
 case class Days(
   amount:       Double,
   howManyAWeek: Double)
+
 case class Detail(
   amount:       Int,
   howManyAWeek: Double,
@@ -70,7 +73,7 @@ object Salary {
   )
 
   def salaryInPence(value: BigDecimal): Int =
-    (value).toInt
+    value.toInt
 }
 
 object Days {

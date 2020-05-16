@@ -27,7 +27,7 @@ class ShowSummarySpec extends BaseSpec {
 
     "return aggregate data of : Earning £20000 Yearly Salary, NOT (Over State Pension), Tax Code: S1150L and IS Scottish Tax Payer" in {
 
-      val controller   = new QuickCalcController(messagesApi, cacheReturnCompleteYearly, stubControllerComponents())
+      val controller   = new QuickCalcController(messagesApi, cacheReturnCompleteYearly, stubControllerComponents(), navigator)
       val action       = controller.summary()
       val result       = action.apply(request)
       val status       = result.header.status
@@ -80,7 +80,7 @@ class ShowSummarySpec extends BaseSpec {
 
     "return aggregate data of : Earning £40 Daily Salary, 5 Days a Week, NOT (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer" in {
 
-      val controller   = new QuickCalcController(messagesApi, cacheReturnCompleteDaily, stubControllerComponents())
+      val controller   = new QuickCalcController(messagesApi, cacheReturnCompleteDaily, stubControllerComponents(), navigator)
       val action       = controller.summary()
       val result       = action.apply(request)
       val status       = result.header.status
@@ -142,7 +142,7 @@ class ShowSummarySpec extends BaseSpec {
 
     "return aggregate data of : Earning £8 Hourly Salary, YES (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer" in {
 
-      val controller   = new QuickCalcController(messagesApi, cacheReturnCompleteHourly, stubControllerComponents())
+      val controller   = new QuickCalcController(messagesApi, cacheReturnCompleteHourly, stubControllerComponents(), navigator)
       val action       = controller.summary()
       val result       = action.apply(request)
       val status       = result.header.status

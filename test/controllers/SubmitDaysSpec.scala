@@ -19,6 +19,7 @@ package controllers
 import forms.{Days, Salary}
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
+import forms.Days
 import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.SessionKeys
@@ -28,109 +29,118 @@ class SubmitDaysSpec extends BaseSpec {
   "Submit Days Form" should {
 
     "return 400 and error message when Empty Days Submission" in {
-      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
       val formSalary = Salary.salaryInDaysForm
-      val action = await(controller.submitDaysAWeek(1))
+      val action     = await(controller.submitDaysAWeek(1))
 
       val days = Map("amount" -> "1", "howManyAWeek" -> "")
 
-      val result = action(request
-        .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
-        .withSession(SessionKeys.sessionId -> "test-salary"))
+      val result = action(
+        request
+          .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
+          .withSession(SessionKeys.sessionId -> "test-salary")
+      )
 
-      val status = result.header.status
+      val status    = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualHeaderMessage = parseHtml.getElementById("how-many-days-a-week-error-link").text()
-      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+      val actualErrorMessage  = parseHtml.getElementsByClass("error-notification").text()
 
-      status shouldBe 400
-      actualErrorMessage shouldBe expectedEmptyDaysErrorMessage
+      status              shouldBe 400
+      actualErrorMessage  shouldBe expectedEmptyDaysErrorMessage
       actualHeaderMessage shouldBe expectedEmptyDaysHeaderMessage
     }
 
     "return 400 and error message when Days in a Week is 0" in {
-      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
       val formSalary = Salary.salaryInDaysForm
-      val action = await(controller.submitDaysAWeek(1))
+      val action     = await(controller.submitDaysAWeek(1))
 
       val days = Map("amount" -> "1", "howManyAWeek" -> "0")
 
-      val result = action(request
-        .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
-        .withSession(SessionKeys.sessionId -> "test-salary"))
+      val result = action(
+        request
+          .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
+          .withSession(SessionKeys.sessionId -> "test-salary")
+      )
 
-      val status = result.header.status
+      val status    = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualHeaderMessage = parseHtml.getElementById("how-many-days-a-week-error-link").text()
-      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+      val actualErrorMessage  = parseHtml.getElementsByClass("error-notification").text()
 
-      status shouldBe 400
-      actualErrorMessage shouldBe expectedMinDaysAWeekErrorMessage
+      status              shouldBe 400
+      actualErrorMessage  shouldBe expectedMinDaysAWeekErrorMessage
       actualHeaderMessage shouldBe expectedInvalidPeriodAmountHeaderMessage
     }
 
-
     "return 400 and error message when Days in a Week is 8" in {
-      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
-      val formSalary = Salary.salaryInDaysForm.fill(Days(1,8))
-      val action = await(controller.submitDaysAWeek(1))
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
+      val formSalary = Salary.salaryInDaysForm.fill(Days(1, 8))
+      val action     = await(controller.submitDaysAWeek(1))
 
-      val result = action(request
-        .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
-        .withSession(SessionKeys.sessionId -> "test-salary"))
+      val result = action(
+        request
+          .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
+          .withSession(SessionKeys.sessionId -> "test-salary")
+      )
 
-      val status = result.header.status
+      val status    = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
       val actualHeaderMessage = parseHtml.getElementById("how-many-days-a-week-error-link").text()
-      val actualErrorMessage = parseHtml.getElementsByClass("error-notification").text()
+      val actualErrorMessage  = parseHtml.getElementsByClass("error-notification").text()
 
-      status shouldBe 400
-      actualErrorMessage shouldBe expectedMaxDaysAWeekErrorMessage
+      status              shouldBe 400
+      actualErrorMessage  shouldBe expectedMaxDaysAWeekErrorMessage
       actualHeaderMessage shouldBe expectedInvalidPeriodAmountHeaderMessage
     }
 
     "return 303, with new Days worked, 1 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
       val formSalary = Salary.salaryInDaysForm
-      val action = await(controller.submitDaysAWeek(1))
+      val action     = await(controller.submitDaysAWeek(1))
 
-      val daily = Map("amount"->"1", "howManyAWeek" -> "1")
+      val daily = Map("amount" -> "1", "howManyAWeek" -> "1")
 
-      val result = action(request
-        .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
-        .withSession(SessionKeys.sessionId -> "test-salary"))
+      val result = action(
+        request
+          .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq: _*)
+          .withSession(SessionKeys.sessionId -> "test-salary")
+      )
 
-      val status = result.header.status
+      val status    = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
       val expectedRedirect = s"${baseURL}state-pension"
-      val actualRedirect = redirectLocation(result).get
+      val actualRedirect   = redirectLocation(result).get
 
-      status shouldBe 303
+      status         shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
 
     "return 303, with new Days worked, 5 and non-existent aggregate" in {
-      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
+      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
       val formSalary = Salary.salaryInDaysForm
-      val action = await(controller.submitDaysAWeek(1))
+      val action     = await(controller.submitDaysAWeek(1))
 
-      val daily = Map("amount"->"1", "howManyAWeek" -> "5")
+      val daily = Map("amount" -> "1", "howManyAWeek" -> "5")
 
-      val result = action(request
-        .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq:_*)
-        .withSession(SessionKeys.sessionId -> "test-salary"))
+      val result = action(
+        request
+          .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq: _*)
+          .withSession(SessionKeys.sessionId -> "test-salary")
+      )
 
-      val status = result.header.status
+      val status    = result.header.status
       val parseHtml = Jsoup.parse(contentAsString(result))
 
       val expectedRedirect = s"${baseURL}state-pension"
-      val actualRedirect = redirectLocation(result).get
+      val actualRedirect   = redirectLocation(result).get
 
-      status shouldBe 303
+      status         shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
   }

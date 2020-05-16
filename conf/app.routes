@@ -4,8 +4,8 @@
 
 GET         /                      controllers.QuickCalcController.redirectToSalaryForm
 
-GET         /your-pay              controllers.QuickCalcController.showSalaryForm
-POST        /your-pay              controllers.QuickCalcController.submitSalaryAmount
+GET         /your-pay              controllers.SalaryController.showSalaryForm
+POST        /your-pay              controllers.SalaryController.submitSalaryAmount
 
 GET         /hours/:value          controllers.QuickCalcController.showHoursAWeek(value: Int, url: String)
 POST        /hours/:value          controllers.QuickCalcController.submitHoursAWeek(value: Int)

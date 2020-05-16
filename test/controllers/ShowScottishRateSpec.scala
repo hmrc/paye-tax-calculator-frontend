@@ -26,22 +26,22 @@ class ShowScottishRateSpec extends BaseSpec with AppendedClues {
 
   "The show Scottish rate page" should {
     "return 200 - OK with existing aggregate data" in {
-      val testController = new QuickCalcController(messagesApi, cacheReturnCompleteYearly, stubControllerComponents())
+      val testController = new QuickCalcController(messagesApi, cacheReturnCompleteYearly, stubControllerComponents(), navigator)
 
       val res = testController.showScottishRateForm()(request)
       status(res) shouldBe OK
 
-      val html = Jsoup.parse(contentAsString(res))
+      val html          = Jsoup.parse(contentAsString(res))
       val noRadioOption = html.select("""input#scottish-rate-no""")
       noRadioOption.hasAttr("checked") shouldBe true withClue """"No" was not pre-selected"""
     }
 
     "return 303 See Other and redirect to the salary page with no aggregate data" in {
-      val testController = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents())
+      val testController = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
 
       val res = testController.showScottishRateForm()(request)
-      status(res) shouldBe SEE_OTHER
-      redirectLocation(res) shouldBe Some(routes.QuickCalcController.showSalaryForm().url)
+      status(res)           shouldBe SEE_OTHER
+      redirectLocation(res) shouldBe Some(routes.SalaryController.showSalaryForm().url)
     }
   }
 }

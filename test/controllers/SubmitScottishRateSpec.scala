@@ -115,7 +115,7 @@ class SubmitScottishRate2018Spec extends BaseSpec {
     lazy val mockCache: QuickCalcCache = mock[QuickCalcCache]
 
     lazy val testController =
-      new QuickCalcController(app.injector.instanceOf[MessagesApi], mockCache, stubControllerComponents())
+      new QuickCalcController(messagesApi, mockCache, stubControllerComponents(), navigator)
     lazy val fakeRequest = FakeRequest().withHeaders(HeaderNames.xSessionId -> "some-session-id")
 
     lazy val emptyCacheMap: Future[CacheMap] = Future.successful(CacheMap("", Map.empty))
@@ -201,7 +201,7 @@ class SubmitScottishRate2019Spec extends BaseSpec {
     lazy val mockCache: QuickCalcCache = mock[QuickCalcCache]
 
     lazy val testController =
-      new QuickCalcController(app.injector.instanceOf[MessagesApi], mockCache, stubControllerComponents())
+      new QuickCalcController(messagesApi, mockCache, stubControllerComponents(), navigator)
     lazy val fakeRequest = FakeRequest().withHeaders(HeaderNames.xSessionId -> "some-session-id")
 
     lazy val emptyCacheMap: Future[CacheMap] = Future.successful(CacheMap("", Map.empty))
@@ -287,7 +287,7 @@ class SubmitScottishRate2020Spec extends BaseSpec {
     lazy val mockCache: QuickCalcCache = mock[QuickCalcCache]
 
     lazy val testController =
-      new QuickCalcController(app.injector.instanceOf[MessagesApi], mockCache, stubControllerComponents())
+      new QuickCalcController(messagesApi, mockCache, stubControllerComponents(), navigator)
     lazy val fakeRequest = FakeRequest().withHeaders(HeaderNames.xSessionId -> "some-session-id")
 
     lazy val emptyCacheMap: Future[CacheMap] = Future.successful(CacheMap("", Map.empty))
@@ -373,7 +373,7 @@ class SubmitScottishRate2020MayOnwradsSpec extends BaseSpec {
     lazy val mockCache: QuickCalcCache = mock[QuickCalcCache]
 
     lazy val testController =
-      new QuickCalcController(app.injector.instanceOf[MessagesApi], mockCache, stubControllerComponents())
+      new QuickCalcController(messagesApi, mockCache, stubControllerComponents(), navigator)
     lazy val fakeRequest = FakeRequest().withHeaders(HeaderNames.xSessionId -> "some-session-id")
 
     lazy val emptyCacheMap: Future[CacheMap] = Future.successful(CacheMap("", Map.empty))
