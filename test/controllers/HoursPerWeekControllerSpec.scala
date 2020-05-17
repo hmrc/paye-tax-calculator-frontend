@@ -50,21 +50,24 @@ import play.api.mvc.{AnyContentAsEmpty, RequestHeader}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.QuickCalcCache
-import setup.QuickCalcCacheSetup.{baseURL, cacheEmpty, cacheTaxCodeStatePensionSalary}
+import setup.QuickCalcCacheSetup._
 import setup.{BaseSpec, QuickCalcCacheSetup}
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import views.html.pages.{HoursAWeekView, SalaryView}
 import play.api.test.CSRFTokenHelper._
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
 
-class HoursPerWeekControllerSpec extends PlaySpec
-  with TryValues
-  with ScalaFutures
-  with IntegrationPatience
-  with MockitoSugar {
+class HoursPerWeekControllerSpec
+    extends PlaySpec
+    with TryValues
+    with ScalaFutures
+    with IntegrationPatience
+    with MockitoSugar {
   val formProvider = new SalaryInHoursFormProvider()
   val form: Form[Hours] = formProvider()
+
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
   def messagesForApp(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
@@ -72,25 +75,23 @@ class HoursPerWeekControllerSpec extends PlaySpec
   "Show Hours Form" should {
 
     "return 200, with existing list of aggregate" in {
-//      val agg    = QuickCalcCacheSetup.cacheTaxCodeStatePensionSalary.get
-//      val result = controller.showHoursAWeekTestable(0, "")(request)(agg)
-//      val status = result.header.status
-//
-//      status shouldBe 200
-
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary)
-
       val application: Application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .overrides(
+          bind[QuickCalcCache].toInstance(mockCache)
+        )
         .build()
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly)
 
       implicit val messages: Messages = messagesForApp(application)
 
+      val amount       = cacheCompleteHourly.value.savedPeriod.value.amount
+
       running(application) {
 
-        val request: RequestHeader = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(0, "").url)
+        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(amount, "").url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -100,142 +101,186 @@ class HoursPerWeekControllerSpec extends PlaySpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(0,form, "")(request, messagesForApp(application)).toString
+        contentAsString(result) mustEqual view(form, amount, "")(request, messagesForApp(application)).toString
+      }
+    }
 
+    "return 303, redirect to start" in {
+      val application: Application = new GuiceApplicationBuilder()
+        .build()
+
+      implicit val messages: Messages = messagesForApp(application)
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(0, "").url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+      }
+
+    }
+  }
+  "Submit Hours Form" should {
+
+    "return 400 and error message when empty Hours Form submission" in {
+
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "howManyAWeek" -> "")
+
+        val request = FakeRequest(POST, routes.HoursPerWeekController.submitHoursAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedEmptyHoursErrorMessage) mustEqual true
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
 
-    "return 200, with non-existing list of aggregate" in {
-//      val agg = QuickCalcAggregateInput.newInstance
+    "return 400 and error message when Hours in a Week is 0" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "howManyAWeek" -> "0")
+
+        val request = FakeRequest(POST, routes.HoursPerWeekController.submitHoursAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedMinHoursAWeekErrorMessage) mustEqual true
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+      }
+    }
 //
-//      val result = controller.showHoursAWeekTestable(0, "")(request)(agg)
-//      val status = result.header.status
-//
-//      status shouldBe 200
+    "return 400 and error message when Hours in a Week is 169" in {
+
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "howManyAWeek" -> "169")
+
+        val request = FakeRequest(POST, routes.HoursPerWeekController.submitHoursAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedMaxHoursAWeekErrorMessage) mustEqual true
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+      }
+    }
+
+    "return 303, with new Hours worked, 40.5 and complete aggregate" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "howManyAWeek" -> "40.5")
+
+        val request = FakeRequest(POST, routes.HoursPerWeekController.submitHoursAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.QuickCalcController.summary().url
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(1)).save(any())(any())
+      }
+    }
+
+    "return 303, with new Hours worked, 40.5 and incomplete aggregate" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheTaxCodeStatePension
+          .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None))
+      )
+      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "howManyAWeek" -> "40.5")
+
+        val request = FakeRequest(POST, routes.HoursPerWeekController.submitHoursAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.QuickCalcController.showStatePensionForm().url
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(1)).save(any())(any())
+      }
     }
   }
-
-
-//  "Submit Hours Form" should {
-//
-//    "return 400 and error message when empty Hours Form submission" in {
-//      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
-//      val formSalary = Salary.salaryInHoursForm
-//      val action     = await(controller.submitHoursAWeek(1))
-//
-//      val days = Map("amount" -> "1", "howManyAWeek" -> "")
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val actualHeaderMessage = parseHtml.getElementById("how-many-hours-a-week-error-link").text()
-//      val actualErrorMessage  = parseHtml.getElementsByClass("error-notification").text()
-//
-//      status              shouldBe 400
-//      actualErrorMessage  shouldBe expectedEmptyHoursErrorMessage
-//      actualHeaderMessage shouldBe expectedEmptyHoursHeaderMessage
-//    }
-//
-//    "return 400 and error message when Hours in a Week is 0" in {
-//      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
-//      val formSalary = Salary.salaryInHoursForm
-//      val action     = await(controller.submitHoursAWeek(1))
-//
-//      val days = Map("amount" -> "1", "howManyAWeek" -> "0")
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.bind(days).data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val actualHeaderMessage = parseHtml.getElementById("how-many-hours-a-week-error-link").text()
-//      val actualErrorMessage  = parseHtml.getElementsByClass("error-notification").text()
-//
-//      status              shouldBe 400
-//      actualErrorMessage  shouldBe expectedMinHoursAWeekErrorMessage
-//      actualHeaderMessage shouldBe expectedInvalidPeriodAmountHeaderMessage
-//    }
-//
-//    "return 400 and error message when Hours in a Week is 169" in {
-//      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
-//      val formSalary = Salary.salaryInHoursForm.fill(Hours(1, 169))
-//      val action     = await(controller.submitHoursAWeek(1))
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val actualHeaderMessage = parseHtml.getElementById("how-many-hours-a-week-error-link").text()
-//      val actualErrorMessage  = parseHtml.getElementsByClass("error-notification").text()
-//
-//      status              shouldBe 400
-//      actualErrorMessage  shouldBe expectedMaxHoursAWeekErrorMessage
-//      actualHeaderMessage shouldBe expectedInvalidPeriodAmountHeaderMessage
-//    }
-//
-//    "return 303, with new Hours worked, 40.5 and non-existent aggregate" in {
-//      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
-//      val formSalary = Salary.salaryBaseForm
-//      val action     = await(controller.submitHoursAWeek(1))
-//
-//      val daily = Map("amount" -> "1", "howManyAWeek" -> "40.5")
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val expectedRedirect = s"${baseURL}state-pension"
-//      val actualRedirect   = redirectLocation(result).get
-//
-//      status         shouldBe 303
-//      actualRedirect shouldBe expectedRedirect
-//    }
-//
-//    "return 303, with new Hours worked, 5 and non-existent aggregate" in {
-//      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
-//      val formSalary = Salary.salaryBaseForm
-//      val action     = await(controller.submitHoursAWeek(1))
-//
-//      val daily = Map("amount" -> "1", "howManyAWeek" -> "5")
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.bind(daily).data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val expectedRedirect = s"${baseURL}state-pension"
-//      val actualRedirect   = redirectLocation(result).get
-//
-//      status         shouldBe 303
-//      actualRedirect shouldBe expectedRedirect
-//    }
-//
-//  }
-
-
 }

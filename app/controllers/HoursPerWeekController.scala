@@ -59,7 +59,6 @@ class HoursPerWeekController @Inject() (
       .bindFromRequest()
       .fold(
         formWithErrors => {
-          println(">>>>>>>>" + formWithErrors.errors)
           cache.fetchAndGetEntry().map(_ => BadRequest(hoursAWeekView(formWithErrors, valueInPence, url)))
         },
         hours => {

@@ -31,11 +31,8 @@
 @govuk_wrapper(Some(title(hoursForm, Messages("quick_calc.salary.question.hours_a_week")))) {
 
     @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek(valueInPence)) {
-
         @errorSummary(hoursForm.errors)
-
         @h2("quick_calc.salary.question.hours_a_week")
-
         @p {
             @Messages("quick_calc.salary.question.approximate")
         }
