@@ -91,7 +91,7 @@ class SalaryControllerSpec
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("amount" -> "", "period" -> "yearly")
+        val formData = Map("amount" -> "", "period" -> messages("quick_calc.salary.yearly.label"))
 
         val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -117,7 +117,7 @@ class SalaryControllerSpec
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("amount" -> "", "period" -> "yearly")
+        val formData = Map("amount" -> "", "period" -> messages("quick_calc.salary.yearly.label"))
 
         val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -143,7 +143,7 @@ class SalaryControllerSpec
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("amount" -> "-1", "period" -> "yearly")
+        val formData = Map("amount" -> "-1", "period" -> messages("quick_calc.salary.yearly.label"))
 
         val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -179,7 +179,7 @@ class SalaryControllerSpec
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("amount" -> "100000000", "period" -> "yearly")
+        val formData = Map("amount" -> "100000000", "period" -> messages("quick_calc.salary.yearly.label"))
 
         val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -214,7 +214,7 @@ class SalaryControllerSpec
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("amount" -> "20000", "period" -> "yearly")
+        val formData = Map("amount" -> "20000", "period" -> messages("quick_calc.salary.yearly.label"))
 
         val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -242,7 +242,7 @@ class SalaryControllerSpec
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("amount" -> "20000", "period" -> "yearly")
+        val formData = Map("amount" -> "20000", "period" -> messages("quick_calc.salary.yearly.label"))
 
         val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -270,7 +270,7 @@ class SalaryControllerSpec
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("amount" -> "20000", "period" -> "yearly")
+        val formData = Map("amount" -> "20000", "period" -> messages("quick_calc.salary.yearly.label"))
 
         val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -285,7 +285,68 @@ class SalaryControllerSpec
         verify(mockCache, times(1)).save(any())(any())
       }
     }
+
+    """return 303, with new Daily Salary data "£100" saved on the complete list of aggregate data and redirect to State Pension Page""" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteDaily.map(_.copy(savedIsOverStatePensionAge = None, savedScottishRate = None, savedTaxCode = None)))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "100", "period" -> messages("quick_calc.salary.daily.label"))
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.QuickCalcController.showStatePensionForm().url
+
+        verify(mockCache, times(1)).save(any())(any())
+      }
+    }
+
+
+    """return 303, with new Hourly Salary data "£100" saved on the complete list of aggregate data and redirect to State Pension Page""" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly.map(_.copy(savedIsOverStatePensionAge = None)))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "100", "period" -> messages("quick_calc.salary.hourly.label"))
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.QuickCalcController.showStatePensionForm().url
+
+        verify(mockCache, times(1)).save(any())(any())
+      }
+    }
+
   }
+
+
+
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]

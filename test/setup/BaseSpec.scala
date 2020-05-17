@@ -20,11 +20,10 @@ import akka.stream.Materializer
 import config.AppConfig
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.test.FakeRequest
-import services.{Navigator, SalaryService}
+import services.Navigator
 import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.play.test.UnitSpec
 

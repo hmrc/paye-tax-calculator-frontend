@@ -106,7 +106,63 @@ class DaysPerWeekControllerSpec
 
         redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
       }
+    }
 
+    "return 303, redirect to start if aggregate present but no savedSalary" in {
+      val mockCache = mock[QuickCalcCache]
+
+      val application: Application = new GuiceApplicationBuilder()
+        .overrides(
+          bind[QuickCalcCache].toInstance(mockCache)
+        )
+        .build()
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheTaxCodeStatePension
+          .map(_.copy(savedSalary = None))
+      )
+
+      implicit val messages: Messages = messagesForApp(application)
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(0, "").url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+      }
+    }
+
+    "return 303, redirect to start if aggregate returns None" in {
+      val mockCache = mock[QuickCalcCache]
+
+      val application: Application = new GuiceApplicationBuilder()
+        .overrides(
+          bind[QuickCalcCache].toInstance(mockCache)
+        )
+        .build()
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      implicit val messages: Messages = messagesForApp(application)
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(0, "").url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+      }
     }
   }
   "Submit Days Form" should {
