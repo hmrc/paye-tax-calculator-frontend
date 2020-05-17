@@ -19,68 +19,44 @@
 @import config.AppConfig
 @import views.html.pages.beta_header
 
-@this()
+@this(govuk_wrapper: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        h2: components.h2,
+        p: components.p,
+        inputNumber: components.inputNumber,
+        inputHidden: components.inputHidden,
+        button: components.button)
 
-@(valueInPence:Int, daysForm: Form[Days], url: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
-@main_template(title = Messages("quick_calc.salary.question.days_a_week"), mainClass = Some("full-width")) {
+@(daysForm: Form[Days], valueInPence:Int, url: String)(implicit request: Request[_], messages: Messages)
 
-  @beta_header()
+    @govuk_wrapper(Some(title(daysForm, Messages("quick_calc.salary.question.days_a_week")))) {
 
-  <a class="back-link" id="pd-back" href="@url">@Messages("back")</a>
-
-  <div class="grid-layout__column grid-layout__column--2-3">
-
-    @if(daysForm.hasErrors) {
-      <div class="flash error-summary error-summary--show"
-      id="error-summary-display"
-      role="alert"
-      aria-labelledby="error-summary-heading"
-      tabindex="-1">
-        <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
-        <ul>
-          <li><a id="how-many-days-a-week-error-link" href="#how-many-days-a-week">@{
-            if(daysForm.errors.head.message == Messages("quick_calc.salary.question.error.number_of_days.less_than_zero")){
-              Messages("quick_calc.salary.period_error_link_a")
+        @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek(valueInPence)) {
+            @h2("quick_calc.salary.question.days_a_week")
+            @p {
+                @Messages("quick_calc.salary.question.approximate")
             }
-            else Messages("quick_calc.salary.period_error_link_b")
-          }</a></li>
-        </ul>
-      </div>
-    }
 
-    <h1 class="heading-large">@Messages("quick_calc.salary.question.days_a_week")</h1>
-    <p>@Messages("quick_calc.salary.question.approximate")</p>
+            @inputNumber(daysForm,
+                id = "how-many-hours-a-week",
+                name = "howManyAWeek",
+                label = "",
+                isDecimal = false,
+                classes = Some("govuk-input--width-10")
+            )
 
-    @helper.form(action = controllers.routes.DaysPerWeekController.submitDaysAWeek(valueInPence)) {
+            @inputHidden(daysForm,
+                id = "num-hours",
+                name = "amount",
+                label = "",
+                isPageHeading = false,
+                value = Some(valueInPence.toString),
+                classes = Some("govuk-input--width-10")
+            )
 
-      <div class="form-group">
-        <fieldset class="form-field-group">
-          @if(daysForm("howManyAWeek").hasErrors){
-            <label class="form-field--error">
-              <span id="how-many-days-a-week-inline-error" class="error-notification">
-              @{daysForm("howManyAWeek").errors.head.message}
-              </span>
-          } else {
-              <label>
-              }
-
-          <span class="visuallyhidden">Days</span>
-          <input style= "display:inline " type="number" id="how-many-days-a-week" name="howManyAWeek" maxlength="1" size="1" />
-          </label>
-        </fieldset>
-
-        <input type="hidden" id="num-days" name="amount" value=@valueInPence>
-      </div>
-
-      <div class="form-group">
-        <input type="submit" id="pd-continue" class="button" value="@Messages("continue")">
-      </div>
-
-    }
-
-  </div>
-
-  <div class="grid-layout__column grid-layout__column--1-3">
-  </div>
-
+            @button("continue")
+        }
 }
+
+

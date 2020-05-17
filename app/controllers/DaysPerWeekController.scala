@@ -60,7 +60,7 @@ class DaysPerWeekController @Inject() (
       .fold(
         formWithErrors =>
           cache.fetchAndGetEntry().map { _ =>
-            BadRequest(daysPerWeekView(valueInPence, formWithErrors, url))
+            BadRequest(daysPerWeekView( formWithErrors, valueInPence,url))
           },
         days => {
           val updatedAggregate = cache
@@ -95,7 +95,7 @@ class DaysPerWeekController @Inject() (
                    ): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    salaryRequired(cache,Ok(daysPerWeekView(valueInPence, form, url)))
+    salaryRequired(cache,Ok(daysPerWeekView(form, valueInPence, url)))
   }
 
 
