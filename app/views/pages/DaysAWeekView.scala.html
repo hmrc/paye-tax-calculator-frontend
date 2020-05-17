@@ -17,18 +17,20 @@
 @import views.html.main_template
 @import play.api.i18n._
 @import config.AppConfig
-@import forms.Hours
 @import views.html.pages.beta_header
-@(valueInPence:Int, hoursForm: Form[Hours], url: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
-@main_template(title = Messages("quick_calc.salary.question.hours_a_week"), mainClass = Some("full-width")) {
+
+@this()
+
+@(valueInPence:Int, daysForm: Form[Days], url: String)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
+@main_template(title = Messages("quick_calc.salary.question.days_a_week"), mainClass = Some("full-width")) {
 
   @beta_header()
 
-  <a class="back-link" id="ph-back" href="@url">@Messages("back")</a>
+  <a class="back-link" id="pd-back" href="@url">@Messages("back")</a>
 
   <div class="grid-layout__column grid-layout__column--2-3">
 
-    @if(hoursForm.hasErrors) {
+    @if(daysForm.hasErrors) {
       <div class="flash error-summary error-summary--show"
       id="error-summary-display"
       role="alert"
@@ -36,42 +38,42 @@
       tabindex="-1">
         <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>
         <ul>
-          <li><a id="how-many-hours-a-week-error-link" href="#how-many-hours-a-week">@{
-            if(hoursForm.errors.head.message == Messages("quick_calc.salary.question.error.number_of_hours.less_than_one")){
+          <li><a id="how-many-days-a-week-error-link" href="#how-many-days-a-week">@{
+            if(daysForm.errors.head.message == Messages("quick_calc.salary.question.error.number_of_days.less_than_zero")){
               Messages("quick_calc.salary.period_error_link_a")
             }
-            else Messages("quick_calc.salary.period_error_link_c")
+            else Messages("quick_calc.salary.period_error_link_b")
           }</a></li>
         </ul>
       </div>
     }
 
-    <h1 class="heading-large">@Messages("quick_calc.salary.question.hours_a_week")</h1>
-
+    <h1 class="heading-large">@Messages("quick_calc.salary.question.days_a_week")</h1>
     <p>@Messages("quick_calc.salary.question.approximate")</p>
 
-    @helper.form(action = controllers.routes.QuickCalcController.submitHoursAWeek(valueInPence)) {
+    @helper.form(action = controllers.routes.DaysPerWeekController.submitDaysAWeek(valueInPence)) {
 
       <div class="form-group">
         <fieldset class="form-field-group">
-          @if(hoursForm("howManyAWeek").hasErrors){
+          @if(daysForm("howManyAWeek").hasErrors){
             <label class="form-field--error">
-              <span id="how-many-hours-a-week-inline-error" class="error-notification">
-              @{hoursForm("howManyAWeek").errors.head.message}
+              <span id="how-many-days-a-week-inline-error" class="error-notification">
+              @{daysForm("howManyAWeek").errors.head.message}
               </span>
-          } else {<label>}
+          } else {
+              <label>
+              }
 
-          <span class="visuallyhidden">Hours</span>
-          <input style= "display:inline " type="number" id="how-many-hours-a-week" min="1" step="0.25" name="howManyAWeek" maxlength="3" size="3" />
-
-           </label>
+          <span class="visuallyhidden">Days</span>
+          <input style= "display:inline " type="number" id="how-many-days-a-week" name="howManyAWeek" maxlength="1" size="1" />
+          </label>
         </fieldset>
 
-        <input type="hidden" id="num-hours" name="amount" value=@valueInPence>
+        <input type="hidden" id="num-days" name="amount" value=@valueInPence>
       </div>
 
       <div class="form-group">
-        <input type="submit" id="ph-continue" class="button" value="@Messages("continue")">
+        <input type="submit" id="pd-continue" class="button" value="@Messages("continue")">
       </div>
 
     }

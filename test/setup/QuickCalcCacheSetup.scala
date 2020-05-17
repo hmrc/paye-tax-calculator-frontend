@@ -16,8 +16,8 @@
 
 package setup
 
-import forms.{Detail, OverStatePensionAge, Salary, ScottishRate, UserTaxCode, YouHaveToldUsItem}
-import models.QuickCalcAggregateInput
+import forms.{OverStatePensionAge, ScottishRate, UserTaxCode, YouHaveToldUsItem}
+import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.i18n.Messages
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
@@ -95,8 +95,8 @@ object QuickCalcCacheSetup {
   val cacheTestYearlySalary       = Some(Salary(20000, "a year", None))
   val cacheTestDailySalary        = Some(Salary(40, "a day", None))
   val cacheTestHourlySalary       = Some(Salary(8, "an hour", None))
-  val cacheTestSalaryPeriodDaily  = Some(Detail(1, 5, "a day", ""))
-  val cacheTestSalaryPeriodHourly = Some(Detail(1, 40, "an hour", ""))
+  val cacheTestSalaryPeriodDaily  = Some(PayPeriodDetail(1, 5, "a day", ""))
+  val cacheTestSalaryPeriodHourly = Some(PayPeriodDetail(1, 40, "an hour", ""))
 
   val cacheTaxCode = Some(
     QuickCalcAggregateInput.newInstance.copy(

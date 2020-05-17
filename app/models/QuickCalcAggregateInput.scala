@@ -16,13 +16,13 @@
 
 package models
 
-import forms.{Detail, OverStatePensionAge, Salary, ScottishRate, UserTaxCode, YouHaveToldUs, YouHaveToldUsItem}
+import forms.{OverStatePensionAge, ScottishRate, UserTaxCode, YouHaveToldUs, YouHaveToldUsItem}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 
 case class QuickCalcAggregateInput(
   savedSalary:                Option[Salary],
-  savedPeriod:                Option[Detail],
+  savedPeriod:                Option[PayPeriodDetail],
   savedIsOverStatePensionAge: Option[OverStatePensionAge],
   savedTaxCode:               Option[UserTaxCode],
   savedScottishRate:          Option[ScottishRate]) {

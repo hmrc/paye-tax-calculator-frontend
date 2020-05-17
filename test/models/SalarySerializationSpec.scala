@@ -16,7 +16,6 @@
 
 package models
 
-import forms.{Days, Hours, Salary}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.play.test.UnitSpec
 

@@ -1,0 +1,62 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.api.i18n._
+
+@this(govuk_wrapper: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        h2: components.h2,
+        p: components.p,
+        inputNumber: components.inputNumber,
+        inputHidden: components.inputHidden,
+        button: components.button
+)
+
+@(hoursForm: Form[Hours], valueInPence: Int, url: String)(implicit request: Request[_], messages: Messages)
+
+@govuk_wrapper(Some(title(hoursForm, Messages("quick_calc.salary.question.hours_a_week")))) {
+
+    @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek(valueInPence)) {
+
+        @errorSummary(hoursForm.errors)
+
+        @h2("quick_calc.salary.question.hours_a_week")
+
+        @p {
+            @Messages("quick_calc.salary.question.approximate")
+        }
+
+        @inputNumber(hoursForm,
+            id = "how-many-hours-a-week",
+            name = "howManyAWeek",
+            label = "",
+            isDecimal = false,
+            classes = Some("govuk-input--width-10")
+        )
+
+        @inputHidden(hoursForm,
+            id = "num-hours",
+            name = "amount",
+            label = "",
+            isPageHeading = false,
+            value = Some(valueInPence.toString),
+            classes = Some("govuk-input--width-10")
+        )
+
+        @button("continue")
+    }
+}

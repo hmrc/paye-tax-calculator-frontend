@@ -16,7 +16,7 @@
 
 package forms
 
-import forms.{OverStatePensionAge, Salary, UserTaxCode}
+import models.Salary
 import models.QuickCalcAggregateInput
 import org.scalatest.{Tag, TestData}
 import org.scalatestplus.play.guice.GuiceOneAppPerTest

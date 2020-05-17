@@ -17,14 +17,16 @@
 package controllers
 
 import config.AppConfig
-import forms.Salary
-import forms.Salary.{salaryBaseForm, salaryInPence}
+import forms.SalaryFormProvider
 import javax.inject.{Inject, Singleton}
+import models.Salary
+import models.Salary.salaryInPence
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{Action, AnyContent, BodyParser, ControllerComponents}
+import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
 import services.{Navigator, QuickCalcCache, SalaryService}
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.ActionWithSessionId
 import views.html.pages.SalaryView
 
@@ -34,29 +36,30 @@ import scala.concurrent.{ExecutionContext, Future}
 class SalaryController @Inject() (
   override val messagesApi:      MessagesApi,
   cache:                         QuickCalcCache,
-  val controllerComponents:      ControllerComponents,
+  val controllerComponents:      MessagesControllerComponents,
   salaryService:                 SalaryService,
   navigator:                     Navigator,
-  salaryView: SalaryView
+  salaryView:                    SalaryView,
+  salaryFormProvider:            SalaryFormProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
-    extends BackendBaseController
+    extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
+
+  val form: Form[Salary] = salaryFormProvider()
 
   def showSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
-        val form = {
-          aggregate.savedSalary.map(s => salaryBaseForm.fill(s)).getOrElse(salaryBaseForm)
-        }
-        Ok(salaryView(form))
+        val filledForm = aggregate.savedSalary.map(s => form.fill(s)).getOrElse(form)
+        Ok(salaryView(filledForm))
       case None =>
-        Ok(salaryView(salaryBaseForm))
+        Ok(salaryView(form))
     }
   }
 
@@ -66,11 +69,13 @@ class SalaryController @Inject() (
     val url = request.uri
     val day:  String = Messages("quick_calc.salary.daily.label")
     val hour: String = Messages("quick_calc.salary.hourly.label")
-    salaryBaseForm
+    form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future(BadRequest(salaryView(formWithErrors))),
-        salaryAmount => {
+        hasErrors = formWithErrors => {
+          Future(BadRequest(salaryView(formWithErrors)))
+        },
+        success = salaryAmount => {
           val updatedAggregate = salaryService.updateSalaryAmount(cache, salaryAmount, url)
 
           updatedAggregate.flatMap(agg =>
@@ -83,12 +88,12 @@ class SalaryController @Inject() (
                       if (agg.savedPeriod.map(_.period).contains(day))
                         Redirect(navigator.tryGetShowStatePension(agg))
                       else
-                        Redirect(routes.QuickCalcController.showDaysAWeek(salaryInPence(salaryAmount.amount), url))
+                        Redirect(routes.DaysPerWeekController.showDaysAWeek(salaryInPence(salaryAmount.amount), url))
                     case `hour` =>
                       if (agg.savedPeriod.map(_.period).contains(hour))
                         Redirect(navigator.tryGetShowStatePension(agg))
                       else
-                        Redirect(routes.QuickCalcController.showHoursAWeek(salaryInPence(salaryAmount.amount), url))
+                        Redirect(routes.HoursPerWeekController.showHoursAWeek(salaryInPence(salaryAmount.amount), url))
                     case _ => Redirect(navigator.tryGetShowStatePension(agg))
                   }
               }

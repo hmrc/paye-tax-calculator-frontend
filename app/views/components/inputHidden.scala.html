@@ -16,36 +16,33 @@
 
 @this(govukInput: GovukInput)
 
-@(form: Form[_],
+@(
+        form: Form[_],
         id: String,
         name: String,
         label: String,
-        isPageHeading: Boolean = false,
-        isDecimal: Boolean = true,
-        hint: Option[String] = None,
+        value: Option[String] = None,
+        isPageHeading: Boolean,
+        headingMessageArgs: Seq[String] = Seq(),
+        hint: Option[Hint] = None,
         classes: Option[String] = None,
-        autoComplete: String  = "",
-        attributes: Map[String,String] = Map.empty,
-        pattern: String = "^[0-9]+(.[0-9]{1,2})?$"
+        stripWhitespace: Boolean = false,
+        autoComplete: String = ""
 )(implicit messages: Messages)
 
 @govukInput(Input(
     id,
     name,
-    inputType = "number",
-    inputmode = Some("numeric"),
-    pattern = Some(pattern),
+    inputType = "hidden",
     classes = classes.fold("")(x => x),
     label = Label(
-        content = Text(messages(label)),
+        content = Text(messages(label, headingMessageArgs: _*)),
         isPageHeading = isPageHeading,
         classes = if(isPageHeading) "govuk-label--xl" else ""
     ),
-    hint = hint.map(hintKey => Hint(
-        content = HtmlContent(messages(hintKey))
-    )),
-    value = form(name).value,
-    autocomplete =  Some(autoComplete),
-    attributes = attributes,
-    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
+    hint = hint,
+    value = value.map(Some(_)).getOrElse(form(name).value),
+    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*)))),
+    autocomplete = Some(autoComplete)
 ))
+

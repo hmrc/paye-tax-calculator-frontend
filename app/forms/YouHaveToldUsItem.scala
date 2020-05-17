@@ -17,6 +17,7 @@
 package forms
 
 import controllers.routes
+import models.{PayPeriodDetail, Salary}
 import play.api.i18n.Messages
 
 case class YouHaveToldUsItem(
@@ -103,17 +104,17 @@ object YouHaveToldUs {
     }
   }
 
-  implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[Detail] {
+  implicit def salaryPeriodFormat(implicit messages: Messages) = new YouHaveToldUs[PayPeriodDetail] {
     val day:  String = messages("quick_calc.salary.daily.label")
     val hour: String = messages("quick_calc.salary.hourly.label")
 
-    def toYouHaveToldUsItem(detail: Detail): YouHaveToldUsItem = {
+    def toYouHaveToldUsItem(detail: PayPeriodDetail): YouHaveToldUsItem = {
       val label    = s"${detail.period.replace(" ", "_")}_sub"
       val idSuffix = "salary-period"
       val url = {
         detail.period match {
-          case `day`  => routes.QuickCalcController.showDaysAWeek(detail.amount, detail.urlForChange).url
-          case `hour` => routes.QuickCalcController.showHoursAWeek(detail.amount, detail.urlForChange).url
+          case `day`  => routes.DaysPerWeekController.showDaysAWeek(detail.amount, detail.urlForChange).url
+          case `hour` => routes.HoursPerWeekController.showHoursAWeek(detail.amount, detail.urlForChange).url
         }
       }
 

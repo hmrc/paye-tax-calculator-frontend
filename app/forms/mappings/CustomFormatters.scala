@@ -43,24 +43,24 @@ object CustomFormatters {
     ) = Map(key -> value.toString)
   }
 
-  def requiredSalaryPeriodFormatter(implicit messages: Messages): Formatter[String] = new Formatter[String] {
+  def requiredSalaryPeriodFormatter: Formatter[String] = new Formatter[String] {
 
     override def bind(
       key:  String,
       data: Map[String, String]
     ) =
       Right(data.getOrElse(key, "")).right.flatMap {
-        case "" => Left(Seq(FormError(key, Messages("quick_calc.salary.option_error"))))
+        case "" => Left(Seq(FormError(key, "quick_calc.salary.option_error")))
         case p  => Right(p)
       }
 
     override def unbind(
       key:   String,
       value: String
-    ) = Map(key -> value.toString)
+    ) = Map(key -> value)
   }
 
-  def dayValidation(implicit messages: Messages): Formatter[Double] = new Formatter[Double] {
+  def dayValidation: Formatter[Double] = new Formatter[Double] {
 
     override def bind(
       key:  String,
@@ -71,17 +71,17 @@ object CustomFormatters {
           try {
             val days = s.toDouble
             if (days < 1.0) {
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_days.less_than_zero"))))
+              Left(Seq(FormError(key, "quick_calc.salary.question.error.number_of_days.less_than_zero")))
             } else if (days > 7.0) {
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_days.more_than_seven"))))
+              Left(Seq(FormError(key, "quick_calc.salary.question.error.number_of_days.more_than_seven")))
             } else {
               Right(days)
             }
           } catch {
             case _: Throwable =>
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_number_daily"))))
+              Left(Seq(FormError(key, "quick_calc.salary.question.error.invalid_number_daily")))
           }
-        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_daily"))))
+        case _ => Left(Seq(FormError(key, "quick_calc.salary.question.error.empty_number_daily")))
       }
 
     override def unbind(
@@ -90,7 +90,7 @@ object CustomFormatters {
     ): Map[String, String] = Map(key -> value.toString)
   }
 
-  def hoursValidation(implicit messages: Messages): Formatter[Double] = new Formatter[Double] {
+  def hoursValidation: Formatter[Double] = new Formatter[Double] {
 
     override def bind(
       key:  String,
@@ -101,17 +101,17 @@ object CustomFormatters {
           try {
             val hours: Double = s.toDouble
             if (!HoursDaysValidator.INSTANCE.isAboveMinimumHoursPerWeek(hours)) {
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.less_than_one"))))
+              Left(Seq(FormError(key, "quick_calc.salary.question.error.number_of_hours.less_than_one")))
             } else if (!HoursDaysValidator.INSTANCE.isBelowMaximumHoursPerWeek(hours)) {
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.number_of_hours.more_than_168"))))
+              Left(Seq(FormError(key, "quick_calc.salary.question.error.number_of_hours.more_than_168")))
             } else {
               Right(hours)
             }
           } catch {
             case _: Throwable =>
-              Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.invalid_number_hourly"))))
+              Left(Seq(FormError(key, "quick_calc.salary.question.error.invalid_number_hourly")))
           }
-        case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_number_hourly"))))
+        case _ => Left(Seq(FormError(key, "quick_calc.salary.question.error.empty_number_hourly")))
       }
 
     override def unbind(
@@ -121,7 +121,7 @@ object CustomFormatters {
 
   }
 
-  def salaryValidation(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
+  def salaryValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
 
     override def bind(
       key:  String,
@@ -146,7 +146,7 @@ object CustomFormatters {
             case _: Throwable => Left("quick_calc.salary.question.error.invalid_salary")
           }
         case None => Left("quick_calc.salary.question.error.empty_salary_input")
-      }).leftMap(translationKey => Seq(FormError(key, Messages(translationKey))))
+      }).leftMap(translationKey => Seq(FormError(key, translationKey)))
 
     override def unbind(
       key:   String,

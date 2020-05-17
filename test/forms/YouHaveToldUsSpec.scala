@@ -17,7 +17,8 @@
 package forms
 
 import controllers.routes
-import forms.{OverStatePensionAge, Salary, YouHaveToldUs, YouHaveToldUsItem}
+import forms.{OverStatePensionAge, YouHaveToldUs, YouHaveToldUsItem}
+import models.Salary
 import play.api.i18n.Messages
 import forms.YouHaveToldUs.salaryFormat
 import setup.BaseSpec

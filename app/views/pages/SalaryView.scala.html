@@ -14,8 +14,6 @@
  * limitations under the License.
  *@
 
-@import config.AppConfig
-@import forms.Salary
 @import play.api.i18n._
 
 @this(
@@ -51,8 +49,6 @@
         )
     }
 }
-@*TODO Add the checked value if needed (maybe add as a form fill) *@
-
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header")))) {
 
@@ -70,11 +66,12 @@
         }
 
         @inputNumber(salaryForm,
-                id = "pay-amount",
-                name = "amount",
-                label = "",
-                classes = Some("govuk-input--width-10")
-            )
+            id = "pay-amount",
+            name = "amount",
+            label = "",
+            classes = Some("govuk-input--width-10"),
+            attributes = Map(("step", "0.01"))
+        )
 
         @inputRadio(
             form = salaryForm,
@@ -84,96 +81,95 @@
         )
 
         @button("continue")
-
     }
-    @* <a class="back-link" id="r-back" href="https://www.gov.uk/estimate-income-tax">@Messages("back")</a>*@
-
-    @* <div class="grid-layout__column grid-layout__column--2-3">*@
-
-    @* @if(salaryForm.hasErrors) {*@
-    @* <div class="flash error-summary error-summary--show"*@
-    @* id="error-summary-display"*@
-    @* role="alert"*@
-    @* aria-labelledby="error-summary-heading"*@
-    @* tabindex="-1">*@
-    @* <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>*@
-    @* <ul>*@
-    @* @if(salaryForm("amount").hasErrors){*@
-    @* <li id="salary-amount-error-link"><a href="#pay-amount">*@
-    @* @if(salaryForm("amount").value.filter(_.nonEmpty).isEmpty) {*@
-    @* @Messages("quick_calc.salary.amount_empty_error_link")*@
-    @* } else {*@
-    @* @Messages("quick_calc.salary.amount_input_error_link")*@
-    @* }*@
-
-    @* </a></li>*@
-    @* }*@
-    @* @if(salaryForm("period").hasErrors){*@
-    @* <li id="salary-period-error-link"><a href="#period-inline-error">@{*@
-    @* Messages("quick_calc.salary.option_error_link")*@
-    @* }*@
-    @* </a></li>*@
-    @* }*@
-    @* </ul>*@
-    @* </div>*@
-    @* }*@
-
-    @* <h1 class="heading-large">@Messages("quick_calc.salary.header")</h1>*@
-    @* <p>@Messages("quick_calc.salary.description_a")</p>*@
-    @* <p>@Messages("quick_calc.salary.description_b")</p>*@
-
-    @* @helper.form(action = controllers.routes.SalaryController.submitSalaryAmount) {*@
-
-    @* <div class="form-group">*@
-
-    @* <fieldset class="form-field-group">*@
-    @* @if(salaryForm("amount").hasErrors){*@
-    @* <label class="form-field--error">*@
-    @* <span class="error-notification" id="pay-amount-inline-error">*@
-    @* @{salaryForm("amount").errors.head.message}*@
-    @* </span>*@
-    @* } else {<label>}*@
-
-    @* <span class="visuallyhidden">Amount</span>*@
-    @* <span>£</span>*@
-    @* <input id="pay-amount" name="amount" type="number" step="0.01" value="@{TaxResult.moneyFormatter(radioFieldAmount.value)}" />*@
-
-    @* </label>*@
-
-    @* </fieldset>*@
-
-    @* </div>*@
-
-    @* <div class="form-group">*@
-    @* @if(salaryForm("period").hasErrors){*@
-    @* <fieldset class="form-field--error">*@
-    @* <div class="error-notification" id="period-inline-error">*@
-    @* @{salaryForm("period").errors.head.message}*@
-    @* </div>*@
-    @* } else {<fieldset>}*@
-
-    @* <legend class="visuallyhidden">@Messages("quick_calc.salary.sub_header")</legend>*@
-
-    @* @for(label <- periodLabels) {*@
-    @* <label class="block-label selection-button-radio">@Messages(s"quick_calc.salary.$label.label")*@
-    @* <input type="radio"*@
-    @* name="period"*@
-    @* id="@label"*@
-    @* value="@Messages(s"quick_calc.salary.$label.label")"*@
-    @* @if(radioFieldPeriod.value.contains(Messages(s"quick_calc.salary.$label.label"))) { checked="checked" } />*@
-    @* </label>*@
-    @* }*@
-
-    @* </fieldset>*@
-    @* </div>*@
-
-    @* <div class="form-group">*@
-    @* <input type="submit" id="p-continue" class="button" value="@Messages("continue")">*@
-    @* </div>*@
-    @* }*@
-
-    @* </div>*@
-
-    @* <div class="grid-layout__column grid-layout__column--1-3">*@
-    @* </div>*@
 }
+@* <a class="back-link" id="r-back" href="https://www.gov.uk/estimate-income-tax">@Messages("back")</a>*@
+
+@* <div class="grid-layout__column grid-layout__column--2-3">*@
+
+@* @if(salaryForm.hasErrors) {*@
+@* <div class="flash error-summary error-summary--show"*@
+@* id="error-summary-display"*@
+@* role="alert"*@
+@* aria-labelledby="error-summary-heading"*@
+@* tabindex="-1">*@
+@* <h1 id="error-summary-heading" class="h2-heading">@Messages("quick_calc.salary.error_header")</h1>*@
+@* <ul>*@
+@* @if(salaryForm("amount").hasErrors){*@
+@* <li id="salary-amount-error-link"><a href="#pay-amount">*@
+@* @if(salaryForm("amount").value.filter(_.nonEmpty).isEmpty) {*@
+@* @Messages("quick_calc.salary.amount_empty_error_link")*@
+@* } else {*@
+@* @Messages("quick_calc.salary.amount_input_error_link")*@
+@* }*@
+
+@* </a></li>*@
+@* }*@
+@* @if(salaryForm("period").hasErrors){*@
+@* <li id="salary-period-error-link"><a href="#period-inline-error">@{*@
+@* Messages("quick_calc.salary.option_error_link")*@
+@* }*@
+@* </a></li>*@
+@* }*@
+@* </ul>*@
+@* </div>*@
+@* }*@
+
+@* <h1 class="heading-large">@Messages("quick_calc.salary.header")</h1>*@
+@* <p>@Messages("quick_calc.salary.description_a")</p>*@
+@* <p>@Messages("quick_calc.salary.description_b")</p>*@
+
+@* @helper.form(action = controllers.routes.SalaryController.submitSalaryAmount) {*@
+
+@* <div class="form-group">*@
+
+@* <fieldset class="form-field-group">*@
+@* @if(salaryForm("amount").hasErrors){*@
+@* <label class="form-field--error">*@
+@* <span class="error-notification" id="pay-amount-inline-error">*@
+@* @{salaryForm("amount").errors.head.message}*@
+@* </span>*@
+@* } else {<label>}*@
+
+@* <span class="visuallyhidden">Amount</span>*@
+@* <span>£</span>*@
+@* <input id="pay-amount" name="amount" type="number" step="0.01" value="@{TaxResult.moneyFormatter(radioFieldAmount.value)}" />*@
+
+@* </label>*@
+
+@* </fieldset>*@
+
+@* </div>*@
+
+@* <div class="form-group">*@
+@* @if(salaryForm("period").hasErrors){*@
+@* <fieldset class="form-field--error">*@
+@* <div class="error-notification" id="period-inline-error">*@
+@* @{salaryForm("period").errors.head.message}*@
+@* </div>*@
+@* } else {<fieldset>}*@
+
+@* <legend class="visuallyhidden">@Messages("quick_calc.salary.sub_header")</legend>*@
+
+@* @for(label <- periodLabels) {*@
+@* <label class="block-label selection-button-radio">@Messages(s"quick_calc.salary.$label.label")*@
+@* <input type="radio"*@
+@* name="period"*@
+@* id="@label"*@
+@* value="@Messages(s"quick_calc.salary.$label.label")"*@
+@* @if(radioFieldPeriod.value.contains(Messages(s"quick_calc.salary.$label.label"))) { checked="checked" } />*@
+@* </label>*@
+@* }*@
+
+@* </fieldset>*@
+@* </div>*@
+
+@* <div class="form-group">*@
+@* <input type="submit" id="p-continue" class="button" value="@Messages("continue")">*@
+@* </div>*@
+@* }*@
+
+@* </div>*@
+
+@* <div class="grid-layout__column grid-layout__column--1-3">*@
+@* </div>*@

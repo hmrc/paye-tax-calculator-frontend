@@ -7,11 +7,11 @@ GET         /                      controllers.QuickCalcController.redirectToSal
 GET         /your-pay              controllers.SalaryController.showSalaryForm
 POST        /your-pay              controllers.SalaryController.submitSalaryAmount
 
-GET         /hours/:value          controllers.QuickCalcController.showHoursAWeek(value: Int, url: String)
-POST        /hours/:value          controllers.QuickCalcController.submitHoursAWeek(value: Int)
+GET         /hours/:value          controllers.HoursPerWeekController.showHoursAWeek(value: Int, url: String)
+POST        /hours/:value          controllers.HoursPerWeekController.submitHoursAWeek(value: Int)
 
-GET         /days/:value           controllers.QuickCalcController.showDaysAWeek(value: Int, url: String)
-POST        /days/:value           controllers.QuickCalcController.submitDaysAWeek(value: Int)
+GET         /days/:value           controllers.DaysPerWeekController.showDaysAWeek(value: Int, url: String)
+POST        /days/:value           controllers.DaysPerWeekController.submitDaysAWeek(value: Int)
 
 GET         /state-pension         controllers.QuickCalcController.showStatePensionForm
 POST        /state-pension         controllers.QuickCalcController.submitStatePensionForm

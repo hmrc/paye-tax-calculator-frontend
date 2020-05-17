@@ -18,7 +18,6 @@ package services
 
 import com.google.inject.{ImplementedBy, Singleton}
 import javax.inject.Inject
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import config.AppConfig
@@ -37,7 +36,7 @@ trait QuickCalcCache {
 @Singleton
 class QuickCalcKeyStoreCache @Inject() (
   httpClient: HttpClient,
-  appConfig:  AppConfig)
+  appConfig:  AppConfig)(implicit executionContext: ExecutionContext)
     extends QuickCalcCache {
 
   val id = "quick-calc-aggregate-input"
@@ -52,7 +51,6 @@ class QuickCalcKeyStoreCache @Inject() (
     override lazy val defaultSource = "paye-tax-calculator-frontend"
     override lazy val baseUri       = appConfig.cacheUrl
     override lazy val domain        = appConfig.domain
-
   }
 
 }

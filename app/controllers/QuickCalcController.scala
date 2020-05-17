@@ -17,10 +17,10 @@
 package controllers
 
 import config.AppConfig
-import forms.Salary._
+import models.Salary._
 import forms._
 import javax.inject.{Inject, Singleton}
-import models.QuickCalcAggregateInput
+import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{ControllerComponents, _}
 import services.{Navigator, QuickCalcCache}
@@ -61,7 +61,7 @@ class QuickCalcController @Inject() (
   }
 
   def summary(): Action[AnyContent] =
-    salaryRequired(implicit request =>
+    salaryRequired(cache,implicit request =>
       aggregate =>
         if (aggregate.allQuestionsAnswered)
           Ok(you_have_told_us(aggregate.youHaveToldUsItems))
@@ -70,7 +70,7 @@ class QuickCalcController @Inject() (
     )
 
   def showResult(): Action[AnyContent] =
-    salaryRequired(implicit request =>
+    salaryRequired(cache, implicit request =>
       aggregate =>
         if (aggregate.allQuestionsAnswered) {
           Ok(result(TaxResult.taxCalculation(aggregate), UserTaxCode.startOfCurrentTaxYear))
@@ -85,127 +85,7 @@ class QuickCalcController @Inject() (
     else
       Redirect(routes.QuickCalcController.showStatePensionForm())
 
-  def showHoursAWeek(
-    valueInPence: Int,
-    url:          String
-  ): Action[AnyContent] =
-    salaryRequired(showHoursAWeekTestable(valueInPence, url))
-
-  private[controllers] def showHoursAWeekTestable(
-    valueInPence: Int,
-    url:          String
-  ): ShowForm = { implicit request => agg =>
-    Ok(hours_a_week(valueInPence, salaryInHoursForm, url))
-  }
-
-  def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    val url   = routes.SalaryController.showSalaryForm().url
-    val value = BigDecimal(valueInPence)
-    salaryInHoursForm
-      .bindFromRequest()
-      .fold(
-        formWithErrors =>
-          cache.fetchAndGetEntry().map { _ =>
-            BadRequest(hours_a_week(valueInPence, formWithErrors, url))
-          },
-        hours => {
-          val updatedAggregate = cache
-            .fetchAndGetEntry()
-            .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-            .map(
-              _.copy(
-                savedSalary = Some(Salary(value, Messages("quick_calc.salary.hourly.label"), Some(hours.howManyAWeek))),
-                savedPeriod =
-                  Some(Detail(valueInPence, hours.howManyAWeek, Messages("quick_calc.salary.hourly.label"), url))
-              )
-            )
-
-          updatedAggregate.flatMap { agg =>
-            cache
-              .save(agg)
-              .map(_ =>
-                Redirect(
-                  navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
-                    routes.QuickCalcController.showStatePensionForm()
-                  )
-                )
-              )
-          }
-        }
-      )
-  }
-
-  def showDaysAWeek(
-    valueInPence: Int,
-    url:          String
-  ): Action[AnyContent] =
-    salaryRequired(showDaysAWeekTestable(valueInPence, url))
-
-  private def salaryRequired[T](
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm())
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm())
-      }
-    }
-
-  private[controllers] def showDaysAWeekTestable(
-    valueInPence: Int,
-    url:          String
-  ): ShowForm =
-    implicit request => agg => Ok(days_a_week(valueInPence, salaryInDaysForm, url))
-
-  def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    val url   = routes.SalaryController.showSalaryForm().url
-    val value = BigDecimal(valueInPence)
-    salaryInDaysForm
-      .bindFromRequest()
-      .fold(
-        formWithErrors =>
-          cache.fetchAndGetEntry().map { _ =>
-            BadRequest(days_a_week(valueInPence, formWithErrors, url))
-          },
-        days => {
-          val updatedAggregate = cache
-            .fetchAndGetEntry()
-            .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-            .map(
-              _.copy(
-                savedSalary = Some(Salary(value, Messages("quick_calc.salary.daily.label"), Some(days.howManyAWeek))),
-                savedPeriod =
-                  Some(Detail(valueInPence, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
-              )
-            )
-
-          updatedAggregate.flatMap { agg =>
-            cache
-              .save(agg)
-              .map(_ =>
-                Redirect(
-                  navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
-                    routes.QuickCalcController.showStatePensionForm()
-                  )
-                )
-              )
-          }
-        }
-      )
-  }
-
-  def showStatePensionForm(): Action[AnyContent] = salaryRequired(showStatePensionFormTestable)
+  def showStatePensionForm(): Action[AnyContent] = salaryRequired(cache,showStatePensionFormTestable)
 
   private[controllers] def showStatePensionFormTestable: ShowForm = { implicit request => agg =>
     val form = agg.savedIsOverStatePensionAge
@@ -245,7 +125,7 @@ class QuickCalcController @Inject() (
       )
   }
 
-  def showTaxCodeForm(): Action[AnyContent] = salaryRequired(showTacCodeFormTestable)
+  def showTaxCodeForm(): Action[AnyContent] = salaryRequired(cache,showTacCodeFormTestable)
 
   def submitTaxCodeForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
@@ -285,7 +165,7 @@ class QuickCalcController @Inject() (
   }
 
   def showScottishRateForm(): Action[AnyContent] =
-    salaryRequired(implicit request =>
+    salaryRequired(cache,implicit request =>
       aggregate => {
         implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
@@ -344,4 +224,23 @@ class QuickCalcController @Inject() (
         Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
     }
   }
+
+  private def salaryRequired[T](
+                                 cache: QuickCalcCache,
+                                 furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
+                               ): Action[AnyContent] =
+    validateAcceptWithSessionId.async { implicit request =>
+      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+
+      cache.fetchAndGetEntry().map {
+        case Some(aggregate) =>
+          if (aggregate.savedSalary.isDefined)
+            furtherAction(request)(aggregate)
+          else
+            Redirect(routes.SalaryController.showSalaryForm())
+        case None =>
+          Redirect(routes.SalaryController.showSalaryForm())
+      }
+    }
+
 }

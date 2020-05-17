@@ -16,10 +16,8 @@
 
 package services
 
-import controllers.routes
-import forms.{Detail, Salary}
 import javax.inject.Inject
-import models.QuickCalcAggregateInput
+import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.mvc.{AnyContent, Request}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -48,7 +46,7 @@ class SalaryService @Inject() (
               newAggregate.copy(
                 savedSalary =
                   Some(Salary(salaryAmount.amount, salary.period, oldAggregate.savedSalary.get.howManyAWeek)),
-                savedPeriod = Some(Detail(salaryAmount.amount.toInt, detail.howManyAWeek, detail.period, url))
+                savedPeriod = Some(PayPeriodDetail(salaryAmount.amount.toInt, detail.howManyAWeek, detail.period, url))
               )
             } else newAggregate.copy(savedPeriod = None)
           case _ => newAggregate.copy(savedPeriod = None)
@@ -56,3 +54,4 @@ class SalaryService @Inject() (
       }
   }
 }
+

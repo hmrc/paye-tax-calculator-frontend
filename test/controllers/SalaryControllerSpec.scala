@@ -16,261 +16,281 @@
 
 package controllers
 
-import config.AppConfig
-import forms.Salary
+import forms.SalaryFormProvider
 import org.jsoup.Jsoup
+import org.mockito.Matchers._
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, redirectLocation, status, stubControllerComponents, _}
-import services.{Navigator, QuickCalcCache, SalaryService}
-import setup.QuickCalcCacheSetup.{baseURL, cacheEmpty, cacheReturnTaxCode, cacheReturnTaxCodeStatePension, cacheReturnTaxCodeStatePensionSalary}
-import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
-import setup.BaseSpec
-import setup.QuickCalcCacheSetup._
-import play.api.test.CSRFTokenHelper._
-import play.api.test.Helpers._
-import views.html.pages.SalaryView
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.Application
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.AnyContentAsEmpty
-import org.mockito.Matchers.{eq => meq, _}
-import org.mockito.Mockito.{times, verify, when}
+import play.api.test.CSRFTokenHelper._
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{contentAsString, redirectLocation, status, _}
+import services.QuickCalcCache
+import setup.QuickCalcCacheSetup._
+import uk.gov.hmrc.http.HeaderNames
+import uk.gov.hmrc.http.cache.client.CacheMap
+import views.html.pages.SalaryView
 
 import scala.concurrent.Future
 
-class SalaryControllerSpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar {
+class SalaryControllerSpec
+    extends PlaySpec
+    with TryValues
+    with ScalaFutures
+    with IntegrationPatience
+    with MockitoSugar {
 
-//  "Submit Salary Form" should {
-//
-//    "return 400, with no aggregate data and empty Salary Form submission" in {
-//      val salaryService: SalaryService   = appInjector.instanceOf[SalaryService]
-//
-//      val controller = new SalaryController(messagesApi, cacheEmpty, stubControllerComponents(), salaryService, navigator)
-//      val formSalary = Salary.salaryBaseForm
-//      val action     = await(controller.submitSalaryAmount())
-//
-//      val formData = Map("value" -> "", "period" -> "")
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.bind(formData).data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val actualHeaderPeriodErrorMessage   = parseHtml.getElementById("salary-period-error-link").text()
-//      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
-//      val actualGrossPayErrorMessage       = parseHtml.getElementById("pay-amount-inline-error").text()
-//      val actualPeriodPayErrorMessage      = parseHtml.getElementById("period-inline-error").text()
-//
-//      status                           shouldBe 400
-//      actualHeaderPeriodErrorMessage   shouldBe expectedNotChosenPeriodHeaderMesssage
-//      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidEmptyGrossPayHeaderMessage
-//      actualGrossPayErrorMessage       shouldBe expectedEmptyGrossPayErrorMessage
-//      actualPeriodPayErrorMessage      shouldBe expectedNotChosenPeriodErrorMessage
-//    }
-//
-//    "return 400, with current list of aggregate data and an error message for invalid Salary" in {
-//      val salaryService: SalaryService   = appInjector.instanceOf[SalaryService]
-//
-//      val controller = new SalaryController(messagesApi, cacheReturnTaxCodeStatePension, stubControllerComponents(),salaryService, navigator)
-//      val formSalary = Salary.salaryBaseForm
-//      val action     = await(controller.submitSalaryAmount())
-//
-//      val formData = Map("value" -> "", "period" -> "yearly")
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.bind(formData).data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
-//      val actualErrorMessage               = parseHtml.getElementsByClass("error-notification").text()
-//
-//      status                           shouldBe 400
-//      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidEmptyGrossPayHeaderMessage
-//      actualErrorMessage               shouldBe expectedEmptyGrossPayErrorMessage
-//    }
-//
-//    "return 400, with empty list of aggregate data and an error message for invalid Salary" in {
-//      val salaryService: SalaryService   = appInjector.instanceOf[SalaryService]
-//
-//      val controller = new SalaryController(messagesApi, cacheEmpty, stubControllerComponents(), salaryService, navigator)
-//      val formSalary = Salary.salaryBaseForm
-//      val action     = await(controller.submitSalaryAmount())
-//
-//      val formData = Map("value" -> "", "period" -> "yearly")
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.bind(formData).data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
-//      val actualErrorMessage               = parseHtml.getElementsByClass("error-notification").text()
-//
-//      status                           shouldBe 400
-//      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidEmptyGrossPayHeaderMessage
-//      actualErrorMessage               shouldBe expectedEmptyGrossPayErrorMessage
-//    }
-//
-//    "return 400 and error message when Salary submitted is \"9.999\" " in {
-//      val salaryService: SalaryService   = appInjector.instanceOf[SalaryService]
-//
-//      val controller = new SalaryController(messagesApi, cacheEmpty, stubControllerComponents(), salaryService, navigator)
-//      val formSalary = Salary.salaryBaseForm.fill(Salary(9.999, "yearly", None))
-//      val action     = await(controller.submitSalaryAmount())
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
-//      val actualErrorMessage               = parseHtml.getElementsByClass("error-notification").text()
-//
-//      status                           shouldBe 400
-//      actualErrorMessage               shouldBe expectedMaxGrossPayErrorMessage
-//      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidGrossPayHeaderMessage
-//    }
-//
-//    "return 400 and error message when Salary submitted is \"-1\" " in {
-//      val salaryService: SalaryService   = appInjector.instanceOf[SalaryService]
-//
-//      val controller = new SalaryController(messagesApi, cacheEmpty, stubControllerComponents(), salaryService, navigator)
-//      val formSalary = Salary.salaryBaseForm.fill(Salary(-1, "yearly", None))
-//      val action     = await(controller.submitSalaryAmount())
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
-//      val actualErrorMessage               = parseHtml.getElementsByClass("error-notification").text()
-//
-//      status                           shouldBe 400
-//      actualErrorMessage               shouldBe expectedNegativeNumberErrorMessage
-//      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidGrossPayHeaderMessage
-//    }
-//
-//    "return 400 and error message when Salary submitted is \"10,000,000.00\"" in {
-//      val salaryService: SalaryService   = appInjector.instanceOf[SalaryService]
-//      val controller = new SalaryController(messagesApi, cacheEmpty, stubControllerComponents(), salaryService, navigator)
-//      val formSalary = Salary.salaryBaseForm.fill(Salary(10000000.00, "yearly", None))
-//      val action     = await(controller.submitSalaryAmount())
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status    = result.header.status
-//      val parseHtml = Jsoup.parse(contentAsString(result))
-//
-//      val actualHeaderGrossPayErrorMessage = parseHtml.getElementById("salary-amount-error-link").text()
-//      val actualErrorMessage               = parseHtml.getElementsByClass("error-notification").text()
-//
-//      status                           shouldBe 400
-//      actualErrorMessage               shouldBe expectedMaxGrossPayErrorMessage
-//      actualHeaderGrossPayErrorMessage shouldBe expectedInvalidGrossPayHeaderMessage
-//    }
-//
-//    """return 303, with new Yearly Salary "£20000", current list of aggregate data without State Pension Answer and redirect to State Pension Page""" in {
-//      val salaryService: SalaryService   = appInjector.instanceOf[SalaryService]
-//      val controller = new SalaryController(messagesApi, cacheReturnTaxCode, stubControllerComponents(), salaryService, navigator)
-//      val formSalary = Salary.salaryBaseForm.fill(Salary(20000, "yearly", None))
-//      val action     = await(controller.submitSalaryAmount())
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status = result.header.status
-//
-//      val expectedRedirect = s"${baseURL}state-pension"
-//      val actualRedirect   = redirectLocation(result).get
-//
-//      status         shouldBe 303
-//      actualRedirect shouldBe expectedRedirect
-//    }
-//
-//    """return 303, with new Yearly Salary data "£20000" saved on a new list of aggregate data and redirect to State Pension Page""" in {
-//      val salaryService: SalaryService   = appInjector.instanceOf[SalaryService]
-//
-//      val controller = new SalaryController(messagesApi, cacheEmpty, stubControllerComponents(),salaryService ,navigator)
-//      val formSalary = Salary.salaryBaseForm.fill(Salary(20000, "yearly", None))
-//      val action     = await(controller.submitSalaryAmount())
-//
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status = result.header.status
-//
-//      val expectedRedirect = s"${baseURL}state-pension"
-//      val actualRedirect   = redirectLocation(result).get
-//
-//      status         shouldBe 303
-//      actualRedirect shouldBe expectedRedirect
-//    }
-//
-//    """return 303, with new Yearly Salary data "£20000" saved on the complete list of aggregate data and redirect to State Pension Page""" in {
-//      val salaryService: SalaryService   = appInjector.instanceOf[SalaryService]
-//
-//      val controller =
-//        new SalaryController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents(), salaryService, navigator)
-//      val formSalary = Salary.salaryBaseForm.fill(Salary(20000, "yearly", None))
-//      val action     = await(controller.submitSalaryAmount())
-//      val result = action(
-//        request
-//          .withFormUrlEncodedBody(formSalary.data.toSeq: _*)
-//          .withSession(SessionKeys.sessionId -> "test-salary")
-//      )
-//
-//      val status = result.header.status
-//
-//      val expectedRedirect = s"${baseURL}your-answers"
-//      val actualRedirect   = redirectLocation(result).get
-//
-//      status         shouldBe 303
-//      actualRedirect shouldBe expectedRedirect
-//    }
-//  }
-lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
-FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+  val formProvider = new SalaryFormProvider()
+  val form         = formProvider()
 
-  def messagesThing(app:Application): Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+  "Submit Salary Form" should {
+
+    "return 400, with no aggregate data and empty Salary Form submission" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      implicit val messages: Messages = messagesThing(application)
+
+      running(application) {
+
+        val formData = Map("amount" -> "", "period" -> "")
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+      }
+    }
+
+    "return 400, with current list of aggregate data and an error message for invalid Salary" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "", "period" -> "yearly")
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+      }
+    }
+
+    "return 400, with empty list of aggregate data and an error message for invalid Salary" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "", "period" -> "yearly")
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+      }
+    }
+
+    "return 400 and error message when Salary submitted is \"-1\" " in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "-1", "period" -> "yearly")
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedNegativeNumberErrorMessage)               mustEqual true
 
 
+      }
+    }
+
+    "return 400 and error message when Salary submitted is \"10,000,000.00\"" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "100000000", "period" -> "yearly")
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedMaxGrossPayErrorMessage)               mustEqual true
+      }
+    }
+
+    """return 303, with new Yearly Salary "£20000", current list of aggregate data without State Pension Answer and redirect to State Pension Page""" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCode)
+      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "20000", "period" -> "yearly")
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.QuickCalcController.showStatePensionForm().url
+
+        verify(mockCache, times(1)).save(any())(any())
+      }
+    }
+
+    """return 303, with new Yearly Salary data "£20000" saved on a new list of aggregate data and redirect to State Pension Page""" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "20000", "period" -> "yearly")
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.QuickCalcController.showStatePensionForm().url
+
+        verify(mockCache, times(1)).save(any())(any())
+      }
+    }
+
+    """return 303, with new Yearly Salary data "£20000" saved on the complete list of aggregate data and redirect to State Pension Page""" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary)
+      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "20000", "period" -> "yearly")
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.QuickCalcController.summary().url
+
+        verify(mockCache, times(1)).save(any())(any())
+      }
+    }
+  }
+
+  lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
+  def messagesThing(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "Show Salary Form" should {
     "return 200, with current list of aggregate data containing Tax Code: 1150L, \"YES\" for is not Over65, 20000 a Year for Salary" in {
@@ -278,13 +298,16 @@ FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.typ
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary)
 
-      val application  = new GuiceApplicationBuilder().overrides(bind[QuickCalcCache].toInstance(mockCache))
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
         .build()
-      implicit val messages: Messages = messagesThing(application)
-      val form = Salary.salaryBaseForm.fill(cacheTaxCodeStatePensionSalary.value.savedSalary.get)
+
+      val formFilled = form.fill(cacheTaxCodeStatePensionSalary.value.savedSalary.get)
       running(application) {
 
-        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm().url).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
+        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
 
         val result = route(application, request).value
 
@@ -292,10 +315,10 @@ FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.typ
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual
-          view(form)(request, messagesThing(application)).toString
-      }
+        contentAsString(result) mustEqual view(formFilled)(request, messagesThing(application)).toString
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
+      }
 
     }
 
@@ -307,8 +330,9 @@ FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.typ
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
         .build()
+
       implicit val messages: Messages = messagesThing(application)
-      val form = Salary.salaryBaseForm
+
       running(application) {
 
         val request = FakeRequest(GET, routes.SalaryController.showSalaryForm().url)
@@ -323,6 +347,7 @@ FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.typ
 
         contentAsString(result) mustEqual
         view(form)(request, messagesThing(application)).toString
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
   }
