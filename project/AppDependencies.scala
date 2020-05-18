@@ -9,13 +9,13 @@ object AppDependencies {
   private val logbackJsonLoggerVersion          = "4.8.0"
   private val govukTemplateVersion              = "5.55.0-play-26"
   private val playHealthVersion                 = "3.15.0-play-26"
-  private val playUiVersion                     = "7.33.0-play-26"
+  private val playUiVersion                     = "8.9.0-play-26"
   private val httpCachingClientVersion          = "9.0.0-play-26"
   private val playConditionalFormMappingVersion = "1.2.0-play-26"
   private val urlBuilderVersion                 = "3.3.0-play-26"
   private val taxYearVersion                    = "1.1.0"
   private val taxKalcVersion                    = "0.9.0"
-  private val catsCoreVersion                   = "1.2.0"
+  private val catsCoreVersion                   = "2.1.0"
   private val govUkTemplate                   = "0.44.0-play-26"
 
   val compile: Seq[ModuleID] = Seq(
