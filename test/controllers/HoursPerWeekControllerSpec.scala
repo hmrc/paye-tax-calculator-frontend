@@ -106,10 +106,17 @@ class HoursPerWeekControllerSpec
     }
 
     "return 303, redirect to start" in {
+      val mockCache = mock[QuickCalcCache]
+
       val application: Application = new GuiceApplicationBuilder()
+        .overrides(
+          bind[QuickCalcCache].toInstance(mockCache)
+        )
         .build()
 
       implicit val messages: Messages = messagesForApp(application)
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
 
       running(application) {
 
