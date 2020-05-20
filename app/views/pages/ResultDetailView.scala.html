@@ -1,0 +1,148 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.api.i18n._
+@import forms.TaxResult._
+@import uk.gov.hmrc.calculator.model.CalculatorResponsePayPeriod
+
+@this(govukPanel: GovukPanel,
+        govukTable: GovukTable,
+        govukDetails: GovukDetails,
+        govButton: GovukButton,
+        p: components.p,
+        h3: components.h3,
+        linkNewTab: components.linkNewTab,
+        appConfig: AppConfig
+)
+
+
+@(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean)(implicit request: Request[_], messages: Messages)
+
+
+@govukPanel(Panel(
+    headingLevel = 0,
+    content = HtmlContent(s"${Messages("quick_calc.result.you_take_home")} $taxYear is <br><strong>£${moneyFormatter(calculatorResponse.getTakeHome)} ${Messages("a")} ${label.toLowerCase}</strong>")
+))
+
+<br/>
+
+@p {
+    @messages("quick_calc.result.total_deductions.info")
+}
+
+@govukTable(
+    Table(
+        rows = Seq(
+            Seq(
+                TableRow(
+                    content = Text(Messages("quick_calc.result.income_tax"))),
+                TableRow(
+                    content = Text(s"£${moneyFormatter(extractIncomeTax(calculatorResponse))}")
+                )
+            ),
+            Seq(
+                TableRow(
+                    content = Text(Messages("quick_calc.result.your_national_insurance"))),
+                TableRow(
+                    content = Text(s"£${moneyFormatter(calculatorResponse.getEmployeesNI)}")
+                )
+            ),
+            Seq(
+                TableRow(
+                    content = HtmlContent("<strong>" + Messages("quick_calc.result.deductions") + "</strong>")),
+                TableRow(
+                    content = HtmlContent("<strong>" + s"£${moneyFormatter(calculatorResponse.getTotalDeductions)}" + "</strong>")
+                )
+            )
+        ),
+        head = Some(Seq(
+
+            HeadCell(
+                content = Text("")
+            ),
+            HeadCell(
+                content = Text("")
+            )
+        )
+        )))
+
+
+@if(calculatorResponse.getMaxTaxAmountExceeded) {
+    @h3(Messages("quick_calc.result.adjusted.head"))
+    @p {
+        @Messages("quick_calc.result.adjusted.info")
+    }
+}
+
+@if(isKCode) {
+    @p {
+        @Messages("quick_calc.about_k_code_a") @linkNewTab("https://www.gov.uk/tax-codes/letters-in-your-tax-code-what-they-mean", Messages("quick_calc.about_k_code_b_k")) @Messages("quick_calc.about_k_code_c")
+    }
+}
+
+@govukDetails(
+    Details(summary = Text(Messages("quick_calc.result.how_we_calculated")),
+        content = HtmlContent(govukTable(Table(
+            rows = Seq(
+                Seq(
+                    TableRow(
+                        content = Text(Messages("quick_calc.result.how_we_calculated.you_earn_a"))),
+                    TableRow(
+                        content = Text(s"£${moneyFormatter(extractIncomeTax(calculatorResponse))} ${Messages("quick_calc.result.how_we_calculated.you_earn_b")}")
+                    )
+                ),
+                if(isKCode) {
+                Seq(
+                    TableRow(
+                        content = Text(Messages("quick_calc.result.k_code"))),
+                    TableRow(
+                        content = Text(s"£${moneyFormatter(calculatorResponse.getKCodeAdjustment.doubleValue())}")
+                    )
+                )}else{
+Seq()
+                },
+                Seq(
+                    TableRow(
+                        content = Text(Messages("quick_calc.result.tax_free_allowance"))),
+                    TableRow(
+                        content = Text(s"£${moneyFormatter(calculatorResponse.getTaxFree)}")
+                    )
+                ),
+                Seq(
+                    TableRow(
+                        content = HtmlContent("<strong>" + Messages("quick_calc.result.taxable_pay") + "</strong>")),
+                    TableRow(
+                        content = HtmlContent("<strong>" + s"£${
+                            moneyFormatter(if(calculatorResponse.getWages - calculatorResponse.getTaxFree < 0) {
+                                0
+                            } else {
+                                calculatorResponse.getWages - calculatorResponse.getTaxFree
+                            })
+                        }" + "</strong>")
+                    )
+                )
+            ),
+            head = Some(Seq(
+
+                HeadCell(
+                    content = Text("")
+                ),
+                HeadCell(
+                    content = Text("")
+                )
+            )
+            ))))))
+

@@ -42,8 +42,10 @@ lazy val microservice = Project(appName, file("."))
       "play.twirl.api.HtmlFormat",
       "uk.gov.hmrc.govukfrontend.views.html.components._",
       "uk.gov.hmrc.govukfrontend.views.html.helpers._",
+      "uk.gov.hmrc.calculator.model._",
       "views.ViewUtils._",
-      "controllers.routes._"
+      "controllers.routes._",
+      "config.AppConfig"
     ),
     resolvers ++= Seq(
       Resolver.bintrayRepo("hmrc", "releases"),

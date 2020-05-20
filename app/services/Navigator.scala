@@ -19,7 +19,7 @@ package services
 import controllers.routes
 import javax.inject.Inject
 import models.QuickCalcAggregateInput
-import play.api.mvc.{AnyContent, Call, Request}
+import play.api.mvc.{AnyContent, Call, Request, Result}
 
 class Navigator @Inject() () {
 
@@ -36,4 +36,11 @@ class Navigator @Inject() () {
       routes.QuickCalcController.showStatePensionForm()
     }
 
+  def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Call =
+    if (aggregate.savedTaxCode.isEmpty)
+     routes.QuickCalcController.showTaxCodeForm()
+    else if (aggregate.savedSalary.isEmpty)
+      routes.SalaryController.showSalaryForm()
+    else
+      routes.QuickCalcController.showStatePensionForm()
 }

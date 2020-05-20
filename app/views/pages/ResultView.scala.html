@@ -1,0 +1,107 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.api.i18n._
+@import views.html.main_template
+@import forms.TaxResult._
+@import views.html.pages._
+@import controllers.{routes => prodRoutes}
+@import config.AppConfig
+@import models.QuickCalcAggregateInput
+@import views.html.pages.beta_header
+@import views.html.pages.result_detail_over_rate
+@import uk.gov.hmrc.calculator.model.CalculatorResponse
+@import uk.gov.hmrc.calculator.model.CalculatorResponsePayPeriod
+@import uk.gov.hmrc.calculator.model.PayPeriod
+
+
+@this(
+        resultDetailView: ResultDetailView,
+        govuk_wrapper: templates.GovukLayoutWrapper,
+        link: components.link,
+        h2: components.h2,
+        govukTabs: GovukTabs,
+        govButton: GovukButton,
+        p: components.p,
+        linkNewTab: components.linkNewTab,
+        appConfig: AppConfig
+)
+
+
+@(calculatorResponse: CalculatorResponse, taxYear: Int)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
+
+@tabsItems = @{
+    Seq(
+        TabItem(
+            id = Some(
+                PayPeriod.YEARLY.toString
+            ),
+            label = Messages("quick_calc.result.tabLabels.year"),
+            panel = TabPanel(
+                content = HtmlContent(resultDetailView(calculatorResponse.getYearly, taxYear,Messages("quick_calc.result.tabLabels.year"),calculatorResponse.isKCode ))
+            )
+        ),
+        TabItem(
+            id = Some(
+                PayPeriod.MONTHLY.toString
+            ),
+            label = Messages("quick_calc.result.tabLabels.month"),
+            panel = TabPanel(
+                content = HtmlContent(resultDetailView(calculatorResponse.getMonthly, taxYear,Messages("quick_calc.result.tabLabels.month"),calculatorResponse.isKCode))
+            )
+        ),
+        TabItem(
+            id = Some(
+                PayPeriod.WEEKLY.toString
+            ),
+            label = Messages("quick_calc.result.tabLabels.week"),
+            panel = TabPanel(
+                content = HtmlContent(resultDetailView(calculatorResponse.getWeekly, taxYear,Messages("quick_calc.result.tabLabels.week"),calculatorResponse.isKCode))
+            )
+        ),
+    )
+}
+
+
+@govuk_wrapper(Some(titleNoForm(Messages("quick_calc.result.header")))) {
+
+    @h2(Messages("quick_calc.result.header"))
+
+    @govukTabs(
+        Tabs(items = tabsItems)
+    )
+
+
+    @govButton(Button(
+        href = Some("javascript:window.print();"),
+        content = Text(Messages("quick_calc.result.info_print"))
+    ))
+
+    @p {
+        @Messages("quick_calc.result.info_a") @linkNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters", "quick_calc.result.info_b") @Messages("quick_calc.result.info_e")
+    }
+
+    @p {
+        @linkNewTab(appConfig.betaFeedbackUrl, "feedback")
+    }
+
+    @p {
+        @govButton(Button(
+            href = Some(routes.QuickCalcController.restartQuickCalc().url),
+            content = Text(Messages("restart"))
+        ))
+    }
+}
