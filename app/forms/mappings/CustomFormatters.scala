@@ -25,7 +25,7 @@ import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, TaxCodeValid
 
 object CustomFormatters {
 
-  def requiredBooleanFormatter(implicit messages: Messages): Formatter[Boolean] = new Formatter[Boolean] {
+  def requiredBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
       key:  String,
@@ -34,7 +34,7 @@ object CustomFormatters {
       Right(data.getOrElse(key, "")).right.flatMap {
         case "true"  => Right(true)
         case "false" => Right(false)
-        case _       => Left(Seq(FormError(key, Messages("select_one"))))
+        case _       => Left(Seq(FormError(key, "select_one")))
       }
 
     override def unbind(

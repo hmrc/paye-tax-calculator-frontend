@@ -33,7 +33,7 @@ class Navigator @Inject() () {
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(implicit request: Request[AnyContent]): Call =
     nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-      routes.QuickCalcController.showStatePensionForm()
+      routes.StatePensionController.showStatePensionForm()
     }
 
 }

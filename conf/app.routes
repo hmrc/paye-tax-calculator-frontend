@@ -13,8 +13,8 @@ POST        /hours/:value          controllers.HoursPerWeekController.submitHour
 GET         /days/:value           controllers.DaysPerWeekController.showDaysAWeek(value: Int, url: String)
 POST        /days/:value           controllers.DaysPerWeekController.submitDaysAWeek(value: Int)
 
-GET         /state-pension         controllers.QuickCalcController.showStatePensionForm
-POST        /state-pension         controllers.QuickCalcController.submitStatePensionForm
+GET         /state-pension         controllers.StatePensionController.showStatePensionForm
+POST        /state-pension         controllers.StatePensionController.submitStatePensionForm
 
 GET         /scottish-tax          controllers.QuickCalcController.showScottishRateForm
 POST        /scottish-tax          controllers.QuickCalcController.submitScottishRateForm

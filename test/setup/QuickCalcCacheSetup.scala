@@ -16,7 +16,7 @@
 
 package setup
 
-import forms.{OverStatePensionAge, ScottishRate, UserTaxCode, YouHaveToldUsItem}
+import forms.{StatePensionFormProvider, ScottishRate, UserTaxCode, YouHaveToldUsItem}
 import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.i18n.Messages
 import services.QuickCalcCache
@@ -42,7 +42,7 @@ object QuickCalcCacheSetup {
   val baseURL = "/estimate-paye-take-home-pay/"
 
   val taxCodeTest            = YouHaveToldUsItem("1150L", "Tax Code", "/foo", "tax-code")
-  val overStatePensionTest   = YouHaveToldUsItem("YES", "Over 65", "/foo", "state_pension")
+  val overStatePensionTest   = YouHaveToldUsItem("YES", "Over 65", "/foo", "StatePensionView")
   val salaryYearlyTest       = YouHaveToldUsItem("20000", "Per year", "/foo", "salary")
   val salaryDailyTest        = YouHaveToldUsItem("40", "Per day", "/foo", "salary")
   val salaryDailyPeriodTest  = YouHaveToldUsItem("5", "Days", "/foo", "time")
@@ -90,8 +90,8 @@ object QuickCalcCacheSetup {
   val cacheTestTaxCode            = Some(UserTaxCode(false, Some("1150L")))
   val cacheTestScottishNO         = Some(ScottishRate(false))
   val cacheTestScottishYES        = Some(ScottishRate(true))
-  val cacheTestStatePensionYES    = Some(OverStatePensionAge(true))
-  val cacheTestStatusPensionNO    = Some(OverStatePensionAge(false))
+  val cacheTestStatePensionYES    = Some(StatePensionFormProvider(true))
+  val cacheTestStatusPensionNO    = Some(StatePensionFormProvider(false))
   val cacheTestYearlySalary       = Some(Salary(20000, "a year", None))
   val cacheTestDailySalary        = Some(Salary(40, "a day", None))
   val cacheTestHourlySalary       = Some(Salary(8, "an hour", None))

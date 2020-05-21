@@ -17,7 +17,7 @@
 package forms
 
 import controllers.routes
-import models.{PayPeriodDetail, Salary}
+import models.{PayPeriodDetail, Salary, StatePension}
 import play.api.i18n.Messages
 
 case class YouHaveToldUsItem(
@@ -56,14 +56,14 @@ object YouHaveToldUs {
     }
   }
 
-  implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[OverStatePensionAge] {
+  implicit def overStatePensionAgeFormat(implicit messages: Messages) = new YouHaveToldUs[StatePension] {
 
-    def toYouHaveToldUsItem(overStatePensionAge: OverStatePensionAge): YouHaveToldUsItem = {
+    def toYouHaveToldUsItem(overStatePensionAge: StatePension): YouHaveToldUsItem = {
       val label    = "over_state_pension_age"
       val idSuffix = "pension-state"
-      val url      = routes.QuickCalcController.showStatePensionForm().url
+      val url      = routes.StatePensionController.showStatePensionForm().url
       YouHaveToldUsItem(
-        if (overStatePensionAge.value) Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
+        if (overStatePensionAge.overStatePensionAge) Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
         else Messages("quick_calc.you_have_told_us.over_state_pension_age.no"),
         label,
         url,

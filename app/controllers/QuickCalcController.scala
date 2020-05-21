@@ -83,47 +83,7 @@ class QuickCalcController @Inject() (
     else if (aggregate.savedSalary.isEmpty)
       Redirect(routes.SalaryController.showSalaryForm())
     else
-      Redirect(routes.QuickCalcController.showStatePensionForm())
-
-  def showStatePensionForm(): Action[AnyContent] = salaryRequired(cache,showStatePensionFormTestable)
-
-  private[controllers] def showStatePensionFormTestable: ShowForm = { implicit request => agg =>
-    val form = agg.savedIsOverStatePensionAge
-      .map(OverStatePensionAge.form.fill)
-      .getOrElse(OverStatePensionAge.form)
-    Ok(state_pension(form, agg.youHaveToldUsItems))
-  }
-
-  def submitStatePensionForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    OverStatePensionAge.form
-      .bindFromRequest()
-      .fold(
-        formWithErrors =>
-          cache.fetchAndGetEntry().map {
-            case Some(aggregate) =>
-              BadRequest(state_pension(formWithErrors, aggregate.youHaveToldUsItems))
-            case None =>
-              BadRequest(state_pension(formWithErrors, Nil))
-          },
-        userAge =>
-          cache.fetchAndGetEntry().flatMap {
-            case Some(aggregate) =>
-              val updatedAggregate = aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
-              cache.save(updatedAggregate).map { _ =>
-                Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-                  routes.QuickCalcController.showTaxCodeForm()
-                })
-              }
-            case None =>
-              cache.save(QuickCalcAggregateInput.newInstance.copy(savedIsOverStatePensionAge = Some(userAge))).map {
-                _ =>
-                  Redirect(routes.QuickCalcController.showTaxCodeForm())
-              }
-          }
-      )
-  }
+      Redirect(routes.StatePensionController.showStatePensionForm())
 
   def showTaxCodeForm(): Action[AnyContent] = salaryRequired(cache,showTacCodeFormTestable)
 

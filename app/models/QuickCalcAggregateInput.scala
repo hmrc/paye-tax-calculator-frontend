@@ -16,16 +16,16 @@
 
 package models
 
-import forms.{OverStatePensionAge, ScottishRate, UserTaxCode, YouHaveToldUs, YouHaveToldUsItem}
+import forms.{StatePensionFormProvider, ScottishRate, UserTaxCode, YouHaveToldUs, YouHaveToldUsItem}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 
 case class QuickCalcAggregateInput(
-  savedSalary:                Option[Salary],
-  savedPeriod:                Option[PayPeriodDetail],
-  savedIsOverStatePensionAge: Option[OverStatePensionAge],
-  savedTaxCode:               Option[UserTaxCode],
-  savedScottishRate:          Option[ScottishRate]) {
+                                    savedSalary:                Option[Salary],
+                                    savedPeriod:                Option[PayPeriodDetail],
+                                    savedIsOverStatePensionAge: Option[StatePension],
+                                    savedTaxCode:               Option[UserTaxCode],
+                                    savedScottishRate:          Option[ScottishRate]) {
 
   def allQuestionsAnswered: Boolean =
     List(
