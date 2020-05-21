@@ -81,7 +81,9 @@
     @h2(Messages("quick_calc.result.header"))
 
     @govukTabs(
-        Tabs(items = tabsItems)
+        Tabs(
+            title = Messages("label.breakdown_per"),
+            items = tabsItems)
     )
 
 

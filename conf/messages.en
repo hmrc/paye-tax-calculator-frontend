@@ -227,3 +227,16 @@ error.boolean = Please give an answer
 error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
+
+
+
+#######################################################
+## needs translating
+#######################################################
+label.breakdown_per = Breakdown per:
+label.DAILY = Daily
+label.HOURLY = Hourly
+label.FOUR_WEEKLY = Four weekly
+label.WEEKLY = Week
+label.MONTHLY = Month
+label.YEARLY = Year
