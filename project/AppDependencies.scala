@@ -16,7 +16,8 @@ object AppDependencies {
   private val taxYearVersion                    = "1.1.0"
   private val taxKalcVersion                    = "0.9.0"
   private val catsCoreVersion                   = "2.1.0"
-  private val govUkTemplate                   = "0.44.0-play-26"
+  private val govUkTemplate                     = "0.44.0-play-26"
+  private val hmrcFrontend                      = "0.15.0-play-26"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
@@ -24,6 +25,7 @@ object AppDependencies {
     "uk.gov.hmrc"   %% "play-partials"                 % playPartialsVersion,
     "uk.gov.hmrc"   %% "logback-json-logger"           % logbackJsonLoggerVersion,
     "uk.gov.hmrc"   %% "govuk-template"                % govukTemplateVersion,
+    "uk.gov.hmrc"   %% "play-frontend-hmrc"            % hmrcFrontend,
     "uk.gov.hmrc"   %% "play-health"                   % playHealthVersion,
     "uk.gov.hmrc"   %% "play-ui"                       % playUiVersion,
     "uk.gov.hmrc"   %% "http-caching-client"           % httpCachingClientVersion,
@@ -32,7 +34,7 @@ object AppDependencies {
     "uk.gov.hmrc"   %% "tax-year"                      % taxYearVersion,
     "uk.gov.hmrc"   % "tax-kalculator-jvm"             % taxKalcVersion,
     "org.typelevel" %% "cats-core"                     % catsCoreVersion,
-    "uk.gov.hmrc" %% "play-frontend-govuk" % govUkTemplate
+    "uk.gov.hmrc"   %% "play-frontend-govuk"           % govUkTemplate
   )
 
   private val hmrcTestVersion                  = "3.9.0-play-26"

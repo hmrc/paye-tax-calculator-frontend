@@ -15,16 +15,19 @@
  *@
 
 @import play.api.i18n._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
+        hmrcCurrencyInput : HmrcCurrencyInput,
         h1: components.h1,
         errorSummary: components.errorSummary,
         inputNumber: components.inputNumber,
         p: components.p,
         inputRadio: components.inputRadio,
-        button: components.button
+        button: components.button,
+        govukBackLink: GovukBackLink
 )
 
 @(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
@@ -52,6 +55,8 @@
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header")))) {
 
+  @govukBackLink(BackLink(href = "https://www.gov.uk/estimate-income-tax", content = Text(Messages("back"))))
+
     @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount()) {
 
         @errorSummary(salaryForm.errors)
@@ -65,16 +70,27 @@
             @Messages("quick_calc.salary.description_b")
         }
 
-        @inputNumber(salaryForm,
+        @hmrcCurrencyInput(CurrencyInput(
             id = "amount",
             name = "amount",
-            label = "",
-            classes = Some("govuk-input--width-10")
-        )
+
+            label = Label(
+                content = Text(Messages("label.salary")),
+                classes = ""
+            ),
+            hint = Some(Hint(
+                content = Text(Messages("hint.salary"))
+            )),
+            classes = "govuk-input--width-10",
+            autocomplete = Some("off")
+        ))
+
 
         @inputRadio(
+            legendAsHeading=false,
             form = salaryForm,
-            legend = "",
+            classes = "",
+            legend = Messages("label.payperiod"),
             name = "period",
             items = periodRadioButtons
         )
