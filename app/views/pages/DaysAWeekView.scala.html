@@ -22,7 +22,7 @@
 @this(govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
-        h2: components.h2,
+        h1: components.h1,
         p: components.p,
         inputNumber: components.inputNumber,
         inputHidden: components.inputHidden,
@@ -34,7 +34,7 @@
 
         @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek(valueInPence)) {
             @errorSummary(daysForm.errors)
-            @h2("quick_calc.salary.question.days_a_week")
+            @h1("quick_calc.salary.question.days_a_week")
             @p {
                 @Messages("quick_calc.salary.question.approximate")
             }

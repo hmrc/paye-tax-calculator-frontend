@@ -19,7 +19,7 @@
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
-        h2: components.h2,
+        h1: components.h1,
         errorSummary: components.errorSummary,
         inputNumber: components.inputNumber,
         p: components.p,
@@ -56,7 +56,7 @@
 
         @errorSummary(salaryForm.errors)
 
-        @h2(messages("quick_calc.salary.header"))
+        @h1(messages("quick_calc.salary.header"))
 
         @p {
             @Messages("quick_calc.salary.description_a")
