@@ -61,20 +61,24 @@ class QuickCalcController @Inject() (
   }
 
   def summary(): Action[AnyContent] =
-    salaryRequired(cache,implicit request =>
-      aggregate =>
-        if (aggregate.allQuestionsAnswered)
-          Ok(you_have_told_us(aggregate.youHaveToldUsItems))
-        else
-          redirectToNotYetDonePage(aggregate)
+    salaryRequired(
+      cache,
+      implicit request =>
+        aggregate =>
+          if (aggregate.allQuestionsAnswered)
+            Ok(you_have_told_us(aggregate.youHaveToldUsItems))
+          else
+            redirectToNotYetDonePage(aggregate)
     )
 
   def showResult(): Action[AnyContent] =
-    salaryRequired(cache, implicit request =>
-      aggregate =>
-        if (aggregate.allQuestionsAnswered) {
-          Ok(result(TaxResult.taxCalculation(aggregate), UserTaxCode.startOfCurrentTaxYear))
-        } else redirectToNotYetDonePage(aggregate)
+    salaryRequired(
+      cache,
+      implicit request =>
+        aggregate =>
+          if (aggregate.allQuestionsAnswered) {
+            Ok(result(TaxResult.taxCalculation(aggregate), UserTaxCode.startOfCurrentTaxYear))
+          } else redirectToNotYetDonePage(aggregate)
     )
 
   private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result =
@@ -85,7 +89,7 @@ class QuickCalcController @Inject() (
     else
       Redirect(routes.QuickCalcController.showStatePensionForm())
 
-  def showStatePensionForm(): Action[AnyContent] = salaryRequired(cache,showStatePensionFormTestable)
+  def showStatePensionForm(): Action[AnyContent] = salaryRequired(cache, showStatePensionFormTestable)
 
   private[controllers] def showStatePensionFormTestable: ShowForm = { implicit request => agg =>
     val form = agg.savedIsOverStatePensionAge
@@ -118,14 +122,13 @@ class QuickCalcController @Inject() (
               }
             case None =>
               cache.save(QuickCalcAggregateInput.newInstance.copy(savedIsOverStatePensionAge = Some(userAge))).map {
-                _ =>
-                  Redirect(routes.QuickCalcController.showTaxCodeForm())
+                _ => Redirect(routes.QuickCalcController.showTaxCodeForm())
               }
           }
       )
   }
 
-  def showTaxCodeForm(): Action[AnyContent] = salaryRequired(cache,showTacCodeFormTestable)
+  def showTaxCodeForm(): Action[AnyContent] = salaryRequired(cache, showTacCodeFormTestable)
 
   def submitTaxCodeForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
@@ -165,13 +168,15 @@ class QuickCalcController @Inject() (
   }
 
   def showScottishRateForm(): Action[AnyContent] =
-    salaryRequired(cache,implicit request =>
-      aggregate => {
-        implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    salaryRequired(
+      cache,
+      implicit request =>
+        aggregate => {
+          implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-        val form = aggregate.savedScottishRate.map(ScottishRate.form.fill).getOrElse(ScottishRate.form)
-        Ok(scottish_income_tax_rate(form, aggregate.youHaveToldUsItems))
-      }
+          val form = aggregate.savedScottishRate.map(ScottishRate.form.fill).getOrElse(ScottishRate.form)
+          Ok(scottish_income_tax_rate(form, aggregate.youHaveToldUsItems))
+        }
     )
 
   def submitScottishRateForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
@@ -217,18 +222,16 @@ class QuickCalcController @Inject() (
     cache.fetchAndGetEntry().flatMap {
       case Some(aggregate) =>
         val updatedAggregate = aggregate.copy(None, None, None, None, None)
-        cache.save(updatedAggregate).map { _ =>
-          Redirect(routes.SalaryController.showSalaryForm())
-        }
+        cache.save(updatedAggregate).map(_ => Redirect(routes.SalaryController.showSalaryForm()))
       case None =>
         Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
     }
   }
 
   private def salaryRequired[T](
-                                 cache: QuickCalcCache,
-                                 furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-                               ): Action[AnyContent] =
+    cache:         QuickCalcCache,
+    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
+  ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
