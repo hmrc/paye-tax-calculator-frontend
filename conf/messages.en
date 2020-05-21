@@ -150,11 +150,8 @@ quick_calc.salary.question.error.number_of_days.less_than_zero=Enter your days a
 quick_calc.salary.question.error.number_of_days.more_than_seven=Enter your days a week as a number between 1 and 7
 quick_calc.salary.question.error.number_of_hours.less_than_one=Enter your hours a week as a number between 1 and 168
 quick_calc.salary.question.error.number_of_hours.more_than_168=Enter your hours a week as a number between 1 and 168
-
-quick_calc.salary.question.error.invalid_number_daily=Enter your days a week as a whole number
 quick_calc.salary.question.error.empty_number_daily=Enter how many days a week you work
 
-quick_calc.salary.question.error.invalid_number_hourly=Enter your hours a week as a whole number
 quick_calc.salary.question.error.empty_number_hourly=Enter how many hours a week you work
 quick_calc.salary.question.error.invalid_salary=Please enter amount in pounds and pence e.g. 123.45
 quick_calc.salary.question_error_invalid_input = Enter your pay in pounds and pence, for example 7.20 or 26500. Don’t use a comma
@@ -227,3 +224,9 @@ error.boolean = Please give an answer
 error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
+
+
+
+## Translation required
+quick_calc.salary.question.error.invalid_number_daily=Enter your days a week as e.g. 5 or 4.5
+quick_calc.salary.question.error.invalid_number_hourly=Enter your hours a week e.g. 35 or 37.5

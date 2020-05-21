@@ -24,17 +24,13 @@
         isDecimal: Boolean = true,
         hint: Option[String] = None,
         classes: Option[String] = None,
-        autoComplete: String  = "",
-        attributes: Map[String,String] = Map.empty,
-        pattern: String = "^[0-9]+(.[0-9]{1,2})?$"
+        autoComplete: String  = ""
 )(implicit messages: Messages)
 
 @govukInput(Input(
     id,
     name,
-    inputType = "number",
     inputmode = Some("numeric"),
-    pattern = Some(pattern),
     classes = classes.fold("")(x => x),
     label = Label(
         content = Text(messages(label)),
@@ -46,6 +42,5 @@
     )),
     value = form(name).value,
     autocomplete =  Some(autoComplete),
-    attributes = attributes,
     errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
 ))
