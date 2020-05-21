@@ -44,8 +44,8 @@ class SalarySerializationSpec extends UnitSpec {
   def yearlyJson  = s"""{"amount":1,"period":"yearly"}"""
   def monthlyJson = s"""{"amount":1,"period":"monthly"}"""
   def weeklyJson  = s"""{"amount":1,"period":"weekly"}"""
-  def dailyJson   = s"""{"amount":1,"howManyAWeek":2}"""
-  def hourlyJson  = s"""{"amount":1,"howManyAWeek":2}"""
+  def dailyJson   = s"""{"amount":1,"how-many-a-week":2}"""
+  def hourlyJson  = s"""{"amount":1,"how-many-a-week":2}"""
 
   def jsonOf[T: Writes](t: T): String = Json.stringify(Json.toJson(t))
 

@@ -185,7 +185,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -217,7 +217,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "0")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "0")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -250,7 +250,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "8")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "8")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -283,7 +283,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "5")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -313,7 +313,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "5")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
