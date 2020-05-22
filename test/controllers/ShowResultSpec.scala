@@ -95,7 +95,7 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
 
         val result = route(application, request).value
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.QuickCalcController.showStatePensionForm().url
+        redirectLocation(result).get mustEqual routes.StatePensionController.showStatePensionForm().url
       }
     }
 
