@@ -163,8 +163,6 @@ class SalaryControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedNegativeNumberErrorMessage)               mustEqual true
-
-
       }
     }
 
@@ -344,8 +342,6 @@ class SalaryControllerSpec
     }
 
   }
-
-
 
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =

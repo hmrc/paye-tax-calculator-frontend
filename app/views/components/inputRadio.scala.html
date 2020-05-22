@@ -17,7 +17,7 @@
 @this(govukRadios: GovukRadios)
 
 @(      form: Form[_],
-        legend: String,
+        legendKey: String,
         name: String,
         items: Seq[RadioItem],
         legendAsHeading: Boolean = true,
@@ -31,7 +31,7 @@
     name = name,
     fieldset = Some(Fieldset(
         legend = Some(Legend(
-            content = Text(messages(legend)),
+            content = Text(messages(legendKey)),
             isPageHeading = legendAsHeading,
             classes = classes
         ))
