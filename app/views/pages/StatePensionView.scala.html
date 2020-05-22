@@ -22,7 +22,7 @@
         govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
-        link: components.link,
+        link: components.linkNewTab,
         inputRadio: components.inputRadio,
         button: components.button,
         govukDetails : GovukDetails,
@@ -46,14 +46,12 @@
 @pensionAgeRadios = @{
     Seq(
         RadioItem(
-            id = Some("over-state-pension-age-yes"),
             content = Text(Messages("quick_calc.over_state_pension_age.yes")),
             label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
             value = Some("true"),
             checked = radioFieldStatePension.value.contains("true")
         ),
         RadioItem(
-            id = Some("over-state-pension-age-no"),
             content = Text(Messages("quick_calc.over_state_pension_age.no")),
             label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
             value = Some("false"),
