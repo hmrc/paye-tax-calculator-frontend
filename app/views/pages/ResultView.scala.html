@@ -41,7 +41,7 @@
 )
 
 
-@(calculatorResponse: CalculatorResponse, taxYear: Int)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
+@(calculatorResponse: CalculatorResponse, taxYear: Int)(implicit request: Request[_], messages: Messages)
 
 @tabsItems = @{
     Seq(

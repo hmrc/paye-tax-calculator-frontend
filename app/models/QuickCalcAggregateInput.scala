@@ -31,7 +31,8 @@ case class QuickCalcAggregateInput(
     List(
       savedSalary,
       savedIsOverStatePensionAge,
-      savedTaxCode
+      savedTaxCode,
+      savedScottishRate,
     ).forall(_.isDefined)
 
   def youHaveToldUsItems(implicit m: Messages): List[YouHaveToldUsItem] =

@@ -293,7 +293,7 @@ class HoursPerWeekControllerSpec
     "return 303, with new Hours worked, 40.5 and complete aggregate" in {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly)
       when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
 
       val application = new GuiceApplicationBuilder()

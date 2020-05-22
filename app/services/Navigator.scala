@@ -37,10 +37,14 @@ class Navigator @Inject() () {
     }
 
   def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Call =
-    if (aggregate.savedTaxCode.isEmpty)
-     routes.QuickCalcController.showTaxCodeForm()
-    else if (aggregate.savedSalary.isEmpty)
+    if (aggregate.savedSalary.isEmpty)
       routes.SalaryController.showSalaryForm()
-    else
+    else if (aggregate.savedIsOverStatePensionAge.isEmpty)
       routes.QuickCalcController.showStatePensionForm()
+    else if (aggregate.savedTaxCode.isEmpty)
+      routes.QuickCalcController.showTaxCodeForm()
+    else if (aggregate.savedScottishRate.isEmpty)
+      routes.QuickCalcController.showScottishRateForm()
+    else
+      routes.SalaryController.showSalaryForm()
 }
