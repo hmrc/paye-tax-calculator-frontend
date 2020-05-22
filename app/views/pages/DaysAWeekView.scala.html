@@ -37,7 +37,7 @@
     @govukBackLink(BackLink(href = url, content = Text(Messages("back"))))
 
 
-    @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek(valueInPence)) {
+    @formHelper(action = controllers.routes.DaysPerWeekController.submitDaysAWeek(valueInPence)) {
             @errorSummary(daysForm.errors)
 
             @inputNumber(daysForm,

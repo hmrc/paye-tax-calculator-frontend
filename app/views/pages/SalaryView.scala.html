@@ -20,7 +20,7 @@
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
-        hmrcCurrencyInput : HmrcCurrencyInput,
+        hmrcCurrencyInput: HmrcCurrencyInput,
         h1: components.h1,
         errorSummary: components.errorSummary,
         inputNumber: components.inputNumber,
@@ -44,7 +44,6 @@
 @periodRadioButtons = @{
     periodLabels.map { label =>
         RadioItem(
-            id = Some(label),
             content = Text(Messages(s"quick_calc.salary.$label.label")),
             label = Some(Label(content = Text(Messages(s"quick_calc.salary.$label.label")))),
             value = Some(Messages(s"quick_calc.salary.$label.label")),
@@ -55,7 +54,7 @@
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header")))) {
 
-  @govukBackLink(BackLink(href = "https://www.gov.uk/estimate-income-tax", content = Text(Messages("back"))))
+    @govukBackLink(BackLink(href = "https://www.gov.uk/estimate-income-tax", content = Text(Messages("back"))))
 
     @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount()) {
 
@@ -73,7 +72,6 @@
         @hmrcCurrencyInput(CurrencyInput(
             id = "amount",
             name = "amount",
-
             label = Label(
                 content = Text(Messages("label.salary")),
                 classes = ""
@@ -81,13 +79,14 @@
             hint = Some(Hint(
                 content = Text(Messages("hint.salary"))
             )),
+          value = salaryForm("amount").value,
             classes = "govuk-input--width-10",
-            autocomplete = Some("off")
+            autocomplete = Some("off"),
+            errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
         ))
 
-
         @inputRadio(
-            legendAsHeading=false,
+            legendAsHeading = false,
             form = salaryForm,
             classes = "",
             legend = Messages("label.payperiod"),

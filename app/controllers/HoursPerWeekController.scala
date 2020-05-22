@@ -59,7 +59,7 @@ class HoursPerWeekController @Inject() (
       .bindFromRequest()
       .fold(
         formWithErrors => {
-          cache.fetchAndGetEntry().map(_ => BadRequest(hoursAWeekView(formWithErrors, valueInPence, url)))
+          Future( BadRequest(hoursAWeekView(formWithErrors, valueInPence, url)))
         },
         hours => {
           val updatedAggregate = cache

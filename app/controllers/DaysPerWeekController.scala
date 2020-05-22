@@ -19,14 +19,14 @@ package controllers
 import config.AppConfig
 import forms.SalaryInDaysFormProvider
 import javax.inject.{Inject, Singleton}
-import models.{Days, Hours, PayPeriodDetail, QuickCalcAggregateInput, Salary}
+import models.{Days, PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{Action, AnyContent, BodyParser, ControllerComponents, MessagesControllerComponents, Request, Result}
+import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.{BackendBaseController, FrontendBaseController}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.ActionWithSessionId
 import views.html.pages.DaysAWeekView
 
@@ -36,10 +36,10 @@ import scala.concurrent.{ExecutionContext, Future}
 class DaysPerWeekController @Inject() (
   override val messagesApi:      MessagesApi,
   cache:                         QuickCalcCache,
-  val controllerComponents: MessagesControllerComponents,
+  val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
-  daysPerWeekView:                DaysAWeekView,
-  salaryInDaysFormProvider: SalaryInDaysFormProvider,
+  daysPerWeekView:               DaysAWeekView,
+  salaryInDaysFormProvider:      SalaryInDaysFormProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -59,9 +59,7 @@ class DaysPerWeekController @Inject() (
       .bindFromRequest()
       .fold(
         formWithErrors =>
-          cache.fetchAndGetEntry().map { _ =>
-            BadRequest(daysPerWeekView( formWithErrors, valueInPence,url))
-          },
+          Future(BadRequest(daysPerWeekView(formWithErrors, valueInPence, url))),
         days => {
           val updatedAggregate = cache
             .fetchAndGetEntry()
@@ -90,20 +88,19 @@ class DaysPerWeekController @Inject() (
   }
 
   def showDaysAWeek(
-                     valueInPence: Int,
-                     url:          String
-                   ): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
+    valueInPence: Int,
+    url:          String
+  ): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    salaryRequired(cache,Ok(daysPerWeekView(form, valueInPence, url)))
+    salaryRequired(cache, Ok(daysPerWeekView(form, valueInPence, url)))
   }
 
-
   private def salaryRequired[T](
-                                 cache: QuickCalcCache,
-                                 resultIfPresent: Result
-                               )(implicit hc: HeaderCarrier): Future[Result] = {
-
+    cache:           QuickCalcCache,
+    resultIfPresent: Result
+  )(implicit hc:     HeaderCarrier
+  ): Future[Result] =
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         if (aggregate.savedSalary.isDefined)
@@ -113,6 +110,5 @@ class DaysPerWeekController @Inject() (
       case None =>
         Redirect(routes.SalaryController.showSalaryForm())
     }
-  }
 
 }

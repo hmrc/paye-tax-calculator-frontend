@@ -132,21 +132,21 @@ object CustomFormatters {
           try {
             val salary = BigDecimal(s).setScale(2)
             if (!WageValidator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
-              Left("quick_calc.salary.question.error.minimum_salary_input")
+              Left(Seq(FormError(key, "quick_calc.salary.question.error.minimum_salary_input")))
             } else if (!WageValidator.INSTANCE.isBelowMaximumWages(salary.toDouble)) {
-              Left("quick_calc.salary.question.error.maximum_salary_input")
+              Left(Seq(FormError(key, "quick_calc.salary.question.error.maximum_salary_input")))
             } else {
               Right(salary)
             }
           } catch {
             case _: Throwable if !s.matches("([0-9])+(\\.\\d+)") =>
-              Left("quick_calc.salary.question_error_invalid_input")
+              Left(Seq(FormError(key, "quick_calc.salary.question_error_invalid_input")))
             case _: Throwable if !s.matches("([0-9])+(\\.\\d{1,2})") =>
-              Left("quick_calc.salary.question.error.invalid_salary")
-            case _: Throwable => Left("quick_calc.salary.question.error.invalid_salary")
+              Left(Seq(FormError(key, "quick_calc.salary.question.error.invalid_salary")))
+            case _: Throwable => Left(Seq(FormError(key, "quick_calc.salary.question.error.invalid_salary")))
           }
-        case None => Left("quick_calc.salary.question.error.empty_salary_input")
-      }).leftMap(translationKey => Seq(FormError(key, translationKey)))
+        case None =>  Left(Seq(FormError(key, "quick_calc.salary.question.error.empty_salary_input")))
+      })
 
     override def unbind(
       key:   String,
