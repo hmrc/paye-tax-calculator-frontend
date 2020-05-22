@@ -66,11 +66,11 @@ class DaysPerWeekControllerSpec
         )
         .build()
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteDaily)
 
       implicit val messages: Messages = messagesForApp(application)
 
-      val amount       = cacheCompleteHourly.value.savedPeriod.value.amount
+      val amount       = cacheCompleteDaily.value.savedPeriod.value.amount
 
       running(application) {
 
@@ -203,7 +203,7 @@ class DaysPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedEmptyDaysErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
@@ -235,7 +235,7 @@ class DaysPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedMinDaysAWeekErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
@@ -268,7 +268,7 @@ class DaysPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedMaxDaysAWeekErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 

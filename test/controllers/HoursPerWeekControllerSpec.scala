@@ -221,7 +221,7 @@ class HoursPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedEmptyHoursErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
@@ -253,7 +253,7 @@ class HoursPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedMinHoursAWeekErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
@@ -286,7 +286,7 @@ class HoursPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedMaxHoursAWeekErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
