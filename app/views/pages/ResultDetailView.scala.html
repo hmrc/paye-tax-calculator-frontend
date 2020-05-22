@@ -25,7 +25,7 @@
         govButton: GovukButton,
         p: components.p,
         h3: components.h3,
-        h1: components.h1,
+        h2: components.h2,
         linkNewTab: components.linkNewTab,
         appConfig: AppConfig
 )
@@ -33,7 +33,7 @@
 
 @(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean)(implicit request: Request[_], messages: Messages)
 
-@h1(Messages(s"label.${calculatorResponse.getPayPeriod}"))
+@h2(Messages(s"label.${calculatorResponse.getPayPeriod}"))
 
 @govukPanel(Panel(
     headingLevel = 0,

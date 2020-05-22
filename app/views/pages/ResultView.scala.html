@@ -31,7 +31,7 @@
         resultDetailView: ResultDetailView,
         govuk_wrapper: templates.GovukLayoutWrapper,
         link: components.link,
-        h2: components.h2,
+        h1: components.h1,
         govukTabs: GovukTabs,
         govButton: GovukButton,
         p: components.p,
@@ -75,9 +75,9 @@
 }
 
 
-@govuk_wrapper(Some(titleNoForm(Messages("quick_calc.result.header")))) {
+@govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), printLink = true) {
 
-    @h2(Messages("quick_calc.result.header"))
+    @h1(Messages("quick_calc.result.header"))
 
     @govukTabs(
         Tabs(
@@ -85,11 +85,6 @@
             items = tabsItems)
     )
 
-
-    @govButton(Button(
-        href = Some("javascript:window.print();"),
-        content = Text(Messages("quick_calc.result.info_print"))
-    ))
 
     @p {
         @Messages("quick_calc.result.info_a") @linkNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters", "quick_calc.result.info_b") @Messages("quick_calc.result.info_e")

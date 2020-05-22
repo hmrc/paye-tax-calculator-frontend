@@ -24,6 +24,7 @@ class AppConfig @Inject()(
 
 
   lazy val host: String = config.get[String]("host")
+  lazy val appName: String = config.get[String]("appName")
 
   lazy val analyticsToken: String = loadConfig(s"google-analytics.token")
   lazy val analyticsHost: String = loadConfig(s"google-analytics.host")

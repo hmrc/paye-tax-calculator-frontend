@@ -16,29 +16,31 @@
 
 @import views.components.FooterLinks
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
 @this(
-    govukLayout: GovukLayout,
-    govukPhaseBanner: GovukPhaseBanner,
-    siteHeader: components.siteHeader,
-    phaseBanner: components.phaseBanner,
-    languageSelection: components.languageSelection,
-    link: components.link,
-    appConfig: config.AppConfig,
-    footerLinks: FooterLinks
-//        ,   hmrcReportTechnicalIssue: hmrcReportTechnicalIssue
+        govukLayout: GovukLayout,
+        govukPhaseBanner: GovukPhaseBanner,
+        siteHeader: components.siteHeader,
+        phaseBanner: components.phaseBanner,
+        languageSelection: components.languageSelection,
+        link: components.link,
+        appConfig: config.AppConfig,
+        footerLinks: FooterLinks,
+        hmrcReportTechnicalIssue: HmrcReportTechnicalIssue
 )
 @(
         pageTitle: Option[String] = None,
         timeout: Boolean = true,
         js: Option[Html] = None,
         signedInUser: Boolean = true,
-        printLink: Boolean =  false,
-        showDeskproLink: Boolean = true)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+        printLink: Boolean = false,
+        showDeskproLink: Boolean = false)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {
-    <!--[if lte IE 8]><link href='@controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" /><!--<![endif]-->
+    <!--[if lte IE 8]><link href='   @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
+        <!--<![endif]-->
     <script src='@controllers.routes.Assets.at("javascripts/gtm_dl.js")' type="text/javascript"></script>
     <script src='@controllers.routes.Assets.at("javascripts/gtm.js")' type="text/javascript"></script>
     <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
@@ -80,13 +82,12 @@
 }
 @content = {
 @contentBlock
-    @* TODO Add back in Deskpro*@
-    @* @ if(showDeskproLink){*@
-    @* <div class="govuk-!-margin-top-5">*@
-    @* @ hmrcReportTechnicalIssue(*@
-    @* uk.gov.hmrc.hmrcfrontend.views.html.components.ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))*@
-    @* )*@
-    @* </div>}*@
+@if(showDeskproLink) {
+    <div class="govuk-!-margin-top-5">
+        @hmrcReportTechnicalIssue(
+            ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))
+        )
+    }
 }
 @beforeContentBlock = {
 

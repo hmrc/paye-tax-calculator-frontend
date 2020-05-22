@@ -225,7 +225,7 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
-
+site.print_and_save = Print or save page
 
 ## Translation required
 quick_calc.salary.question.error.invalid_number_daily=Enter your days a week as e.g. 5 or 4.5
