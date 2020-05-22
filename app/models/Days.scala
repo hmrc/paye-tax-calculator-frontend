@@ -16,12 +16,23 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Reads, Writes, __}
 
 case class Days(
                  amount:       Double,
                  howManyAWeek: Double)
 
 object Days {
-  implicit val daysFormat: OFormat[Days] = Json.format[Days]
+  import play.api.libs.functional.syntax._
+
+  implicit lazy val reads: Reads[Days] = (
+    (__ \ "amount").read[Double] and
+      (__ \ "how-many-a-week").read[Double]
+    )(Days(_, _))
+
+  implicit lazy val writes: Writes[Days] =
+    (
+      (__ \ "amount").write[Double] and
+        (__ \ "how-many-a-week").write[Double]
+      )(a => (a.amount, a.howManyAWeek))
 }

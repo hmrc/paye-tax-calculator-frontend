@@ -29,7 +29,7 @@ class SalaryInHoursFormProvider @Inject()() {
   def apply(): Form[Hours] = Form(
     mapping(
       a1 = "amount"       -> of[Double],
-      a2 = "howManyAWeek" -> of(CustomFormatters.hoursValidation)
+      a2 = "how-many-a-week" -> of(CustomFormatters.hoursValidation)
     )(Hours.apply)(Hours.unapply)
   )
 }

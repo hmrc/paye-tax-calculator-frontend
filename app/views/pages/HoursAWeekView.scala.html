@@ -19,29 +19,28 @@
 @this(govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
-        h2: components.h2,
+        h1: components.h1,
         p: components.p,
         inputNumber: components.inputNumber,
         inputHidden: components.inputHidden,
-        button: components.button
+        button: components.button,
+        govukBackLink: GovukBackLink
 )
 
 @(hoursForm: Form[Hours], valueInPence: Int, url: String)(implicit request: Request[_], messages: Messages)
 
 @govuk_wrapper(Some(title(hoursForm, Messages("quick_calc.salary.question.hours_a_week")))) {
 
+    @govukBackLink(BackLink(href = url, content = Text(Messages("back"))))
+
     @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek(valueInPence)) {
         @errorSummary(hoursForm.errors)
-        @h2("quick_calc.salary.question.hours_a_week")
-        @p {
-            @Messages("quick_calc.salary.question.approximate")
-        }
 
         @inputNumber(hoursForm,
-            id = "how-many-hours-a-week",
-            name = "howManyAWeek",
-            label = "",
-            isDecimal = false,
+            id = "how-many-a-week",
+            name = "how-many-a-week",
+            label = "quick_calc.salary.question.hours_a_week",
+            hint = Some("quick_calc.salary.question.approximate"),
             classes = Some("govuk-input--width-10")
         )
 
