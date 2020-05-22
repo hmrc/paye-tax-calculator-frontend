@@ -49,69 +49,67 @@
     <script src='@controllers.routes.Assets.at("javascripts/application.min.js")'></script>
     <script>window.GOVUKFrontend.initAll();</script>
     <script>
-    if(@signedInUser){
-        if (@timeout) {
-            timeoutDialog({
-                title: '@messages("timeout.title")',
-                message: '@messages("timeout.message")',
-                keepAliveButtonText: '@messages("timeout.keepAlive")',
-                signOutButtonText: '@messages("timeout.signOut")',
-                timeout: @{appConfig.timeout},
-                countdown: @{appConfig.countdown},
-                keepAliveUrl: '@{request.uri}',
-                @*signOutUrl: '@{routes.AuthController.signOutNoSurvey().url}'*@
-            });
-        };
-       }
-       else{
-           if (@timeout) {
-            timeoutDialog({
-                message: '@messages("timeout.message.notSignedIn")',
-                keepAliveButtonText: '@messages("timeout.keepAlive.notSignedIn")',
-                signOutButtonText: '@messages(s"timeout.deleteAnswers")',
-                timeout: @{appConfig.timeout},
-                countdown: @{appConfig.countdown},
-                keepAliveUrl: '@{request.uri}',
-                signOutUrl: '/self-employment-support/service-reset'
-            });
-        }
-       }
+            if (@signedInUser) {
+                if (@timeout) {
+                    timeoutDialog({
+                        title: '@messages("timeout.title")',
+                        message: '@messages("timeout.message")',
+                        keepAliveButtonText: '@messages("timeout.keepAlive")',
+                        signOutButtonText: '@messages("timeout.signOut")',
+                        timeout: @{appConfig.timeout},
+                        countdown: @{appConfig.countdown},
+                        keepAliveUrl: '@{request.uri}',
+                        @*signOutUrl: '@{routes.AuthController.signOutNoSurvey().url}'*@
+                    });
+                };
+            } else {
+                if (@timeout) {
+                    timeoutDialog({
+                        message: '@messages("timeout.message.notSignedIn")',
+                        keepAliveButtonText: '@messages("timeout.keepAlive.notSignedIn")',
+                        signOutButtonText: '@messages(s"timeout.deleteAnswers")',
+                        timeout: @{appConfig.timeout},
+                        countdown: @{appConfig.countdown},
+                        keepAliveUrl: '@{request.uri}',
+                        signOutUrl: '/self-employment-support/service-reset'
+                    });
+                }
+            }
     </script>
-    @js.map(x => x)
+@js.map(x => x)
 }
 @content = {
-    @contentBlock
-
-@*    TODO Add back in Deskpro*@
-@*    @ if(showDeskproLink){*@
-@*        <div class="govuk-!-margin-top-5">*@
-@*            @ hmrcReportTechnicalIssue(*@
-@*                    uk.gov.hmrc.hmrcfrontend.views.html.components.ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))*@
-@*                )*@
-@*        </div>}*@
+@contentBlock
+    @* TODO Add back in Deskpro*@
+    @* @ if(showDeskproLink){*@
+    @* <div class="govuk-!-margin-top-5">*@
+    @* @ hmrcReportTechnicalIssue(*@
+    @* uk.gov.hmrc.hmrcfrontend.views.html.components.ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))*@
+    @* )*@
+    @* </div>}*@
 }
 @beforeContentBlock = {
 
-    @phaseBanner("beta", signedInUser)
+@phaseBanner("beta", signedInUser)
 
-    @if(appConfig.languageTranslationEnabled) {
-        @languageSelection()
-    }
+@if(appConfig.languageTranslationEnabled) {
+    @languageSelection()
+}
 
-    @if(printLink){
-        <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-4" style="float:right">
-          <p class="govuk-body">
-          <img src="https://www.tax.service.gov.uk/assets/4.9.0//images/icon-print.svg" alt="Print Icon">
-          <a class="govuk-link print-page" href="#">@messages("site.print_and_save")</a></p>
-        </div>
-     }
+@if(printLink) {
+    <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-4" style="float: right">
+        <p class="govuk-body">
+            <img src="https://www.tax.service.gov.uk/assets/4.9.0//images/icon-print.svg" alt="Print Icon">
+            <a class="govuk-link print-page" href="#">@messages("site.print_and_save")</a></p>
+    </div>
+}
 }
 
 @govukLayout(
-  pageTitle = pageTitle,
-  headBlock = Some(head),
-  beforeContentBlock = Some(beforeContentBlock),
-  scriptsBlock = Some(scripts),
-  headerBlock = Some(siteHeader()),
-  footerItems = footerLinks.items
+    pageTitle = pageTitle,
+    headBlock = Some(head),
+    beforeContentBlock = Some(beforeContentBlock),
+    scriptsBlock = Some(scripts),
+    headerBlock = Some(siteHeader()),
+    footerItems = footerLinks.items
 )(content)

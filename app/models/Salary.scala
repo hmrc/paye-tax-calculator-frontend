@@ -25,8 +25,22 @@ case class Salary(
 
 object Salary {
 
-  implicit val format: OFormat[Salary] = Json.format[Salary]
+  import play.api.libs.functional.syntax._
 
   def salaryInPence(value: BigDecimal): Int =
     value.toInt
+
+  implicit lazy val reads: Reads[Salary] = (
+    (__ \ "amount").read[BigDecimal] and
+    (__ \ "period").read[String] and
+    (__ \ "how-many-a-week").readNullable[Double]
+  )(Salary(_, _, _))
+
+  implicit lazy val writes: Writes[Salary] =
+    (
+      (__ \ "amount").write[BigDecimal] and
+      (__ \ "period").write[String] and
+      (__ \ "how-many-a-week").writeNullable[Double]
+    )(a => (a.amount, a.period, a.howManyAWeek))
+
 }

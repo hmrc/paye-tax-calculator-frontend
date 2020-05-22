@@ -15,16 +15,19 @@
  *@
 
 @import play.api.i18n._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
-        h2: components.h2,
+        hmrcCurrencyInput: HmrcCurrencyInput,
+        h1: components.h1,
         errorSummary: components.errorSummary,
         inputNumber: components.inputNumber,
         p: components.p,
         inputRadio: components.inputRadio,
-        button: components.button
+        button: components.button,
+        govukBackLink: GovukBackLink
 )
 
 @(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
@@ -41,7 +44,6 @@
 @periodRadioButtons = @{
     periodLabels.map { label =>
         RadioItem(
-            id = Some(label),
             content = Text(Messages(s"quick_calc.salary.$label.label")),
             label = Some(Label(content = Text(Messages(s"quick_calc.salary.$label.label")))),
             value = Some(Messages(s"quick_calc.salary.$label.label")),
@@ -52,11 +54,13 @@
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header")))) {
 
+    @govukBackLink(BackLink(href = "https://www.gov.uk/estimate-income-tax", content = Text(Messages("back"))))
+
     @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount()) {
 
         @errorSummary(salaryForm.errors)
 
-        @h2(messages("quick_calc.salary.header"))
+        @h1(messages("quick_calc.salary.header"))
 
         @p {
             @Messages("quick_calc.salary.description_a")
@@ -65,22 +69,32 @@
             @Messages("quick_calc.salary.description_b")
         }
 
-        @inputNumber(salaryForm,
-            id = "pay-amount",
+        @hmrcCurrencyInput(CurrencyInput(
+            id = "amount",
             name = "amount",
-            label = "",
-            classes = Some("govuk-input--width-10"),
-            attributes = Map(("step", "0.01"))
-        )
+            label = Label(
+                content = Text(Messages("label.salary")),
+                classes = ""
+            ),
+            hint = Some(Hint(
+                content = Text(Messages("hint.salary"))
+            )),
+          value = salaryForm("amount").value,
+            classes = "govuk-input--width-10",
+            autocomplete = Some("off"),
+            errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+        ))
 
         @inputRadio(
+            legendAsHeading = false,
             form = salaryForm,
-            legend = "",
+            classes = "",
+            legend = Messages("label.payperiod"),
             name = "period",
             items = periodRadioButtons
         )
 
-        @button("continue")
+        @button("continue", Some("button-continue"))
     }
 }
 @* <a class="back-link" id="r-back" href="https://www.gov.uk/estimate-income-tax">@Messages("back")</a>*@

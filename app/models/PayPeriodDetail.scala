@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Json, OFormat, Reads, Writes, __}
 
 case class PayPeriodDetail(
                             amount:       Int,
@@ -25,5 +25,21 @@ case class PayPeriodDetail(
                             urlForChange: String)
 
 object PayPeriodDetail {
-  implicit val format: OFormat[PayPeriodDetail] = Json.format[PayPeriodDetail]
+  import play.api.libs.functional.syntax._
+
+  implicit lazy val reads: Reads[PayPeriodDetail] = (
+    (__ \ "amount").read[Int] and
+      (__ \ "how-many-a-week").read[Double] and
+        (__ \ "period").read[String] and
+        (__ \ "urlForChange").read[String]
+
+    )(PayPeriodDetail(_, _, _,_))
+
+  implicit lazy val writes: Writes[PayPeriodDetail] =
+    (
+      (__ \ "amount").write[Int] and
+        (__ \ "how-many-a-week").write[Double] and
+          (__ \ "period").write[String] and
+        (__ \ "urlForChange").write[String]
+      )(a => (a.amount, a.howManyAWeek, a.period, a.urlForChange))
 }

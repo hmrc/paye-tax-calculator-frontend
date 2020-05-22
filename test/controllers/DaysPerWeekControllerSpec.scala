@@ -66,11 +66,11 @@ class DaysPerWeekControllerSpec
         )
         .build()
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteDaily)
 
       implicit val messages: Messages = messagesForApp(application)
 
-      val amount       = cacheCompleteHourly.value.savedPeriod.value.amount
+      val amount       = cacheCompleteDaily.value.savedPeriod.value.amount
 
       running(application) {
 
@@ -89,10 +89,17 @@ class DaysPerWeekControllerSpec
     }
 
     "return 303, redirect to start" in {
+      val mockCache = mock[QuickCalcCache]
+
       val application: Application = new GuiceApplicationBuilder()
+        .overrides(
+          bind[QuickCalcCache].toInstance(mockCache)
+        )
         .build()
 
       implicit val messages: Messages = messagesForApp(application)
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
 
       running(application) {
 
@@ -178,7 +185,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -196,7 +203,7 @@ class DaysPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedEmptyDaysErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
@@ -210,7 +217,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "0")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "0")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -228,7 +235,7 @@ class DaysPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedMinDaysAWeekErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
@@ -243,7 +250,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "8")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "8")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -261,7 +268,7 @@ class DaysPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedMaxDaysAWeekErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
@@ -276,7 +283,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "5")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -306,7 +313,7 @@ class DaysPerWeekControllerSpec
         .build()
       implicit val messages: Messages = messagesForApp(application)
       running(application) {
-        val formData = Map("amount" -> "1", "howManyAWeek" -> "5")
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)

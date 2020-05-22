@@ -56,9 +56,12 @@ class SalaryController @Inject() (
 
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
+
         val filledForm = aggregate.savedSalary.map(s => form.fill(s)).getOrElse(form)
+
         Ok(salaryView(filledForm))
       case None =>
+
         Ok(salaryView(form))
     }
   }

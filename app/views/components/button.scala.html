@@ -16,6 +16,8 @@
 
 @this(govukButton: GovukButton)
 
-@(msg: String)(implicit messages: Messages)
+@(msg: String, id: Option[String])(implicit messages: Messages)
 
-@govukButton(Button(content = Text(messages(msg))))
+    @govukButton(Button(content = Text(messages(msg)),
+        attributes = id.map(id => Map("id" -> id)).getOrElse(Map.empty)
+    ))

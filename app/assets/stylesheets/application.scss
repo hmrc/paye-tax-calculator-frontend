@@ -1,5 +1,8 @@
 $govuk-assets-path: "/paye-tax-calculator-frontend/assets/lib/govuk-frontend/govuk/assets/";
+$hmrc-assets-path: "/paye-tax-calculator-frontend/assets/lib/hmrc-frontend/hmrc/assets/";
+
 @import "lib/govuk-frontend/govuk/all";
+@import "lib/hmrc-frontend/hmrc/all";
 
 @import "timeout-dialog";
 @import "language-selection";
