@@ -18,7 +18,7 @@ package forms
 
 import controllers.routes
 import forms.{StatePensionFormProvider, YouHaveToldUs, YouHaveToldUsItem}
-import models.Salary
+import models.{Salary, StatePension}
 import play.api.i18n.Messages
 import forms.YouHaveToldUs.salaryFormat
 import setup.BaseSpec
@@ -51,15 +51,15 @@ class YouHaveToldUsSpec extends BaseSpec {
   "Converting OverStatePensionAge to YouHaveToldUsItem" in {
     val label    = "over_state_pension_age"
     val idSuffix = "pension-state"
-    val url      = routes.QuickCalcController.showStatePensionForm().url
+    val url      = routes.StatePensionController.showStatePensionForm().url
 
-    YouHaveToldUs(StatePensionFormProvider(true)) shouldBe YouHaveToldUsItem(
+    YouHaveToldUs(StatePension(true)) shouldBe YouHaveToldUsItem(
       Messages("quick_calc.you_have_told_us.over_state_pension_age.yes"),
       label,
       url,
       idSuffix
     )
-    YouHaveToldUs(StatePensionFormProvider(false)) shouldBe YouHaveToldUsItem(
+    YouHaveToldUs(StatePension(false)) shouldBe YouHaveToldUsItem(
       Messages("quick_calc.you_have_told_us.over_state_pension_age.no"),
       label,
       url,

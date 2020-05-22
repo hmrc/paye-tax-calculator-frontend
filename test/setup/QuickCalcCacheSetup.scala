@@ -16,8 +16,8 @@
 
 package setup
 
-import forms.{StatePensionFormProvider, ScottishRate, UserTaxCode, YouHaveToldUsItem}
-import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary}
+import forms.{ScottishRate, StatePensionFormProvider, UserTaxCode, YouHaveToldUsItem}
+import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary, StatePension}
 import play.api.i18n.Messages
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
@@ -90,8 +90,8 @@ object QuickCalcCacheSetup {
   val cacheTestTaxCode            = Some(UserTaxCode(false, Some("1150L")))
   val cacheTestScottishNO         = Some(ScottishRate(false))
   val cacheTestScottishYES        = Some(ScottishRate(true))
-  val cacheTestStatePensionYES    = Some(StatePensionFormProvider(true))
-  val cacheTestStatusPensionNO    = Some(StatePensionFormProvider(false))
+  val cacheTestStatePensionYES    = Some(StatePension(true))
+  val cacheTestStatusPensionNO    = Some(StatePension(false))
   val cacheTestYearlySalary       = Some(Salary(20000, "a year", None))
   val cacheTestDailySalary        = Some(Salary(40, "a day", None))
   val cacheTestHourlySalary       = Some(Salary(8, "an hour", None))

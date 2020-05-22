@@ -16,8 +16,7 @@
 
 package forms
 
-import models.Salary
-import models.QuickCalcAggregateInput
+import models.{QuickCalcAggregateInput, Salary, StatePension}
 import org.scalatest.{Tag, TestData}
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
@@ -66,11 +65,11 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
   "Extracting OverStatePensionAge answer from user response" should {
 
     "return true if the response is user is over state pension StatePensionView" in {
-      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePensionFormProvider(true)), None, None)) shouldBe true
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(true)), None, None)) shouldBe true
     }
 
     "return false if the response is user is not over state pension StatePensionView" in {
-      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePensionFormProvider(false)), None, None)) shouldBe false
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(false)), None, None)) shouldBe false
     }
 
     """return an error with message with "No answer has been provided for the question: Are you over state pension StatePensionView?" if no response""" in {
