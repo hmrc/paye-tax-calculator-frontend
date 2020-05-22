@@ -17,21 +17,16 @@
 package forms
 
 import forms.mappings.CustomFormatters._
+import javax.inject.Inject
+import models.StatePension
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
-import play.api.libs.json.Json
 
-case class OverStatePensionAge(value: Boolean) extends AnyVal
+class StatePensionFormProvider @Inject()() {
 
-object OverStatePensionAge {
-
-  implicit val format = Json.format[OverStatePensionAge]
-
-  def form(implicit messages: Messages) =
-    Form(
+  def apply(): Form[StatePension] = Form(
       mapping(
         "overStatePensionAge" -> of(requiredBooleanFormatter)
-      )(OverStatePensionAge.apply)(OverStatePensionAge.unapply)
+      )(StatePension.apply)(StatePension.unapply)
     )
 }

@@ -80,7 +80,7 @@ class HoursPerWeekController @Inject() (
               .map(_ =>
                 Redirect(
                   navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
-                    routes.QuickCalcController.showStatePensionForm()
+                    routes.StatePensionController.showStatePensionForm()
                   )
                 )
               )

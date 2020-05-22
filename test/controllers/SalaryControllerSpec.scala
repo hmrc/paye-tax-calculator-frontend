@@ -31,7 +31,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, redirectLocation, status, _}
+import play.api.test.Helpers._
 import services.QuickCalcCache
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
@@ -166,6 +166,42 @@ class SalaryControllerSpec
       }
     }
 
+    "return 400 and error message when Salary submitted is more than 2 decimal places" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "23.3456547", "period" -> messages("quick_calc.salary.yearly.label"))
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedInvalidSalaryErrorMessage)               mustEqual true
+
+
+      }
+    }
+
     "return 400 and error message when Salary submitted is \"10,000,000.00\"" in {
       val mockCache = mock[QuickCalcCache]
 
@@ -222,7 +258,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.QuickCalcController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
 
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -250,7 +286,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.QuickCalcController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
 
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -306,7 +342,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.QuickCalcController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
 
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -335,7 +371,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.QuickCalcController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
 
         verify(mockCache, times(1)).save(any())(any())
       }

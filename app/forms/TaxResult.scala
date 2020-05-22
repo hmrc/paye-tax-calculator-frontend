@@ -74,7 +74,7 @@ object TaxResult {
 
   def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedIsOverStatePensionAge match {
-      case Some(s) => s.value
+      case Some(s) => s.overStatePensionAge
       case None    => throw new Exception("No answer has been provided for the question: Are you over state pension age?")
     }
 
