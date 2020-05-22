@@ -142,7 +142,7 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
     }
   }
 
-    "return 303, with current list of aggregate data and redirect to Scottish Form Form if isScottish is not provided" in {
+    "return 200, with current list of aggregate data and isScottish is not provided" in {
       val mockCache = mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary.map(_.copy(savedScottishRate= None)))
@@ -158,8 +158,7 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
           .withCSRFToken
 
         val result = route(application, request).value
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.QuickCalcController.showScottishRateForm().url
+        status(result) mustEqual OK
       }
     }
 }

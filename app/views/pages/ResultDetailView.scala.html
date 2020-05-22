@@ -108,14 +108,15 @@
                     )
                 ),
                 if(isKCode) {
-                Seq(
-                    TableRow(
-                        content = Text(Messages("quick_calc.result.k_code"))),
-                    TableRow(
-                        content = Text(s"£${moneyFormatter(calculatorResponse.getKCodeAdjustment.doubleValue())}")
+                    Seq(
+                        TableRow(
+                            content = Text(Messages("quick_calc.result.k_code"))),
+                        TableRow(
+                            content = Text(s"£${moneyFormatter(calculatorResponse.getKCodeAdjustment.doubleValue())}")
+                        )
                     )
-                )}else{
-Seq()
+                } else {
+                    Seq()
                 },
                 Seq(
                     TableRow(

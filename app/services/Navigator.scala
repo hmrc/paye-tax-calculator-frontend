@@ -43,8 +43,6 @@ class Navigator @Inject() () {
       routes.QuickCalcController.showStatePensionForm()
     else if (aggregate.savedTaxCode.isEmpty)
       routes.QuickCalcController.showTaxCodeForm()
-    else if (aggregate.savedScottishRate.isEmpty)
-      routes.QuickCalcController.showScottishRateForm()
     else
       routes.SalaryController.showSalaryForm()
 }
