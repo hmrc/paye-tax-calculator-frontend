@@ -36,7 +36,8 @@
         govButton: GovukButton,
         p: components.p,
         linkNewTab: components.linkNewTab,
-        appConfig: AppConfig
+        appConfig: AppConfig,
+        formHelper: FormWithCSRF,
 )
 
 
@@ -95,9 +96,10 @@
     }
 
     @p {
-        @govButton(Button(
-            href = Some(routes.QuickCalcController.restartQuickCalc().url),
-            content = Text(Messages("restart"))
-        ))
+        @formHelper(action = controllers.routes.QuickCalcController.restartQuickCalc()) {
+            @govButton(Button(
+                content = Text(Messages("restart"))
+            ))
+        }
     }
 }
