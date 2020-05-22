@@ -14,10 +14,8 @@
  * limitations under the License.
  *@
 
-@this(govukButton: GovukButton)
+@this()
 
-@(msg: String, id: Option[String])(implicit messages: Messages)
+@(msg: String, headingClass: String = "govuk-heading-m")(implicit messages: Messages)
 
-    @govukButton(Button(content = Text(messages(msg)),
-        attributes = id.map(id => Map("id" -> id)).getOrElse(Map.empty)
-    ))
+<h3 class="@headingClass">@messages(msg)</h3>

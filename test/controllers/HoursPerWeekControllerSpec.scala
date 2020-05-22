@@ -221,7 +221,7 @@ class HoursPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedEmptyHoursErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
@@ -253,7 +253,7 @@ class HoursPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedMinHoursAWeekErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
@@ -286,14 +286,14 @@ class HoursPerWeekControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedMaxHoursAWeekErrorMessage) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
     }
 
     "return 303, with new Hours worked, 40.5 and complete aggregate" in {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly)
       when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
 
       val application = new GuiceApplicationBuilder()

@@ -27,6 +27,7 @@
 )(implicit messages: Messages)
 
 @govukRadios(Radios(
+    idPrefix = Some(name),
     classes = s"${if(inline){"govuk-radios--inline"}}",
     name = name,
     fieldset = Some(Fieldset(

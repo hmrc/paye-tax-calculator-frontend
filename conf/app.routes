@@ -25,7 +25,7 @@ POST        /tax-code              controllers.QuickCalcController.submitTaxCode
 
 GET         /your-answers          controllers.QuickCalcController.summary
 
-GET         /your-results          controllers.QuickCalcController.showResult
+GET         /your-results          controllers.ShowResultsController.showResult
 
 GET         /restart               controllers.QuickCalcController.restartQuickCalc
 

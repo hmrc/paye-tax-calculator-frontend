@@ -225,7 +225,7 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
-
+site.print_and_save = Print or save page
 
 ## Translation required
 quick_calc.salary.question.error.invalid_number_daily=Enter your days a week as e.g. 5 or 4.5
@@ -234,3 +234,11 @@ label.salary=How much do you get paid?
 hint.salary=For example, £1300 or £193.50
 label.payperiod=How frequently are you paid?
 label.state-pension-details=Check your state pension age
+
+label.breakdown_per = Breakdown per:
+label.DAILY = Daily
+label.HOURLY = Hourly
+label.FOUR_WEEKLY = Four weekly
+label.WEEKLY = Week
+label.MONTHLY = Month
+label.YEARLY = Year

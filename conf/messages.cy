@@ -219,6 +219,8 @@ footer.privacy = Polisi preifatrwydd
 footer.termsConditions = Telerau ac amodau
 footer.govukHelp = Help wrth ddefnyddio GOV.UK
 
+site.print_and_save = Argraffu neu arbed tudalen
+
 #######################################################
 ## error Messages
 #######################################################
