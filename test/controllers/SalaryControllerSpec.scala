@@ -163,44 +163,6 @@ class SalaryControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedNegativeNumberErrorMessage)               mustEqual true
-
-
-      }
-    }
-
-    "return 400 and error message when Salary submitted is more than 2 decimal places" in {
-      val mockCache = mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-      implicit val messages: Messages = messagesThing(application)
-      running(application) {
-
-        val formData = Map("amount" -> "23.3456547", "period" -> messages("quick_calc.salary.yearly.label"))
-
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-
-        verify(mockCache, times(0)).fetchAndGetEntry()(any())
-
-        val parseHtml = Jsoup.parse(contentAsString(result))
-
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-
-        errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedInvalidSalaryErrorMessage)               mustEqual true
-
-
       }
     }
 
@@ -380,8 +342,6 @@ class SalaryControllerSpec
     }
 
   }
-
-
 
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =

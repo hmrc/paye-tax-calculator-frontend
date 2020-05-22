@@ -16,75 +16,150 @@
 
 package controllers
 
+import forms.{TaxResult, UserTaxCode}
 import org.jsoup.Jsoup
-import play.api.test.Helpers._
-import setup.BaseSpec
+import org.mockito.Matchers.any
+import org.mockito.Mockito.{times, verify, when}
+import org.scalatest.TryValues
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import play.api.Application
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{status, _}
 import setup.QuickCalcCacheSetup._
+import play.api.test.CSRFTokenHelper._
+import services.QuickCalcCache
+import uk.gov.hmrc.http.HeaderNames
+import views.html.pages.ResultView
 
-class ShowResultSpec extends BaseSpec {
+import scala.concurrent.Future
+
+class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar {
+
+  lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
+  def messagesThing(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "Show Result Page" should {
     "return 200, with current list of aggregate which contains all answers from previous questions" in {
-      val controller =
-        new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePensionSalary, stubControllerComponents(), navigator)
-      val action       = controller.showResult()
-      val result       = action.apply(request)
-      val status       = result.header.status
-      val responseBody = contentAsString(result)
-      val parseHtml    = Jsoup.parse(responseBody)
+      val mockCache = mock[QuickCalcCache]
 
-      status shouldBe 200
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val taxResult = TaxResult.taxCalculation(cacheTaxCodeStatePensionSalary.get)
+
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[ResultView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual view(taxResult, UserTaxCode.currentTaxYear)(
+          request,
+          messagesThing(application)
+        ).toString
+
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+      }
     }
 
     "return 303, with current list of aggregate data and redirect to Tax Code Form if Tax Code is not provided" in {
-      val controller = new QuickCalcController(messagesApi, cacheReturnStatePensionSalary, stubControllerComponents(), navigator)
-      val action     = controller.showResult()
-      val result     = action.apply(request)
-      val status     = result.header.status
+      val mockCache = mock[QuickCalcCache]
 
-      val actualRedirect   = redirectLocation(result).get
-      val expectedRedirect = s"${baseURL}tax-code"
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeSalary)
 
-      status         shouldBe 303
-      actualRedirect shouldBe expectedRedirect
-    }
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
 
-    "return 303, with current list of aggregate data and redirect to Age Form if no answer is provided for \"Are you Over 65?\"" in {
-      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeSalary, stubControllerComponents(), navigator)
-      val action     = controller.showResult()
-      val result     = action.apply(request)
-      val status     = result.header.status
+      running(application) {
 
-      val actualRedirect   = redirectLocation(result).get
-      val expectedRedirect = s"${baseURL}state-pension"
-      status         shouldBe 303
-      actualRedirect shouldBe expectedRedirect
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).get mustEqual routes.QuickCalcController.showStatePensionForm().url
+      }
     }
 
     "return 303, with current list of aggregate data and redirect to Salary Form if Salary is not provided" in {
-      val controller = new QuickCalcController(messagesApi, cacheReturnTaxCodeStatePension, stubControllerComponents(), navigator)
-      val action     = controller.showResult()
-      val result     = action.apply(request)
-      val status     = result.header.status
+      val mockCache = mock[QuickCalcCache]
 
-      val actualRedirect   = redirectLocation(result).get
-      val expectedRedirect = s"${baseURL}your-pay"
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
 
-      status         shouldBe 303
-      actualRedirect shouldBe expectedRedirect
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm().url
+      }
     }
 
-    "return 303, with empty list of aggregate data and redirect to Tax Code Form" in {
-      val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
-      val action     = controller.showResult()
-      val result     = action.apply(request)
-      val status     = result.header.status
+    "return 303, with current list of aggregate data and redirect to TaxCode Form Form if TaxCode is not provided" in {
+      val mockCache = mock[QuickCalcCache]
 
-      val expectedRedirect = s"${baseURL}your-pay"
-      val actualRedirect   = redirectLocation(result).get
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode= None)))
 
-      status         shouldBe 303
-      actualRedirect shouldBe expectedRedirect
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).get mustEqual routes.QuickCalcController.showTaxCodeForm().url
+      }
     }
   }
+
+    "return 303, with current list of aggregate data and redirect to Scottish Form Form if isScottish is not provided" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary.map(_.copy(savedScottishRate= None)))
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).get mustEqual routes.QuickCalcController.showScottishRateForm().url
+      }
+    }
 }

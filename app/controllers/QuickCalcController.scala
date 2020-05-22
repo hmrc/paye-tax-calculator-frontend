@@ -38,7 +38,7 @@ class QuickCalcController @Inject() (
   cache:                         QuickCalcCache,
   val controllerComponents:      ControllerComponents,
   navigator:                     Navigator
-)(implicit val appConfig:        AppConfig,
+                                    )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends BackendBaseController
     with I18nSupport
@@ -68,26 +68,9 @@ class QuickCalcController @Inject() (
           if (aggregate.allQuestionsAnswered)
             Ok(you_have_told_us(aggregate.youHaveToldUsItems))
           else
-            redirectToNotYetDonePage(aggregate)
+            Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 
-  def showResult(): Action[AnyContent] =
-    salaryRequired(
-      cache,
-      implicit request =>
-        aggregate =>
-          if (aggregate.allQuestionsAnswered) {
-            Ok(result(TaxResult.taxCalculation(aggregate), UserTaxCode.startOfCurrentTaxYear))
-          } else redirectToNotYetDonePage(aggregate)
-    )
-
-  private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result =
-    if (aggregate.savedTaxCode.isEmpty)
-      Redirect(routes.QuickCalcController.showTaxCodeForm())
-    else if (aggregate.savedSalary.isEmpty)
-      Redirect(routes.SalaryController.showSalaryForm())
-    else
-      Redirect(routes.QuickCalcController.showStatePensionForm())
 
   def showStatePensionForm(): Action[AnyContent] = salaryRequired(cache, showStatePensionFormTestable)
 
