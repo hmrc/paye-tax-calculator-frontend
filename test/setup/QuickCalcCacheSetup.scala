@@ -16,8 +16,8 @@
 
 package setup
 
-import forms.{ScottishRate, StatePensionFormProvider, UserTaxCode, YouHaveToldUsItem}
-import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary, StatePension}
+import forms.{ScottishRate, YouHaveToldUsItem}
+import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary, StatePension, UserTaxCode}
 import play.api.i18n.Messages
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
@@ -109,6 +109,14 @@ object QuickCalcCacheSetup {
     QuickCalcAggregateInput.newInstance.copy(
       savedTaxCode               = cacheTestTaxCode,
       savedIsOverStatePensionAge = cacheTestStatePensionYES
+    )
+  )
+
+  val cacheSalaryStatePensionTaxCode = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary               = cacheTestYearlySalary,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedTaxCode               = cacheTestTaxCode.map(_.copy(gaveUsTaxCode = true)),
     )
   )
 

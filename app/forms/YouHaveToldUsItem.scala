@@ -17,7 +17,7 @@
 package forms
 
 import controllers.routes
-import models.{PayPeriodDetail, Salary, StatePension}
+import models.{PayPeriodDetail, Salary, StatePension, UserTaxCode}
 import play.api.i18n.Messages
 
 case class YouHaveToldUsItem(
@@ -41,7 +41,7 @@ object YouHaveToldUs {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
       val label    = "about_tax_code"
       val idSuffix = "tax-code"
-      val url      = routes.QuickCalcController.showTaxCodeForm().url
+      val url      = routes.TaxCodeController.showTaxCodeForm().url
       YouHaveToldUsItem(
         if (t.gaveUsTaxCode)
           s"${Messages("quick_calc.you_have_told_us.about_tax_code.yes")} (${t.taxCode.getOrElse(UserTaxCode.defaultUkTaxCode)})"
@@ -129,6 +129,6 @@ object YouHaveToldUs {
   def getGoBackLink(items: List[YouHaveToldUsItem]): String =
     items.flatMap(y => if (y.label == SOTTISH_RATE) y.url else "") match {
       case url if url.nonEmpty => url.mkString
-      case _                   => routes.QuickCalcController.showTaxCodeForm().url
+      case _                   => routes.TaxCodeController.showTaxCodeForm().url
     }
 }

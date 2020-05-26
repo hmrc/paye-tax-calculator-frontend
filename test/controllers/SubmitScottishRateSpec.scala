@@ -16,12 +16,11 @@
 
 package controllers
 
-import forms.{ScottishRate, UserTaxCode}
-import models.QuickCalcAggregateInput
+import forms.ScottishRate
+import models.{QuickCalcAggregateInput, UserTaxCode}
 import org.jsoup.Jsoup
 import org.scalatest.Tag
 import play.api.Application
-import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

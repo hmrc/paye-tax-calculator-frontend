@@ -17,7 +17,6 @@
 package controllers
 
 import config.AppConfig
-import forms.{TaxResult, UserTaxCode}
 import javax.inject.{Inject, Singleton}
 import models.QuickCalcAggregateInput
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -26,7 +25,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.ActionWithSessionId
-import views.html.pages.{ResultView, YouHaveToldUsView}
+import views.html.pages.YouHaveToldUsView
 
 import scala.concurrent.ExecutionContext
 
@@ -36,7 +35,7 @@ class YouHaveToldUsController @Inject() (
   cache:                         QuickCalcCache,
   val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
-  yourHaveToldUsView: YouHaveToldUsView
+  yourHaveToldUsView:            YouHaveToldUsView
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -57,9 +56,9 @@ class YouHaveToldUsController @Inject() (
     )
 
   private def salaryRequired[T](
-                                 cache: QuickCalcCache,
-                                 furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-                               ): Action[AnyContent] =
+    cache:         QuickCalcCache,
+    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
+  ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
@@ -73,6 +72,5 @@ class YouHaveToldUsController @Inject() (
           Redirect(routes.SalaryController.showSalaryForm())
       }
     }
-
 
 }

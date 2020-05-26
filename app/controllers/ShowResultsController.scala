@@ -17,19 +17,18 @@
 package controllers
 
 import config.AppConfig
-import forms.{SalaryInHoursFormProvider, TaxResult, UserTaxCode}
+import forms.TaxResult
 import javax.inject.{Inject, Singleton}
-import models.QuickCalcAggregateInput
+import models.{QuickCalcAggregateInput, UserTaxCode}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents, Request, Result}
+import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.ActionWithSessionId
-import views.html.pages.{HoursAWeekView, ResultView}
+import views.html.pages.ResultView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ShowResultsController @Inject() (

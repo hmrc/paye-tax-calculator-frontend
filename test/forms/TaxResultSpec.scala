@@ -16,7 +16,7 @@
 
 package forms
 
-import models.{QuickCalcAggregateInput, Salary, StatePension}
+import models.{QuickCalcAggregateInput, Salary, StatePension, UserTaxCode}
 import org.scalatest.{Tag, TestData}
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application

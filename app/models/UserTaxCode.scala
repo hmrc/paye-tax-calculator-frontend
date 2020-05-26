@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
 import java.time.MonthDay
 
-import forms.mappings.CustomFormatters._
-import play.api.data.Forms._
 import play.api.data.{Form, FormError}
-import play.api.i18n.Messages
-import play.api.libs.json._
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.calculator.model.ValidationError
 import uk.gov.hmrc.calculator.utils.validation.TaxCodeValidator
 import utils.LocalDateProvider
 
 case class UserTaxCode(
-  gaveUsTaxCode: Boolean,
-  taxCode:       Option[String])
+                        gaveUsTaxCode: Boolean,
+                        taxCode:       Option[String])
+
 
 object UserTaxCode {
 
@@ -61,50 +59,20 @@ object UserTaxCode {
     }
   }
 
-  def form(implicit messages: Messages) = Form(
-    mapping(
-      HasTaxCode -> of(requiredBooleanFormatter),
-      TaxCode    -> of(taxCodeFormatter)
-    )(UserTaxCode.apply)(UserTaxCode.unapply)
-  )
-
   def defaultUkTaxCode: String =
     if (currentTaxYear == 2019 || currentTaxYear == 2020) Default20192020UkTaxCode else Default2018UkTaxCode
 
-  def wrongTaxCode(taxCode: String)(implicit messages: Messages): Seq[FormError] = {
+  def wrongTaxCode(taxCode: String): Seq[FormError] = {
     val res = TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode)
 
     (res.isValid, res.getErrorType) match {
-      case (false, ValidationError.WrongTaxCodeNumber) => Seq(FormError(TaxCode, messages(WrongTaxCodeNumber)))
-      case (false, ValidationError.WrongTaxCodePrefix) => Seq(FormError(TaxCode, messages(WrongTaxCodePrefixKey)))
-      case (false, ValidationError.WrongTaxCodeSuffix) => Seq(FormError(TaxCode, messages(WrongTaxCodeSuffixKey)))
-      case _                                           => Seq(FormError(TaxCode, messages(WrongTaxCodeKey)))
+      case (false, ValidationError.WrongTaxCodeNumber) => Seq(FormError(TaxCode, WrongTaxCodeNumber))
+      case (false, ValidationError.WrongTaxCodePrefix) => Seq(FormError(TaxCode, WrongTaxCodePrefixKey))
+      case (false, ValidationError.WrongTaxCodeSuffix) => Seq(FormError(TaxCode, WrongTaxCodeSuffixKey))
+      case _                                           => Seq(FormError(TaxCode, WrongTaxCodeKey))
     }
   }
 
   def startOfCurrentTaxYear: Int =
     firstDayOfTaxYear.atYear(currentTaxYear).getYear
-
-  def checkUserSelection(
-    checkFor:          Boolean,
-    taxCodeFromServer: Form[UserTaxCode]
-  ): String = {
-    def htmlMapper(bO: Option[Boolean]): String =
-      bO.filter(identity)
-        .map(_ => "checked")
-        .getOrElse("")
-
-    def whatWasSelected(taxCode: Form[UserTaxCode]): Option[Boolean] =
-      taxCode.value.map(formData => formData.gaveUsTaxCode)
-    htmlMapper(whatWasSelected(taxCodeFromServer).map(_ == checkFor))
-  }
-
-  def hideTextField(taxCode: Form[UserTaxCode]): String =
-    if (taxCode("taxCode").hasErrors) ""
-    else {
-      taxCode.value match {
-        case Some(v) => if (v.gaveUsTaxCode) "" else "hidden"
-        case _       => "hidden"
-      }
-    }
 }
