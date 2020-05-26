@@ -88,6 +88,7 @@ object QuickCalcCacheSetup {
   )
 
   val cacheTestTaxCode            = Some(UserTaxCode(false, Some("1150L")))
+  val cacheTestTaxCodeScottish           = Some(UserTaxCode(false, Some("S1150L")))
   val cacheTestScottishNO         = Some(ScottishRate(false))
   val cacheTestScottishYES        = Some(ScottishRate(true))
   val cacheTestStatePensionYES    = Some(StatePension(true))
@@ -135,6 +136,15 @@ object QuickCalcCacheSetup {
       savedTaxCode               = cacheTestTaxCode,
       savedIsOverStatePensionAge = cacheTestStatusPensionNO,
       savedScottishRate          = cacheTestScottishNO
+    )
+  )
+
+  val cacheCompleteYearlyScottish = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlySalary,
+      savedTaxCode               = cacheTestTaxCodeScottish,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate          = cacheTestScottishYES
     )
   )
 
@@ -193,6 +203,7 @@ object QuickCalcCacheSetup {
   val cacheReturnTaxCodeSalary: QuickCalcCache = cache(cacheTaxCodeSalary)
 
   val expectedTaxCodeAnswer          = "No - we’ll use the default (1150L)"
+  val expectedTaxCodeAnswerScottish          = "No - we’ll use the default (S1150L)"
   val expectedStatePensionYES        = "Yes"
   val expectedStatePensionNO         = "No"
   val expectedYearlySalaryAnswer     = "£20,000 a year"
@@ -202,6 +213,7 @@ object QuickCalcCacheSetup {
   val expectedHourlyPeriodAnswer     = "40.0"
   val expectedYearlySalaryTypeAnswer = "Per year"
   val expectedScottishAnswer         = "No"
+  val expectedScottishAnswerYes         = "Yes"
 
   val expectedFieldErrorMessage = "This field is required"
 

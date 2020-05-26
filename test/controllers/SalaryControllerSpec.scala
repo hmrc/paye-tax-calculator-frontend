@@ -314,7 +314,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.QuickCalcController.summary().url
+        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary().url
 
         verify(mockCache, times(1)).save(any())(any())
       }

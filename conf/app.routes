@@ -23,7 +23,7 @@ POST        /scottish-tax          controllers.QuickCalcController.submitScottis
 GET         /tax-code              controllers.QuickCalcController.showTaxCodeForm
 POST        /tax-code              controllers.QuickCalcController.submitTaxCodeForm
 
-GET         /your-answers          controllers.QuickCalcController.summary
+GET         /your-answers          controllers.YouHaveToldUsController.summary
 
 GET         /your-results          controllers.ShowResultsController.showResult
 

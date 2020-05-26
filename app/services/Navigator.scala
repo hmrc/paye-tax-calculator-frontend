@@ -28,7 +28,7 @@ class Navigator @Inject() () {
   )(next:             Call
   )(implicit request: Request[_]
   ): Call =
-    if (aggregate.allQuestionsAnswered) routes.QuickCalcController.summary()
+    if (aggregate.allQuestionsAnswered) routes.YouHaveToldUsController.summary()
     else next
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(implicit request: Request[AnyContent]): Call =

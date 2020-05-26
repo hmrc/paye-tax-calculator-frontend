@@ -62,7 +62,7 @@ class SubmitScottishRate2018Spec extends BaseSpec {
       val res = testController.submitScottishRateForm()(fakeRequest.withFormUrlEncodedBody("scottishRate" -> "true"))
       status(res) shouldBe SEE_OTHER
 
-      redirectLocation(res) shouldBe Some(routes.QuickCalcController.summary().url)
+      redirectLocation(res) shouldBe Some(routes.YouHaveToldUsController.summary().url)
     }
 
     "set the user's tax code to the 2018-19 default UK tax code " +
@@ -162,7 +162,7 @@ class SubmitScottishRate2019Spec extends BaseSpec {
       val res = testController.submitScottishRateForm()(fakeRequest.withFormUrlEncodedBody("scottishRate" -> "true"))
       status(res) shouldBe SEE_OTHER
 
-      redirectLocation(res) shouldBe Some(routes.QuickCalcController.summary().url)
+      redirectLocation(res) shouldBe Some(routes.YouHaveToldUsController.summary().url)
     }
   }
   "set the user's tax code to the 2019-20 default Scottish tax code " +
@@ -248,7 +248,7 @@ class SubmitScottishRate2020Spec extends BaseSpec {
       val res = testController.submitScottishRateForm()(fakeRequest.withFormUrlEncodedBody("scottishRate" -> "true"))
       status(res) shouldBe SEE_OTHER
 
-      redirectLocation(res) shouldBe Some(routes.QuickCalcController.summary().url)
+      redirectLocation(res) shouldBe Some(routes.YouHaveToldUsController.summary().url)
     }
   }
   "set the user's tax code to the 2020-21 default Scottish tax code " +
@@ -334,7 +334,7 @@ class SubmitScottishRate2020MayOnwradsSpec extends BaseSpec {
       val res = testController.submitScottishRateForm()(fakeRequest.withFormUrlEncodedBody("scottishRate" -> "true"))
       status(res) shouldBe SEE_OTHER
 
-      redirectLocation(res) shouldBe Some(routes.QuickCalcController.summary().url)
+      redirectLocation(res) shouldBe Some(routes.YouHaveToldUsController.summary().url)
     }
   }
   "set the user's tax code to the 2020-21 default Scottish tax code " +

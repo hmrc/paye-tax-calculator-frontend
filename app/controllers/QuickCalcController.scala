@@ -28,7 +28,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
 import utils.ActionWithSessionId
-import views.html.pages._
+import views.html.pages.{YouHaveToldUsView, _}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +38,7 @@ class QuickCalcController @Inject() (
   cache:                         QuickCalcCache,
   val controllerComponents:      ControllerComponents,
   navigator:                     Navigator
+
                                     )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends BackendBaseController
@@ -59,17 +60,6 @@ class QuickCalcController @Inject() (
 
     Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
   }
-
-  def summary(): Action[AnyContent] =
-    salaryRequired(
-      cache,
-      implicit request =>
-        aggregate =>
-          if (aggregate.allQuestionsAnswered)
-            Ok(you_have_told_us(aggregate.youHaveToldUsItems))
-          else
-            Redirect(navigator.redirectToNotYetDonePage(aggregate))
-    )
 
 
 //  def showStatePensionForm(): Action[AnyContent] = salaryRequired(cache, showStatePensionFormTestable)
@@ -148,7 +138,7 @@ class QuickCalcController @Inject() (
               .map(_ =>
                 if (newTaxCode.gaveUsTaxCode) {
                   Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                    routes.QuickCalcController.summary()
+                    routes.YouHaveToldUsController.summary()
                   })
                 } else Redirect(routes.QuickCalcController.showScottishRateForm())
               )
@@ -201,7 +191,7 @@ class QuickCalcController @Inject() (
             )
           updatedAggregate
             .map(cache.save)
-            .map(_ => Redirect(routes.QuickCalcController.summary()))
+            .map(_ => Redirect(routes.YouHaveToldUsController.summary()))
         }
       )
   }
