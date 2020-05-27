@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
-import forms.mappings.CustomFormatters._
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.i18n.Messages
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
-case class ScottishRate(value: Boolean) extends AnyVal
+case class ScottishRate(payScottishRate: Boolean)
 
 object ScottishRate {
 
-  implicit val format = Json.format[ScottishRate]
+  implicit val format: OFormat[ScottishRate] = Json.format[ScottishRate]
 
-  def form(implicit messages: Messages) =
-    Form(
-      mapping(
-        "scottishRate" -> of(requiredBooleanFormatter)
-      )(ScottishRate.apply)(ScottishRate.unapply)
-    )
 }

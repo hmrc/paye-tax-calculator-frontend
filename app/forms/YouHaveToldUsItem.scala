@@ -17,7 +17,7 @@
 package forms
 
 import controllers.routes
-import models.{PayPeriodDetail, Salary, StatePension}
+import models.{PayPeriodDetail, Salary, ScottishRate, StatePension}
 import play.api.i18n.Messages
 
 case class YouHaveToldUsItem(
@@ -32,7 +32,7 @@ trait YouHaveToldUs[A] {
 
 object YouHaveToldUs {
 
-  val SOTTISH_RATE = "scottish_rate"
+  val SCOTTISH_RATE = "scottish_rate"
 
   def apply[A: YouHaveToldUs](a: A): YouHaveToldUsItem = implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
@@ -75,11 +75,11 @@ object YouHaveToldUs {
   implicit def scottishIncomeFormat(implicit messages: Messages) = new YouHaveToldUs[ScottishRate] {
 
     def toYouHaveToldUsItem(scottish: ScottishRate): YouHaveToldUsItem = {
-      val label    = SOTTISH_RATE
-      val idSuffix = SOTTISH_RATE
-      val url      = routes.QuickCalcController.showScottishRateForm().url
+      val label    = SCOTTISH_RATE
+      val idSuffix = SCOTTISH_RATE
+      val url      = routes.ScottishRateController.showScottishRateForm().url
       YouHaveToldUsItem(
-        if (scottish.value) Messages("quick_calc.you_have_told_us.scottish_rate.yes")
+        if (scottish.payScottishRate) Messages("quick_calc.you_have_told_us.scottish_rate.yes")
         else Messages("quick_calc.you_have_told_us.scottish_rate.no"),
         label,
         url,
@@ -127,7 +127,7 @@ object YouHaveToldUs {
   }
 
   def getGoBackLink(items: List[YouHaveToldUsItem]): String =
-    items.flatMap(y => if (y.label == SOTTISH_RATE) y.url else "") match {
+    items.flatMap(y => if (y.label == SCOTTISH_RATE) y.url else "") match {
       case url if url.nonEmpty => url.mkString
       case _                   => routes.QuickCalcController.showTaxCodeForm().url
     }

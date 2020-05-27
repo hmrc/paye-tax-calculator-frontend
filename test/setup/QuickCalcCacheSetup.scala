@@ -16,8 +16,8 @@
 
 package setup
 
-import forms.{ScottishRate, StatePensionFormProvider, UserTaxCode, YouHaveToldUsItem}
-import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary, StatePension}
+import forms.{ScottishRateFormProvider, StatePensionFormProvider, UserTaxCode, YouHaveToldUsItem}
+import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary, ScottishRate, StatePension}
 import play.api.i18n.Messages
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier

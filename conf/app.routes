@@ -17,8 +17,8 @@ POST        /days/:value           controllers.DaysPerWeekController.submitDaysA
 GET         /state-pension         controllers.StatePensionController.showStatePensionForm
 POST        /state-pension         controllers.StatePensionController.submitStatePensionForm
 
-GET         /scottish-tax          controllers.QuickCalcController.showScottishRateForm
-POST        /scottish-tax          controllers.QuickCalcController.submitScottishRateForm
+GET         /scottish-tax          controllers.ScottishRateController.showScottishRateForm
+POST        /scottish-tax          controllers.ScottishRateController.submitScottishRateForm
 
 GET         /tax-code              controllers.QuickCalcController.showTaxCodeForm
 POST        /tax-code              controllers.QuickCalcController.submitTaxCodeForm

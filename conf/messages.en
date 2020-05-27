@@ -234,6 +234,7 @@ label.salary=How much do you get paid?
 hint.salary=For example, £1300 or £193.50
 label.payperiod=How frequently are you paid?
 label.state-pension-details=Check your state pension age
+label.scottish-rate-details=Check if you pay Scottish Income Tax
 
 label.breakdown_per = Breakdown per:
 label.DAILY = Daily

@@ -71,53 +71,6 @@ class QuickCalcController @Inject() (
             Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 
-
-//  def showStatePensionForm(): Action[AnyContent] = salaryRequired(cache, showStatePensionFormTestable)
-//
-//  private[controllers] def showStatePensionFormTestable: ShowForm = { implicit request => agg =>
-//    val form = agg.savedIsOverStatePensionAge
-//      .map(OverStatePensionAge.form.fill)
-//      .getOrElse(OverStatePensionAge.form)
-//    Ok(state_pension(form, agg.youHaveToldUsItems))
-//  }
-//
-//  def submitStatePensionForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-//    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-//
-//    OverStatePensionAge.form
-//      .bindFromRequest()
-//      .fold(
-//        formWithErrors =>
-//          cache.fetchAndGetEntry().map {
-//            case Some(aggregate) =>
-//              BadRequest(state_pension(formWithErrors, aggregate.youHaveToldUsItems))
-//            case None =>
-//              BadRequest(state_pension(formWithErrors, Nil))
-//          },
-//        userAge =>
-//          cache.fetchAndGetEntry().flatMap {
-//            case Some(aggregate) =>
-//              val updatedAggregate = aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
-//              cache.save(updatedAggregate).map { _ =>
-//                Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAggregate) {
-//                  routes.QuickCalcController.showTaxCodeForm()
-//                })
-//              }
-//            case None =>
-//              cache.save(QuickCalcAggregateInput.newInstance.copy(savedIsOverStatePensionAge = Some(userAge))).map {
-//                _ => Redirect(routes.QuickCalcController.showTaxCodeForm())
-//              }
-//          }
-//      )
-//  }
-//  private def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Result =
-//    if (aggregate.savedTaxCode.isEmpty)
-//      Redirect(routes.QuickCalcController.showTaxCodeForm())
-//    else if (aggregate.savedSalary.isEmpty)
-//      Redirect(routes.SalaryController.showSalaryForm())
-//    else
-//      Redirect(routes.StatePensionController.showStatePensionForm())
-
   def showTaxCodeForm(): Action[AnyContent] = salaryRequired(cache, showTacCodeFormTestable)
 
   def submitTaxCodeForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
@@ -150,58 +103,9 @@ class QuickCalcController @Inject() (
                   Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg) {
                     routes.QuickCalcController.summary()
                   })
-                } else Redirect(routes.QuickCalcController.showScottishRateForm())
+                } else Redirect(routes.ScottishRateController.showScottishRateForm())
               )
           )
-        }
-      )
-  }
-
-  def showScottishRateForm(): Action[AnyContent] =
-    salaryRequired(
-      cache,
-      implicit request =>
-        aggregate => {
-          implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-          val form = aggregate.savedScottishRate.map(ScottishRate.form.fill).getOrElse(ScottishRate.form)
-          Ok(scottish_income_tax_rate(form, aggregate.youHaveToldUsItems))
-        }
-    )
-
-  def submitScottishRateForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    ScottishRate.form
-      .bindFromRequest()
-      .fold(
-        formWithErrors =>
-          cache
-            .fetchAndGetEntry()
-            .map {
-              case Some(aggregate) => aggregate.youHaveToldUsItems
-              case None            => Nil
-            }
-            .map(itemList => BadRequest(scottish_income_tax_rate(formWithErrors, itemList))),
-        scottish => {
-          val taxCode =
-            if (scottish.value)
-              UserTaxCode.defaultScottishTaxCode
-            else
-              UserTaxCode.defaultUkTaxCode
-
-          val updatedAggregate = cache
-            .fetchAndGetEntry()
-            .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-            .map(
-              _.copy(
-                savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode))),
-                savedScottishRate = Some(ScottishRate(scottish.value))
-              )
-            )
-          updatedAggregate
-            .map(cache.save)
-            .map(_ => Redirect(routes.QuickCalcController.summary()))
         }
       )
   }
