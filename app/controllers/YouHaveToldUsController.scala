@@ -17,53 +17,43 @@
 package controllers
 
 import config.AppConfig
-import models.Salary._
-import forms._
 import javax.inject.{Inject, Singleton}
-import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary, UserTaxCode}
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{ControllerComponents, _}
+import models.QuickCalcAggregateInput
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.ActionWithSessionId
-import views.html.pages.{YouHaveToldUsView, _}
+import views.html.pages.YouHaveToldUsView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class QuickCalcController @Inject() (
+class YouHaveToldUsController @Inject() (
   override val messagesApi:      MessagesApi,
   cache:                         QuickCalcCache,
-  val controllerComponents:      ControllerComponents,
-  navigator:                     Navigator
+  val controllerComponents:      MessagesControllerComponents,
+  navigator:                     Navigator,
+  yourHaveToldUsView:            YouHaveToldUsView
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
-    extends BackendBaseController
+    extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  def redirectToSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc: HeaderCarrier =
-      HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
-  }
-
-  def restartQuickCalc(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    cache.fetchAndGetEntry().flatMap {
-      case Some(aggregate) =>
-        val updatedAggregate = aggregate.copy(None, None, None, None, None)
-        cache.save(updatedAggregate).map(_ => Redirect(routes.SalaryController.showSalaryForm()))
-      case None =>
-        Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
-    }
-  }
+  def summary(): Action[AnyContent] =
+    salaryRequired(
+      cache,
+      implicit request =>
+        aggregate =>
+          if (aggregate.allQuestionsAnswered)
+            Ok(yourHaveToldUsView(aggregate.youHaveToldUsItems))
+          else
+            Redirect(navigator.redirectToNotYetDonePage(aggregate))
+    )
 
   private def salaryRequired[T](
     cache:         QuickCalcCache,

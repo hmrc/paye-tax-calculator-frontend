@@ -94,7 +94,7 @@ class StatePensionController @Inject()(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(
                       updatedAggregate
                     ) {
-                      routes.QuickCalcController.showTaxCodeForm()
+                      routes.TaxCodeController.showTaxCodeForm()
                     }
                   )
                 }
@@ -105,7 +105,7 @@ class StatePensionController @Inject()(
                       .copy(savedIsOverStatePensionAge = Some(userAge))
                   )
                   .map { _ =>
-                    Redirect(routes.QuickCalcController.showTaxCodeForm())
+                    Redirect(routes.TaxCodeController.showTaxCodeForm())
                   }
           }
         )

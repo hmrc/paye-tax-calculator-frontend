@@ -16,10 +16,9 @@
 
 package forms.mappings
 
+import models.UserTaxCode._
 import play.api.data.FormError
 import play.api.data.format.Formatter
-import play.api.i18n.Messages
-import forms.UserTaxCode._
 import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, TaxCodeValidator, WageValidator}
 
 object CustomFormatters {
@@ -199,7 +198,7 @@ object CustomFormatters {
 //      case _ => Left(Seq(FormError(key, Messages("quick_calc.salary.question.error.empty_daily_salary_input"))))
 //    }
 
-  def taxCodeFormatter(implicit messages: Messages): Formatter[Option[String]] = new Formatter[Option[String]] {
+  def taxCodeFormatter: Formatter[Option[String]] = new Formatter[Option[String]] {
 
     override def bind(
       key:  String,
@@ -216,7 +215,7 @@ object CustomFormatters {
             else {
               Left(wrongTaxCode(taxCode))
             }
-          case None => Left(Seq(FormError(TaxCode, messages(WrongTaxCodeEmpty))))
+          case None => Left(Seq(FormError(TaxCode, WrongTaxCodeEmpty)))
         }
       } else Right(Some(defaultUkTaxCode))
 

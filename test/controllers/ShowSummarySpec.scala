@@ -17,189 +17,116 @@
 package controllers
 
 import org.jsoup.Jsoup
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import org.scalatest.TryValues
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import setup.BaseSpec
+import services.QuickCalcCache
 import setup.QuickCalcCacheSetup._
+import uk.gov.hmrc.http.HeaderNames
+import play.api.test.CSRFTokenHelper._
 
-class ShowSummarySpec extends BaseSpec {
+import scala.concurrent.Future
+
+class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar {
 
   "Show Summary Page" should {
 
     "return aggregate data of : Earning £20000 Yearly Salary, NOT (Over State Pension), Tax Code: S1150L and IS Scottish Tax Payer" in {
+      val mockCache = mock[QuickCalcCache]
 
-      val controller   = new QuickCalcController(messagesApi, cacheReturnCompleteYearly, stubControllerComponents(), navigator)
-      val action       = controller.summary()
-      val result       = action.apply(request)
-      val status       = result.header.status
-      val responseBody = contentAsString(result)
-      val parseHtml    = Jsoup.parse(responseBody)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteYearlyScottish)
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
 
-      val expectedTableSize = 5 // Including header
+      running(application) {
+        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
 
-      val actualTableSize = parseHtml.getElementById("content").getElementsByTag("tr").size()
+        val result = route(application, request).value
 
-      val actualSalary = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(1)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
+        status(result) mustBe OK
 
-      val actualStatePensionAnswer = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(2)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
+        val responseBody = contentAsString(result)
+        val parseHtml    = Jsoup.parse(responseBody)
 
-      val actualTaxCodeAnswer = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(3)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
+        val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
+        actualTable.size() mustBe 4
 
-      val actualScottishAnswer = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(4)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
-
-      status                   shouldBe 200
-      actualTableSize          shouldBe expectedTableSize
-      actualSalary             shouldBe expectedYearlySalaryAnswer
-      actualStatePensionAnswer shouldBe expectedStatePensionNO
-      actualTaxCodeAnswer      shouldBe expectedTaxCodeAnswer
-      actualScottishAnswer     shouldBe expectedScottishAnswer
+        actualTable.get(0).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedYearlySalaryAnswer
+        actualTable.get(1).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
+        actualTable.get(2).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedTaxCodeAnswerScottish
+        actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedScottishAnswerYes
+      }
     }
 
     "return aggregate data of : Earning £40 Daily Salary, 5 Days a Week, NOT (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer" in {
+      val mockCache = mock[QuickCalcCache]
 
-      val controller   = new QuickCalcController(messagesApi, cacheReturnCompleteDaily, stubControllerComponents(), navigator)
-      val action       = controller.summary()
-      val result       = action.apply(request)
-      val status       = result.header.status
-      val responseBody = contentAsString(result)
-      val parseHtml    = Jsoup.parse(responseBody)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteDaily)
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
 
-      val expectedTableSize = 6 // Including header
+      running(application) {
+        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
 
-      val actualTableSize = parseHtml.getElementById("content").getElementsByTag("tr").size()
+        val result = route(application, request).value
 
-      val actualSalary = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(1)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
+        status(result) mustBe OK
 
-      val actualSalaryPeriod = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(2)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
+        val responseBody = contentAsString(result)
+        val parseHtml    = Jsoup.parse(responseBody)
 
-      val actualStatePensionAnswer = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(3)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
+        val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
+        actualTable.size() mustBe 5
 
-      val actualTaxCodeAnswer = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(4)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
-
-      val actualScottishAnswer = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(5)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
-
-      status                   shouldBe 200
-      actualTableSize          shouldBe expectedTableSize
-      actualSalary             shouldBe expectedDailySalaryAnswer
-      actualSalaryPeriod       shouldBe expectedDailyPeriodAnswer
-      actualStatePensionAnswer shouldBe expectedStatePensionNO
-      actualTaxCodeAnswer      shouldBe expectedTaxCodeAnswer
-      actualScottishAnswer     shouldBe expectedScottishAnswer
+        actualTable.get(0).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedDailySalaryAnswer
+        actualTable.get(1).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedDailyPeriodAnswer
+        actualTable.get(2).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
+        actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedTaxCodeAnswer
+        actualTable.get(4).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedScottishAnswer
+      }
     }
-
     "return aggregate data of : Earning £8 Hourly Salary, YES (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer" in {
+      val mockCache = mock[QuickCalcCache]
 
-      val controller   = new QuickCalcController(messagesApi, cacheReturnCompleteHourly, stubControllerComponents(), navigator)
-      val action       = controller.summary()
-      val result       = action.apply(request)
-      val status       = result.header.status
-      val responseBody = contentAsString(result)
-      val parseHtml    = Jsoup.parse(responseBody)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly)
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
 
-      val expectedTableSize = 6 // Including header
+      running(application) {
+        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
 
-      val actualTableSize = parseHtml.getElementById("content").getElementsByTag("tr").size()
+        val result = route(application, request).value
 
-      val actualSalary = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(1)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
+        status(result) mustBe OK
 
-      val actualSalaryPeriod = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(2)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
+        val responseBody = contentAsString(result)
+        val parseHtml    = Jsoup.parse(responseBody)
 
-      val actualStatePensionAnswer = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(3)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
+        val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
+        actualTable.size() mustBe 5
 
-      val actualTaxCodeAnswer = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(4)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
-
-      val actualScottishAnswer = parseHtml
-        .getElementById("content")
-        .getElementsByTag("tr")
-        .get(5)
-        .getElementsByTag("td")
-        .get(1)
-        .text()
-
-      status                   shouldBe 200
-      actualTableSize          shouldBe expectedTableSize
-      actualSalary             shouldBe expectedHourlySalaryAnswer
-      actualSalaryPeriod       shouldBe expectedHourlyPeriodAnswer
-      actualStatePensionAnswer shouldBe expectedStatePensionNO
-      actualTaxCodeAnswer      shouldBe expectedTaxCodeAnswer
-      actualScottishAnswer     shouldBe expectedScottishAnswer
+        actualTable.get(0).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedHourlySalaryAnswer
+        actualTable.get(1).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedHourlyPeriodAnswer
+        actualTable.get(2).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
+        actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedTaxCodeAnswer
+        actualTable.get(4).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedScottishAnswer
+      }
     }
   }
 }

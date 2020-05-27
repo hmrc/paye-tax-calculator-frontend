@@ -35,14 +35,6 @@
     overStatePensionAgeForm("overStatePensionAge")
 }
 
-@labels = @{
-    List(Messages("quick_calc.salary.yearly.sub_label"),
-        Messages("quick_calc.salary.monthly.sub_label"),
-        Messages("quick_calc.salary.weekly.sub_label"),
-        Messages("quick_calc.salary.daily.sub_label"),
-        Messages("quick_calc.salary.hourly.sub_label"))
-}
-
 @pensionAgeRadios = @{
     Seq(
         RadioItem(
@@ -70,8 +62,7 @@
             legendKey = "quick_calc.over_state_pension_age.header",
             hintKey = Some("quick_calc.salary.question.state_pension_inf"),
             name = "overStatePensionAge",
-            items = pensionAgeRadios,
-            inline = true
+            items = pensionAgeRadios
         )
 
         @govukDetails(Details(

@@ -20,10 +20,10 @@ POST        /state-pension         controllers.StatePensionController.submitStat
 GET         /scottish-tax          controllers.ScottishRateController.showScottishRateForm
 POST        /scottish-tax          controllers.ScottishRateController.submitScottishRateForm
 
-GET         /tax-code              controllers.QuickCalcController.showTaxCodeForm
-POST        /tax-code              controllers.QuickCalcController.submitTaxCodeForm
+GET         /tax-code              controllers.TaxCodeController.showTaxCodeForm
+POST        /tax-code              controllers.TaxCodeController.submitTaxCodeForm
 
-GET         /your-answers          controllers.QuickCalcController.summary
+GET         /your-answers          controllers.YouHaveToldUsController.summary
 
 GET         /your-results          controllers.ShowResultsController.showResult
 

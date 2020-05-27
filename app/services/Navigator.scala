@@ -28,7 +28,7 @@ class Navigator @Inject() () {
   )(next:             Call
   )(implicit request: Request[_]
   ): Call =
-    if (aggregate.allQuestionsAnswered) routes.QuickCalcController.summary()
+    if (aggregate.allQuestionsAnswered) routes.YouHaveToldUsController.summary()
     else next
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(implicit request: Request[AnyContent]): Call =
@@ -42,7 +42,7 @@ class Navigator @Inject() () {
     else if (aggregate.savedIsOverStatePensionAge.isEmpty)
       routes.StatePensionController.showStatePensionForm()
     else if (aggregate.savedTaxCode.isEmpty)
-      routes.QuickCalcController.showTaxCodeForm()
+      routes.TaxCodeController.showTaxCodeForm()
     else
       routes.SalaryController.showSalaryForm()
 }

@@ -16,7 +16,7 @@
 
 package forms
 
-import models.QuickCalcAggregateInput
+import models.{QuickCalcAggregateInput, UserTaxCode}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.{Json, OFormat}
