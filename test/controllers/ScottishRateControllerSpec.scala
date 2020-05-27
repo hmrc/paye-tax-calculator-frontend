@@ -16,8 +16,8 @@
 
 package controllers
 
-import forms.{ScottishRateFormProvider, UserTaxCode}
-import models.{QuickCalcAggregateInput, ScottishRate}
+import forms.ScottishRateFormProvider
+import models.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
 import org.jsoup.Jsoup
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{times, verify, when}
@@ -200,9 +200,7 @@ class ScottishRateControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.QuickCalcController
-          .summary()
-          .url
+        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary().url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }

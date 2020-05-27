@@ -477,7 +477,7 @@ with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.QuickCalcController.showScottishRateForm().url
+        redirectLocation(result).get mustEqual routes.ScottishRateController.showScottishRateForm().url
       }
     }
   }

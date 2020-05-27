@@ -91,7 +91,7 @@ class TaxCodeController @Inject()(
                   Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg) {
                     routes.YouHaveToldUsController.summary()
                   })
-                } else Redirect(routes.QuickCalcController.showScottishRateForm())
+                } else Redirect(routes.ScottishRateController.showScottishRateForm())
               )
           )
         }

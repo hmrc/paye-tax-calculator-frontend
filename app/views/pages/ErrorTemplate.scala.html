@@ -14,14 +14,17 @@
  * limitations under the License.
  *@
 
-@()
+@this(
+        govuk_wrapper: templates.GovukLayoutWrapper,
+        h1: components.h1
+)
 
-<div id="beta-banner" class="beta-banner--borderless" style="overflow: auto;
-    width: 100%">
-    <p style="margin-top: 0">
-        <strong class="phase-tag">BETA</strong>
-        <span style="font-size: 16px">
-            This is a new service – your <a href="/contact/beta-feedback-unauthenticated?service=PayeTaxCalculator">feedback</a>
-            will help us to improve it.</span>
-    </p>
-</div>
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
+
+@govuk_wrapper(Some(titleNoForm(pageTitle))) {
+
+    @h1(messages(heading))
+
+    <p class="govuk-body">@messages(message)</p>
+
+}

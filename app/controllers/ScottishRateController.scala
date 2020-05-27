@@ -17,9 +17,9 @@
 package controllers
 
 import config.AppConfig
-import forms.{ScottishRateFormProvider, UserTaxCode}
+import forms.ScottishRateFormProvider
 import javax.inject.{Inject, Singleton}
-import models.{QuickCalcAggregateInput, ScottishRate}
+import models.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
@@ -103,7 +103,7 @@ class ScottishRateController @Inject()(
               )
             updatedAggregate
               .map(cache.save)
-              .map(_ => Redirect(routes.QuickCalcController.summary()))
+              .map(_ => Redirect(routes.YouHaveToldUsController.summary()))
           }
         )
     }
