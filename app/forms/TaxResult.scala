@@ -17,28 +17,15 @@
 package forms
 
 import models.{QuickCalcAggregateInput, UserTaxCode}
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.calculator.Calculator
 import uk.gov.hmrc.calculator.model.{CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod}
 import uk.gov.hmrc.http.BadRequestException
 
 import scala.math.BigDecimal.RoundingMode
 
-case class Tab(tab: String)
-
 object TaxResult {
 
   val SCOTTISH_TAX_CODE_PREFIX = "SK"
-
-  implicit val format: OFormat[Tab] = Json.format[Tab]
-
-  def tabForm: Form[Tab] = Form(
-    mapping(
-      "tab" -> text
-    )(Tab.apply)(Tab.unapply)
-  )
 
   def incomeTax(response: CalculatorResponsePayPeriod): BigDecimal =
     response.getTaxToPay
@@ -135,20 +122,4 @@ object TaxResult {
       case _ => formatter.format(value)
     }
   }
-
-  def moneyFormatter(value: Option[String]): String = {
-    val money = """(.*)\.(\d)""".r
-    value match {
-      case Some(v) =>
-        v match {
-          case money(pounds, pins) => v + "0"
-          case _                   => v
-        }
-      case _ => ""
-    }
-  }
-
-  def omitScotland(value: String): String =
-    value.replaceAll("Scotland ", "")
-
 }

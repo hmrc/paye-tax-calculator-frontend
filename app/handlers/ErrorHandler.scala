@@ -14,31 +14,21 @@
  * limitations under the License.
  */
 
-package config
+package handlers
 
-import javax.inject.Inject
-import play.api.Configuration
-import play.api.i18n.MessagesApi
+import javax.inject.{Inject, Singleton}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Request
-import play.twirl.api.HtmlFormat
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
-import views.html.error_template
+import views.html.pages.ErrorTemplate
 
-class ErrorHandler @Inject() (
-  val messagesApi:   MessagesApi,
-  val configuration: Configuration,
-  errorView: error_template
-)(
-  implicit val appConfig: AppConfig)
-    extends FrontendErrorHandler {
+@Singleton
+class ErrorHandler @Inject()(
+                              val messagesApi: MessagesApi,
+                              view: ErrorTemplate
+                            ) extends FrontendErrorHandler with I18nSupport {
 
-  override def standardErrorTemplate(
-    pageTitle: String,
-    heading:   String,
-    message:   String
-  )(
-    implicit request: Request[_]
-  ): HtmlFormat.Appendable =
-    errorView(pageTitle, heading, message)
-
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
+    view(pageTitle, heading, message)
 }

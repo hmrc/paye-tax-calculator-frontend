@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-        govuk_wrapper: templates.GovukLayoutWrapper,
-        h1: components.h1
-)
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
+package forms
 
-@govuk_wrapper(Some(titleNoForm(pageTitle))) {
+import forms.mappings.CustomFormatters._
+import javax.inject.Inject
+import models.ScottishRate
+import play.api.data.Form
+import play.api.data.Forms._
 
- @h1(messages(heading))
+class ScottishRateFormProvider @Inject()() {
 
- <p class="govuk-body">@messages(message)</p>
-
+  def apply(): Form[ScottishRate] = Form(
+      mapping(
+        "payScottishRate" -> of(requiredBooleanFormatter)
+      )(ScottishRate.apply)(ScottishRate.unapply)
+    )
 }

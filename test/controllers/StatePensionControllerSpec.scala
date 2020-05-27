@@ -34,7 +34,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.QuickCalcCache
 import setup.QuickCalcCacheSetup._
-import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
+import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.pages.StatePensionView
 
@@ -48,7 +48,7 @@ class StatePensionControllerSpec
     with MockitoSugar {
 
   val formProvider = new StatePensionFormProvider()
-  val form         = formProvider()
+  val form = formProvider()
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
@@ -85,10 +85,10 @@ class StatePensionControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(formFilled, aggregateCompleteListYearly)(
-          request,
-          messagesThing(application)
-        ).toString
+        contentAsString(result) mustEqual view(
+          formFilled,
+          aggregateCompleteListYearly
+        )(request, messagesThing(application)).toString
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
@@ -97,7 +97,9 @@ class StatePensionControllerSpec
 
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        None
+      )
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -107,147 +109,178 @@ class StatePensionControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.StatePensionController.showStatePensionForm().url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
+        val request = FakeRequest(
+          GET,
+          routes.StatePensionController.showStatePensionForm().url
+        ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+        redirectLocation(result).value mustEqual routes.SalaryController
+          .showSalaryForm()
+          .url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
 
     }
-  }
 
-  "Submit State Pension Form" should {
+    "Submit State Pension Form" should {
 
-    "return 400 for invalid form answer and current list of aggregate data" in {
-      val mockCache = mock[QuickCalcCache]
+      "return 400 for invalid form answer and current list of aggregate data" in {
+        val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+          cacheTaxCodeStatePension
+        )
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-      implicit val messages: Messages = messagesThing(application)
-      running(application) {
+        val application = new GuiceApplicationBuilder()
+          .overrides(bind[QuickCalcCache].toInstance(mockCache))
+          .build()
+        implicit val messages: Messages = messagesThing(application)
+        running(application) {
 
-        val request = FakeRequest(POST, routes.StatePensionController.submitStatePensionForm().url)
-          .withFormUrlEncodedBody(form.data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
+          val request = FakeRequest(
+            POST,
+            routes.StatePensionController.submitStatePensionForm().url
+          ).withFormUrlEncodedBody(form.data.toSeq: _*)
+            .withHeaders(HeaderNames.xSessionId -> "test")
+            .withCSRFToken
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+          status(result) mustEqual BAD_REQUEST
 
-        val parseHtml = Jsoup.parse(contentAsString(result))
+          val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+          val errorHeader =
+            parseHtml.getElementById("error-summary-title").text()
+          val errorMessage = parseHtml
+            .getElementsByClass("govuk-list govuk-error-summary__list")
+            .text()
 
-        errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedYesNoAnswerErrorMessage) mustEqual true
+          errorHeader mustEqual "There is a problem"
+          errorMessage.contains(expectedYesNoAnswerErrorMessage) mustEqual true
+        }
       }
-    }
 
-    "return 400 for invalid form answer and empty list of aggregate data" in {
-      val mockCache = mock[QuickCalcCache]
+      "return 400 for invalid form answer and empty list of aggregate data" in {
+        val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+          None
+        )
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
+        val application = new GuiceApplicationBuilder()
+          .overrides(bind[QuickCalcCache].toInstance(mockCache))
+          .build()
 
-      implicit val messages: Messages = messagesThing(application)
+        implicit val messages: Messages = messagesThing(application)
 
-      running(application) {
+        running(application) {
 
-        val request = FakeRequest(POST, routes.StatePensionController.submitStatePensionForm().url)
-          .withFormUrlEncodedBody(form.data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
+          val request = FakeRequest(
+            POST,
+            routes.StatePensionController.submitStatePensionForm().url
+          ).withFormUrlEncodedBody(form.data.toSeq: _*)
+            .withHeaders(HeaderNames.xSessionId -> "test")
+            .withCSRFToken
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+          status(result) mustEqual BAD_REQUEST
 
-        val parseHtml = Jsoup.parse(contentAsString(result))
+          val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+          val errorHeader =
+            parseHtml.getElementById("error-summary-title").text()
+          val errorMessage = parseHtml
+            .getElementsByClass("govuk-list govuk-error-summary__list")
+            .text()
 
-        errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedYesNoAnswerErrorMessage) mustEqual true
+          errorHeader mustEqual "There is a problem"
+          errorMessage.contains(expectedYesNoAnswerErrorMessage) mustEqual true
+        }
       }
-    }
 
-    "return 303, with an answer \"No\" saved on existing list of aggregate data without Salary and redirect to Salary Page" in {
-      val mockCache = mock[QuickCalcCache]
+      "return 303, with an answer \"No\" saved on existing list of aggregate data without Salary and redirect to Salary Page" in {
+        val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCode)
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+          cacheTaxCode
+        )
+        when(mockCache.save(any())(any())) thenReturn Future.successful(
+          CacheMap("id", Map.empty)
+        )
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
+        val application = new GuiceApplicationBuilder()
+          .overrides(bind[QuickCalcCache].toInstance(mockCache))
+          .build()
 
-      implicit val messages: Messages = messagesThing(application)
+        implicit val messages: Messages = messagesThing(application)
 
-      running(application) {
+        running(application) {
 
-        val formData = Map("overStatePensionAge" -> "false")
+          val formData = Map("overStatePensionAge" -> "false")
 
-        val request = FakeRequest(GET, routes.StatePensionController.showStatePensionForm().url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
+          val request = FakeRequest(
+            GET,
+            routes.StatePensionController.showStatePensionForm().url
+          ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+            .withHeaders(HeaderNames.xSessionId -> "test")
+            .withCSRFToken
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        val view = application.injector.instanceOf[StatePensionView]
+          val view = application.injector.instanceOf[StatePensionView]
 
-        status(result) mustEqual SEE_OTHER
+          status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+          redirectLocation(result).value mustEqual routes.SalaryController
+            .showSalaryForm()
+            .url
+          verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        }
       }
-    }
 
-    "return 303, with an answer \"Yes\" for being Over 65 saved on a new list of aggregate data and redirect Salary Page" in {
-      val mockCache = mock[QuickCalcCache]
+      "return 303, with an answer \"Yes\" for being Over 65 saved on a new list of aggregate data and redirect Salary Page" in {
+        val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCode)
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+          cacheTaxCode
+        )
+        when(mockCache.save(any())(any())) thenReturn Future.successful(
+          CacheMap("id", Map.empty)
+        )
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
+        val application = new GuiceApplicationBuilder()
+          .overrides(bind[QuickCalcCache].toInstance(mockCache))
+          .build()
 
-      implicit val messages: Messages = messagesThing(application)
+        implicit val messages: Messages = messagesThing(application)
 
-      running(application) {
+        running(application) {
 
-        val formData = Map("overStatePensionAge" -> "true")
+          val formData = Map("overStatePensionAge" -> "true")
 
-        val request = FakeRequest(GET, routes.StatePensionController.showStatePensionForm().url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
+          val request = FakeRequest(
+            GET,
+            routes.StatePensionController.showStatePensionForm().url
+          ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+            .withHeaders(HeaderNames.xSessionId -> "test")
+            .withCSRFToken
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        val view = application.injector.instanceOf[StatePensionView]
+          val view = application.injector.instanceOf[StatePensionView]
 
-        status(result) mustEqual SEE_OTHER
+          status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+          redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+          verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        }
       }
     }
   }

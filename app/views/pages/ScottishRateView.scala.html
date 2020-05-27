@@ -25,52 +25,57 @@
         link: components.linkNewTab,
         inputRadio: components.inputRadio,
         button: components.button,
-        govukDetails : GovukDetails,
-        govukBackLink : GovukBackLink
+        govukBackLink: GovukBackLink,
+        govukDetails: GovukDetails
 )
 
-@(overStatePensionAgeForm: Form[StatePension], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@(scottishRateForm: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
-@radioFieldStatePension = @{
-    overStatePensionAgeForm("overStatePensionAge")
+@radioFieldScottishRate = @{
+    scottishRateForm("payScottishRate")
 }
 
-@pensionAgeRadios = @{
+@scottishRateRadios = @{
     Seq(
         RadioItem(
             content = Text(Messages("quick_calc.over_state_pension_age.yes")),
             label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
             value = Some("true"),
-            checked = radioFieldStatePension.value.contains("true")
+            checked = radioFieldScottishRate.value.contains("true")
         ),
         RadioItem(
             content = Text(Messages("quick_calc.over_state_pension_age.no")),
             label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
             value = Some("false"),
-            checked = radioFieldStatePension.value.contains("false"))
+            checked = radioFieldScottishRate.value.contains("false"))
     )
 }
 
-@govuk_wrapper(Some(title(overStatePensionAgeForm, Messages("quick_calc.over_state_pension_age.header")))) {
+@govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income")))) {
 
-    @formHelper(action = controllers.routes.StatePensionController.submitStatePensionForm()) {
+    @govukBackLink(BackLink(
+        href = s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "")}",
+        content = Text(Messages("back"))))
 
-        @errorSummary(overStatePensionAgeForm.errors)
+    @formHelper(action = controllers.routes.ScottishRateController.submitScottishRateForm()) {
+
+        @errorSummary(scottishRateForm.errors)
 
         @inputRadio(
-            form = overStatePensionAgeForm,
-            legendKey = "quick_calc.over_state_pension_age.header",
-            hintKey = Some("quick_calc.salary.question.state_pension_inf"),
-            name = "overStatePensionAge",
-            items = pensionAgeRadios
+            form = scottishRateForm,
+            legendKey = "quick_calc.salary.question.scottish_income",
+            hintKey = Some(Messages("quick_calc.salary.question.scottish_income_info")),
+            name = "payScottishRate",
+            items = scottishRateRadios,
         )
 
         @govukDetails(Details(
-            summary = Text(messages("label.state-pension-details")),
-            content = HtmlContent(Messages("quick_calc.salary.question.state_pension_url_a") + link("https://www.gov.uk/state-pension-age", "quick_calc.salary.question.state_pension_url_b") + " " + Messages("quick_calc.salary.question.state_pension_url_c")
+            summary = Text(messages("label.scottish-rate-details")),
+            content = HtmlContent(Messages("quick_calc.salary.question.scottish_income_url_a") + link("https://www.gov.uk/scottish-rate-income-tax", "quick_calc.salary.question.scottish_income_url_b") + " " + Messages("quick_calc.salary.question.scottish_income_url_c"))
         )
-        ))
+        )
 
         @button("continue", Some("button-continue"))
+
     }
 }

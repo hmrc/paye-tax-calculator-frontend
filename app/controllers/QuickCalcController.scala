@@ -53,55 +53,6 @@ class QuickCalcController @Inject() (
     Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
   }
 
-  def showScottishRateForm(): Action[AnyContent] =
-    salaryRequired(
-      cache,
-      implicit request =>
-        aggregate => {
-          implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-          val form = aggregate.savedScottishRate.map(ScottishRate.form.fill).getOrElse(ScottishRate.form)
-          Ok(scottish_income_tax_rate(form, aggregate.youHaveToldUsItems))
-        }
-    )
-
-  def submitScottishRateForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    ScottishRate.form
-      .bindFromRequest()
-      .fold(
-        formWithErrors =>
-          cache
-            .fetchAndGetEntry()
-            .map {
-              case Some(aggregate) => aggregate.youHaveToldUsItems
-              case None            => Nil
-            }
-            .map(itemList => BadRequest(scottish_income_tax_rate(formWithErrors, itemList))),
-        scottish => {
-          val taxCode =
-            if (scottish.value)
-              UserTaxCode.defaultScottishTaxCode
-            else
-              UserTaxCode.defaultUkTaxCode
-
-          val updatedAggregate = cache
-            .fetchAndGetEntry()
-            .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-            .map(
-              _.copy(
-                savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode))),
-                savedScottishRate = Some(ScottishRate(scottish.value))
-              )
-            )
-          updatedAggregate
-            .map(cache.save)
-            .map(_ => Redirect(routes.YouHaveToldUsController.summary()))
-        }
-      )
-  }
-
   def restartQuickCalc(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 

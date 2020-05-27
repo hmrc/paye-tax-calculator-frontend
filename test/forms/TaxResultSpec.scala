@@ -23,6 +23,7 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import forms.TaxResult._
 import uk.gov.hmrc.calculator.model.{CalculatorResponsePayPeriod, PayPeriod}
+import uk.gov.hmrc.http.BadRequestException
 import uk.gov.hmrc.play.test.UnitSpec
 
 class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
@@ -57,6 +58,14 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
       "2020_2"
     ) in {
       val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
+
+      extractTaxCode(input) shouldBe "1250L"
+    }
+
+    "return the default UK tax code for 2020-21 (if in May onwards as this has new bands for scotland if the user does not provide one and is None" taggedAs Tag(
+      "2020_2"
+    ) in {
+      val input = QuickCalcAggregateInput(None, None, None, None, None)
 
       extractTaxCode(input) shouldBe "1250L"
     }
@@ -102,6 +111,13 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
       extractSalary(QuickCalcAggregateInput(Some(Salary(2, "an hour", None)), None, None, None, None)) shouldBe 2
     }
 
+    """return an error with message "No Salary has been provided" if incorrect salary duration""" in {
+      val thrown = intercept[Exception] {
+        extractSalary(QuickCalcAggregateInput(Some(Salary(2, "a decade", None)), None, None, None, None))
+      }
+      thrown.getMessage shouldBe "No Salary has been provided."
+    }
+
     """return an error with message "No Salary has been provided" if no response""" in {
       val thrown = intercept[Exception] {
         extractSalary(QuickCalcAggregateInput(None, None, None, None, None))
@@ -131,20 +147,39 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
     "return empty string if response is Hourly" in {
       extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "an hour", None)), None, None, None, None)) shouldBe PayPeriod.HOURLY
     }
+
+    """return an error with message "a decade is not a valid PayPeriod" if incorrect salary duration""" in {
+      val thrown = intercept[BadRequestException] {
+        extractPayPeriod(QuickCalcAggregateInput(Some(Salary(2, "a decade", None)), None, None, None, None))
+      }
+      thrown.getMessage shouldBe "a decade is not a valid PayPeriod"
+    }
+
+    """return an error with message "Invalid PayPeriod""" in {
+      val thrown = intercept[BadRequestException] {
+        extractPayPeriod(QuickCalcAggregateInput(None, None, None, None, None))
+      }
+      thrown.getMessage shouldBe "Invalid PayPeriod"
+    }
+
   }
 
   "Extracting Hours from user response" should {
 
     "return if response is hours in Daily" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(40, "a day", None)), None, None, None, None)) shouldBe None
+      extractHours(QuickCalcAggregateInput(Some(Salary(40, "a day", Some(4.0))), None, None, None, None)) shouldBe Some(4.0)
     }
 
     "return if response is hours in Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(20, "an hour", None)), None, None, None, None)) shouldBe None
+      extractHours(QuickCalcAggregateInput(Some(Salary(20, "an hour", Some(10.0))), None, None, None, None)) shouldBe Some(10.0)
     }
 
     "return if response is not Daily or Hourly" in {
       extractHours(QuickCalcAggregateInput(Some(Salary(-1, "an hour", None)), None, None, None, None)) shouldBe None
+    }
+
+    "return None if no salary present" in {
+      extractHours(QuickCalcAggregateInput(None, None, None, None, None)) shouldBe None
     }
   }
 

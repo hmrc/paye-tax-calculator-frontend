@@ -16,7 +16,7 @@
 
 package models
 
-import forms.{StatePensionFormProvider, ScottishRate, YouHaveToldUs, YouHaveToldUsItem}
+import forms.{StatePensionFormProvider, ScottishRateFormProvider, YouHaveToldUs, YouHaveToldUsItem}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 
