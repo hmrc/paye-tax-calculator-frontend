@@ -51,7 +51,7 @@
         rows = Seq(
             Seq(
                 TableRow(
-                    content = Text(Messages("quick_calc.result.income_tax"))),
+                    content = Text(if(isKCode) Messages("quick_calc.result.adjusted_taxable_pay") else Messages("quick_calc.result.income_tax"))),
                 TableRow(
                     content = Text(s"£${moneyFormatter(extractIncomeTax(calculatorResponse))}")
                 )

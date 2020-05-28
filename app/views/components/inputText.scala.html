@@ -26,7 +26,8 @@
         hint: Option[Hint] = None,
         classes: Option[String] = None,
         stripWhitespace: Boolean = false,
-        autoComplete: String = ""
+        autoComplete: String = "",
+        populateField: Boolean = true
 )(implicit messages: Messages)
 
 @govukInput(Input(
@@ -39,7 +40,7 @@
     classes = if(isPageHeading) "govuk-label--xl" else ""
   ),
   hint = hint,
-  value = form(name).value,
+  value = if (populateField) form(name).value else None,
   errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)))),
   autocomplete =  Some(autoComplete)
 ))

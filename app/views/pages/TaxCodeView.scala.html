@@ -47,10 +47,11 @@
             checked = radioField.value.contains("true"),
             conditionalHtml = Some(textInput(
                 userTaxCodeForm,
-                "tax-code-input",
+                "taxCode",
                 "taxCode",
                 Messages("quick_calc.about_tax_code.has_tax_code"),
-                isPageHeading = false
+                isPageHeading = false,
+                populateField = false
             ))
         ),
         RadioItem(
