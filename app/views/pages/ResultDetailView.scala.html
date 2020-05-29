@@ -51,7 +51,7 @@
         rows = Seq(
             Seq(
                 TableRow(
-                    content = Text(if(isKCode) Messages("quick_calc.result.adjusted_taxable_pay") else Messages("quick_calc.result.income_tax"))),
+                    content = Text(if(isKCode) Messages("quick_calc.result.income_tax_adjusted") else Messages("quick_calc.result.income_tax"))),
                 TableRow(
                     content = Text(s"£${moneyFormatter(extractIncomeTax(calculatorResponse))}")
                 )
@@ -127,13 +127,17 @@
                 ),
                 Seq(
                     TableRow(
-                        content = HtmlContent("<strong>" + Messages("quick_calc.result.taxable_pay") + "</strong>")),
+                        content = HtmlContent("<strong>" + Messages(if (isKCode) "quick_calc.result.adjusted_taxable_pay" else "quick_calc.result.taxable_pay") + "</strong>")),
                     TableRow(
                         content = HtmlContent("<strong>" + s"£${
                             moneyFormatter(if(calculatorResponse.getWages - calculatorResponse.getTaxFree < 0) {
                                 0
                             } else {
-                                calculatorResponse.getWages - calculatorResponse.getTaxFree
+                                if(isKCode) {
+                                    calculatorResponse.getWages + calculatorResponse.getKCodeAdjustment
+                                } else {
+                                    calculatorResponse.getWages - calculatorResponse.getTaxFree
+                                }
                             })
                         }" + "</strong>")
                     )
