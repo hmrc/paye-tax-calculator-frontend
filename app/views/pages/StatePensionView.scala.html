@@ -31,6 +31,14 @@
 
 @(overStatePensionAgeForm: Form[StatePension], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
+    @labels = @{
+        List(Messages("quick_calc.salary.yearly.sub_label"),
+            Messages("quick_calc.salary.monthly.sub_label"),
+            Messages("quick_calc.salary.weekly.sub_label"),
+            Messages("quick_calc.salary.daily.sub_label"),
+            Messages("quick_calc.salary.hourly.sub_label"))
+    }
+
 @radioFieldStatePension = @{
     overStatePensionAgeForm("overStatePensionAge")
 }
@@ -52,6 +60,11 @@
 }
 
 @govuk_wrapper(Some(title(overStatePensionAgeForm, Messages("quick_calc.over_state_pension_age.header")))) {
+
+
+    @govukBackLink(BackLink(
+        href = s"${youHaveToldUsItems.flatMap(y => if(labels.contains(y.label)) y.url else "").mkString}",
+        content = Text(Messages("back"))))
 
     @formHelper(action = controllers.routes.StatePensionController.submitStatePensionForm()) {
 

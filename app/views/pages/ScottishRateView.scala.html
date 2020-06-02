@@ -54,7 +54,7 @@
 @govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income")))) {
 
     @govukBackLink(BackLink(
-        href = s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "")}",
+        href = s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "").mkString}",
         content = Text(Messages("back"))))
 
     @formHelper(action = controllers.routes.ScottishRateController.submitScottishRateForm()) {
