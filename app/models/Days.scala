@@ -20,19 +20,19 @@ import play.api.libs.json.{Reads, Writes, __}
 
 case class Days(
                  amount:       Double,
-                 howManyAWeek: Double)
+                 howManyAWeek: BigDecimal)
 
 object Days {
   import play.api.libs.functional.syntax._
 
   implicit lazy val reads: Reads[Days] = (
     (__ \ "amount").read[Double] and
-      (__ \ "how-many-a-week").read[Double]
+      (__ \ "how-many-a-week").read[BigDecimal]
     )(Days(_, _))
 
   implicit lazy val writes: Writes[Days] =
     (
       (__ \ "amount").write[Double] and
-        (__ \ "how-many-a-week").write[Double]
+        (__ \ "how-many-a-week").write[BigDecimal]
       )(a => (a.amount, a.howManyAWeek))
 }

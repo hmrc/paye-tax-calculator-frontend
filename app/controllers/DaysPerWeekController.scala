@@ -58,8 +58,7 @@ class DaysPerWeekController @Inject() (
     form
       .bindFromRequest()
       .fold(
-        formWithErrors =>
-          Future(BadRequest(daysPerWeekView(formWithErrors, valueInPence, url))),
+        formWithErrors => Future(BadRequest(daysPerWeekView(formWithErrors, valueInPence, url))),
         days => {
           val updatedAggregate = cache
             .fetchAndGetEntry()
@@ -90,25 +89,35 @@ class DaysPerWeekController @Inject() (
   def showDaysAWeek(
     valueInPence: Int,
     url:          String
-  ): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    salaryRequired(cache, Ok(daysPerWeekView(form, valueInPence, url)))
-  }
+  ): Action[AnyContent] =
+    salaryRequired(cache, { implicit request => agg => {
+      val filledForm = agg.savedPeriod
+        .map { s =>
+          form.fill(Days(s.amount, s.howManyAWeek.bigDecimal.stripTrailingZeros()))
+        }
+        .getOrElse(form)
+      Ok(daysPerWeekView(filledForm, valueInPence, url))}
+    })
 
   private def salaryRequired[T](
-    cache:           QuickCalcCache,
-    resultIfPresent: Result
-  )(implicit hc:     HeaderCarrier
-  ): Future[Result] =
-    cache.fetchAndGetEntry().map {
-      case Some(aggregate) =>
-        if (aggregate.savedSalary.isDefined)
-          resultIfPresent
-        else
+    cache:         QuickCalcCache,
+    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
+  ): Action[AnyContent] =
+    validateAcceptWithSessionId.async { implicit request =>
+      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
+        request.headers,
+        Some(request.session)
+      )
+
+      cache.fetchAndGetEntry().map {
+        case Some(aggregate) =>
+          if (aggregate.savedSalary.isDefined)
+            furtherAction(request)(aggregate)
+          else
+            Redirect(routes.SalaryController.showSalaryForm())
+        case None =>
           Redirect(routes.SalaryController.showSalaryForm())
-      case None =>
-        Redirect(routes.SalaryController.showSalaryForm())
+      }
     }
 
 }

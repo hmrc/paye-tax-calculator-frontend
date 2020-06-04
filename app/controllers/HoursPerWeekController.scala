@@ -19,7 +19,7 @@ package controllers
 import config.AppConfig
 import forms.SalaryInHoursFormProvider
 import javax.inject.{Inject, Singleton}
-import models.{Hours, PayPeriodDetail, QuickCalcAggregateInput, Salary}
+import models.{Days, Hours, PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
@@ -58,9 +58,7 @@ class HoursPerWeekController @Inject() (
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => {
-          Future(BadRequest(hoursAWeekView(formWithErrors, valueInPence, url)))
-        },
+        formWithErrors => Future(BadRequest(hoursAWeekView(formWithErrors, valueInPence, url))),
         hours => {
           val updatedAggregate = cache
             .fetchAndGetEntry()
@@ -92,25 +90,37 @@ class HoursPerWeekController @Inject() (
   def showHoursAWeek(
     valueInPence: Int,
     url:          String
-  ): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+  ): Action[AnyContent] =
+    salaryRequired(
+      cache, { implicit request => agg =>
+        val filledForm = agg.savedPeriod
+          .map(s => form.fill(Hours(s.amount, s.howManyAWeek.bigDecimal.stripTrailingZeros())))
+          .getOrElse(form)
 
-    salaryRequired(cache, Ok(hoursAWeekView(form, valueInPence, url)))
-  }
+        Ok(hoursAWeekView(filledForm, valueInPence, url))
+
+      }
+    )
 
   private def salaryRequired[T](
-    cache:           QuickCalcCache,
-    resultIfPresent: Result
-  )(implicit hc:     HeaderCarrier
-  ): Future[Result] =
-    cache.fetchAndGetEntry().map {
-      case Some(aggregate) =>
-        if (aggregate.savedSalary.isDefined)
-          resultIfPresent
-        else
+    cache:         QuickCalcCache,
+    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
+  ): Action[AnyContent] =
+    validateAcceptWithSessionId.async { implicit request =>
+      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
+        request.headers,
+        Some(request.session)
+      )
+
+      cache.fetchAndGetEntry().map {
+        case Some(aggregate) =>
+          if (aggregate.savedSalary.isDefined)
+            furtherAction(request)(aggregate)
+          else
+            Redirect(routes.SalaryController.showSalaryForm())
+        case None =>
           Redirect(routes.SalaryController.showSalaryForm())
-      case None =>
-        Redirect(routes.SalaryController.showSalaryForm())
+      }
     }
 
 }

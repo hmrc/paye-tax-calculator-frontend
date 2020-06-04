@@ -63,7 +63,7 @@
 
 
     @govukBackLink(BackLink(
-        href = s"${youHaveToldUsItems.flatMap(y => if(labels.contains(y.label)) y.url else "").mkString}",
+        href = s"${youHaveToldUsItems.flatMap((y: YouHaveToldUsItem) => if(labels.contains(y.label)) y.url else "").mkString}",
         content = Text(Messages("back"))))
 
     @formHelper(action = controllers.routes.StatePensionController.submitStatePensionForm()) {

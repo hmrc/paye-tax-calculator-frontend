@@ -43,8 +43,8 @@ object QuickCalcCacheSetup {
 
   val taxCodeTest            = YouHaveToldUsItem("1150L", "Tax Code", "/foo", "tax-code")
   val overStatePensionTest   = YouHaveToldUsItem("YES", "Over 65", "/foo", "StatePensionView")
-  val salaryYearlyTest       = YouHaveToldUsItem("20000", "Per year", "/foo", "salary")
-  val salaryDailyTest        = YouHaveToldUsItem("40", "Per day", "/foo", "salary")
+  val salaryYearlyTest       = YouHaveToldUsItem("20000", "a_year", "/estimate-paye-take-home-pay/your-pay", "salary")
+  val salaryDailyTest        = YouHaveToldUsItem("40", "a_day", "/foo", "salary")
   val salaryDailyPeriodTest  = YouHaveToldUsItem("5", "Days", "/foo", "time")
   val salaryHourlyPeriodTest = YouHaveToldUsItem("5", "Hours", "/foo", "time")
   val scottishRateTest       = YouHaveToldUsItem("No", "Scottish", "/foo", "scottish_rate")

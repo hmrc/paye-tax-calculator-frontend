@@ -58,12 +58,12 @@ object CustomFormatters {
     ) = Map(key -> value)
   }
 
-  def dayValidation: Formatter[Double] = new Formatter[Double] {
+  def dayValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
 
     override def bind(
       key:  String,
       data: Map[String, String]
-    ): Either[Seq[FormError], Double] =
+    ): Either[Seq[FormError], BigDecimal] =
       Right(data.getOrElse(key, "")).right.flatMap {
         case s if s.nonEmpty =>
           try {
@@ -73,7 +73,7 @@ object CustomFormatters {
             } else if (days > 7.0) {
               Left(Seq(FormError(key, "quick_calc.salary.question.error.number_of_days.more_than_seven")))
             } else {
-              Right(days)
+              Right(BigDecimal(s).bigDecimal.stripTrailingZeros())
             }
           } catch {
             case _: Throwable =>
@@ -84,16 +84,16 @@ object CustomFormatters {
 
     override def unbind(
       key:   String,
-      value: Double
+      value: BigDecimal
     ): Map[String, String] = Map(key -> value.toString)
   }
 
-  def hoursValidation: Formatter[Double] = new Formatter[Double] {
+  def hoursValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
 
     override def bind(
       key:  String,
       data: Map[String, String]
-    ): Either[Seq[FormError], Double] =
+    ): Either[Seq[FormError], BigDecimal] =
       Right(data.getOrElse(key, "")).right.flatMap {
         case s if s.nonEmpty =>
           try {
@@ -103,7 +103,7 @@ object CustomFormatters {
             } else if (!HoursDaysValidator.INSTANCE.isBelowMaximumHoursPerWeek(hours)) {
               Left(Seq(FormError(key, "quick_calc.salary.question.error.number_of_hours.more_than_168")))
             } else {
-              Right(hours)
+              Right(BigDecimal(s).bigDecimal.stripTrailingZeros())
             }
           } catch {
             case _: Throwable =>
@@ -114,7 +114,7 @@ object CustomFormatters {
 
     override def unbind(
       key:   String,
-      value: Double
+      value: BigDecimal
     ): Map[String, String] = Map(key -> value.toString)
 
   }

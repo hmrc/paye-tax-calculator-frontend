@@ -30,7 +30,7 @@ class SalaryFormProvider @Inject()() {
     mapping(
       "amount"       -> of(CustomFormatters.salaryValidation),
       "period"       -> of(CustomFormatters.requiredSalaryPeriodFormatter),
-      "how-many-a-week" -> optional(of[Double])
+      "how-many-a-week" -> optional(of[BigDecimal])
     )(Salary.apply)(Salary.unapply)
   )
 }

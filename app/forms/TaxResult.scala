@@ -43,7 +43,7 @@ object TaxResult {
       extractPayPeriod(quickCalcAggregateInput),
       extractOverStatePensionAge(quickCalcAggregateInput),
       extractHours(quickCalcAggregateInput) match {
-        case Some(number) => number
+        case Some(number) => number.toDouble
         case None         => null
       },
       UserTaxCode.currentTaxYear
@@ -98,7 +98,7 @@ object TaxResult {
     * "hoursIn" does not only means hours but can also mean days.
     * buildTaxCalc will use the number returned to calculate the weekly gross pay from Daily or Hourly via those case classes.
     **/
-  def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput): Option[Double] =
+  def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput): Option[BigDecimal] =
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
         (s.period, s.howManyAWeek) match {

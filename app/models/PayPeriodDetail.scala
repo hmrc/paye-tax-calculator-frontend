@@ -20,7 +20,7 @@ import play.api.libs.json.{Json, OFormat, Reads, Writes, __}
 
 case class PayPeriodDetail(
                             amount:       Int,
-                            howManyAWeek: Double,
+                            howManyAWeek: BigDecimal,
                             period:       String,
                             urlForChange: String)
 
@@ -29,7 +29,7 @@ object PayPeriodDetail {
 
   implicit lazy val reads: Reads[PayPeriodDetail] = (
     (__ \ "amount").read[Int] and
-      (__ \ "how-many-a-week").read[Double] and
+      (__ \ "how-many-a-week").read[BigDecimal] and
         (__ \ "period").read[String] and
         (__ \ "urlForChange").read[String]
 
@@ -38,7 +38,7 @@ object PayPeriodDetail {
   implicit lazy val writes: Writes[PayPeriodDetail] =
     (
       (__ \ "amount").write[Int] and
-        (__ \ "how-many-a-week").write[Double] and
+        (__ \ "how-many-a-week").write[BigDecimal] and
           (__ \ "period").write[String] and
         (__ \ "urlForChange").write[String]
       )(a => (a.amount, a.howManyAWeek, a.period, a.urlForChange))
