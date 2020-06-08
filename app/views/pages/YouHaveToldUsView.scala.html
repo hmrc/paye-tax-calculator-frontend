@@ -27,26 +27,25 @@
         govukBackLink: GovukBackLink,
         formHelper: FormWithCSRF,
         button: components.button,
-        govukSummaryList : GovukSummaryList
+        govukSummaryList: GovukSummaryList
 )
 
 @(items: List[YouHaveToldUsItem])(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 
 @rows = @{
     items.map { item =>
-
         SummaryListRow(
-          key= Key(content = Text(Messages(s"quick_calc.you_have_told_us.${item.label}.label"))),
-          value = Value(content = Text(item.value)),
-          actions = Some(Actions(
-            items = Seq(
-              ActionItem(
-                href =item.url,
-                  content = Text(Messages("quick_calc.you_have_told_us.edit")),
-                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label"))
-              )
-            )
-          ))
+            key = Key(content = Text(Messages(s"quick_calc.you_have_told_us.${item.label}.label"))),
+            value = Value(content = Text(item.value)),
+            actions = Some(Actions(
+                items = Seq(
+                    ActionItem(
+                        href = item.url,
+                        content = Text(Messages("quick_calc.you_have_told_us.edit")),
+                        visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label"))
+                    )
+                )
+            ))
         )
     }.toSeq
 }
@@ -59,7 +58,7 @@
 
     @govukSummaryList(SummaryList(rows = rows))
 
-        @formHelper(action = routes.ShowResultsController.showResult()) {
-            @button("get_results", Some("button-get-results"))
-        }
+    @formHelper(action = routes.ShowResultsController.showResult()) {
+        @button("get_results", Some("button-get-results"))
     }
+}

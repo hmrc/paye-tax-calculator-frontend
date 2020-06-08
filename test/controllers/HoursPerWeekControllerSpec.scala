@@ -33,7 +33,7 @@
 package controllers
 
 import forms.{SalaryFormProvider, SalaryInHoursFormProvider}
-import models.{Hours, QuickCalcAggregateInput}
+import models.{Days, Hours, QuickCalcAggregateInput}
 import org.jsoup.Jsoup
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
@@ -87,7 +87,8 @@ class HoursPerWeekControllerSpec
 
       implicit val messages: Messages = messagesForApp(application)
 
-      val amount       = cacheCompleteHourly.value.savedPeriod.value.amount
+      val amount       = (cacheCompleteHourly.value.savedPeriod.value.amount * 100.0).toInt
+      val howManyAWeek       = cacheCompleteHourly.value.savedPeriod.value.howManyAWeek
 
       running(application) {
 
@@ -101,7 +102,7 @@ class HoursPerWeekControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, amount, "")(request, messagesForApp(application)).toString
+        contentAsString(result) mustEqual view(form.fill(Hours(cacheCompleteHourly.value.savedPeriod.value.amount, howManyAWeek)), cacheCompleteHourly.value.savedPeriod.value.amount, "")(request, messagesForApp(application)).toString
       }
     }
 

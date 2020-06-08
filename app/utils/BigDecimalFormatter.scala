@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package forms
+package utils
 
-import forms.mappings.CustomFormatters
-import javax.inject.Inject
-import models.Hours
-import play.api.data.Form
-import play.api.data.Forms.{mapping, of}
-import play.api.i18n.Messages
-import play.api.data.format.Formats._
-
-class SalaryInHoursFormProvider @Inject()() {
-
-  def apply(): Form[Hours] = Form(
-    mapping(
-      a1 = "amount"       -> of[BigDecimal],
-      a2 = "how-many-a-week" -> of(CustomFormatters.hoursValidation)
-    )(Hours.apply)(Hours.unapply)
-  )
+object BigDecimalFormatter {
+    def stripZeros(bigDecimal: BigDecimal): scala.BigDecimal = {
+      if ( bigDecimal.bigDecimal.scale > 0 ) bigDecimal.bigDecimal.stripTrailingZeros else bigDecimal.bigDecimal
+    }
 }

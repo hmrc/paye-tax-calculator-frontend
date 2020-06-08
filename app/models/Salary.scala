@@ -27,9 +27,6 @@ object Salary {
 
   import play.api.libs.functional.syntax._
 
-  def salaryInPence(value: BigDecimal): Int =
-    value.toInt
-
   implicit lazy val reads: Reads[Salary] = (
     (__ \ "amount").read[BigDecimal] and
     (__ \ "period").read[String] and

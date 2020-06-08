@@ -20,6 +20,7 @@ import models.UserTaxCode._
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, TaxCodeValidator, WageValidator}
+import utils.BigDecimalFormatter
 
 object CustomFormatters {
 
@@ -73,7 +74,7 @@ object CustomFormatters {
             } else if (days > 7.0) {
               Left(Seq(FormError(key, "quick_calc.salary.question.error.number_of_days.more_than_seven")))
             } else {
-              Right(BigDecimal(s).bigDecimal.stripTrailingZeros())
+              Right(BigDecimalFormatter.stripZeros(BigDecimal(s).bigDecimal))
             }
           } catch {
             case _: Throwable =>
@@ -103,7 +104,7 @@ object CustomFormatters {
             } else if (!HoursDaysValidator.INSTANCE.isBelowMaximumHoursPerWeek(hours)) {
               Left(Seq(FormError(key, "quick_calc.salary.question.error.number_of_hours.more_than_168")))
             } else {
-              Right(BigDecimal(s).bigDecimal.stripTrailingZeros())
+              Right(BigDecimalFormatter.stripZeros(BigDecimal(s).bigDecimal))
             }
           } catch {
             case _: Throwable =>

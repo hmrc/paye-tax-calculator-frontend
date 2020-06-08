@@ -27,7 +27,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, BigDecimalFormatter}
 import views.html.pages.HoursAWeekView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -52,13 +52,16 @@ class HoursPerWeekController @Inject() (
 
   def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    println(valueInPence)
 
     val url   = routes.SalaryController.showSalaryForm().url
-    val value = BigDecimal(valueInPence)
+    val value = BigDecimal(valueInPence / 100.0)
+    println(value)
+
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future(BadRequest(hoursAWeekView(formWithErrors, valueInPence, url))),
+        formWithErrors => Future(BadRequest(hoursAWeekView(formWithErrors, value, url))),
         hours => {
           val updatedAggregate = cache
             .fetchAndGetEntry()
@@ -67,7 +70,7 @@ class HoursPerWeekController @Inject() (
               _.copy(
                 savedSalary = Some(Salary(value, Messages("quick_calc.salary.hourly.label"), Some(hours.howManyAWeek))),
                 savedPeriod = Some(
-                  PayPeriodDetail(valueInPence, hours.howManyAWeek, Messages("quick_calc.salary.hourly.label"), url)
+                  PayPeriodDetail(value, hours.howManyAWeek, Messages("quick_calc.salary.hourly.label"), url)
                 )
               )
             )
@@ -90,22 +93,25 @@ class HoursPerWeekController @Inject() (
   def showHoursAWeek(
     valueInPence: Int,
     url:          String
-  ): Action[AnyContent] =
+  ): Action[AnyContent] ={
+
     salaryRequired(
       cache, { implicit request => agg =>
         val filledForm = agg.savedPeriod
-          .map(s => form.fill(Hours(s.amount, s.howManyAWeek.bigDecimal.stripTrailingZeros())))
+          .map(s => form.fill(Hours(s.amount, BigDecimalFormatter.stripZeros(s.howManyAWeek.bigDecimal))))
           .getOrElse(form)
 
-        Ok(hoursAWeekView(filledForm, valueInPence, url))
+        Ok(hoursAWeekView(filledForm, BigDecimal(valueInPence / 100.0), url))
 
       }
     )
-
+  }
   private def salaryRequired[T](
     cache:         QuickCalcCache,
     furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
   ): Action[AnyContent] =
+
+
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
         request.headers,

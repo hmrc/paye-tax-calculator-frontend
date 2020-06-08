@@ -38,6 +38,7 @@ import services.QuickCalcCache
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.http.cache.client.CacheMap
+import utils.BigDecimalFormatter
 import views.html.pages.DaysAWeekView
 
 import scala.concurrent.Future
@@ -70,11 +71,12 @@ class DaysPerWeekControllerSpec
 
       implicit val messages: Messages = messagesForApp(application)
 
-      val amount       = cacheCompleteDaily.value.savedPeriod.value.amount
+      val amount       = (cacheCompleteHourly.value.savedPeriod.value.amount * 100.0).toInt
+      val howManyAweek       = cacheCompleteDaily.value.savedPeriod.value.howManyAWeek
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(amount, "").url)
+        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(amount, "url").url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -84,7 +86,7 @@ class DaysPerWeekControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, amount, "")(request, messagesForApp(application)).toString
+        contentAsString(result) mustEqual view(form.fill(Days(cacheCompleteHourly.value.savedPeriod.value.amount, BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))), cacheCompleteHourly.value.savedPeriod.value.amount, "url")(request, messagesForApp(application)).toString
       }
     }
 

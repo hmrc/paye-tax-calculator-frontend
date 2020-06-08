@@ -27,13 +27,13 @@
         govukBackLink: GovukBackLink
 )
 
-@(hoursForm: Form[Hours], valueInPence: Int, url: String)(implicit request: Request[_], messages: Messages)
+@(hoursForm: Form[Hours], value: BigDecimal, url: String)(implicit request: Request[_], messages: Messages)
 
 @govuk_wrapper(Some(title(hoursForm, Messages("quick_calc.salary.question.hours_a_week")))) {
 
     @govukBackLink(BackLink(href = url, content = Text(Messages("back"))))
 
-    @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek(valueInPence)) {
+    @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek((value * 100.0).toInt)) {
         @errorSummary(hoursForm.errors)
 
         @inputNumber(hoursForm,
@@ -49,7 +49,7 @@
             name = "amount",
             label = "",
             isPageHeading = false,
-            value = Some(valueInPence.toString),
+            value = Some(value.toString()),
             classes = Some("govuk-input--width-10")
         )
 

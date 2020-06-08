@@ -53,7 +53,6 @@
 }
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header")))) {
-
     @govukBackLink(BackLink(href = "https://www.gov.uk/estimate-income-tax", content = Text(Messages("back"))))
 
     @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount()) {

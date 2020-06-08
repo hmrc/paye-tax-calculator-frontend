@@ -28,7 +28,7 @@ class SalaryInDaysFormProvider @Inject()() {
 
   def apply(): Form[Days] = Form(
     mapping(
-      "amount"       -> of[Double],
+      "amount"       -> of[BigDecimal],
       "how-many-a-week" -> of(CustomFormatters.dayValidation)
     )(Days.apply)(Days.unapply)
   )

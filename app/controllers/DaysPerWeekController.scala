@@ -27,7 +27,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, BigDecimalFormatter}
 import views.html.pages.DaysAWeekView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -52,13 +52,16 @@ class DaysPerWeekController @Inject() (
 
   def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    println(valueInPence)
 
     val url   = routes.SalaryController.showSalaryForm().url
-    val value = BigDecimal(valueInPence)
+    val value = BigDecimal(valueInPence / 100.0)
+    println(value)
+
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future(BadRequest(daysPerWeekView(formWithErrors, valueInPence, url))),
+        formWithErrors => Future(BadRequest(daysPerWeekView(formWithErrors, value, url))),
         days => {
           val updatedAggregate = cache
             .fetchAndGetEntry()
@@ -67,7 +70,7 @@ class DaysPerWeekController @Inject() (
               _.copy(
                 savedSalary = Some(Salary(value, Messages("quick_calc.salary.daily.label"), Some(days.howManyAWeek))),
                 savedPeriod =
-                  Some(PayPeriodDetail(valueInPence, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
+                  Some(PayPeriodDetail(value, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
               )
             )
 
@@ -93,10 +96,10 @@ class DaysPerWeekController @Inject() (
     salaryRequired(cache, { implicit request => agg => {
       val filledForm = agg.savedPeriod
         .map { s =>
-          form.fill(Days(s.amount, s.howManyAWeek.bigDecimal.stripTrailingZeros()))
+          form.fill(Days(s.amount, BigDecimalFormatter.stripZeros(s.howManyAWeek.bigDecimal)))
         }
         .getOrElse(form)
-      Ok(daysPerWeekView(filledForm, valueInPence, url))}
+      Ok(daysPerWeekView(filledForm, BigDecimal(valueInPence / 100.0), url))}
     })
 
   private def salaryRequired[T](

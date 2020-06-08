@@ -42,11 +42,12 @@ class SalaryService @Inject() (
         val newAggregate = oldAggregate.copy(savedSalary = Some(salaryAmount))
         (newAggregate.savedSalary, newAggregate.savedPeriod) match {
           case (Some(salary), Some(detail)) =>
+            println("????????? " + salary)
             if (salary.period == oldAggregate.savedSalary.map(_.period).getOrElse("")) {
               newAggregate.copy(
                 savedSalary =
                   Some(Salary(salaryAmount.amount, salary.period, oldAggregate.savedSalary.get.howManyAWeek)),
-                savedPeriod = Some(PayPeriodDetail(salaryAmount.amount.toInt, detail.howManyAWeek, detail.period, url))
+                savedPeriod = Some(PayPeriodDetail(salaryAmount.amount, detail.howManyAWeek, detail.period, url))
               )
             } else newAggregate.copy(savedPeriod = None)
           case _ => newAggregate.copy(savedPeriod = None)

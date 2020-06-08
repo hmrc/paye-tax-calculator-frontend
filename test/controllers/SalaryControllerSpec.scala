@@ -369,7 +369,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.DaysPerWeekController.showDaysAWeek(10000, "/estimate-paye-take-home-pay/your-pay").url
 
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -398,7 +398,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.HoursPerWeekController.showHoursAWeek(10000, "/estimate-paye-take-home-pay/your-pay").url
 
         verify(mockCache, times(1)).save(any())(any())
       }

@@ -98,7 +98,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         actualTable.get(4).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedScottishAnswer
       }
     }
-    "return aggregate data of : Earning £8 Hourly Salary, YES (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer" in {
+    "return aggregate data of : Earning £8.5 Hourly Salary, YES (Over State Pension), Tax Code: 1150L and is NOT Scottish Tax Payer" in {
       val mockCache = mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly)

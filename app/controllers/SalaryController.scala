@@ -20,7 +20,7 @@ import config.AppConfig
 import forms.SalaryFormProvider
 import javax.inject.{Inject, Singleton}
 import models.Salary
-import models.Salary.salaryInPence
+import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
@@ -76,6 +76,7 @@ class SalaryController @Inject() (
           Future(BadRequest(salaryView(formWithErrors)))
         },
         success = salaryAmount => {
+          println("±±±±±±±±±± " + salaryAmount)
           val updatedAggregate = salaryService.updateSalaryAmount(cache, salaryAmount, url)
 
           updatedAggregate.flatMap(agg =>
@@ -85,15 +86,13 @@ class SalaryController @Inject() (
                 _ =>
                   salaryAmount.period match {
                     case `day` =>
-                      if (agg.savedPeriod.map(_.period).contains(day))
-                        Redirect(navigator.tryGetShowStatePension(agg))
-                      else
-                        Redirect(routes.DaysPerWeekController.showDaysAWeek(salaryInPence(salaryAmount.amount), url))
+                      println(">>>>>>>>>>>>>" + (salaryAmount.amount * 100.0))
+                      println(">>>>>>>>>>>>>" + (salaryAmount.amount * 100.0).toInt)
+                        Redirect(routes.DaysPerWeekController.showDaysAWeek((salaryAmount.amount * 100.0).toInt, url))
                     case `hour` =>
-                      if (agg.savedPeriod.map(_.period).contains(hour))
-                        Redirect(navigator.tryGetShowStatePension(agg))
-                      else
-                        Redirect(routes.HoursPerWeekController.showHoursAWeek(salaryInPence(salaryAmount.amount), url))
+                      println(">>>>>>>>>>>>>" + (salaryAmount.amount * 100))
+                      println(">>>>>>>>>>>>>" + (salaryAmount.amount * 100.0).toInt)
+                      Redirect(routes.HoursPerWeekController.showHoursAWeek((salaryAmount.amount * 100.0).toInt, url))
                     case _ => Redirect(navigator.tryGetShowStatePension(agg))
                   }
               }
