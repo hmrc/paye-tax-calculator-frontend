@@ -1,0 +1,81 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import forms.YouHaveToldUsItem
+@import play.api.i18n._
+@import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+
+@this(
+        govuk_wrapper: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        link: components.linkNewTab,
+        inputRadio: components.inputRadio,
+        button: components.button,
+        govukBackLink: GovukBackLink,
+        govukDetails: GovukDetails
+)
+
+@(scottishRateForm: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+
+@radioFieldScottishRate = @{
+    scottishRateForm("payScottishRate")
+}
+
+@scottishRateRadios = @{
+    Seq(
+        RadioItem(
+            content = Text(Messages("quick_calc.over_state_pension_age.yes")),
+            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
+            value = Some("true"),
+            checked = radioFieldScottishRate.value.contains("true")
+        ),
+        RadioItem(
+            content = Text(Messages("quick_calc.over_state_pension_age.no")),
+            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
+            value = Some("false"),
+            checked = radioFieldScottishRate.value.contains("false"))
+    )
+}
+
+@govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income")))) {
+
+    @govukBackLink(BackLink(
+        href = s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "").mkString}",
+        content = Text(Messages("back"))))
+
+    @formHelper(action = controllers.routes.ScottishRateController.submitScottishRateForm()) {
+
+        @errorSummary(scottishRateForm.errors)
+
+        @inputRadio(
+            form = scottishRateForm,
+            legendKey = "quick_calc.salary.question.scottish_income",
+            hintKey = Some(Messages("quick_calc.salary.question.scottish_income_info")),
+            name = "payScottishRate",
+            items = scottishRateRadios,
+        )
+
+        @govukDetails(Details(
+            summary = Text(messages("label.scottish-rate-details")),
+            content = HtmlContent(Messages("quick_calc.salary.question.scottish_income_url_a") + link("https://www.gov.uk/scottish-rate-income-tax", "quick_calc.salary.question.scottish_income_url_b") + " " + Messages("quick_calc.salary.question.scottish_income_url_c"))
+        )
+        )
+
+        @button("continue", Some("button-continue"))
+
+    }
+}

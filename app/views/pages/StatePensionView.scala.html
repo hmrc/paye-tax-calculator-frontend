@@ -1,0 +1,89 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import forms.YouHaveToldUsItem
+@import play.api.i18n._
+@import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+
+@this(
+        govuk_wrapper: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        link: components.linkNewTab,
+        inputRadio: components.inputRadio,
+        button: components.button,
+        govukDetails : GovukDetails,
+        govukBackLink : GovukBackLink
+)
+
+@(overStatePensionAgeForm: Form[StatePension], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+
+    @labels = @{
+        List(Messages("quick_calc.salary.yearly.sub_label"),
+            Messages("quick_calc.salary.monthly.sub_label"),
+            Messages("quick_calc.salary.weekly.sub_label"),
+            Messages("quick_calc.salary.daily.sub_label"),
+            Messages("quick_calc.salary.hourly.sub_label"))
+    }
+
+@radioFieldStatePension = @{
+    overStatePensionAgeForm("overStatePensionAge")
+}
+
+@pensionAgeRadios = @{
+    Seq(
+        RadioItem(
+            content = Text(Messages("quick_calc.over_state_pension_age.yes")),
+            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
+            value = Some("true"),
+            checked = radioFieldStatePension.value.contains("true")
+        ),
+        RadioItem(
+            content = Text(Messages("quick_calc.over_state_pension_age.no")),
+            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
+            value = Some("false"),
+            checked = radioFieldStatePension.value.contains("false"))
+    )
+}
+
+@govuk_wrapper(Some(title(overStatePensionAgeForm, Messages("quick_calc.over_state_pension_age.header")))) {
+
+
+    @govukBackLink(BackLink(
+        href = s"${youHaveToldUsItems.flatMap((y: YouHaveToldUsItem) => if(labels.contains(y.label)) y.url else "").mkString}",
+        content = Text(Messages("back"))))
+
+    @formHelper(action = controllers.routes.StatePensionController.submitStatePensionForm()) {
+
+        @errorSummary(overStatePensionAgeForm.errors)
+
+        @inputRadio(
+            form = overStatePensionAgeForm,
+            legendKey = "quick_calc.over_state_pension_age.header",
+            hintKey = Some("quick_calc.salary.question.state_pension_inf"),
+            name = "overStatePensionAge",
+            items = pensionAgeRadios
+        )
+
+        @govukDetails(Details(
+            summary = Text(messages("label.state-pension-details")),
+            content = HtmlContent(Messages("quick_calc.salary.question.state_pension_url_a") + link("https://www.gov.uk/state-pension-age", "quick_calc.salary.question.state_pension_url_b") + " " + Messages("quick_calc.salary.question.state_pension_url_c")
+        )
+        ))
+
+        @button("continue", Some("button-continue"))
+    }
+}

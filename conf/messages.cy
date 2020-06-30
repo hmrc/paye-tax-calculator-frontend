@@ -192,3 +192,43 @@ quick_calc.about_k_code_a = Amcangyfrif yw’ch Treth Incwm wedi’i addasu sy�
 quick_calc.about_k_code_b_k = y K yn eich cod treth (yn agor mewn tab newydd)
 quick_calc.about_k_code_b_sk = yr SK yn eich cod treth (yn agor mewn tab newydd)
 quick_calc.about_k_code_c = Defnyddir y cod K ledled y DU ac fel arfer mae’n dynodi bod arnoch dreth o flwyddyn flaenorol.
+
+
+#######################################################
+## Beta Banner
+#######################################################
+feedback.before = Gwasanaeth newydd yw hwn – bydd eich
+feedback.link = adborth
+feedback.after = yn ein helpu i’w wella.
+
+#######################################################
+## Languages
+#######################################################
+language.cymraeg = Cymraeg
+language.change.cymraeg = Newid yr iaith i’r Gymraeg
+language.english = English
+language.change.english = Change the language to English
+language.switcher = Language switcher
+
+#######################################################
+## Footer
+#######################################################
+footer.accessibility = Datganiad Hygyrchedd
+footer.cookies = Cwcis
+footer.privacy = Polisi preifatrwydd
+footer.termsConditions = Telerau ac amodau
+footer.govukHelp = Help wrth ddefnyddio GOV.UK
+
+site.print_and_save = Argraffu neu arbed tudalen
+
+#######################################################
+## error Messages
+#######################################################
+#######################################################
+## error Messages
+#######################################################
+error.browser.title.prefix = Gwall:
+error.boolean = Rhowch ateb
+error.number = Nodwch rif dilys
+error.required = Nodwch ateb
+error.summary.title = Mae problem wedi codi
