@@ -44,7 +44,7 @@
 @periodRadioButtons = @{
     periodLabels.map { label =>
         RadioItem(
-            content = Text(Messages(s"quick_calc.salary.$label.label")),
+            content = Text(Messages(s"quick_calc.salary.$label.text")),
             label = Some(Label(content = Text(Messages(s"quick_calc.salary.$label.label")))),
             value = Some(Messages(s"quick_calc.salary.$label.label")),
             checked = radioFieldPeriod.value.contains(Messages(s"quick_calc.salary.$label.label"))
@@ -61,20 +61,9 @@
 
         @h1(messages("quick_calc.salary.header"))
 
-        @p {
-            @Messages("quick_calc.salary.description_a")
-        }
-        @p {
-            @Messages("quick_calc.salary.description_b")
-        }
-
         @hmrcCurrencyInput(CurrencyInput(
             id = "amount",
             name = "amount",
-            label = Label(
-                content = Text(Messages("label.salary")),
-                classes = ""
-            ),
             hint = Some(Hint(
                 content = Text(Messages("hint.salary"))
             )),
