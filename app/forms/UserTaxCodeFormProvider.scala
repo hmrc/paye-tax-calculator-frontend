@@ -26,8 +26,8 @@ import play.api.data.Forms._
 class UserTaxCodeFormProvider @Inject()() {
   def apply(): Form[UserTaxCode] = Form(
     mapping(
-      HasTaxCode -> of(requiredBooleanFormatter),
-      TaxCode    -> of(taxCodeFormatter)
+      HasTaxCode -> of(hasTaxCodeBooleanFormatter),
+      TaxCode -> of(taxCodeFormatter)
     )(UserTaxCode.apply)(UserTaxCode.unapply)
   )
 }

@@ -42,7 +42,6 @@ class SalaryService @Inject() (
         val newAggregate = oldAggregate.copy(savedSalary = Some(salaryAmount))
         (newAggregate.savedSalary, newAggregate.savedPeriod) match {
           case (Some(salary), Some(detail)) =>
-            println("????????? " + salary)
             if (salary.period == oldAggregate.savedSalary.map(_.period).getOrElse("")) {
               newAggregate.copy(
                 savedSalary =

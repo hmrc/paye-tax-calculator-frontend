@@ -282,40 +282,7 @@ with MockitoSugar {
       }
     }
 
-    "return 400, with no aggregate data and an error message when user selects \"Yes\" but did not enter Tax code" in {
-      val mockCache = mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-      implicit val messages: Messages = messagesThing(application)
-      running(application) {
-
-        val formData = Map("hasTaxCode" -> "true")
-
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-
-        val parseHtml = Jsoup.parse(contentAsString(result))
-
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-
-        errorHeader mustEqual "There is a problem"
-
-        errorMessage.contains(expectedEmptyTaxCodeErrorMessage) mustEqual true
-      }
-    }
-
-    "return 400, with no aggregate data and an error message when user selects \"Yes\" but Tax Code entered is 99999L" in {
+    "return 400, with no aggregate data and an error message when Tax Code entered is 99999L" in {
       val mockCache = mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
@@ -348,37 +315,6 @@ with MockitoSugar {
       }
     }
 
-    "return 400, with no aggregate data when Tax Code Form submission is empty" in {
-      val mockCache = mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-      implicit val messages: Messages = messagesThing(application)
-      running(application) {
-
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
-          .withFormUrlEncodedBody(form.data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-
-        val parseHtml = Jsoup.parse(contentAsString(result))
-
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-
-        errorHeader mustEqual "There is a problem"
-
-        errorMessage.contains(expectedYesNoAnswerErrorMessage) mustEqual true
-      }
-    }
-    //
     "return 303, with current aggregate data and redirect to Is Over State Pension Page" in {
 
       val mockCache = mock[QuickCalcCache]
