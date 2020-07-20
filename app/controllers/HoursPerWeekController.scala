@@ -52,11 +52,9 @@ class HoursPerWeekController @Inject() (
 
   def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-    println(valueInPence)
 
     val url   = routes.SalaryController.showSalaryForm().url
     val value = BigDecimal(valueInPence / 100.0)
-    println(value)
 
     form
       .bindFromRequest()

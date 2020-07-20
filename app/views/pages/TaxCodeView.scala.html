@@ -21,11 +21,11 @@
         formHelper: FormWithCSRF,
         govukBackLink: GovukBackLink,
         errorSummary: components.errorSummary,
-        textInput: components.inputText,
+        inputText: components.inputText,
         inputRadio: components.inputRadio,
         button: components.button,
         link: components.linkNewTab,
-        govukDetails : GovukDetails
+        govukDetails: GovukDetails
 )
 
 @(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
@@ -38,50 +38,24 @@
     userTaxCodeForm("taxCode")
 }
 
-@taxCodeRadios = @{
-    Seq(
-        RadioItem(
-            content = Text(Messages("quick_calc.over_state_pension_age.yes")),
-            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
-            value = Some("true"),
-            checked = radioField.value.contains("true"),
-            conditionalHtml = Some(textInput(
-                userTaxCodeForm,
-                "taxCode",
-                "taxCode",
-                Messages("quick_calc.about_tax_code.has_tax_code"),
-                isPageHeading = false,
-                populateField = false
-            ))
-        ),
-        RadioItem(
-            content = Text(Messages("quick_calc.over_state_pension_age.no")),
-            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
-            value = Some("false"),
-            checked = radioField.value.contains("false"))
-    )
-}
-
-
 @govUkWrapper(Some(title(userTaxCodeForm, Messages("quick_calc.about_tax_code.header")))) {
 
-        @govukBackLink(BackLink(
-            href = s"${youHaveToldUsItems.flatMap(y => if (y.label == "over_state_pension_age") y.url else "").mkString}",
-        content= Text(Messages("back"))))
+    @govukBackLink(BackLink(
+        href = s"${youHaveToldUsItems.flatMap(y => if(y.label == "over_state_pension_age") y.url else "").mkString}",
+        content = Text(Messages("back"))))
 
-    @formHelper(action = routes.TaxCodeController.submitTaxCodeForm){
-      @errorSummary(userTaxCodeForm.errors)
+    @formHelper(action = routes.TaxCodeController.submitTaxCodeForm) {
+        @errorSummary(userTaxCodeForm.errors)
 
-            @inputRadio(
-            form = userTaxCodeForm,
-            legendKey = "quick_calc.about_tax_code.header",
-            hintKey = Some("quick_calc.salary.question.tax_code_info"),
-            name = "hasTaxCode",
-            items = taxCodeRadios,
-            legendAsHeading = true
+        @inputText(form = userTaxCodeForm,
+            id = "taxCode",
+            name = "taxCode",
+            hint = Some(Hint(content = Text(messages("quick_calc.salary.question.tax_code_info")))),
+            label = Messages("quick_calc.you_have_told_us.about_tax_code.label"),
+            isPageHeading = true
         )
 
-            @govukDetails(Details(
+        @govukDetails(Details(
             summary = Text(messages("label.tax-code")),
             content = HtmlContent(Messages("quick_calc.salary.question.tax_code_info_url_a") + link("https://www.gov.uk/tax-codes/overview", "quick_calc.salary.question.tax_code_info_url_b"))
         )

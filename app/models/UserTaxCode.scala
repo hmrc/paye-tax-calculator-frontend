@@ -25,7 +25,7 @@ import uk.gov.hmrc.calculator.utils.validation.TaxCodeValidator
 import utils.LocalDateProvider
 
 case class UserTaxCode(
-                        gaveUsTaxCode: Boolean,
+                        gaveUsTaxCode: Boolean = false,
                         taxCode:       Option[String])
 
 

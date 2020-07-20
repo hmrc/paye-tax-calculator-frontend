@@ -76,7 +76,6 @@ class SalaryController @Inject() (
           Future(BadRequest(salaryView(formWithErrors)))
         },
         success = salaryAmount => {
-          println("±±±±±±±±±± " + salaryAmount)
           val updatedAggregate = salaryService.updateSalaryAmount(cache, salaryAmount, url)
 
           updatedAggregate.flatMap(agg =>
@@ -86,12 +85,8 @@ class SalaryController @Inject() (
                 _ =>
                   salaryAmount.period match {
                     case `day` =>
-                      println(">>>>>>>>>>>>>" + (salaryAmount.amount * 100.0))
-                      println(">>>>>>>>>>>>>" + (salaryAmount.amount * 100.0).toInt)
                         Redirect(routes.DaysPerWeekController.showDaysAWeek((salaryAmount.amount * 100.0).toInt, url))
                     case `hour` =>
-                      println(">>>>>>>>>>>>>" + (salaryAmount.amount * 100))
-                      println(">>>>>>>>>>>>>" + (salaryAmount.amount * 100.0).toInt)
                       Redirect(routes.HoursPerWeekController.showHoursAWeek((salaryAmount.amount * 100.0).toInt, url))
                     case _ => Redirect(navigator.tryGetShowStatePension(agg))
                   }

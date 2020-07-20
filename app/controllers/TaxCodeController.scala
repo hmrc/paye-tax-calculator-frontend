@@ -49,54 +49,77 @@ class TaxCodeController @Inject()(
 
   val form: Form[UserTaxCode] = userTaxCodeFormProvider()
 
-  def showTaxCodeForm: Action[AnyContent] = salaryRequired(cache, {
-    implicit request => agg =>
-    {
-      val filledForm = agg.savedTaxCode
-        .map { s =>
-          form.fill(s)
-        }
-        .getOrElse(form)
-      Ok(taxCodeView(filledForm, agg.youHaveToldUsItems))
-    }
-  })
+  def showTaxCodeForm: Action[AnyContent] =
+    salaryRequired(cache, { implicit request => agg =>
+      {
+        val filledForm = agg.savedTaxCode
+          .map { s =>
+            form.fill(s)
+          }
+          .getOrElse(form)
+        Ok(taxCodeView(filledForm, agg.youHaveToldUsItems))
+      }
+    })
 
-  def submitTaxCodeForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors =>
-          cache.fetchAndGetEntry().map {
-            case Some(aggregate) =>
-              BadRequest(taxCodeView(formWithErrors, aggregate.youHaveToldUsItems))
-            case None => BadRequest(taxCodeView(formWithErrors, Nil))
-          },
-        newTaxCode => {
-          val updatedAggregate = cache
-            .fetchAndGetEntry()
-            .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-            .map(agg =>
-              if (newTaxCode.gaveUsTaxCode) agg.copy(savedTaxCode = Some(newTaxCode), savedScottishRate = None)
-              else
-                agg.copy(savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(UserTaxCode.defaultUkTaxCode))))
-            )
-
-          updatedAggregate.flatMap(agg =>
-            cache
-              .save(agg)
-              .map(_ =>
-                if (newTaxCode.gaveUsTaxCode) {
-                  Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                    routes.YouHaveToldUsController.summary()
-                  })
-                } else Redirect(routes.ScottishRateController.showScottishRateForm())
-              )
-          )
-        }
+  def submitTaxCodeForm(): Action[AnyContent] =
+    validateAcceptWithSessionId.async { implicit request =>
+      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
+        request.headers,
+        Some(request.session)
       )
-  }
+
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            cache.fetchAndGetEntry().map {
+              case Some(aggregate) =>
+                BadRequest(
+                  taxCodeView(formWithErrors, aggregate.youHaveToldUsItems)
+                )
+              case None => BadRequest(taxCodeView(formWithErrors, Nil))
+          },
+          (newTaxCode: UserTaxCode) => {
+            val updatedAggregate = cache
+              .fetchAndGetEntry()
+              .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+              .map(
+                agg =>
+                  agg.copy(
+                    savedTaxCode = Some(
+                      UserTaxCode(
+                        newTaxCode.taxCode.isDefined,
+                        Some(
+                          newTaxCode.taxCode
+                            .getOrElse(UserTaxCode.defaultUkTaxCode)
+                        )
+                      )
+                    )
+                )
+              )
+
+            updatedAggregate.flatMap(
+              agg =>
+                cache
+                  .save(agg)
+                  .map(
+                    _ =>
+                      if (newTaxCode.taxCode.isEmpty) {
+                        Redirect(
+                          routes.ScottishRateController.showScottishRateForm()
+                        )
+                      } else
+                        Redirect(
+                          navigator
+                            .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+                              routes.YouHaveToldUsController.summary()
+                            }
+                      )
+                )
+            )
+          }
+        )
+    }
 
   private def salaryRequired[T](
     cache: QuickCalcCache,
