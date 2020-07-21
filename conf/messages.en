@@ -123,6 +123,7 @@ quick_calc.salary.option_error_link = You haven’t chosen how often you get pai
 quick_calc.salary.amount_empty_error_link = You haven’t entered how much you get paid
 quick_calc.salary.amount_input_error_link = There’s a problem with the amount you’ve entered
 quick_calc.salary.error_header = Something’s wrong
+quick_calc.salary.amount.label = Amount paid
 
 quick_calc.salary.yearly.sub_label=a_year
 quick_calc.salary.monthly.sub_label=a_month
