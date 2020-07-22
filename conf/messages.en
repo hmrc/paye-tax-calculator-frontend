@@ -148,7 +148,7 @@ quick_calc.salary.question.scottish_income_error_link = You haven’t told us if
 
 quick_calc.salary.question.tax_code_info=If you do not enter a tax code we will use the default tax code 1250L to calculate your take-home pay.
 quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
-quick_calc.salary.question.tax_code_info_url_b=recent payslip or P45 (opens in a new tab).
+quick_calc.salary.question.tax_code_info_url_b=recent payslip or P45 (opens in a new tab)
 
 quick_calc.salary.period_error_link_a = There’s a problem with the amount you’ve entered
 quick_calc.salary.period_error_link_b = You haven’t entered how many days you work

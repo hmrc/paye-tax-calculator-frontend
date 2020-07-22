@@ -98,25 +98,28 @@ class TaxCodeController @Inject()(
                 )
               )
 
-            updatedAggregate.flatMap(
-              agg =>
-                cache
-                  .save(agg)
-                  .map(
-                    _ =>
-                      if (newTaxCode.taxCode.isEmpty) {
-                        Redirect(
-                          routes.ScottishRateController.showScottishRateForm()
-                        )
-                      } else
-                        Redirect(
-                          navigator
-                            .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                              routes.YouHaveToldUsController.summary()
-                            }
+            updatedAggregate.flatMap(updatedAgg => {
+              val agg =
+                if (newTaxCode.taxCode.isDefined)
+                  updatedAgg.copy(savedScottishRate = None)
+                else updatedAgg
+              cache
+                .save(agg)
+                .map(
+                  _ =>
+                    if (newTaxCode.taxCode.isEmpty) {
+                      Redirect(
+                        routes.ScottishRateController.showScottishRateForm()
                       )
+                    } else
+                      Redirect(
+                        navigator
+                          .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+                            routes.YouHaveToldUsController.summary()
+                          }
+                    )
                 )
-            )
+            })
           }
         )
     }
