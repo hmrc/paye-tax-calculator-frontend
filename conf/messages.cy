@@ -141,7 +141,7 @@ quick_calc.salary.question.scottish_income_error_link = Nid ydych wedi rhoi gwyb
 
 quick_calc.salary.question.tax_code_info=Os ydych yn ei wybod, bydd eich amcangyfrif o’ch cyflog clir yn fwy cywir. Os nad ydych yn ei wybod, defnyddiwn y cod treth mwyaf cyffredin yn lle hynny.
 quick_calc.salary.question.tax_code_info_url_a=Gallwch ddod o hyd i’ch cod treth ar
-quick_calc.salary.question.tax_code_info_url_b=slip cyflog diweddar neu P45 (yn agor mewn tab newydd).
+quick_calc.salary.question.tax_code_info_url_b=slip cyflog diweddar neu P45 (yn agor mewn tab newydd)
 
 quick_calc.salary.period_error_link_a = Mae problem gyda’r swm rydych wedi’i nodi
 quick_calc.salary.period_error_link_b = Nid ydych wedi rhoi sawl diwrnod rydych yn gweithio
