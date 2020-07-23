@@ -16,6 +16,6 @@
 
 @this()
 
-@(link: String, messageKey: String, id: Option[String] = None)(implicit messages: Messages)
+@(link: String, messageKey: String, id: Option[String] = None, endWithFullStop: Boolean = false)(implicit messages: Messages)
 
-<a href="@link" class="govuk-link" @id.map(x => s"id=$x") target="_blank">@messages(messageKey)</a>
+<a href="@link" class="govuk-link" @id.map(x => s"id=$x") target="_blank">@messages(messageKey)</a>@if(endWithFullStop) {.}
