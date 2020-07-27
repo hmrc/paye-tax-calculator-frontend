@@ -41,7 +41,6 @@
         timeout: Boolean = true,
         js: Option[Html] = None,
         signedInUser: Boolean = true,
-        printLink: Boolean = false,
         showDeskproLink: Boolean = true,
         mainClass: Option[String] = None,
         mainDataAttributes: Option[Html] = None,
@@ -122,13 +121,7 @@
 @if(appConfig.languageTranslationEnabled) {
     @languageSelection()
 }
-@if(printLink) {
-    <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-4" style="float: right">
-        <p class="govuk-body">
-            <img src="https://www.tax.service.gov.uk/assets/4.9.0//images/icon-print.svg" alt="Print Icon">
-            <a class="govuk-link print-page" href="#">@messages("site.print_and_save")</a></p>
-    </div>
-}
+
 }
 
 

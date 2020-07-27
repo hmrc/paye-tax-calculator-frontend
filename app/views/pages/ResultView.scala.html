@@ -23,7 +23,7 @@
 @import uk.gov.hmrc.calculator.model.CalculatorResponse
 @import uk.gov.hmrc.calculator.model.CalculatorResponsePayPeriod
 @import uk.gov.hmrc.calculator.model.PayPeriod
-
+@import views.html.components.printLink
 
 @this(
         resultDetailView: ResultDetailView,
@@ -36,9 +36,9 @@
         linkNewTab: components.linkNewTab,
         appConfig: AppConfig,
         formHelper: FormWithCSRF,
-        govukBackLink: GovukBackLink
+        govukBackLink: GovukBackLink,
+        printLink: printLink
 )
-
 
 @(calculatorResponse: CalculatorResponse, taxYear: Int)(implicit request: Request[_], messages: Messages)
 
@@ -48,34 +48,34 @@
             id = Some(
                 PayPeriod.YEARLY.toString
             ),
-            label = Messages("quick_calc.result.tabLabels.year"),
+            label = Messages("quick_calc.result.tabLabels.yearly"),
             panel = TabPanel(
-                content = HtmlContent(resultDetailView(calculatorResponse.getYearly, taxYear,Messages("quick_calc.result.tabLabels.year"),calculatorResponse.isKCode ))
+                content = HtmlContent(resultDetailView(calculatorResponse.getYearly, taxYear,Messages("label.YEARLY"),calculatorResponse.isKCode ))
             )
         ),
         TabItem(
             id = Some(
                 PayPeriod.MONTHLY.toString
             ),
-            label = Messages("quick_calc.result.tabLabels.month"),
+            label = Messages("quick_calc.result.tabLabels.monthly"),
             panel = TabPanel(
-                content = HtmlContent(resultDetailView(calculatorResponse.getMonthly, taxYear,Messages("quick_calc.result.tabLabels.month"),calculatorResponse.isKCode))
+                content = HtmlContent(resultDetailView(calculatorResponse.getMonthly, taxYear,Messages("label.MONTHLY"),calculatorResponse.isKCode))
             )
         ),
         TabItem(
             id = Some(
                 PayPeriod.WEEKLY.toString
             ),
-            label = Messages("quick_calc.result.tabLabels.week"),
+            label = Messages("quick_calc.result.tabLabels.weekly"),
             panel = TabPanel(
-                content = HtmlContent(resultDetailView(calculatorResponse.getWeekly, taxYear,Messages("quick_calc.result.tabLabels.week"),calculatorResponse.isKCode))
+                content = HtmlContent(resultDetailView(calculatorResponse.getWeekly, taxYear,Messages("label.WEEKLY"),calculatorResponse.isKCode))
             )
         ),
     )
 }
 
 
-@govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), printLink = true) {
+@govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header")))) {
 
     @govukBackLink(BackLink(
         href = s"${prodRoutes.YouHaveToldUsController.summary()}",
@@ -105,4 +105,6 @@
             ))
         }
     }
+
+  @printLink("site.print_and_save")
 }
