@@ -69,7 +69,7 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(taxResult, UserTaxCode.currentTaxYear)(
+        contentAsString(result) mustEqual view(taxResult, UserTaxCode.currentTaxYear, false)(
           request,
           messagesThing(application)
         ).toString
