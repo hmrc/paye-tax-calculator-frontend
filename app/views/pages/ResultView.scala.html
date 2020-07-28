@@ -40,7 +40,7 @@
         printLink: printLink
 )
 
-@(calculatorResponse: CalculatorResponse, taxYear: Int)(implicit request: Request[_], messages: Messages)
+@(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean)(implicit request: Request[_], messages: Messages)
 
 @tabsItems = @{
     Seq(
@@ -50,7 +50,7 @@
             ),
             label = Messages("quick_calc.result.tabLabels.yearly"),
             panel = TabPanel(
-                content = HtmlContent(resultDetailView(calculatorResponse.getYearly, taxYear,Messages("label.YEARLY"),calculatorResponse.isKCode ))
+                content = HtmlContent(resultDetailView(calculatorResponse.getYearly, taxYear, Messages("label.YEARLY"), calculatorResponse.isKCode, isScottish))
             )
         ),
         TabItem(
@@ -59,7 +59,7 @@
             ),
             label = Messages("quick_calc.result.tabLabels.monthly"),
             panel = TabPanel(
-                content = HtmlContent(resultDetailView(calculatorResponse.getMonthly, taxYear,Messages("label.MONTHLY"),calculatorResponse.isKCode))
+                content = HtmlContent(resultDetailView(calculatorResponse.getMonthly, taxYear, Messages("label.MONTHLY"), calculatorResponse.isKCode, isScottish))
             )
         ),
         TabItem(
@@ -68,7 +68,7 @@
             ),
             label = Messages("quick_calc.result.tabLabels.weekly"),
             panel = TabPanel(
-                content = HtmlContent(resultDetailView(calculatorResponse.getWeekly, taxYear,Messages("label.WEEKLY"),calculatorResponse.isKCode))
+                content = HtmlContent(resultDetailView(calculatorResponse.getWeekly, taxYear, Messages("label.WEEKLY"), calculatorResponse.isKCode, isScottish))
             )
         ),
     )
@@ -89,13 +89,8 @@
             items = tabsItems)
     )
 
-
     @p {
         @Messages("quick_calc.result.info_a") @linkNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters", "quick_calc.result.info_b") @Messages("quick_calc.result.info_e")
-    }
-
-    @p {
-        @linkNewTab(appConfig.betaFeedbackUrl, "feedback")
     }
 
     @p {
@@ -106,5 +101,11 @@
         }
     }
 
-  @printLink("site.print_and_save")
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    @printLink("site.print_and_save")
+
+    @p {
+        @linkNewTab(appConfig.betaFeedbackUrl, "feedback")
+    }
 }

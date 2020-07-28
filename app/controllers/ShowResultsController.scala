@@ -49,7 +49,8 @@ class ShowResultsController @Inject() (
     salaryRequired(cache, implicit request =>
       aggregate =>
         if (aggregate.allQuestionsAnswered) {
-          Ok(resultView(TaxResult.taxCalculation(aggregate), UserTaxCode.startOfCurrentTaxYear))
+          val isScottish = aggregate.savedTaxCode.exists(_.taxCode.exists(_.contains("S")))
+          Ok(resultView(TaxResult.taxCalculation(aggregate), UserTaxCode.startOfCurrentTaxYear, isScottish))
         } else Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 

@@ -21,23 +21,21 @@
 
 @this(govukPanel: GovukPanel,
         govukSummaryList: GovukSummaryList,
-        govukTable: GovukTable,
-        govukDetails: GovukDetails,
-        govButton: GovukButton,
         p: components.p,
         h3: components.h3,
         h2: components.h2,
         linkNewTab: components.linkNewTab,
-        appConfig: AppConfig
+        resultsPanel: components.resultsPanel
 )
 
 
-@(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean)(implicit request: Request[_], messages: Messages)
+@(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean, isScottish: Boolean)(implicit request: Request[_], messages: Messages)
 
-@govukPanel(Panel(
-    headingLevel = 0,
-    content = HtmlContent(s"${Messages("quick_calc.result.you_take_home")} $taxYear is <br><strong>£${moneyFormatter(calculatorResponse.getTakeHome)} ${Messages("a")} ${label.toLowerCase}</strong>")
-))
+@formattedAmount = @{
+    moneyFormatter(calculatorResponse.getTakeHome)
+}
+
+@resultsPanel(calculatorResponse, taxYear, label, formattedAmount)
 
 <br/>
 
@@ -47,21 +45,25 @@
     SummaryList(
         rows = Seq(
             SummaryListRow(
-                key = Key(content = Text(if(isKCode) Messages("quick_calc.result.income_tax_adjusted") else Messages("quick_calc.result.income_tax")),
+                key = Key(content =
+                        Text(Messages(
+                            if(isKCode && isScottish) "quick_calc.result.income_tax_scottish_adjusted"
+                            else if(isKCode) "quick_calc.result.income_tax_adjusted"
+                            else if(isScottish) "quick_calc.result.income_tax_scottish"
+                                else "quick_calc.result.income_tax")),
                     classes = "govuk-!-font-weight-regular"),
-                value = Value(content = Text(s"£${moneyFormatter(extractIncomeTax(calculatorResponse))}")
+                value = Value(content = Text(s"£${moneyFormatter(extractIncomeTax(calculatorResponse))}"), classes = "govuk-!-padding-left-9"
                 )
             ),
             SummaryListRow(
                 key = Key(content = Text(Messages("quick_calc.result.your_national_insurance")),
                     classes = "govuk-!-font-weight-regular"),
-                value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getEmployeesNI)}"),
-
+                value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getEmployeesNI)}"), classes = "govuk-!-padding-left-9"
                 )
             ),
             SummaryListRow(
                 key = Key(content = HtmlContent(Messages("quick_calc.result.deductions"))),
-                value = Value(content = HtmlContent("<strong>" + s"£${moneyFormatter(calculatorResponse.getTotalDeductions)}" + "</strong>")
+                value = Value(content = HtmlContent("<strong>" + s"£${moneyFormatter(calculatorResponse.getTotalDeductions)}" + "</strong>"), classes = "govuk-!-padding-left-9"
                 )
             )
         )
@@ -91,24 +93,24 @@
                 SummaryListRow(
                     key = Key(content = Text(Messages("quick_calc.result.how_we_calculated.you_earn_a")),
                         classes = "govuk-!-font-weight-regular"),
-                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getWages)} ${Messages("quick_calc.result.how_we_calculated.you_earn_b")}")
+                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getWages)} ${Messages("quick_calc.result.how_we_calculated.you_earn_b")}"), classes = "govuk-!-padding-left-9"
                     )
                 ),
                 SummaryListRow(
                     key = Key(content = Text(Messages("quick_calc.result.k_code")),
                         classes = "govuk-!-font-weight-regular"),
-                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getKCodeAdjustment.doubleValue())}")
+                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getKCodeAdjustment.doubleValue())}"), classes = "govuk-!-padding-left-9"
                     )
                 )
                 ,
                 SummaryListRow(
                     key = Key(content = Text(Messages("quick_calc.result.tax_free_allowance")),
                         classes = "govuk-!-font-weight-regular"),
-                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getTaxFree)}")
+                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getTaxFree)}"), classes = "govuk-!-padding-left-9"
                     )
                 ),
                 SummaryListRow(
-                    key = Key(content = HtmlContent(Messages(if(isKCode) "quick_calc.result.adjusted_taxable_pay" else "quick_calc.result.taxable_pay"))),
+                    key = Key(content = HtmlContent(Messages("quick_calc.result.adjusted_taxable_pay"))),
                     value = Value(content = HtmlContent("<strong>" + s"£${
                         moneyFormatter(if(calculatorResponse.getWages - calculatorResponse.getTaxFree < 0) {
                             0
@@ -119,7 +121,7 @@
                                 calculatorResponse.getWages - calculatorResponse.getTaxFree
                             }
                         })
-                    }" + "</strong>")
+                    }" + "</strong>"), classes = "govuk-!-padding-left-9"
                     )
                 )
             )
@@ -135,17 +137,17 @@
                 SummaryListRow(
                     key = Key(content = Text(Messages("quick_calc.result.how_we_calculated.you_earn_a")),
                         classes = "govuk-!-font-weight-regular"),
-                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getWages)} ${Messages("quick_calc.result.how_we_calculated.you_earn_b")}")
+                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getWages)} ${Messages("quick_calc.result.how_we_calculated.you_earn_b")}"), classes = "govuk-!-padding-left-9"
                     )
                 ),
                 SummaryListRow(
                     key = Key(content = Text(Messages("quick_calc.result.tax_free_allowance")),
                         classes = "govuk-!-font-weight-regular"),
-                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getTaxFree)}")
+                    value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getTaxFree)}"), classes = "govuk-!-padding-left-9"
                     )
                 ),
                 SummaryListRow(
-                    key = Key(content = HtmlContent(Messages(if(isKCode) "quick_calc.result.adjusted_taxable_pay" else "quick_calc.result.taxable_pay"))),
+                    key = Key(content = HtmlContent(Messages("quick_calc.result.taxable_pay"))),
                     value = Value(content = HtmlContent("<strong>" + s"£${
                         moneyFormatter(if(calculatorResponse.getWages - calculatorResponse.getTaxFree < 0) {
                             0
@@ -156,7 +158,7 @@
                                 calculatorResponse.getWages - calculatorResponse.getTaxFree
                             }
                         })
-                    }" + "</strong>")
+                    }" + "</strong>"), classes = "govuk-!-padding-left-9"
                     )
                 )
             )
