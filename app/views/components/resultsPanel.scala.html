@@ -18,12 +18,11 @@
 
 @(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, formattedAmount: String)(implicit messages: Messages)
 
-<div class="govuk-tabs__panel" id="YEARLY" role="tabpanel" aria-labelledby="tab_YEARLY">
-
- <div class="govuk-panel govuk-panel--confirmation">
-  <div class="govuk-panel__body">
-   @{messages("quick_calc.result.you_take_home")} @taxYear is <br><strong>£@formattedAmount @messages("a") @label.toLowerCase</strong>
-  </div>
- </div>
-
+<div class="govuk-panel govuk-panel--confirmation">
+    <div class="govuk-panel__body">
+        @{
+            messages("quick_calc.result.you_take_home")
+        } @taxYear is <br>
+            <strong>£@formattedAmount @messages("a") @label.toLowerCase</strong>
+    </div>
 </div>
