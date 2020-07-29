@@ -25,19 +25,19 @@
         link: components.linkNewTab,
         inputRadio: components.inputRadio,
         button: components.button,
-        govukDetails : GovukDetails,
-        govukBackLink : GovukBackLink
+        govukDetails: GovukDetails,
+        beforeContent: components.beforeContent
 )
 
 @(overStatePensionAgeForm: Form[StatePension], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
-    @labels = @{
-        List(Messages("quick_calc.salary.yearly.sub_label"),
-            Messages("quick_calc.salary.monthly.sub_label"),
-            Messages("quick_calc.salary.weekly.sub_label"),
-            Messages("quick_calc.salary.daily.sub_label"),
-            Messages("quick_calc.salary.hourly.sub_label"))
-    }
+@labels = @{
+    List(Messages("quick_calc.salary.yearly.sub_label"),
+        Messages("quick_calc.salary.monthly.sub_label"),
+        Messages("quick_calc.salary.weekly.sub_label"),
+        Messages("quick_calc.salary.daily.sub_label"),
+        Messages("quick_calc.salary.hourly.sub_label"))
+}
 
 @radioFieldStatePension = @{
     overStatePensionAgeForm("overStatePensionAge")
@@ -59,12 +59,11 @@
     )
 }
 
-@govuk_wrapper(Some(title(overStatePensionAgeForm, Messages("quick_calc.over_state_pension_age.header")))) {
+@backButtonUrl = @{
+    s"${youHaveToldUsItems.flatMap((y: YouHaveToldUsItem) => if(labels.contains(y.label)) y.url else "").mkString}"
+}
 
-
-    @govukBackLink(BackLink(
-        href = s"${youHaveToldUsItems.flatMap((y: YouHaveToldUsItem) => if(labels.contains(y.label)) y.url else "").mkString}",
-        content = Text(Messages("back"))))
+@govuk_wrapper(Some(title(overStatePensionAgeForm, Messages("quick_calc.over_state_pension_age.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
     @formHelper(action = controllers.routes.StatePensionController.submitStatePensionForm()) {
 
@@ -80,7 +79,7 @@
         @govukDetails(Details(
             summary = Text(messages("label.state-pension-details")),
             content = HtmlContent(Messages("quick_calc.salary.question.state_pension_url_a") + link("https://www.gov.uk/state-pension-age", "quick_calc.salary.question.state_pension_url_b") + " " + Messages("quick_calc.salary.question.state_pension_url_c")
-        )
+            )
         ))
 
         @button("continue", Some("button-continue"))

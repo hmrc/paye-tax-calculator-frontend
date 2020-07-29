@@ -27,7 +27,8 @@
         govukBackLink: GovukBackLink,
         formHelper: FormWithCSRF,
         button: components.button,
-        govukSummaryList: GovukSummaryList
+        govukSummaryList: GovukSummaryList,
+        beforeContent: components.beforeContent
 )
 
 @(items: List[YouHaveToldUsItem])(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
@@ -50,9 +51,11 @@
     }.toSeq
 }
 
-@govukTemplate(Some(titleNoForm(Messages("quick_calc.you_have_told_us.header")))) {
+@backButtonUrl = @{
+    s"${getGoBackLink(items)}"
+}
 
-    @govukBackLink(BackLink(href = s"${getGoBackLink(items)}", content = Text(Messages("back"))))
+@govukTemplate(Some(titleNoForm(Messages("quick_calc.you_have_told_us.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
     @h1("quick_calc.you_have_told_us.header")
 

@@ -33,7 +33,7 @@
         hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
         mainContent: uiLayouts.MainContent,
         serviceInfo: uiLayouts.ServiceInfo,
-        mainContentHeader: uiLayouts.MainContentHeader,
+        mainContentHeader: uiLayouts.MainContentHeader
 
 )
 @(
@@ -44,12 +44,13 @@
         showDeskproLink: Boolean = true,
         mainClass: Option[String] = None,
         mainDataAttributes: Option[Html] = None,
-        bodyClassess: Option[String] = None
+        bodyClassess: Option[String] = None,
+        beforeContentBlock: Html = Html("")
 
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {
-    <!--[if lte IE 8]><link href='            @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if lte IE 8]><link href='             @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
         <!--<![endif]-->
     <script src='@controllers.routes.Assets.at("javascripts/gtm_dl.js")' type="text/javascript"></script>
@@ -108,20 +109,10 @@
 
 @if(showDeskproLink) {
     <div class="govuk-!-margin-top-5">
-        @hmrcReportTechnicalIssue(
-            ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))
-        )
-    }
+    @hmrcReportTechnicalIssue(
+        ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))
+    )
 }
-
-@beforeContentBlock = {
-
-@phaseBanner("BETA", signedInUser)
-
-@if(appConfig.languageTranslationEnabled) {
-    @languageSelection()
-}
-
 }
 
 

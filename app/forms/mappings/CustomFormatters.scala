@@ -78,7 +78,7 @@ object CustomFormatters {
       Right(data.getOrElse(key, "")).right.flatMap {
         case s if s.nonEmpty =>
           try {
-            val days = s.toDouble
+            val days = BigDecimal(s).setScale(2).toDouble
             if (days < 1.0) {
               Left(
                 Seq(
@@ -94,15 +94,6 @@ object CustomFormatters {
                   FormError(
                     key,
                     "quick_calc.salary.question.error.number_of_days.more_than_seven"
-                  )
-                )
-              )
-            } else if (!s.matches("([0-9])+(\\.\\d{1,2})?")) {
-              Left(
-                Seq(
-                  FormError(
-                    key,
-                    "quick_calc.salary.question.error.invalid_number_daily"
                   )
                 )
               )
@@ -144,7 +135,7 @@ object CustomFormatters {
       Right(data.getOrElse(key, "")).right.flatMap {
         case s if s.nonEmpty =>
           try {
-            val hours: Double = s.toDouble
+            val hours = BigDecimal(s).setScale(2).toDouble
             if (!HoursDaysValidator.INSTANCE
                   .isAboveMinimumHoursPerWeek(hours)) {
               Left(
@@ -162,15 +153,6 @@ object CustomFormatters {
                   FormError(
                     key,
                     "quick_calc.salary.question.error.number_of_hours.more_than_168"
-                  )
-                )
-              )
-            } else if (!s.matches("([0-9])+(\\.\\d{1,2})?")) {
-              Left(
-                Seq(
-                  FormError(
-                    key,
-                    "quick_calc.salary.question.error.invalid_number_hourly"
                   )
                 )
               )
