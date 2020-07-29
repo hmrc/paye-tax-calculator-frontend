@@ -26,7 +26,8 @@
         inputRadio: components.inputRadio,
         button: components.button,
         govukBackLink: GovukBackLink,
-        govukDetails: GovukDetails
+        govukDetails: GovukDetails,
+        beforeContent: components.beforeContent
 )
 
 @(scottishRateForm: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
@@ -51,11 +52,11 @@
     )
 }
 
-@govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income")))) {
+@backButtonUrl = @{
+    s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "").mkString}"
+}
 
-    @govukBackLink(BackLink(
-        href = s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "").mkString}",
-        content = Text(Messages("back"))))
+@govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
     @formHelper(action = controllers.routes.ScottishRateController.submitScottishRateForm()) {
 

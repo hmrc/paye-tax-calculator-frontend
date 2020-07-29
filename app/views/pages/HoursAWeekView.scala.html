@@ -24,14 +24,12 @@
         inputNumber: components.inputNumber,
         inputHidden: components.inputHidden,
         button: components.button,
-        govukBackLink: GovukBackLink
+        beforeContent: components.beforeContent
 )
 
 @(hoursForm: Form[Hours], value: BigDecimal, url: String)(implicit request: Request[_], messages: Messages)
 
-@govuk_wrapper(Some(title(hoursForm, Messages("quick_calc.salary.question.hours_a_week")))) {
-
-    @govukBackLink(BackLink(href = url, content = Text(Messages("back"))))
+@govuk_wrapper(Some(title(hoursForm, Messages("quick_calc.salary.question.hours_a_week"))), beforeContentBlock = beforeContent(url)) {
 
     @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek((value * 100.0).toInt)) {
         @errorSummary(hoursForm.errors)

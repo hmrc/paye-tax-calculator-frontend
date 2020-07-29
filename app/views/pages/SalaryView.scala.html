@@ -16,6 +16,7 @@
 
 @import play.api.i18n._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
+@import views.html.components.beforeContent
 
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
@@ -27,8 +28,9 @@
         p: components.p,
         inputRadio: components.inputRadio,
         button: components.button,
-        govukBackLink: GovukBackLink
+        beforeContent: components.beforeContent
 )
+
 
 @(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
 
@@ -52,8 +54,7 @@
     }
 }
 
-@govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header")))) {
-    @govukBackLink(BackLink(href = "https://www.gov.uk/estimate-income-tax", content = Text(Messages("back"))))
+@govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax")) {
 
     @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount()) {
 
@@ -68,7 +69,7 @@
             hint = Some(Hint(
                 content = Text(Messages("hint.salary"))
             )),
-          value = salaryForm("amount").value,
+            value = salaryForm("amount").value,
             classes = "govuk-input--width-10",
             autocomplete = Some("off"),
             errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))

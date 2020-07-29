@@ -36,8 +36,8 @@
         linkNewTab: components.linkNewTab,
         appConfig: AppConfig,
         formHelper: FormWithCSRF,
-        govukBackLink: GovukBackLink,
-        printLink: printLink
+        beforeContent: components.beforeContent,
+        printLink: components.printLink
 )
 
 @(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean)(implicit request: Request[_], messages: Messages)
@@ -74,12 +74,7 @@
     )
 }
 
-
-@govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header")))) {
-
-    @govukBackLink(BackLink(
-        href = s"${prodRoutes.YouHaveToldUsController.summary()}",
-        content = Text(Messages("back"))))
+@govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), beforeContentBlock = beforeContent(s"${prodRoutes.YouHaveToldUsController.summary()}")) {
 
     @h1(Messages("quick_calc.result.header"))
 

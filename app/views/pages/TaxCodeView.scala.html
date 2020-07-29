@@ -25,7 +25,8 @@
         inputRadio: components.inputRadio,
         button: components.button,
         link: components.linkNewTab,
-        govukDetails: GovukDetails
+        govukDetails: GovukDetails,
+        beforeContent: components.beforeContent
 )
 
 @(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
@@ -38,11 +39,11 @@
     userTaxCodeForm("taxCode")
 }
 
-@govUkWrapper(Some(title(userTaxCodeForm, Messages("quick_calc.about_tax_code.header")))) {
+@backButtonUrl = @{
+    s"${youHaveToldUsItems.flatMap(y => if(y.label == "over_state_pension_age") y.url else "").mkString}"
+}
 
-    @govukBackLink(BackLink(
-        href = s"${youHaveToldUsItems.flatMap(y => if(y.label == "over_state_pension_age") y.url else "").mkString}",
-        content = Text(Messages("back"))))
+@govUkWrapper(Some(title(userTaxCodeForm, Messages("quick_calc.about_tax_code.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
     @formHelper(action = routes.TaxCodeController.submitTaxCodeForm) {
         @errorSummary(userTaxCodeForm.errors)
