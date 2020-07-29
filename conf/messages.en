@@ -236,7 +236,7 @@ error.summary.title = There is a problem
 site.print_and_save = Print or save page
 
 ## Translation required
-quick_calc.salary.question.error.invalid_number_daily=Enter your days a week as e.g. 5 or 4.5
+quick_calc.salary.question.error.invalid_number_daily=Enter your days a week e.g. 5 or 4.5
 quick_calc.salary.question.error.invalid_number_hourly=Enter your hours a week e.g. 35 or 37.5
 label.salary=How much do you get paid?
 hint.salary=For example, 1300 or 193.50

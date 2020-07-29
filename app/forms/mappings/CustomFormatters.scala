@@ -97,6 +97,15 @@ object CustomFormatters {
                   )
                 )
               )
+            } else if (!s.matches("([0-9])+(\\.\\d{1,2})?")) {
+              Left(
+                Seq(
+                  FormError(
+                    key,
+                    "quick_calc.salary.question.error.invalid_number_daily"
+                  )
+                )
+              )
             } else {
               Right(BigDecimalFormatter.stripZeros(BigDecimal(s).bigDecimal))
             }
@@ -156,7 +165,17 @@ object CustomFormatters {
                   )
                 )
               )
-            } else {
+            } else if (!s.matches("([0-9])+(\\.\\d{1,2})?")) {
+              Left(
+                Seq(
+                  FormError(
+                    key,
+                    "quick_calc.salary.question.error.invalid_number_hourly"
+                  )
+                )
+              )
+            }
+            else {
               Right(BigDecimalFormatter.stripZeros(BigDecimal(s).bigDecimal))
             }
           } catch {

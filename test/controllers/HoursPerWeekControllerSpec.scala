@@ -291,6 +291,39 @@ class HoursPerWeekControllerSpec
       }
     }
 
+    "return 400 and error message when Hours in a Week has more than 2 decimal places" in {
+
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "37.555")
+
+        val request = FakeRequest(POST, routes.HoursPerWeekController.submitHoursAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedWholeNumberHourlyErrorMessage) mustEqual true
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+      }
+    }
+
     "return 303, with new Hours worked, 40.5 and complete aggregate" in {
       val mockCache = mock[QuickCalcCache]
 
