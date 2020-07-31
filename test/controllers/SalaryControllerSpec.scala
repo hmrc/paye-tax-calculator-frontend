@@ -80,7 +80,43 @@ class SalaryControllerSpec
       }
     }
 
-    "return 400, with current list of aggregate data and an error message for invalid Salary" in {
+    "return 400, with no aggregate data and empty Salary frequency Form submission" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      implicit val messages: Messages = messagesThing(application)
+
+      running(application) {
+
+        val formData = Map("amount" -> "10", "period" -> "")
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedPayFrequencyErrorMessage)               mustEqual true
+      }
+    }
+
+    "return 400, with current list of aggregate data and an error message for empty Salary amount" in {
       val mockCache = mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
@@ -103,6 +139,14 @@ class SalaryControllerSpec
         status(result) mustEqual BAD_REQUEST
 
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedEmptyErrorMessage)               mustEqual true
       }
     }
 
@@ -129,6 +173,49 @@ class SalaryControllerSpec
         status(result) mustEqual BAD_REQUEST
 
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        //change
+        errorMessage.contains(expectedEmptyErrorMessage)               mustEqual true
+      }
+    }
+
+    "return 400 and error message when Salary submitted is \"0\" " in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "0", "period" -> messages("quick_calc.salary.yearly.label"))
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedNegativeNumberErrorMessage)               mustEqual true
       }
     }
 
@@ -233,6 +320,40 @@ class SalaryControllerSpec
 
         errorHeader mustEqual "There is a problem"
         errorMessage.contains(expectedMaxGrossPayErrorMessage)               mustEqual true
+      }
+    }
+
+    "return 400 and error message when Salary submitted is not numeric" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "test", "period" -> messages("quick_calc.salary.yearly.label"))
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+
+        val parseHtml = Jsoup.parse(contentAsString(result))
+
+        val errorHeader = parseHtml.getElementById("error-summary-title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+
+        errorHeader mustEqual "There is a problem"
+        errorMessage.contains(expectedSymbolErrorMessage)               mustEqual true
       }
     }
 

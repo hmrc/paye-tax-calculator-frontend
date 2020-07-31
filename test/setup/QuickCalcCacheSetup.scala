@@ -254,11 +254,13 @@ object QuickCalcCacheSetup {
   val expectedEmptyTaxCodeErrorMessage =
     "Enter your current tax code or change your answer to ‘No’"
 
-  val expectedEmptyErrorMessage = "Please enter numbers and \".\" only"
+  val expectedEmptyErrorMessage = "Enter how much you get paid"
   val expectedNegativeNumberErrorMessage =
     "Enter your pay as a number more than £0.00"
   val expectedInvalidSalaryErrorMessage =
     "Please enter amount in pounds and pence e.g. 123.45"
+  val expectedSymbolErrorMessage =
+    "Enter your pay in pounds and pence, for example 7.20 or 26500. Don’t use a comma"
   val expectedMinHourlyRateErrorMessage = "Hourly rate must be at least 0.01"
   val expectedMinHoursAWeekErrorMessage =
     "Enter your hours a week as a number between 1 and 168"
@@ -277,6 +279,8 @@ object QuickCalcCacheSetup {
     "Enter your pay in pounds and pence. Make sure it’s less than 10000000.00"
   val expectedMaxHourlyRateErrorMessage =
     "Enter your pay as a number less than 10000000.00"
+
+  val expectedPayFrequencyErrorMessage = "Choose how often you get paid"
 
   //Generic
   def expectedYesNoAnswerErrorMessage(implicit messages: Messages) =
