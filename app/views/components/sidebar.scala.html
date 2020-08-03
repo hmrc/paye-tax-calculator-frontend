@@ -16,6 +16,13 @@
 
 @this()
 
-@(link: String, messageKey: String, id: Option[String] = None, endWithFullStop: Boolean = false)(implicit messages: Messages)
+@(content: Html)
 
-<a href="@link" class="govuk-link" @id.map(x => s"id=$x")>@messages(messageKey)</a>@if(endWithFullStop) {.}
+<div class="govuk-grid-column-one-third">
+    <aside style="
+        border-top: 2px solid #1d70b8;
+        padding-top: 10px;
+    ">
+        @content
+    </aside>
+</div>

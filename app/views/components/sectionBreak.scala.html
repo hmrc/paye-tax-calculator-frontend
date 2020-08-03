@@ -16,6 +16,6 @@
 
 @this()
 
-@(link: String, messageKey: String, id: Option[String] = None, endWithFullStop: Boolean = false)(implicit messages: Messages)
+@(size: String)
 
-<a href="@link" class="govuk-link" @id.map(x => s"id=$x")>@messages(messageKey)</a>@if(endWithFullStop) {.}
+<hr class="@{s"govuk-section-break govuk-section-break--$size"}">
