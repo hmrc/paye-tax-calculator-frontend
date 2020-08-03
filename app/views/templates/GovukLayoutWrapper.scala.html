@@ -23,18 +23,11 @@
 
 @this(
         govukLayout: GovukLayout,
-        govukPhaseBanner: GovukPhaseBanner,
         siteHeader: components.siteHeader,
-        phaseBanner: components.phaseBanner,
-        languageSelection: components.languageSelection,
         link: components.link,
         appConfig: config.AppConfig,
         footerLinks: FooterLinks,
-        hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
-        mainContent: uiLayouts.MainContent,
-        serviceInfo: uiLayouts.ServiceInfo,
-        mainContentHeader: uiLayouts.MainContentHeader
-
+        hmrcReportTechnicalIssue: HmrcReportTechnicalIssue
 )
 @(
         pageTitle: Option[String] = None,
@@ -93,16 +86,6 @@
 @js.map(x => x)
 }
 
-@serviceInfoWrapper = {
-@serviceInfo(
-    includeHMRCBranding = false,
-    betaBanner = phaseBanner("beta", signedInUser),
-    includeGridWrapper = false,
-    serviceInfoContent = None,
-    setLang = messages.lang.code
-)
-}
-
 @content = {
 
 @contentBlock
@@ -114,7 +97,6 @@
     )
 }
 }
-
 
 @govukLayout(
     pageTitle = pageTitle,

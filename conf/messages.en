@@ -99,9 +99,9 @@ quick_calc.result.info_e=HMRC will not keep a record of your data for security r
 quick_calc.result.info_print=Print my calculation
 
 quick_calc.result.info_url_list=What to do now
-quick_calc.result.info_url_a=Check my tax for a previous year
-quick_calc.result.info_url_b=Check if an overpayment has been made
-quick_calc.result.info_url_c=Claim for a tax refund
+quick_calc.result.info_url_a=Check how much Income Tax you paid last year
+quick_calc.result.info_url_b=Check if you have paid the right amount of tax
+quick_calc.result.info_url_c=Claim a tax refund
 
 quick_calc.salary.header=How much do you get paid?
 quick_calc.salary.sub_header=How often do you get paid?

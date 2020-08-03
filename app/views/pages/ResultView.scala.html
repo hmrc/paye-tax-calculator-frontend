@@ -30,6 +30,7 @@
         govuk_wrapper: templates.GovukLayoutWrapper,
         link: components.link,
         h1: components.h1,
+        h2: components.h2,
         govukTabs: GovukTabs,
         govButton: GovukButton,
         p: components.p,
@@ -37,7 +38,12 @@
         appConfig: AppConfig,
         formHelper: FormWithCSRF,
         beforeContent: components.beforeContent,
-        printLink: components.printLink
+        printLink: components.printLink,
+        siteHeader: components.siteHeader,
+        sectionBreak: components.sectionBreak,
+        sectionBreakVisible: components.sectionBreakVisible,
+        sidebar: components.sidebar,
+        hmrcReportTechnicalIssue: HmrcReportTechnicalIssue
 )
 
 @(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean)(implicit request: Request[_], messages: Messages)
@@ -74,7 +80,18 @@
     )
 }
 
-@govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), beforeContentBlock = beforeContent(s"${prodRoutes.YouHaveToldUsController.summary()}")) {
+@head = {
+    <!--[if lte IE 8]><link href='                    @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
+        <!--<![endif]-->
+    <script src='@controllers.routes.Assets.at("javascripts/gtm_dl.js")' type="text/javascript"></script>
+    <script src='@controllers.routes.Assets.at("javascripts/gtm.js")' type="text/javascript"></script>
+    <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
+}
+
+<div class="govuk-grid-row">
+
+@govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), showDeskproLink = false, beforeContentBlock = beforeContent(s"${prodRoutes.YouHaveToldUsController.summary()}")) {
 
     @h1(Messages("quick_calc.result.header"))
 
@@ -96,7 +113,7 @@
         }
     }
 
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    @sectionBreakVisible("m")
 
     @printLink("site.print_and_save")
 
@@ -104,5 +121,18 @@
         @linkNewTab(appConfig.betaFeedbackUrl, "feedback")
     }
 
-    <hr class="govuk-section-break govuk-section-break--l">
+    @sectionBreak("l")
+
+    <div class="govuk-!-margin-top-5">
+        @hmrcReportTechnicalIssue(ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language)))
+    </div>
+
+</div>
+@sidebar {
+    @h2(Messages("quick_calc.result.info_url_list"))
+    @p(link("https://www.gov.uk/check-income-tax-last-year", Messages("quick_calc.result.info_url_a")))
+    @p(link("https://www.gov.uk/tax-overpayments-and-underpayments", Messages("quick_calc.result.info_url_b")))
+    @p(link("https://www.gov.uk/claim-tax-refund", Messages("quick_calc.result.info_url_c")))
+}
+
 }
