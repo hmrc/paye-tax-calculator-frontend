@@ -18,6 +18,7 @@ package controllers
 
 import forms.TaxResult
 import models.UserTaxCode
+import org.jsoup.Jsoup
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.TryValues
@@ -47,7 +48,7 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
   def messagesThing(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "Show Result Page" should {
-    "return 200, with current list of aggregate which contains all answers from previous questions" in {
+    "return 200, with current list of aggregate which contains all answers from previous questions and sidebar links" in {
       val mockCache = mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary)
@@ -69,10 +70,18 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(taxResult, UserTaxCode.currentTaxYear, false)(
+        val responseBody = contentAsString(result)
+        val parseHtml    = Jsoup.parse(responseBody)
+
+        responseBody mustEqual view(taxResult, UserTaxCode.currentTaxYear, false)(
           request,
           messagesThing(application)
         ).toString
+
+        val sidebar = parseHtml.getElementsByClass("govuk-grid-column-one-third")
+        val links = sidebar.get(0).getElementsByClass("govuk-link")
+
+        links.size() mustEqual 3
 
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
