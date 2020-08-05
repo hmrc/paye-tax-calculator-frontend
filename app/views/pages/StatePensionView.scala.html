@@ -77,6 +77,7 @@
         )
 
         @govukDetails(Details(
+            id = Some("statePensionDetails"),
             summary = Text(messages("label.state-pension-details")),
             content = HtmlContent(Messages("quick_calc.salary.question.state_pension_url_a") + link("https://www.gov.uk/state-pension-age", "quick_calc.salary.question.state_pension_url_b") + " " + Messages("quick_calc.salary.question.state_pension_url_c")
             )

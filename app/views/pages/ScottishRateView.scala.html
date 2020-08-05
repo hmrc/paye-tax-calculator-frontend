@@ -71,6 +71,7 @@
         )
 
         @govukDetails(Details(
+            id = Some("scottishRateDetails"),
             summary = Text(messages("label.scottish-rate-details")),
             content = HtmlContent(Messages("quick_calc.salary.question.scottish_income_url_a") + link("https://www.gov.uk/scottish-rate-income-tax", "quick_calc.salary.question.scottish_income_url_b") + " " + Messages("quick_calc.salary.question.scottish_income_url_c"))
         )

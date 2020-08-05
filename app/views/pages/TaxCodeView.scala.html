@@ -57,6 +57,7 @@
         )
 
         @govukDetails(Details(
+            id = Some("taxCodeDetails"),
             summary = Text(messages("label.tax-code")),
             content = HtmlContent(Messages("quick_calc.salary.question.tax_code_info_url_a") + link("https://www.gov.uk/tax-codes/overview", "quick_calc.salary.question.tax_code_info_url_b", endWithFullStop = true)),
         )
