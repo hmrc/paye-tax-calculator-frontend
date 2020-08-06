@@ -25,9 +25,8 @@ import uk.gov.hmrc.calculator.utils.validation.TaxCodeValidator
 import utils.LocalDateProvider
 
 case class UserTaxCode(
-                        gaveUsTaxCode: Boolean = false,
-                        taxCode:       Option[String])
-
+  gaveUsTaxCode: Boolean = false,
+  taxCode:       Option[String])
 
 object UserTaxCode {
 
@@ -40,11 +39,12 @@ object UserTaxCode {
   val HasTaxCode                                  = "hasTaxCode"
   val TaxCode                                     = "taxCode"
   val suffixKeys                                  = List('L', 'M', 'N', 'T')
-  val WrongTaxCodeSuffixKey                       = "quick_calc.about_tax_code.wrong_tax_code_suffix"
-  val WrongTaxCodeKey                             = "quick_calc.about_tax_code.wrong_tax_code"
-  val WrongTaxCodeNumber                          = "quick_calc.about_tax_code.wrong_tax_code_number"
   val WrongTaxCodePrefixKey                       = "quick_calc.about_tax_code.wrong_tax_code_prefix"
-  val WrongTaxCodeEmpty                           = "quick_calc.about_tax_code_empty_error"
+  val WrongTaxCodePrefixKeyLink                   = "quick_calc.about_tax_code.wrong_tax_code_prefix_link"
+  val WrongTaxCodeSuffixKey                       = "quick_calc.about_tax_code.wrong_tax_code_suffix"
+  val WrongTaxCodeSuffixKeyLink                   = "quick_calc.about_tax_code.wrong_tax_code_suffix_link"
+  val WrongTaxCodeKey                             = "quick_calc.about_tax_code.wrong_tax_code"
+  val WrongTaxCodeKeyLink                         = "quick_calc.about_tax_code.wrong_tax_code_link"
 
   def defaultScottishTaxCode: String =
     if (currentTaxYear == 2019 || currentTaxYear == 2020) Default20192020ScottishTaxCode else Default2018ScottishTaxCode
@@ -66,10 +66,11 @@ object UserTaxCode {
     val res = TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode)
 
     (res.isValid, res.getErrorType) match {
-      case (false, ValidationError.WrongTaxCodeNumber) => Seq(FormError(TaxCode, WrongTaxCodeNumber))
-      case (false, ValidationError.WrongTaxCodePrefix) => Seq(FormError(TaxCode, WrongTaxCodePrefixKey))
-      case (false, ValidationError.WrongTaxCodeSuffix) => Seq(FormError(TaxCode, WrongTaxCodeSuffixKey))
-      case _                                           => Seq(FormError(TaxCode, WrongTaxCodeKey))
+      case (false, ValidationError.WrongTaxCodePrefix) =>
+        Seq(FormError(TaxCode, WrongTaxCodePrefixKeyLink, WrongTaxCodePrefixKey))
+      case (false, ValidationError.WrongTaxCodeSuffix) =>
+        Seq(FormError(TaxCode, WrongTaxCodeSuffixKeyLink, WrongTaxCodeSuffixKey))
+      case _ => Seq(FormError(TaxCode, WrongTaxCodeKeyLink, WrongTaxCodeKey))
     }
   }
 

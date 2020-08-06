@@ -50,7 +50,7 @@ class ScottishRateControllerSpec
     with MockitoSugar {
 
   val formProvider = new ScottishRateFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
@@ -115,8 +115,7 @@ class ScottishRateControllerSpec
         val request = FakeRequest(
           GET,
           routes.ScottishRateController.showScottishRateForm().url
-        ).withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
+        ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
         val result = route(application, request).value
 
@@ -160,13 +159,13 @@ class ScottishRateControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml
-          .getElementsByClass("govuk-list govuk-error-summary__list")
-          .text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedYesNoAnswerErrorMessage) mustEqual true
+        errorMessageLink.contains(expectedInvalidScottishRateAnswerLink) mustEqual true
+        errorMessage.contains(expectedInvalidScottishRateAnswer) mustEqual true
       }
     }
 
@@ -211,7 +210,7 @@ class ScottishRateControllerSpec
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(false)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("1185L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some("1185L")))
         )
 
       val mockCache = mock[QuickCalcCache]
@@ -251,11 +250,13 @@ class ScottishRateControllerSpec
       }
     }
 
-    "set the user's tax code to the 2018-19 default Scottish tax code if the user pays the Scottish rate" taggedAs Tag("2018") in {
+    "set the user's tax code to the 2018-19 default Scottish tax code if the user pays the Scottish rate" taggedAs Tag(
+      "2018"
+    ) in {
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(true)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1185L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1185L")))
         )
 
       val mockCache = mock[QuickCalcCache]
@@ -301,7 +302,7 @@ class ScottishRateControllerSpec
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(false)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
         )
 
       val mockCache = mock[QuickCalcCache]
@@ -341,11 +342,13 @@ class ScottishRateControllerSpec
       }
     }
 
-    "set the user's tax code to the 2019-20 default Scottish tax code if the user pays the Scottish rate" taggedAs Tag("2019") in {
+    "set the user's tax code to the 2019-20 default Scottish tax code if the user pays the Scottish rate" taggedAs Tag(
+      "2019"
+    ) in {
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(true)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
         )
 
       val mockCache = mock[QuickCalcCache]
@@ -391,7 +394,7 @@ class ScottishRateControllerSpec
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(false)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
         )
 
       val mockCache = mock[QuickCalcCache]
@@ -431,11 +434,13 @@ class ScottishRateControllerSpec
       }
     }
 
-    "set the user's tax code to the 2020-21 default Scottish tax code if the user pays the Scottish rate" taggedAs Tag("2020") in {
+    "set the user's tax code to the 2020-21 default Scottish tax code if the user pays the Scottish rate" taggedAs Tag(
+      "2020"
+    ) in {
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(true)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
         )
 
       val mockCache = mock[QuickCalcCache]

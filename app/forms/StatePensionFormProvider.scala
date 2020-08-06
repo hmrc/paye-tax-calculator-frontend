@@ -22,11 +22,11 @@ import models.StatePension
 import play.api.data.Form
 import play.api.data.Forms._
 
-class StatePensionFormProvider @Inject()() {
+class StatePensionFormProvider @Inject() () {
 
   def apply(): Form[StatePension] = Form(
-      mapping(
-        "overStatePensionAge" -> of(requiredBooleanFormatter)
-      )(StatePension.apply)(StatePension.unapply)
-    )
+    mapping(
+      "overStatePensionAge" -> of(statePensionAgeValidation)
+    )(StatePension.apply)(StatePension.unapply)
+  )
 }

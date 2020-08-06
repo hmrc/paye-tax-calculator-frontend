@@ -41,13 +41,14 @@ import views.html.pages.{StatePensionView, TaxCodeView}
 
 import scala.concurrent.Future
 
-class TaxCodeControllerSpec extends PlaySpec
-with TryValues
-with ScalaFutures
-with IntegrationPatience
-with MockitoSugar {
+class TaxCodeControllerSpec
+    extends PlaySpec
+    with TryValues
+    with ScalaFutures
+    with IntegrationPatience
+    with MockitoSugar {
   val formProvider = new UserTaxCodeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
@@ -87,7 +88,9 @@ with MockitoSugar {
     "return 200 and a list of current aggregate data containing Tax Code and pension" in {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)))
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None))
+      )
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -107,7 +110,10 @@ with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).value.youHaveToldUsItems)(
+        contentAsString(result) mustEqual view(
+          form,
+          cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).value.youHaveToldUsItems
+        )(
           request,
           messagesThing(application)
         ).toString
@@ -174,11 +180,12 @@ with MockitoSugar {
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-
+        errorMessageLink.contains(expectedInvalidTaxCodeErrorMessage) mustEqual true
         errorMessage.contains(expectedInvalidTaxCodeErrorMessage) mustEqual true
       }
     }
@@ -207,11 +214,12 @@ with MockitoSugar {
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-
+        errorMessageLink.contains(expectedInvalidTaxCodeErrorMessage) mustEqual true
         errorMessage.contains(expectedInvalidTaxCodeErrorMessage) mustEqual true
       }
     }
@@ -227,7 +235,7 @@ with MockitoSugar {
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("hasTaxCode" -> "true", "taxCode" -> "OO9999")
+        val formData = Map("hasTaxCode" -> "true", "taxCode" -> "X9999")
 
         val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -240,11 +248,13 @@ with MockitoSugar {
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
 
+        errorMessageLink.contains(expectedPrefixTaxCodeErrorMessageLink) mustEqual true
         errorMessage.contains(expectedPrefixTaxCodeErrorMessage) mustEqual true
       }
     }
@@ -260,7 +270,7 @@ with MockitoSugar {
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("hasTaxCode" -> "true", "taxCode" -> "9999R")
+        val formData = Map("hasTaxCode" -> "true", "taxCode" -> "9999A")
 
         val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -273,11 +283,13 @@ with MockitoSugar {
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
 
+        errorMessageLink.contains(expectedSuffixTaxCodeErrorMessageLink) mustEqual true
         errorMessage.contains(expectedSuffixTaxCodeErrorMessage) mustEqual true
       }
     }
@@ -306,12 +318,14 @@ with MockitoSugar {
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
 
-        errorMessage.contains(expectedWrongNumberTaxCodeErrorMessage) mustEqual true
+        errorMessageLink.contains(expectedInvalidTaxCodeErrorMessage) mustEqual true
+        errorMessage.contains(expectedInvalidTaxCodeErrorMessage) mustEqual true
       }
     }
 
@@ -395,7 +409,9 @@ with MockitoSugar {
     "return 303, with to scottish page if No to tax code" in {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)))
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None))
+      )
       when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
 
       val application = new GuiceApplicationBuilder()

@@ -48,7 +48,7 @@ class StatePensionControllerSpec
     with MockitoSugar {
 
   val formProvider = new StatePensionFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
@@ -157,12 +157,12 @@ class StatePensionControllerSpec
 
           val errorHeader =
             parseHtml.getElementById("error-summary-title").text()
-          val errorMessage = parseHtml
-            .getElementsByClass("govuk-list govuk-error-summary__list")
-            .text()
+          val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+          val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
           errorHeader mustEqual "There is a problem"
-          errorMessage.contains(expectedYesNoAnswerErrorMessage) mustEqual true
+          errorMessageLink.contains(expectedInvalidStatePensionAnswerLink) mustEqual true
+          errorMessage.contains(expectedInvalidStatePensionAnswer) mustEqual true
         }
       }
 
@@ -196,12 +196,12 @@ class StatePensionControllerSpec
 
           val errorHeader =
             parseHtml.getElementById("error-summary-title").text()
-          val errorMessage = parseHtml
-            .getElementsByClass("govuk-list govuk-error-summary__list")
-            .text()
+          val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+          val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
           errorHeader mustEqual "There is a problem"
-          errorMessage.contains(expectedYesNoAnswerErrorMessage) mustEqual true
+          errorMessageLink.contains(expectedInvalidStatePensionAnswerLink) mustEqual true
+          errorMessage.contains(expectedInvalidStatePensionAnswer) mustEqual true
         }
       }
 

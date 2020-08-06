@@ -72,7 +72,7 @@
             value = salaryForm("amount").value,
             classes = "govuk-input--width-10",
             autocomplete = Some("off"),
-            errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+            errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.args.toString, err.args: _*))))
         ))
 
         @inputRadio(

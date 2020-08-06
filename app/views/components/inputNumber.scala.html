@@ -23,7 +23,7 @@
         isPageHeading: Boolean = true,
         hint: Option[String] = None,
         classes: Option[String] = None,
-        autoComplete: String  = ""
+        autoComplete: String = ""
 )(implicit messages: Messages)
 
 @govukInput(Input(
@@ -40,6 +40,6 @@
         content = HtmlContent(messages(hintKey))
     )),
     value = form(name).value,
-    autocomplete =  Some(autoComplete),
-    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
+    autocomplete = Some(autoComplete),
+    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.args.toString, err.args: _*))))
 ))

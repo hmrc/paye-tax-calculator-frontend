@@ -19,16 +19,12 @@ package forms.mappings
 import models.UserTaxCode._
 import play.api.data.FormError
 import play.api.data.format.Formatter
-import uk.gov.hmrc.calculator.utils.validation.{
-  HoursDaysValidator,
-  TaxCodeValidator,
-  WageValidator
-}
+import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, TaxCodeValidator, WageValidator}
 import utils.BigDecimalFormatter
 
 object CustomFormatters {
 
-  def requiredBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
+  def scottishRateValidation: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
       key:  String,
@@ -37,7 +33,30 @@ object CustomFormatters {
       Right(data.getOrElse(key, "")).right.flatMap {
         case "true"  => Right(true)
         case "false" => Right(false)
-        case _       => Left(Seq(FormError(key, "select_one")))
+        case _       => Left(Seq(FormError(key, "quick_calc.scottish_rate_error_link", "quick_calc.scottish_rate_error")))
+      }
+
+    override def unbind(
+      key:   String,
+      value: Boolean
+    ) = Map(key -> value.toString)
+  }
+
+  def statePensionAgeValidation: Formatter[Boolean] = new Formatter[Boolean] {
+
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ) =
+      Right(data.getOrElse(key, "")).right.flatMap {
+        case "true"  => Right(true)
+        case "false" => Right(false)
+        case _ =>
+          Left(
+            Seq(
+              FormError(key, "quick_calc.over_state_pension_age_error_link", "quick_calc.over_state_pension_age_error")
+            )
+          )
       }
 
     override def unbind(
@@ -48,31 +67,43 @@ object CustomFormatters {
 
   def hasTaxCodeBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
 
-    override def bind(key: String, data: Map[String, String]) =
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
         case "" => Right(false)
         case _  => Right(true)
       }
 
-    override def unbind(key: String, value: Boolean) =
+    override def unbind(
+      key:   String,
+      value: Boolean
+    ) =
       Map(key -> value.toString)
   }
 
   def requiredSalaryPeriodFormatter: Formatter[String] = new Formatter[String] {
 
-    override def bind(key: String, data: Map[String, String]) =
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
-        case "" => Left(Seq(FormError(key, "quick_calc.salary.option_error")))
+        case "" => Left(Seq(FormError(key, "quick_calc.salary.option_error_link", "quick_calc.salary.option_error")))
         case p  => Right(p)
       }
 
-    override def unbind(key: String, value: String) = Map(key -> value)
+    override def unbind(
+      key:   String,
+      value: String
+    ) = Map(key -> value)
   }
 
   def dayValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
 
     override def bind(
-      key: String,
+      key:  String,
       data: Map[String, String]
     ): Either[Seq[FormError], BigDecimal] =
       Right(data.getOrElse(key, "")).right.flatMap {
@@ -84,7 +115,8 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
-                    "quick_calc.salary.question.error.number_of_days.less_than_zero"
+                    "quick_calc.salary.question.error.number_of_days.invalid_hours_link",
+                    "quick_calc.salary.question.error.number_of_days.invalid_hours"
                   )
                 )
               )
@@ -93,7 +125,8 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
-                    "quick_calc.salary.question.error.number_of_days.more_than_seven"
+                    "quick_calc.salary.question.error.number_of_days.invalid_hours_link",
+                    "quick_calc.salary.question.error.number_of_days.invalid_hours"
                   )
                 )
               )
@@ -106,7 +139,8 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
-                    "quick_calc.salary.question.error.invalid_number_daily"
+                    "quick_calc.salary.question.error.number_of_days.invalid_number_link",
+                    "quick_calc.salary.question.error.number_of_days.invalid_number"
                   )
                 )
               )
@@ -116,20 +150,24 @@ object CustomFormatters {
             Seq(
               FormError(
                 key,
+                "quick_calc.salary.question.error.empty_number_daily_link",
                 "quick_calc.salary.question.error.empty_number_daily"
               )
             )
           )
       }
 
-    override def unbind(key: String, value: BigDecimal): Map[String, String] =
+    override def unbind(
+      key:   String,
+      value: BigDecimal
+    ): Map[String, String] =
       Map(key -> value.toString)
   }
 
   def hoursValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
 
     override def bind(
-      key: String,
+      key:  String,
       data: Map[String, String]
     ): Either[Seq[FormError], BigDecimal] =
       Right(data.getOrElse(key, "")).right.flatMap {
@@ -142,7 +180,8 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
-                    "quick_calc.salary.question.error.number_of_hours.less_than_one"
+                    "quick_calc.salary.question.error.number_of_hours.invalid_number_link",
+                    "quick_calc.salary.question.error.number_of_hours.invalid_number"
                   )
                 )
               )
@@ -152,12 +191,12 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
-                    "quick_calc.salary.question.error.number_of_hours.more_than_168"
+                    "quick_calc.salary.question.error.number_of_hours.invalid_number_link",
+                    "quick_calc.salary.question.error.number_of_hours.invalid_number"
                   )
                 )
               )
-            }
-            else {
+            } else {
               Right(BigDecimalFormatter.stripZeros(BigDecimal(s).bigDecimal))
             }
           } catch {
@@ -166,6 +205,7 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
+                    "quick_calc.salary.question.error.invalid_number_hourly_link",
                     "quick_calc.salary.question.error.invalid_number_hourly"
                   )
                 )
@@ -176,13 +216,17 @@ object CustomFormatters {
             Seq(
               FormError(
                 key,
+                "quick_calc.salary.question.error.empty_number_hourly_link",
                 "quick_calc.salary.question.error.empty_number_hourly"
               )
             )
           )
       }
 
-    override def unbind(key: String, value: BigDecimal): Map[String, String] =
+    override def unbind(
+      key:   String,
+      value: BigDecimal
+    ): Map[String, String] =
       Map(key -> value.toString)
 
   }
@@ -190,7 +234,7 @@ object CustomFormatters {
   def salaryValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
 
     override def bind(
-      key: String,
+      key:  String,
       data: Map[String, String]
     ): Either[Seq[FormError], BigDecimal] =
       (data.get(key).filter(_.nonEmpty) match {
@@ -202,6 +246,7 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
+                    "quick_calc.salary.question.error.minimum_salary_input_link",
                     "quick_calc.salary.question.error.minimum_salary_input"
                   )
                 )
@@ -212,6 +257,7 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
+                    "quick_calc.salary.question.error.maximum_salary_input_link",
                     "quick_calc.salary.question.error.maximum_salary_input"
                   )
                 )
@@ -225,6 +271,7 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
+                    "quick_calc.salary.question_error_invalid_input_link",
                     "quick_calc.salary.question_error_invalid_input"
                   )
                 )
@@ -234,6 +281,7 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
+                    "quick_calc.salary.question.error.invalid_salary_link",
                     "quick_calc.salary.question.error.invalid_salary"
                   )
                 )
@@ -243,6 +291,7 @@ object CustomFormatters {
                 Seq(
                   FormError(
                     key,
+                    "quick_calc.salary.question.error.invalid_salary_link",
                     "quick_calc.salary.question.error.invalid_salary"
                   )
                 )
@@ -253,13 +302,17 @@ object CustomFormatters {
             Seq(
               FormError(
                 key,
+                "quick_calc.salary.question.error.empty_salary_input_link",
                 "quick_calc.salary.question.error.empty_salary_input"
               )
             )
           )
       })
 
-    override def unbind(key: String, value: BigDecimal): Map[String, String] =
+    override def unbind(
+      key:   String,
+      value: BigDecimal
+    ): Map[String, String] =
       Map(key -> value.toString)
   }
 
@@ -267,10 +320,9 @@ object CustomFormatters {
     new Formatter[Option[String]] {
 
       override def bind(
-        key: String,
+        key:  String,
         data: Map[String, String]
-      ): Either[Seq[FormError], Option[String]] = {
-
+      ): Either[Seq[FormError], Option[String]] =
         data
           .get(TaxCode)
           .filter(_.nonEmpty)
@@ -283,10 +335,11 @@ object CustomFormatters {
             }
           case None => Right(None)
         }
-      }
 
-      override def unbind(key: String,
-                          value: Option[String]): Map[String, String] =
+      override def unbind(
+        key:   String,
+        value: Option[String]
+      ): Map[String, String] =
         Map(key -> value.getOrElse(""))
     }
 

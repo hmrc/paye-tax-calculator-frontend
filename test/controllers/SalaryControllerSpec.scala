@@ -108,11 +108,13 @@ class SalaryControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedPayFrequencyErrorMessage)               mustEqual true
+        errorMessageLink.contains(expectedPayFrequencyErrorMessageLink) mustEqual true
+        errorMessage.contains(expectedPayFrequencyErrorMessage) mustEqual true
       }
     }
 
@@ -142,46 +144,13 @@ class SalaryControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedEmptyErrorMessage)               mustEqual true
-      }
-    }
-
-    "return 400, with empty list of aggregate data and an error message for invalid Salary" in {
-      val mockCache = mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-      implicit val messages: Messages = messagesThing(application)
-      running(application) {
-
-        val formData = Map("amount" -> "", "period" -> messages("quick_calc.salary.yearly.label"))
-
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-
-        verify(mockCache, times(0)).fetchAndGetEntry()(any())
-
-        val parseHtml = Jsoup.parse(contentAsString(result))
-
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-
-        errorHeader mustEqual "There is a problem"
-        //change
-        errorMessage.contains(expectedEmptyErrorMessage)               mustEqual true
+        errorMessageLink.contains(expectedEmptyErrorMessageLink) mustEqual true
+        errorMessage.contains(expectedEmptyErrorMessage) mustEqual true
       }
     }
 
@@ -211,11 +180,13 @@ class SalaryControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedNegativeNumberErrorMessage)               mustEqual true
+        errorMessageLink.contains(expectedMinimumNumberErrorMessageLink) mustEqual true
+        errorMessage.contains(expectedMinimumNumberErrorMessage) mustEqual true
       }
     }
 
@@ -245,11 +216,13 @@ class SalaryControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedNegativeNumberErrorMessage)               mustEqual true
+        errorMessageLink.contains(expectedMinimumNumberErrorMessageLink) mustEqual true
+        errorMessage.contains(expectedMinimumNumberErrorMessage)
       }
     }
 
@@ -279,12 +252,13 @@ class SalaryControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedInvalidSalaryErrorMessage)               mustEqual true
-
+        errorMessageLink.contains(expectedInvalidSalaryErrorMessageLink) mustEqual true
+        errorMessage.contains(expectedInvalidSalaryErrorMessage) mustEqual true
 
       }
     }
@@ -315,11 +289,13 @@ class SalaryControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedMaxGrossPayErrorMessage)               mustEqual true
+        errorMessageLink.contains(expectedMaxGrossPayErrorMessageLink) mustEqual true
+        errorMessage.contains(expectedMaxGrossPayErrorMessage) mustEqual true
       }
     }
 
@@ -349,11 +325,13 @@ class SalaryControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessage.contains(expectedSymbolErrorMessage)               mustEqual true
+        errorMessageLink.contains(invalidInputErrorMessageLink) mustEqual true
+        errorMessage.contains(invalidInputErrorMessage) mustEqual true
       }
     }
 
@@ -471,7 +449,9 @@ class SalaryControllerSpec
     """return 303, with new Daily Salary data "£100" saved on the complete list of aggregate data and redirect to State Pension Page""" in {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteDaily.map(_.copy(savedIsOverStatePensionAge = None, savedScottishRate = None, savedTaxCode = None)))
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheCompleteDaily.map(_.copy(savedIsOverStatePensionAge = None, savedScottishRate = None, savedTaxCode = None))
+      )
       when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
 
       val application = new GuiceApplicationBuilder()
@@ -490,17 +470,20 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.DaysPerWeekController.showDaysAWeek(10000, "/estimate-paye-take-home-pay/your-pay").url
+        redirectLocation(result).value mustEqual routes.DaysPerWeekController
+          .showDaysAWeek(10000, "/estimate-paye-take-home-pay/your-pay")
+          .url
 
         verify(mockCache, times(1)).save(any())(any())
       }
     }
 
-
     """return 303, with new Hourly Salary data "£100" saved on the complete list of aggregate data and redirect to State Pension Page""" in {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly.map(_.copy(savedIsOverStatePensionAge = None)))
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheCompleteHourly.map(_.copy(savedIsOverStatePensionAge = None))
+      )
       when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
 
       val application = new GuiceApplicationBuilder()
@@ -519,14 +502,15 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.HoursPerWeekController.showHoursAWeek(10000, "/estimate-paye-take-home-pay/your-pay").url
+        redirectLocation(result).value mustEqual routes.HoursPerWeekController
+          .showHoursAWeek(10000, "/estimate-paye-take-home-pay/your-pay")
+          .url
 
         verify(mockCache, times(1)).save(any())(any())
       }
     }
 
   }
-
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
