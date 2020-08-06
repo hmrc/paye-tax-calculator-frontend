@@ -44,7 +44,7 @@ import views.html.pages.DaysAWeekView
 import scala.concurrent.Future
 
 class DaysPerWeekControllerSpec
-  extends PlaySpec
+    extends PlaySpec
     with TryValues
     with ScalaFutures
     with IntegrationPatience
@@ -72,7 +72,7 @@ class DaysPerWeekControllerSpec
       implicit val messages: Messages = messagesForApp(application)
 
       val amount       = (cacheCompleteHourly.value.savedPeriod.value.amount * 100.0).toInt
-      val howManyAweek       = cacheCompleteDaily.value.savedPeriod.value.howManyAWeek
+      val howManyAweek = cacheCompleteDaily.value.savedPeriod.value.howManyAWeek
 
       running(application) {
 
@@ -86,7 +86,14 @@ class DaysPerWeekControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form.fill(Days(cacheCompleteHourly.value.savedPeriod.value.amount, BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))), cacheCompleteHourly.value.savedPeriod.value.amount, "url")(request, messagesForApp(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(
+            Days(cacheCompleteHourly.value.savedPeriod.value.amount,
+                 BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))
+          ),
+          cacheCompleteHourly.value.savedPeriod.value.amount,
+          "url"
+        )(request, messagesForApp(application)).toString
       }
     }
 
@@ -200,10 +207,12 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
+        errorMessageLink.contains(expectedEmptyDaysErrorMessageLink) mustEqual true
         errorMessage.contains(expectedEmptyDaysErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -232,10 +241,12 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
+        errorMessageLink.contains(expectedMinDaysAWeekErrorMessageLink) mustEqual true
         errorMessage.contains(expectedMinDaysAWeekErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -265,10 +276,12 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
+        errorMessageLink.contains(expectedMaxDaysAWeekErrorMessageLink) mustEqual true
         errorMessage.contains(expectedMaxDaysAWeekErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -298,10 +311,12 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
+        errorMessageLink.contains(expectedWholeNumberDailyErrorMessageLink) mustEqual true
         errorMessage.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -331,10 +346,12 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementById("error-summary-title").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
+        errorMessageLink.contains(expectedWholeNumberDailyErrorMessageLink) mustEqual true
         errorMessage.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }

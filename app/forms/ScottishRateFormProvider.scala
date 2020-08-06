@@ -22,11 +22,11 @@ import models.ScottishRate
 import play.api.data.Form
 import play.api.data.Forms._
 
-class ScottishRateFormProvider @Inject()() {
+class ScottishRateFormProvider @Inject() () {
 
   def apply(): Form[ScottishRate] = Form(
-      mapping(
-        "payScottishRate" -> of(requiredBooleanFormatter)
-      )(ScottishRate.apply)(ScottishRate.unapply)
-    )
+    mapping(
+      "payScottishRate" -> of(scottishRateValidation)
+    )(ScottishRate.apply)(ScottishRate.unapply)
+  )
 }
