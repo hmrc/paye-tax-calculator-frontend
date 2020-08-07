@@ -80,16 +80,7 @@
     )
 }
 
-@head = {
-    <!--[if lte IE 8]><link href='                    @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
-        <!--<![endif]-->
-    <script src='@controllers.routes.Assets.at("javascripts/gtm_dl.js")' type="text/javascript"></script>
-    <script src='@controllers.routes.Assets.at("javascripts/gtm.js")' type="text/javascript"></script>
-    <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
-}
-
-<div class="govuk-grid-row">
+<div class="govuk-grid-row govuk-!-padding-left-2 govuk-!-padding-right-2">
 
 @govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), showDeskproLink = false, beforeContentBlock = beforeContent(s"${prodRoutes.YouHaveToldUsController.summary()}")) {
 
@@ -98,8 +89,7 @@
     @govukTabs(
         Tabs(
             title = Messages("label.breakdown_per"),
-            items = tabsItems,
-            classes = "govuk-!-margin-4")
+            items = tabsItems)
     )
 
     @p {
@@ -125,7 +115,7 @@
     @sectionBreak("l")
 
     <div class="govuk-!-margin-top-5">
-        @hmrcReportTechnicalIssue(ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language)))
+    @hmrcReportTechnicalIssue(ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language)))
     </div>
 
 </div>
