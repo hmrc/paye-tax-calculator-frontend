@@ -38,6 +38,7 @@ select_one=Answer ‘Yes’ or ‘No’
 
 quick_calc.title=HMRC Estimate your take-home pay calculator
 quick_calc.header.title=Estimate your take-home pay
+site.govuk=GOV.UK
 
 quick_calc.you_have_told_us.header=Check your answers
 quick_calc.you_have_told_us.header_question=We asked
