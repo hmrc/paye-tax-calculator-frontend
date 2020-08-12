@@ -20,6 +20,8 @@
 
 @(backLinkUrl: String)(implicit request: Request[_], messages: Messages)
 
+<nav id="navigation-content" role="navigation">
+
 @phaseBanner("BETA")
 
 @if(appConfig.languageTranslationEnabled) {
@@ -27,3 +29,5 @@
 }
 
 @govukBackLink(BackLink(href = backLinkUrl, content = Text(Messages("back"))))
+
+</nav>
