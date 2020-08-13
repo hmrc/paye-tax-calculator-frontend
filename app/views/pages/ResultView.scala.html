@@ -32,7 +32,7 @@
         h1: components.h1,
         h2: components.h2,
         govukTabs: GovukTabs,
-        govButton: GovukButton,
+        button: components.button,
         p: components.p,
         linkNewTab: components.linkNewTab,
         appConfig: AppConfig,
@@ -81,7 +81,6 @@
 }
 
 
-
 @govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), showDeskproLink = false, beforeContentBlock = beforeContent(s"${prodRoutes.YouHaveToldUsController.summary()}"), bodyClassess = Some("govuk-grid-row govuk-!-padding-left-2 govuk-!-padding-right-2"), showAppBanner = true) {
 
     @h1(Messages("quick_calc.result.header"))
@@ -96,12 +95,9 @@
         @Messages("quick_calc.result.info_a") @linkNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters", "quick_calc.result.info_b") @Messages("quick_calc.result.info_e")
     }
 
-    @p {
-        @formHelper(action = controllers.routes.QuickCalcController.restartQuickCalc()) {
-            @govButton(Button(
-                content = Text(Messages("restart"))
-            ))
-        }
+    @formHelper(action = controllers.routes.QuickCalcController.restartQuickCalc()) {
+        @button("restart", Some("restart-button")
+        )
     }
 
     @sectionBreakVisible("m")
@@ -118,12 +114,12 @@
     @hmrcReportTechnicalIssue(ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language)))
     </div>
 
-</div>
-@sidebar {
-    @h2(Messages("quick_calc.result.info_url_list"))
-    @p(link("https://www.gov.uk/check-income-tax-last-year", Messages("quick_calc.result.info_url_a")))
-    @p(link("https://www.gov.uk/tax-overpayments-and-underpayments", Messages("quick_calc.result.info_url_b")))
-    @p(link("https://www.gov.uk/claim-tax-refund", Messages("quick_calc.result.info_url_c")))
-}
+    </div>
+    @sidebar {
+        @h2(Messages("quick_calc.result.info_url_list"))
+        @p(link("https://www.gov.uk/check-income-tax-last-year", Messages("quick_calc.result.info_url_a")))
+        @p(link("https://www.gov.uk/tax-overpayments-and-underpayments", Messages("quick_calc.result.info_url_b")))
+        @p(link("https://www.gov.uk/claim-tax-refund", Messages("quick_calc.result.info_url_c")))
+    }
 
 }

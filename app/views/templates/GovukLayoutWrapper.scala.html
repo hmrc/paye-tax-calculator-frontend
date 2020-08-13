@@ -47,8 +47,8 @@
     <!--[if lte IE 8]><link href='              @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
         <!--<![endif]-->
-    <script src='@controllers.routes.Assets.at("javascripts/gtm_dl.js")' type="text/javascript"></script>
-    <script src='@controllers.routes.Assets.at("javascripts/gtm.js")' type="text/javascript"></script>
+    <script src='@controllers.routes.Assets.at("javascripts/gtm_dl.js")'></script>
+    <script src='@controllers.routes.Assets.at("javascripts/gtm.js")'></script>
     @if(showAppBanner) {
     <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
     }
@@ -98,6 +98,7 @@
     @hmrcReportTechnicalIssue(
         ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))
     )
+    </div>
 }
 }
 
