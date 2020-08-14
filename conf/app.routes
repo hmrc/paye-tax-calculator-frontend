@@ -12,7 +12,6 @@ GET         /hours/:value          controllers.HoursPerWeekController.showHoursA
 POST        /hours/:value          controllers.HoursPerWeekController.submitHoursAWeek(value: Int)
 
 GET         /days/:value           controllers.DaysPerWeekController.showDaysAWeek(value: Int)
-GET         /days/your-pay         controllers.QuickCalcController.redirectToSalaryForm
 POST        /days/:value           controllers.DaysPerWeekController.submitDaysAWeek(value: Int)
 
 GET         /state-pension         controllers.StatePensionController.showStatePensionForm
