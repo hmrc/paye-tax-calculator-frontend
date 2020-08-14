@@ -76,7 +76,7 @@ class DaysPerWeekControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(amount, "url").url)
+        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(amount).url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -91,8 +91,7 @@ class DaysPerWeekControllerSpec
             Days(cacheCompleteHourly.value.savedPeriod.value.amount,
                  BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))
           ),
-          cacheCompleteHourly.value.savedPeriod.value.amount,
-          "url"
+          cacheCompleteHourly.value.savedPeriod.value.amount
         )(request, messagesForApp(application)).toString
       }
     }
@@ -112,7 +111,7 @@ class DaysPerWeekControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(0, "").url)
+        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(0).url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -142,7 +141,7 @@ class DaysPerWeekControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(0, "").url)
+        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(0).url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -169,7 +168,7 @@ class DaysPerWeekControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(0, "").url)
+        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(0).url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 

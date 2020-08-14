@@ -59,7 +59,7 @@ class HoursPerWeekController @Inject() (
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future(BadRequest(hoursAWeekView(formWithErrors, value, url))),
+        formWithErrors => Future(BadRequest(hoursAWeekView(formWithErrors, value))),
         hours => {
           val updatedAggregate = cache
             .fetchAndGetEntry()
@@ -89,8 +89,7 @@ class HoursPerWeekController @Inject() (
   }
 
   def showHoursAWeek(
-    valueInPence: Int,
-    url:          String
+    valueInPence: Int
   ): Action[AnyContent] ={
 
     salaryRequired(
@@ -99,7 +98,7 @@ class HoursPerWeekController @Inject() (
           .map(s => form.fill(Hours(s.amount, BigDecimalFormatter.stripZeros(s.howManyAWeek.bigDecimal))))
           .getOrElse(form)
 
-        Ok(hoursAWeekView(filledForm, BigDecimal(valueInPence / 100.0), url))
+        Ok(hoursAWeekView(filledForm, BigDecimal(valueInPence / 100.0)))
 
       }
     )

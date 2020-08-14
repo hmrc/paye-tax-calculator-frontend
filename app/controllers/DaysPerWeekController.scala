@@ -59,7 +59,7 @@ class DaysPerWeekController @Inject() (
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future(BadRequest(daysPerWeekView(formWithErrors, value, url))),
+        formWithErrors => Future(BadRequest(daysPerWeekView(formWithErrors, value))),
         days => {
           val updatedAggregate = cache
             .fetchAndGetEntry()
@@ -88,8 +88,7 @@ class DaysPerWeekController @Inject() (
   }
 
   def showDaysAWeek(
-    valueInPence: Int,
-    url:          String
+    valueInPence: Int
   ): Action[AnyContent] =
     salaryRequired(cache, { implicit request => agg => {
       val filledForm = agg.savedPeriod
@@ -97,7 +96,7 @@ class DaysPerWeekController @Inject() (
           form.fill(Days(s.amount, BigDecimalFormatter.stripZeros(s.howManyAWeek.bigDecimal)))
         }
         .getOrElse(form)
-      Ok(daysPerWeekView(filledForm, BigDecimal(valueInPence / 100.0), url))}
+      Ok(daysPerWeekView(filledForm, BigDecimal(valueInPence / 100.0)))}
     })
 
   private def salaryRequired[T](

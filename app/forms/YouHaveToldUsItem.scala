@@ -127,15 +127,13 @@ object YouHaveToldUs {
             case `day` =>
               routes.DaysPerWeekController
                 .showDaysAWeek(
-                  (detail.amount * 100.0).toInt,
-                  detail.urlForChange
+                  (detail.amount * 100.0).toInt
                 )
                 .url
             case `hour` =>
               routes.HoursPerWeekController
                 .showHoursAWeek(
-                  (detail.amount * 100.0).toInt,
-                  detail.urlForChange
+                  (detail.amount * 100.0).toInt
                 )
                 .url
           }
