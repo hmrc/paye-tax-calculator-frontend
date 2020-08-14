@@ -471,7 +471,7 @@ class SalaryControllerSpec
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.DaysPerWeekController
-          .showDaysAWeek(10000, "/estimate-paye-take-home-pay/your-pay")
+          .showDaysAWeek(10000)
           .url
 
         verify(mockCache, times(1)).save(any())(any())
@@ -503,7 +503,7 @@ class SalaryControllerSpec
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.HoursPerWeekController
-          .showHoursAWeek(10000, "/estimate-paye-take-home-pay/your-pay")
+          .showHoursAWeek(10000)
           .url
 
         verify(mockCache, times(1)).save(any())(any())

@@ -85,9 +85,9 @@ class SalaryController @Inject() (
                 _ =>
                   salaryAmount.period match {
                     case `day` =>
-                        Redirect(routes.DaysPerWeekController.showDaysAWeek((salaryAmount.amount * 100.0).toInt, url))
+                        Redirect(routes.DaysPerWeekController.showDaysAWeek((salaryAmount.amount * 100.0).toInt))
                     case `hour` =>
-                      Redirect(routes.HoursPerWeekController.showHoursAWeek((salaryAmount.amount * 100.0).toInt, url))
+                      Redirect(routes.HoursPerWeekController.showHoursAWeek((salaryAmount.amount * 100.0).toInt))
                     case _ => Redirect(navigator.tryGetShowStatePension(agg))
                   }
               }

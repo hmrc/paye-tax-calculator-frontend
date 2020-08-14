@@ -28,9 +28,9 @@
         beforeContent: components.beforeContent
 )
 
-@(daysForm: Form[Days], valueBd: BigDecimal, url: String)(implicit request: Request[_], messages: Messages)
+@(daysForm: Form[Days], valueBd: BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@govuk_wrapper(Some(title(daysForm, Messages("quick_calc.salary.question.days_a_week"))), beforeContentBlock = beforeContent(url)) {
+@govuk_wrapper(Some(title(daysForm, Messages("quick_calc.salary.question.days_a_week"))), beforeContentBlock = beforeContent("/estimate-paye-take-home-pay/your-pay")) {
 
     @formHelper(action = controllers.routes.DaysPerWeekController.submitDaysAWeek((valueBd * 100.0).toInt)) {
         @errorSummary(daysForm.errors)

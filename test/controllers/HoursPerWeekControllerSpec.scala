@@ -92,7 +92,7 @@ class HoursPerWeekControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(amount, "").url)
+        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(amount).url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -104,8 +104,7 @@ class HoursPerWeekControllerSpec
 
         contentAsString(result) mustEqual view(
           form.fill(Hours(cacheCompleteHourly.value.savedPeriod.value.amount, howManyAWeek)),
-          cacheCompleteHourly.value.savedPeriod.value.amount,
-          ""
+          cacheCompleteHourly.value.savedPeriod.value.amount
         )(request, messagesForApp(application)).toString
       }
     }
@@ -125,7 +124,7 @@ class HoursPerWeekControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(0, "").url)
+        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(0).url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -155,7 +154,7 @@ class HoursPerWeekControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(0, "").url)
+        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(0).url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -182,7 +181,7 @@ class HoursPerWeekControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(0, "").url)
+        val request = FakeRequest(GET, routes.HoursPerWeekController.showHoursAWeek(0).url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
