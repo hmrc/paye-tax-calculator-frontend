@@ -4,7 +4,7 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay26Version            = "1.7.0"
+  private val bootstrapPlay26Version            = "1.14.0"
   private val playPartialsVersion               = "6.11.0-play-26"
   private val logbackJsonLoggerVersion          = "4.8.0"
   private val govukTemplateVersion              = "5.55.0-play-26"

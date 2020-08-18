@@ -108,5 +108,10 @@
     scriptsBlock = Some(scriptElement),
     beforeContentBlock = Some(beforeContentBlock),
     headerBlock = Some(siteHeader()),
-    footerItems = footerLinks.items
+    footerItems = footerLinks.items,
+    bodyEndBlock = Some(uiLayouts.footer(analyticsToken = Some(appConfig.analyticsToken),
+        analyticsHost = appConfig.analyticsHost,
+        ssoUrl = None,
+        scriptElem = None,
+        gaCalls = None))
 )(content)
