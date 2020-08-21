@@ -232,3 +232,10 @@ error.boolean = Rhowch ateb
 error.number = Nodwch rif dilys
 error.required = Nodwch ateb
 error.summary.title = Mae problem wedi codi
+
+#######################################################
+## Timeout Messagesfor not signed in user
+#######################################################
+timeout.message.notSignedIn = Er eich diogelwch, byddwn yn dileu’ch atebion cyn pen 2 funud.
+timeout.keepAlive.notSignedIn= Dychwelyd i’r gwasanaeth
+timeout.deleteAnswers = Dileu’ch atebion

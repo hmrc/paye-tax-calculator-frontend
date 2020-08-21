@@ -279,3 +279,11 @@ label.FOUR_WEEKLY = Four weekly
 label.WEEKLY = Week
 label.MONTHLY = Month
 label.YEARLY = Year
+
+
+#######################################################
+## Timeout Messages for not signed in user
+#######################################################
+timeout.message.notSignedIn = For your security, we will delete your answers in 2 minutes.
+timeout.keepAlive.notSignedIn= Return to the service
+timeout.deleteAnswers = Delete your answers
