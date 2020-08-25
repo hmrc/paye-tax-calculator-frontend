@@ -39,7 +39,7 @@
 
 <br/>
 
-@h2(Messages("quick_calc.result.total_deductions.info"))
+@h2(Messages("quick_calc.result.total_deductions.info_a") + " " + label.toLowerCase + "ly " + Messages("quick_calc.result.total_deductions.info_b"))
 
 @govukSummaryList(
     SummaryList(
@@ -85,7 +85,7 @@
         @Messages("quick_calc.about_k_code_c")
     }
 
-    @h2(Messages("quick_calc.result.how_we_calculated"))
+    @h2(Messages("quick_calc.result.how_we_calculate_a") + " " + label.toLowerCase + "ly " + Messages("quick_calc.result.how_we_calculate_b"))
 
     @govukSummaryList(
         SummaryList(
@@ -129,7 +129,7 @@
     )
 } else {
 
-    @h2(Messages("quick_calc.result.how_we_calculated"))
+    @h2(Messages("quick_calc.result.how_we_calculate_a") + " " + label.toLowerCase + "ly " + Messages("quick_calc.result.how_we_calculate_b"))
 
     @govukSummaryList(
         SummaryList(
