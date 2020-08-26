@@ -29,7 +29,7 @@
 )
 
 
-@(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean, isScottish: Boolean)(implicit request: Request[_], messages: Messages)
+@(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean, isScottish: Boolean, headerFrequency: String)(implicit request: Request[_], messages: Messages)
 
 @formattedAmount = @{
     moneyFormatter(calculatorResponse.getTakeHome)
@@ -38,8 +38,7 @@
 @resultsPanel(calculatorResponse, taxYear, label, formattedAmount)
 
 <br/>
-
-@h2(Messages("quick_calc.result.total_deductions.info"))
+@h2(Messages("quick_calc.result.total_deductions.info_a") + " " + headerFrequency.toLowerCase + " " + Messages("quick_calc.result.total_deductions.info_b"))
 
 @govukSummaryList(
     SummaryList(
@@ -85,7 +84,7 @@
         @Messages("quick_calc.about_k_code_c")
     }
 
-    @h2(Messages("quick_calc.result.how_we_calculated"))
+    @h2(Messages("quick_calc.result.how_we_calculate_a") + " " + headerFrequency.toLowerCase + " " + Messages("quick_calc.result.how_we_calculate_b"))
 
     @govukSummaryList(
         SummaryList(
@@ -129,7 +128,7 @@
     )
 } else {
 
-    @h2(Messages("quick_calc.result.how_we_calculated"))
+    @h2(Messages("quick_calc.result.how_we_calculate_a") + " " + headerFrequency.toLowerCase + " " + Messages("quick_calc.result.how_we_calculate_b"))
 
     @govukSummaryList(
         SummaryList(
