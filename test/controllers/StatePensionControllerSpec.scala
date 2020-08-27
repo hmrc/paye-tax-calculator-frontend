@@ -161,7 +161,7 @@ class StatePensionControllerSpec
           val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
           errorHeader mustEqual "There is a problem"
-          errorMessageLink.contains(expectedInvalidStatePensionAnswerLink) mustEqual true
+          errorMessageLink.contains(expectedInvalidStatePensionAnswer) mustEqual true
           errorMessage.contains(expectedInvalidStatePensionAnswer) mustEqual true
         }
       }
@@ -200,7 +200,7 @@ class StatePensionControllerSpec
           val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
           errorHeader mustEqual "There is a problem"
-          errorMessageLink.contains(expectedInvalidStatePensionAnswerLink) mustEqual true
+          errorMessageLink.contains(expectedInvalidStatePensionAnswer) mustEqual true
           errorMessage.contains(expectedInvalidStatePensionAnswer) mustEqual true
         }
       }

@@ -164,7 +164,7 @@ class ScottishRateControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedInvalidScottishRateAnswerLink) mustEqual true
+        errorMessageLink.contains(expectedInvalidScottishRateAnswer) mustEqual true
         errorMessage.contains(expectedInvalidScottishRateAnswer) mustEqual true
       }
     }

@@ -41,7 +41,7 @@
     ),
     hint = hint,
     value = if(populateField) form(name).value else None,
-    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.args.toString, err.args: _*)))),
+    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*)))),
     autocomplete = Some(autoComplete)
 ))
 

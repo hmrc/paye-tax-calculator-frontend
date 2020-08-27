@@ -122,8 +122,6 @@ quick_calc.salary.weekly.text=Weekly
 quick_calc.salary.daily.text=Daily
 quick_calc.salary.hourly.text=Hourly
 quick_calc.salary.option_error=Select how often you are paid
-quick_calc.salary.option_error_link =You must select how often you are paid
-quick_calc.salary.amount_input_error_link=There’s a problem with the amount you’ve entered
 quick_calc.salary.error_header=Something’s wrong
 quick_calc.salary.amount.label=Amount paid
 
@@ -146,7 +144,6 @@ quick_calc.salary.question.scottish_income_info=You usually pay Scottish Income 
 quick_calc.salary.question.scottish_income_url_a=You can check if you pay
 quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a new tab)
 quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
-quick_calc.scottish_rate_error_link=You must select yes if you pay Scottish Income Tax
 quick_calc.scottish_rate_error=Select yes if you pay Scottish Income Tax
 
 quick_calc.salary.question.tax_code_info=If you do not enter a tax code we will use the default tax code 1250L to calculate your take-home pay.
@@ -158,33 +155,24 @@ quick_calc.salary.period_error_link_b = You haven’t entered how many days you 
 quick_calc.salary.period_error_link_c = You haven’t entered how many hours you work
 
 quick_calc.salary.question.error.number_of_days.invalid_hours=Enter a number between 1 and 7
-quick_calc.salary.question.error.number_of_days.invalid_hours_link=The number of days must be between 1 and 7
 
 quick_calc.salary.question.error.number_of_hours.invalid_number=Enter hours worked in a week between 1 and 168
-quick_calc.salary.question.error.number_of_hours.invalid_number_link=Hours worked in a week must be between 1 and 168
 
 quick_calc.salary.question.error.number_of_hours.more_than_168=Enter your hours a week as a number between 1 and 168
 
 quick_calc.salary.question.error.empty_number_daily=Enter how many days you work in a week
-quick_calc.salary.question.error.empty_number_daily_link=You must enter how many days you work in a week
 
 quick_calc.salary.question.error.empty_number_hourly=Enter how many hours a week you work
-quick_calc.salary.question.error.empty_number_hourly_link=You must enter how many hours a week you work
 
 quick_calc.salary.question.error.invalid_salary=Enter a number, like 7.20 or 26500
-quick_calc.salary.question.error.invalid_salary_link=Amount you get paid must be a number, like 7.20 or 26500
 
 quick_calc.salary.question_error_invalid_input=Enter a number, like 7.20 or 26500
-quick_calc.salary.question_error_invalid_input_link=Amount you get paid must be a number, like 7.20 or 26500
 
 quick_calc.salary.question.error.maximum_salary_input=Enter an amount that is less than 10000000
-quick_calc.salary.question.error.maximum_salary_input_link=The amount must be less than 10000000
 
 quick_calc.salary.question.error.minimum_salary_input=Enter a payment amount that is more than 0
-quick_calc.salary.question.error.minimum_salary_input_link=The amount must be more than 0
 
 quick_calc.salary.question.error.empty_salary_input=Enter an amount that you get paid
-quick_calc.salary.question.error.empty_salary_input_link=You must enter an amount that you get paid
 
 quick_calc.salary.question.error.empty_daily_salary_input=Please enter your daily rate
 quick_calc.salary.question.error.empty_hourly_salary_input=Please enter your hourly rate
@@ -195,27 +183,20 @@ quick_calc.salary.question.error.minimum_daily_salary_input=Daily rate must be a
 quick_calc.over_state_pension_age.header=Are you over the State Pension age?
 quick_calc.over_state_pension_age.yes=Yes
 quick_calc.over_state_pension_age.no=No
-quick_calc.over_state_pension_age_error_link=You must select yes if you are over the State Pension age
 quick_calc.over_state_pension_age_error=Select yes if you are over the State Pension age
 
-quick_calc.about_tax_code_error_link = You haven’t told us your tax code
-quick_calc.about_has_tax_code_error_link = You haven’t told us if you want to use your current tax code
 quick_calc.about_tax_code.header=What is your tax code? (Optional)
 quick_calc.about_tax_code.has_tax_code=Enter your tax code
 
 quick_calc.about_tax_code.wrong_tax_code_prefix=Enter a tax code that starts with the letters S, K, SK, C or CK followed by numbers
-quick_calc.about_tax_code.wrong_tax_code_prefix_link=Tax code must start with the letters S, K, SK, C or CK followed by numbers
 
 quick_calc.about_tax_code.wrong_tax_code=You must enter a tax code in the correct format, like 1117L, K497, S1117L or SK497
-quick_calc.about_tax_code.wrong_tax_code_link=You must enter a tax code in the correct format, like 1117L, K497, S1117L or SK497
 
 quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
 
 quick_calc.about_tax_code.wrong_tax_code_suffix=Enter a tax code that ends with with the letter L, M, N or T
-quick_calc.about_tax_code.wrong_tax_code_suffix_link=Tax code must end with with the letter L, M, N or T
 
-quick_calc.about_tax_code.wrong_tax_code_error_link = There’s a problem with the tax code you’ve entered
 quick_calc.about_tax_code_empty_error = Enter your current tax code or change your answer to ‘No’
 
 quick_calc.about_k_code_a = Your adjusted Income Tax is an estimate including any increase indicated by
@@ -261,11 +242,9 @@ error.summary.title = There is a problem
 site.print_and_save = Print or save page
 
 ## Translation required
-quick_calc.salary.question.error.number_of_days.invalid_number_link=Days worked in a week must be a number, like 5 or 4.5
 quick_calc.salary.question.error.number_of_days.invalid_number=Enter days worked in a week as a number, like 5 or 4.5
 
 quick_calc.salary.question.error.invalid_number_hourly=Enter hours worked in a week as a number, like 8 or 37.5
-quick_calc.salary.question.error.invalid_number_hourly_link=Hours worked in a week must be a number, like 8 or 37.5
 
 label.salary=How much do you get paid?
 hint.salary=For example, 1300 or 193.50
