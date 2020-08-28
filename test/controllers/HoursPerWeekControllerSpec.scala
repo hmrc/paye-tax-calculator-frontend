@@ -225,7 +225,7 @@ class HoursPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedEmptyHoursErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedEmptyHoursErrorMessage) mustEqual true
         errorMessage.contains(expectedEmptyHoursErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -259,7 +259,7 @@ class HoursPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedMinHoursAWeekErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedMinHoursAWeekErrorMessage) mustEqual true
         errorMessage.contains(expectedMinHoursAWeekErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -294,7 +294,7 @@ class HoursPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedMaxHoursAWeekErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedMaxHoursAWeekErrorMessage) mustEqual true
         errorMessage.contains(expectedMaxHoursAWeekErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -329,7 +329,7 @@ class HoursPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedWholeNumberHourlyErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedWholeNumberHourlyErrorMessage) mustEqual true
         errorMessage.contains(expectedWholeNumberHourlyErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -364,7 +364,7 @@ class HoursPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedWholeNumberHourlyErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedWholeNumberHourlyErrorMessage) mustEqual true
         errorMessage.contains(expectedWholeNumberHourlyErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }

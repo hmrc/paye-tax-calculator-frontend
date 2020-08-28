@@ -254,7 +254,7 @@ class TaxCodeControllerSpec
 
         errorHeader mustEqual "There is a problem"
 
-        errorMessageLink.contains(expectedPrefixTaxCodeErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedPrefixTaxCodeErrorMessage) mustEqual true
         errorMessage.contains(expectedPrefixTaxCodeErrorMessage) mustEqual true
       }
     }
@@ -289,7 +289,7 @@ class TaxCodeControllerSpec
 
         errorHeader mustEqual "There is a problem"
 
-        errorMessageLink.contains(expectedSuffixTaxCodeErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedSuffixTaxCodeErrorMessage) mustEqual true
         errorMessage.contains(expectedSuffixTaxCodeErrorMessage) mustEqual true
       }
     }

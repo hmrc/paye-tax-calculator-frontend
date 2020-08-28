@@ -211,7 +211,7 @@ class DaysPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedEmptyDaysErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedEmptyDaysErrorMessage) mustEqual true
         errorMessage.contains(expectedEmptyDaysErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -245,7 +245,7 @@ class DaysPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedMinDaysAWeekErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedMinDaysAWeekErrorMessage) mustEqual true
         errorMessage.contains(expectedMinDaysAWeekErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -280,7 +280,7 @@ class DaysPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedMaxDaysAWeekErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedMaxDaysAWeekErrorMessage) mustEqual true
         errorMessage.contains(expectedMaxDaysAWeekErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -315,7 +315,7 @@ class DaysPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedWholeNumberDailyErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
         errorMessage.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }
@@ -350,7 +350,7 @@ class DaysPerWeekControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedWholeNumberDailyErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
         errorMessage.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
       }

@@ -237,17 +237,11 @@ object QuickCalcCacheSetup {
   val expectedWrongNumberTaxCodeErrorMessage =
     "Enter your current tax code as numbers and letters, making sure the number is between 0 and 9999"
 
-  val expectedSuffixTaxCodeErrorMessageLink =
-    "Tax code must end with with the letter L, M, N or T"
-
   val expectedSuffixTaxCodeErrorMessage =
     "Enter a tax code that ends with with the letter L, M, N or T"
 
   val expectedInvalidTaxCodeErrorMessage =
     "You must enter a tax code in the correct format, like 1117L, K497, S1117L or SK497"
-
-  val expectedPrefixTaxCodeErrorMessageLink =
-    "Tax code must start with the letters S, K, SK, C or CK followed by numbers"
 
   val expectedPrefixTaxCodeErrorMessage =
     "Enter a tax code that starts with the letters S, K, SK, C or CK followed by numbers"
@@ -255,53 +249,30 @@ object QuickCalcCacheSetup {
   val expectedEmptyTaxCodeErrorMessage =
     "Enter your current tax code or change your answer to ‘No’"
 
-  val expectedMinimumNumberErrorMessageLink =
-    "The amount must be more than 0"
-
   val expectedMinimumNumberErrorMessage =
     "Enter a payment amount that is more than 0"
 
-  val expectedInvalidSalaryErrorMessageLink =
-    "Amount you get paid must be a number, like 7.20 or 26500"
-
   val expectedInvalidSalaryErrorMessage =
     "Enter a number, like 7.20 or 26500"
-
-  val invalidInputErrorMessageLink =
-    "Amount you get paid must be a number, like 7.20 or 26500"
 
   val invalidInputErrorMessage =
     "Enter a number, like 7.20 or 26500"
 
   val expectedMinHourlyRateErrorMessage = "Hourly rate must be at least 0.01"
 
-  val expectedMinHoursAWeekErrorMessageLink =
-    "Hours worked in a week must be between 1 and 168"
-
   val expectedMinHoursAWeekErrorMessage =
     "Enter hours worked in a week between 1 and 168"
+
   val expectedMinDailyRateErrorMessage = "Daily rate must be at least 0.01"
 
   val expectedMinDaysAWeekErrorMessage =
     "Enter a number between 1 and 7"
 
-  val expectedMinDaysAWeekErrorMessageLink =
-    "The number of days must be between 1 and 7"
-
   val expectedWholeNumberDailyErrorMessage =
     "Enter days worked in a week as a number, like 5 or 4.5"
 
-  val expectedWholeNumberDailyErrorMessageLink =
-    "Days worked in a week must be a number, like 5 or 4.5"
-
-  val expectedWholeNumberHourlyErrorMessageLink =
-    "Hours worked in a week must be a number, like 8 or 37.5"
-
   val expectedWholeNumberHourlyErrorMessage =
     "Enter hours worked in a week as a number, like 8 or 37.5"
-
-  val expectedMaxHoursAWeekErrorMessageLink =
-    "Hours worked in a week must be between 1 and 168"
 
   val expectedMaxHoursAWeekErrorMessage =
     "Enter hours worked in a week between 1 and 168"
@@ -309,82 +280,29 @@ object QuickCalcCacheSetup {
   val expectedMaxDaysAWeekErrorMessage =
     "Enter a number between 1 and 7"
 
-  val expectedMaxDaysAWeekErrorMessageLink =
-    "The number of days must be between 1 and 7"
-
-  val expectedMaxGrossPayErrorMessageLink =
-    "The amount must be less than 10000000"
-
   val expectedMaxGrossPayErrorMessage =
     "Enter an amount that is less than 10000000"
 
   val expectedMaxHourlyRateErrorMessage =
     "Enter your pay as a number less than 10000000.00"
 
-  val expectedEmptyErrorMessageLink        = "You must enter an amount that you get paid"
   val expectedEmptyErrorMessage            = "Enter an amount that you get paid"
-  val expectedPayFrequencyErrorMessageLink = "You must select how often you are paid"
+
   val expectedPayFrequencyErrorMessage     = "Select how often you are paid"
 
-  //Generic
-  def expectedYesNoAnswerErrorMessage(implicit messages: Messages) =
-    messages("select_one")
-
-  //Salary
-  def expectedInvalidEmptyGrossPayHeaderMessage(implicit messages: Messages) =
-    messages("quick_calc.salary.amount_empty_error_link")
-
-  def expectedInvalidGrossPayHeaderMessage(implicit messages: Messages) =
-    messages("quick_calc.salary.amount_input_error_link")
-
-  def expectedNotChosenPeriodHeaderMesssage(implicit messages: Messages) =
-    messages("quick_calc.salary.option_error_link")
-
-  def expectedEmptyGrossPayErrorMessage(implicit messages: Messages) =
-    messages("quick_calc.salary.question.error.empty_salary_input")
-
-  def expectedNotChosenPeriodErrorMessage(implicit messages: Messages) =
-    messages("quick_calc.salary.option_error")
-
-  //Days and Hours
-  def expectedInvalidPeriodAmountHeaderMessage(implicit messages: Messages) =
-    messages("quick_calc.salary.period_error_link_a")
-
   //Hours
-  def expectedEmptyHoursErrorMessageLink(implicit messages: Messages) =
-    messages("quick_calc.salary.question.error.empty_number_hourly_link")
-
   def expectedEmptyHoursErrorMessage(implicit messages: Messages) =
     messages("quick_calc.salary.question.error.empty_number_hourly")
 
   //Days
-  def expectedEmptyDaysErrorMessageLink(implicit messages: Messages) =
-    messages("quick_calc.salary.question.error.empty_number_daily_link")
-
   def expectedEmptyDaysErrorMessage(implicit messages: Messages) =
     messages("quick_calc.salary.question.error.empty_number_daily")
 
   //Over State Pension
-  def expectedInvalidStatePensionAnswerLink(implicit messages: Messages) =
-    messages("quick_calc.over_state_pension_age_error_link")
-
   def expectedInvalidStatePensionAnswer(implicit messages: Messages) =
     messages("quick_calc.over_state_pension_age_error")
 
-  //Tax Code
-  def expectedInvalidTaxCodeHeaderMessage(implicit messages: Messages) =
-    messages("quick_calc.about_tax_code.wrong_tax_code_error_link")
-
-  def expectedEmptyTaxCodeHeaderMessage(implicit messages: Messages) =
-    messages("quick_calc.about_tax_code_error_link")
-
-  def expectedNotAnsweredTaxCodeHeaderMessage(implicit messages: Messages) =
-    messages("quick_calc.about_has_tax_code_error_link")
-
   //Scottish Rate
-  def expectedInvalidScottishRateAnswerLink(implicit messages: Messages) =
-    messages("quick_calc.scottish_rate_error_link")
-
   def expectedInvalidScottishRateAnswer(implicit messages: Messages) =
     messages("quick_calc.scottish_rate_error")
 }

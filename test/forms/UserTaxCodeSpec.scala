@@ -38,7 +38,7 @@ class UserTaxCodeSpec extends BaseSpec {
       val form     = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "taxCode" -> "foo"))
       val hasError = form.hasErrors
       val errorMessageKey =
-        "quick_calc.about_tax_code.wrong_tax_code_link"
+        "quick_calc.about_tax_code.wrong_tax_code"
       hasError        shouldBe true
       errorMessageKey shouldBe form.errors.head.message
     }

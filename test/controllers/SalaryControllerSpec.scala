@@ -113,7 +113,7 @@ class SalaryControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedPayFrequencyErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedPayFrequencyErrorMessage) mustEqual true
         errorMessage.contains(expectedPayFrequencyErrorMessage) mustEqual true
       }
     }
@@ -149,7 +149,7 @@ class SalaryControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedEmptyErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedEmptyErrorMessage) mustEqual true
         errorMessage.contains(expectedEmptyErrorMessage) mustEqual true
       }
     }
@@ -185,7 +185,7 @@ class SalaryControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedMinimumNumberErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedMinimumNumberErrorMessage) mustEqual true
         errorMessage.contains(expectedMinimumNumberErrorMessage) mustEqual true
       }
     }
@@ -221,7 +221,7 @@ class SalaryControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedMinimumNumberErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedMinimumNumberErrorMessage) mustEqual true
         errorMessage.contains(expectedMinimumNumberErrorMessage)
       }
     }
@@ -257,7 +257,7 @@ class SalaryControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedInvalidSalaryErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedInvalidSalaryErrorMessage) mustEqual true
         errorMessage.contains(expectedInvalidSalaryErrorMessage) mustEqual true
 
       }
@@ -294,7 +294,7 @@ class SalaryControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedMaxGrossPayErrorMessageLink) mustEqual true
+        errorMessageLink.contains(expectedMaxGrossPayErrorMessage) mustEqual true
         errorMessage.contains(expectedMaxGrossPayErrorMessage) mustEqual true
       }
     }
@@ -330,7 +330,7 @@ class SalaryControllerSpec
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(invalidInputErrorMessageLink) mustEqual true
+        errorMessageLink.contains(invalidInputErrorMessage) mustEqual true
         errorMessage.contains(invalidInputErrorMessage) mustEqual true
       }
     }
