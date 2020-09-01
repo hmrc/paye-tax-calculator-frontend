@@ -16,7 +16,7 @@
 
 package models
 
-import forms.{StatePensionFormProvider, ScottishRateFormProvider, YouHaveToldUs, YouHaveToldUsItem}
+import forms.{YouHaveToldUs, YouHaveToldUsItem}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 
@@ -42,6 +42,12 @@ case class QuickCalcAggregateInput(
       savedTaxCode.map { YouHaveToldUs(_) },
       savedScottishRate.map { YouHaveToldUs(_) }
     ).flatten
+
+  def isEmpty: Boolean =     List(
+    savedSalary,
+    savedIsOverStatePensionAge,
+    savedTaxCode
+  ).forall(_.isEmpty)
 
 }
 

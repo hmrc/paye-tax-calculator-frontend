@@ -52,13 +52,12 @@
         <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
     }
     @if(timeout) {
-
         <meta
         name="hmrc-timeout-dialog"
         data-timeout="@{appConfig.timeout}"
         data-countdown="@{appConfig.countdown}"
         data-keep-alive-url="@{request.uri}"
-        data-sign-out-url="@{routes.QuickCalcController.restartQuickCalc().url}"
+        data-sign-out-url="@{routes.ResetController.reset().url}"
         data-title=""
         data-message="@{messages("timeout.message.notSignedIn")}"
         data-keep-alive-button-text="@{messages("timeout.keepAlive.notSignedIn")}"

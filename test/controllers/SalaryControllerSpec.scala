@@ -540,7 +540,7 @@ class SalaryControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(formFilled)(request, messagesThing(application)).toString
+        contentAsString(result) mustEqual view(formFilled, true)(request, messagesThing(application)).toString
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
@@ -571,7 +571,7 @@ class SalaryControllerSpec
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-        view(form)(request, messagesThing(application)).toString
+        view(form, enableTimeout = false)(request, messagesThing(application)).toString
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
