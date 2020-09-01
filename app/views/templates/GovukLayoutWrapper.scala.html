@@ -25,7 +25,8 @@
         link: components.link,
         appConfig: config.AppConfig,
         footerLinks: FooterLinks,
-        hmrcReportTechnicalIssue: HmrcReportTechnicalIssue
+        hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
+        timeoutDialog: HmrcTimeoutDialog
 )
 @(
         pageTitle: Option[String] = None,
@@ -41,64 +42,66 @@
 
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
-@head = {
-    <!--[if lte IE 8]><link href='               @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
-        <!--<![endif]-->
-    <script src='@controllers.routes.Assets.at("javascripts/gtm_dl.js")'></script>
-    <script src='@controllers.routes.Assets.at("javascripts/gtm.js")'></script>
-@if(showAppBanner) {
-    <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
-}
-}
-
-@scriptElement = {
-    <script src='@controllers.routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
-    <script src='@controllers.routes.Assets.at("javascripts/application.min.js")'></script>
-    <script>window.GOVUKFrontend.initAll();</script>
-    <script>
-    @if(timeout){
-        timeoutDialog({
-            message: '@messages("timeout.message.notSignedIn")',
-            keepAliveButtonText: '@messages("timeout.keepAlive.notSignedIn")',
-            signOutButtonText: '@messages(s"timeout.deleteAnswers")',
-            timeout: @{appConfig.timeout},
-            countdown: @{appConfig.countdown},
-            keepAliveUrl: '@{request.uri}',
-            signOutUrl: "@{routes.QuickCalcController.restartQuickCalc().url}"
-        });
+    @head = {
+        <!--[if lte IE 8]><link href='                 @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+        <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
+            <!--<![endif]-->
+        <script src='@controllers.routes.Assets.at("javascripts/gtm_dl.js")'></script>
+        <script src='@controllers.routes.Assets.at("javascripts/gtm.js")'></script>
+    @if(showAppBanner) {
+        <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
     }
-    </script>
-@js.map(x => x)
-}
+    @if(timeout) {
 
+        <meta
+        name="hmrc-timeout-dialog"
+        data-timeout="@{appConfig.timeout}"
+        data-countdown="@{appConfig.countdown}"
+        data-keep-alive-url="@{request.uri}"
+        data-sign-out-url="@{routes.QuickCalcController.restartQuickCalc().url}"
+        data-title=""
+        data-message="@{messages("timeout.message.notSignedIn")}"
+        data-keep-alive-button-text="@{messages("timeout.keepAlive.notSignedIn")}"
+        data-sign-out-button-text="@{messages("timeout.deleteAnswers")}"
+        />
+
+    }
+    }
+
+    @scriptElement = {
+        <script src='@controllers.routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
+        <script src='@controllers.routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
+        <script src='@controllers.routes.Assets.at("javascripts/application.min.js")'></script>
+        <script>window.GOVUKFrontend.initAll();</script>
+        <script>window.HMRCFrontend.initAll();</script>
+    @js.map(x => x)
+    }
     @content = {
 
-    @contentBlock
+        @contentBlock
 
-    @if(showDeskproLink) {
-        <div class="govuk-!-margin-top-5">
-        @hmrcReportTechnicalIssue(
-            ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))
-        )
-        </div>
+        @if(showDeskproLink) {
+            <div class="govuk-!-margin-top-5">
+            @hmrcReportTechnicalIssue(
+                ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))
+            )
+            </div>
+        }
     }
-}
-
     @scriptElem = {
     <script src="@controllers.routes.Assets.at("javascripts/ga-events-emit.js")" type="text/javascript"></script>
-}
+    }
 
-@govukLayout(
-    pageTitle = pageTitle,
-    headBlock = Some(head),
-    scriptsBlock = Some(scriptElement),
-    beforeContentBlock = Some(beforeContentBlock),
-    headerBlock = Some(siteHeader()),
-    footerItems = footerLinks.items,
-    bodyEndBlock = Some(uiLayouts.footer(analyticsToken = Some(appConfig.analyticsToken),
-        analyticsHost = appConfig.analyticsHost,
-        ssoUrl = None,
-        scriptElem = Some(scriptElem),
-        gaCalls = None))
-)(content)
+    @govukLayout(
+        pageTitle = pageTitle,
+        headBlock = Some(head),
+        scriptsBlock = Some(scriptElement),
+        beforeContentBlock = Some(beforeContentBlock),
+        headerBlock = Some(siteHeader()),
+        footerItems = footerLinks.items,
+        bodyEndBlock = Some(uiLayouts.footer(analyticsToken = Some(appConfig.analyticsToken),
+            analyticsHost = appConfig.analyticsHost,
+            ssoUrl = None,
+            scriptElem = Some(scriptElem),
+            gaCalls = None))
+    )(content)
