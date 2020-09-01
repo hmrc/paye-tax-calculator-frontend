@@ -268,3 +268,6 @@ label.YEARLY = Year
 timeout.message.notSignedIn = Your session will expire soon. For your security, we will delete your answers in
 timeout.keepAlive.notSignedIn= Return to the service
 timeout.deleteAnswers = Delete your answers
+
+reset.h1=Your answers have been deleted
+
