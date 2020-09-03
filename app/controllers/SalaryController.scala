@@ -57,9 +57,9 @@ class SalaryController @Inject() (
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         val filledForm = aggregate.savedSalary.map(s => form.fill(s)).getOrElse(form)
-        Ok(salaryView(filledForm, enableTimeout = !aggregate.isEmpty))   //Only timeout when there is data in view
+        Ok(salaryView(filledForm))   //Only timeout when there is data in view
       case None =>
-        Ok(salaryView(form, enableTimeout=false))
+        Ok(salaryView(form))
     }
   }
 
@@ -73,7 +73,7 @@ class SalaryController @Inject() (
       .bindFromRequest()
       .fold(
         hasErrors = formWithErrors => {
-          Future(BadRequest(salaryView(formWithErrors, enableTimeout= true)))
+          Future(BadRequest(salaryView(formWithErrors)))
         },
         success = salaryAmount => {
           val updatedAggregate = salaryService.updateSalaryAmount(cache, salaryAmount, url)
