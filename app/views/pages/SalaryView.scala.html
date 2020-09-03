@@ -32,7 +32,7 @@
 )
 
 
-@(salaryForm: Form[Salary], enableTimeout: Boolean)(implicit request: Request[_], messages: Messages)
+@(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
 
 @periodLabels = @{
     Seq("hourly", "daily", "weekly", "monthly", "yearly")
@@ -54,7 +54,7 @@
     }
 }
 
-@govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = true, timeout=enableTimeout) {
+@govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = true) {
 
     @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount()) {
 
