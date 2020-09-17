@@ -22,7 +22,7 @@ import play.api.i18n.Messages
 import play.api.mvc.Request
 import uk.gov.hmrc.govukfrontend.views.viewmodels.footer.FooterItem
 
-class FooterLinks @Inject()(appConfig: AppConfig) {
+class FooterLinks @Inject() (appConfig: AppConfig) {
 
   def cookieLink(implicit messages: Messages): FooterItem = FooterItem(
     Some(messages("footer.cookies")),
@@ -44,12 +44,18 @@ class FooterLinks @Inject()(appConfig: AppConfig) {
     Some(appConfig.govukHelp)
   )
 
-  def accessibilityLink(implicit messages: Messages, request: Request[_]): FooterItem = FooterItem(
+  def accessibilityLink(
+    implicit messages: Messages,
+    request:           Request[_]
+  ): FooterItem = FooterItem(
     Some(messages("footer.accessibility")),
-    Some("")   //TODO Add this back or get one?! Some(routes.AccessibilityStatementController.onPageLoad(request.uri).url)
+    Some(appConfig.accessibilityStatement)
   )
 
-  def items(implicit messages: Messages, request: Request[_]) = Seq(
+  def items(
+    implicit messages: Messages,
+    request:           Request[_]
+  ) = Seq(
     cookieLink,
     accessibilityLink,
     privacyLink,
