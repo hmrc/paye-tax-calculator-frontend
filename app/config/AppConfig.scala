@@ -19,47 +19,49 @@ package config
 import javax.inject.Inject
 import play.api.Configuration
 
-class AppConfig @Inject()(
-                           config: Configuration) {
+class AppConfig @Inject() (config: Configuration) {
 
-
-  lazy val host: String = config.get[String]("host")
+  lazy val host:    String = config.get[String]("host")
   lazy val appName: String = config.get[String]("appName")
 
   lazy val analyticsToken: String = loadConfig(s"google-analytics.token")
-  lazy val analyticsHost: String = loadConfig(s"google-analytics.host")
+  lazy val analyticsHost:  String = loadConfig(s"google-analytics.host")
+
   lazy val betaFeedbackUrl: String =
     s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+
   lazy val reportAProblemPartialUrl: String =
     s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
+
   lazy val reportAProblemNonJSUrl: String =
     s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
   lazy val cacheUrl: String = config.get[Service]("microservice.services.cachable.session-cache").baseUrl
+
   lazy val domain: String = config
     .getOptional[String]("microservice.services.cachable.session-cache.domain")
     .getOrElse(throw new Exception(s"Could not find config 'services.cachable.session-cache.domain'"))
-  private val contactHost: String = loadConfig(s"contact-frontend.host")
+  private val contactHost:                  String = loadConfig(s"contact-frontend.host")
   private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
 
   private def loadConfig(key: String): String =
     config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
-  lazy val cookies: String = host + config.get[String]("urls.footer.cookies")
-  lazy val privacy: String = host + config.get[String]("urls.footer.privacy")
-  lazy val termsConditions: String = host + config.get[String]("urls.footer.termsConditions")
-  lazy val govukHelp: String = config.get[String]("urls.footer.govukHelp")
-
+  lazy val cookies:                String = host + config.get[String]("urls.footer.cookies")
+  lazy val privacy:                String = host + config.get[String]("urls.footer.privacy")
+  lazy val termsConditions:        String = host + config.get[String]("urls.footer.termsConditions")
+  lazy val govukHelp:              String = config.get[String]("urls.footer.govukHelp")
+  lazy val accessibilityStatement: String = config.get[String]("urls.footer.accessibilityStatement")
 
   lazy val languageTranslationEnabled: Boolean = config.get[Boolean]("features.welsh-translation")
 
-  lazy val timeout: Int = config.get[Int]("timeout.timeout")
+  lazy val timeout:   Int = config.get[Int]("timeout.timeout")
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
 
-  def feedbackUrl(signedInUser: Boolean) = if (signedInUser) {
-    s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
-  } else {
-    s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
-  }
-
+  def feedbackUrl(signedInUser: Boolean) =
+    if (signedInUser) {
+      s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
+    } else {
+      s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+    }
 
 }
