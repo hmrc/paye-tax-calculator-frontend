@@ -224,7 +224,7 @@ language.switcher = Language switcher
 #######################################################
 ## Footer
 #######################################################
-footer.accessibility   = Accessibility Statement
+footer.accessibility   = Accessibility statement
 footer.cookies         = Cookies
 footer.privacy         = Privacy policy
 footer.termsConditions = Terms and conditions
