@@ -1,18 +1,14 @@
 import play.sbt.PlayImport.PlayKeys
-import sbt.Keys._
-import sbt.Tests.{Group, SubProcess}
-import sbt.{Def, GlobFilter, inConfig, _}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-import uk.gov.hmrc._
-import DefaultBuildSettings._
-import uk.gov.hmrc.SbtAutoBuildPlugin
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
-import uk.gov.hmrc.versioning.SbtGitVersioning
-import uk.gov.hmrc.SbtArtifactory
 import play.sbt.routes.RoutesKeys
+import sbt.Keys._
+import sbt.{GlobFilter, _}
 import scoverage.ScoverageKeys
-import uk.gov.hmrc.DefaultBuildSettings
+import uk.gov.hmrc.DefaultBuildSettings._
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
+import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
+import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
 
 val appName: String = "paye-tax-calculator-frontend"
 
@@ -51,7 +47,7 @@ lazy val microservice = Project(appName, file("."))
     ),
     resolvers ++= Seq(
       Resolver.bintrayRepo("hmrc", "releases"),
-      Resolver.bintrayRepo("hmrc", "mobile-releases"),
+      Resolver.bintrayRepo("hmrc-mobile", "mobile-releases"),
       Resolver.jcenterRepo
     ),
     // concatenate js
