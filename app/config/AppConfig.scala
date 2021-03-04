@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ class AppConfig @Inject() (config: Configuration) {
 
   lazy val host:    String = config.get[String]("host")
   lazy val appName: String = config.get[String]("appName")
-
-  lazy val analyticsToken: String = loadConfig(s"google-analytics.token")
-  lazy val analyticsHost:  String = loadConfig(s"google-analytics.host")
 
   lazy val betaFeedbackUrl: String =
     s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"

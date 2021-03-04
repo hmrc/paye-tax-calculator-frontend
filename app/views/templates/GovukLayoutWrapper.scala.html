@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,13 +82,10 @@
         @if(showDeskproLink) {
             <div class="govuk-!-margin-top-5">
             @hmrcReportTechnicalIssue(
-                ReportTechnicalIssue(appConfig.appName, Some(messages.lang.language))
+                ReportTechnicalIssue(appConfig.appName, messages.lang.language)
             )
             </div>
         }
-    }
-    @scriptElem = {
-    <script src="@controllers.routes.Assets.at("javascripts/ga-events-emit.js")" type="text/javascript"></script>
     }
 
     @govukLayout(
@@ -98,9 +95,9 @@
         beforeContentBlock = Some(beforeContentBlock),
         headerBlock = Some(siteHeader()),
         footerItems = footerLinks.items,
-        bodyEndBlock = Some(uiLayouts.footer(analyticsToken = Some(appConfig.analyticsToken),
-            analyticsHost = appConfig.analyticsHost,
+        bodyEndBlock = Some(uiLayouts.footer(analyticsToken = None,
+            analyticsHost = "",
             ssoUrl = None,
-            scriptElem = Some(scriptElem),
+            scriptElem = None,
             gaCalls = None))
     )(content)
