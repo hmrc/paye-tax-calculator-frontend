@@ -57,7 +57,7 @@ class TaxCodeController @Inject()(
             form.fill(s)
           }
           .getOrElse(form)
-        Ok(taxCodeView(filledForm, agg.youHaveToldUsItems))
+        Ok(taxCodeView(filledForm, agg.youHaveToldUsItems, UserTaxCode.defaultUkTaxCode))
       }
     })
 
@@ -75,9 +75,9 @@ class TaxCodeController @Inject()(
             cache.fetchAndGetEntry().map {
               case Some(aggregate) =>
                 BadRequest(
-                  taxCodeView(formWithErrors, aggregate.youHaveToldUsItems)
+                  taxCodeView(formWithErrors, aggregate.youHaveToldUsItems, UserTaxCode.defaultUkTaxCode)
                 )
-              case None => BadRequest(taxCodeView(formWithErrors, Nil))
+              case None => BadRequest(taxCodeView(formWithErrors, Nil, UserTaxCode.defaultUkTaxCode))
           },
           (newTaxCode: UserTaxCode) => {
             val updatedAggregate = cache

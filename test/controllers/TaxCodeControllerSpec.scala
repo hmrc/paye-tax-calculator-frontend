@@ -17,6 +17,7 @@
 package controllers
 
 import forms.{StatePensionFormProvider, UserTaxCodeFormProvider}
+import models.UserTaxCode
 import org.jsoup.Jsoup
 import org.mockito.Matchers._
 import org.mockito.Mockito.{times, verify, when}
@@ -112,7 +113,8 @@ class TaxCodeControllerSpec
 
         contentAsString(result) mustEqual view(
           form,
-          cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).value.youHaveToldUsItems
+          cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).value.youHaveToldUsItems,
+          UserTaxCode.defaultUkTaxCode
         )(
           request,
           messagesThing(application)
@@ -146,7 +148,9 @@ class TaxCodeControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(formFilled, cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems)(
+        contentAsString(result) mustEqual view(formFilled,
+                                               cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems,
+                                               UserTaxCode.defaultUkTaxCode)(
           request,
           messagesThing(application)
         ).toString

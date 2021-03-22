@@ -146,7 +146,8 @@ quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a
 quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
 quick_calc.scottish_rate_error=Select yes if you pay Scottish Income Tax
 
-quick_calc.salary.question.tax_code_info=If you do not enter a tax code we will use the default tax code 1250L to calculate your take-home pay.
+quick_calc.salary.question.tax_code_info_a=If you do not enter a tax code we will use the default tax code
+quick_calc.salary.question.tax_code_info_b=to calculate your take-home pay.
 quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
 quick_calc.salary.question.tax_code_info_url_b=recent payslip or P45 (opens in a new tab)
 
