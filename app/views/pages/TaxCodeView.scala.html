@@ -29,7 +29,7 @@
         beforeContent: components.beforeContent
 )
 
-@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem], defaultTaxCode: String)(implicit request: Request[_], messages: Messages)
 
 @radioField = @{
     userTaxCodeForm("hasTaxCode")
@@ -51,7 +51,7 @@
         @inputText(form = userTaxCodeForm,
             id = "taxCode",
             name = "taxCode",
-            hint = Some(Hint(content = Text(messages("quick_calc.salary.question.tax_code_info")))),
+            hint = Some(Hint(content = Text(messages("quick_calc.salary.question.tax_code_info_a") + s" $defaultTaxCode " + messages("quick_calc.salary.question.tax_code_info_b")))),
             label = Messages("quick_calc.you_have_told_us.about_tax_code.label"),
             isPageHeading = true
         )

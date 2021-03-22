@@ -36,38 +36,24 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
       extractTaxCode(input) shouldBe "K452"
     }
 
-    "return default tax code for 2018-19 (1150L) if the user does not provide one" taggedAs Tag("2018") in {
-      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
-
-      extractTaxCode(input) shouldBe "1185L"
-    }
-
-    "return the default UK tax code for 2019-20 if the user does not provide one" taggedAs Tag("2019") in {
+    "return the default UK tax code for 2020-21 if the user does not provide one" taggedAs Tag("2020") in {
       val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
 
       extractTaxCode(input) shouldBe "1250L"
     }
 
-    "return the default UK tax code for 2020-21 if the user does not provide one" taggedAs Tag("2020_1") in {
+    "return the default UK tax code for 2021-22 if the user does not provide one" taggedAs Tag("2021") in {
       val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
 
-      extractTaxCode(input) shouldBe "1250L"
+      extractTaxCode(input) shouldBe "1257L"
     }
 
-    "return the default UK tax code for 2020-21 (if in May onwards as this has new bands for scotland if the user does not provide one" taggedAs Tag(
-      "2020_2"
-    ) in {
-      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
-
-      extractTaxCode(input) shouldBe "1250L"
-    }
-
-    "return the default UK tax code for 2020-21 (if in May onwards as this has new bands for scotland if the user does not provide one and is None" taggedAs Tag(
-      "2020_2"
+    "return the default UK tax code for 2020-21 if the user does not provide one and is None" taggedAs Tag(
+      "2021"
     ) in {
       val input = QuickCalcAggregateInput(None, None, None, None, None)
 
-      extractTaxCode(input) shouldBe "1250L"
+      extractTaxCode(input) shouldBe "1257L"
     }
   }
 
@@ -167,11 +153,15 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
   "Extracting Hours from user response" should {
 
     "return if response is hours in Daily" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(40, "a day", Some(4.0))), None, None, None, None)) shouldBe Some(4.0)
+      extractHours(QuickCalcAggregateInput(Some(Salary(40, "a day", Some(4.0))), None, None, None, None)) shouldBe Some(
+        4.0
+      )
     }
 
     "return if response is hours in Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(20, "an hour", Some(10.0))), None, None, None, None)) shouldBe Some(10.0)
+      extractHours(QuickCalcAggregateInput(Some(Salary(20, "an hour", Some(10.0))), None, None, None, None)) shouldBe Some(
+        10.0
+      )
     }
 
     "return if response is not Daily or Hourly" in {
@@ -238,13 +228,11 @@ class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
   }
 
   override def newAppForTest(testData: TestData): Application =
-    if (testData.tags.contains("2020_2")) {
+    if (testData.tags.contains("2020")) {
       GuiceApplicationBuilder().configure("dateOverride" -> "2020-05-12").build()
-    } else if (testData.tags.contains("2020_1")) {
-      GuiceApplicationBuilder().configure("dateOverride" -> "2020-04-06").build()
-    } else if (testData.tags.contains("2019")) {
-      GuiceApplicationBuilder().configure("dateOverride" -> "2019-04-06").build()
+    } else if (testData.tags.contains("2021")) {
+      GuiceApplicationBuilder().configure("dateOverride" -> "2021-04-06").build()
     } else {
-      GuiceApplicationBuilder().configure("dateOverride" -> "2018-04-06").build()
+      GuiceApplicationBuilder().configure("dateOverride" -> "2020-04-06").build()
     }
 }

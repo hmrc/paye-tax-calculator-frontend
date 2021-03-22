@@ -31,9 +31,9 @@ case class UserTaxCode(
 object UserTaxCode {
 
   implicit val format: OFormat[UserTaxCode] = Json.format[UserTaxCode]
-  private lazy val Default2018ScottishTaxCode     = "S1185L"
+  private lazy val Default2021ScottishTaxCode     = "S1257L"
   private lazy val Default20192020ScottishTaxCode = "S1250L"
-  private lazy val Default2018UkTaxCode           = "1185L"
+  private lazy val Default2021UkTaxCode           = "1257L"
   private lazy val Default20192020UkTaxCode       = "1250L"
   private lazy val firstDayOfTaxYear              = MonthDay.of(4, 6)
   val HasTaxCode                                  = "hasTaxCode"
@@ -44,7 +44,7 @@ object UserTaxCode {
   val WrongTaxCodeKey                             = "quick_calc.about_tax_code.wrong_tax_code"
 
   def defaultScottishTaxCode: String =
-    if (currentTaxYear == 2019 || currentTaxYear == 2020) Default20192020ScottishTaxCode else Default2018ScottishTaxCode
+    if (currentTaxYear == 2021) Default2021ScottishTaxCode else Default20192020ScottishTaxCode
 
   def currentTaxYear: Int = {
     val now = LocalDateProvider.now
@@ -57,7 +57,7 @@ object UserTaxCode {
   }
 
   def defaultUkTaxCode: String =
-    if (currentTaxYear == 2019 || currentTaxYear == 2020) Default20192020UkTaxCode else Default2018UkTaxCode
+    if (currentTaxYear == 2021) Default2021UkTaxCode else Default20192020UkTaxCode
 
   def wrongTaxCode(taxCode: String): Seq[FormError] = {
     val res = TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode)
