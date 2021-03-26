@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
 @import views.components.FooterLinks
 
 @this(
@@ -26,7 +27,8 @@
         appConfig: config.AppConfig,
         footerLinks: FooterLinks,
         hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
-        timeoutDialog: HmrcTimeoutDialog
+        timeoutDialog: HmrcTimeoutDialog,
+        hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
 )
 @(
         pageTitle: Option[String] = None,
@@ -41,13 +43,11 @@
         showAppBanner: Boolean = false
 
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
-
     @head = {
+    @hmrcTrackingConsentSnippet()
         <!--[if lte IE 8]><link href='                 @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
         <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
             <!--<![endif]-->
-        <script src='@controllers.routes.Assets.at("javascripts/gtm_dl.js")'></script>
-        <script src='@controllers.routes.Assets.at("javascripts/gtm.js")'></script>
     @if(showAppBanner) {
         <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
     }
