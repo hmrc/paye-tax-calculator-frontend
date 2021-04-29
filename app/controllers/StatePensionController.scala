@@ -18,28 +18,30 @@ package controllers
 
 import config.AppConfig
 import forms.StatePensionFormProvider
+
 import javax.inject.{Inject, Singleton}
 import models.{QuickCalcAggregateInput, StatePension}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
-import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.ActionWithSessionId
 import views.html.pages.StatePensionView
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class StatePensionController @Inject()(
-  override val messagesApi: MessagesApi,
-  cache: QuickCalcCache,
-  val controllerComponents: MessagesControllerComponents,
-  navigator: Navigator,
-  statePensionView: StatePensionView,
-  statePensionFormProvider: StatePensionFormProvider
-)(implicit val appConfig: AppConfig,
+class StatePensionController @Inject() (
+  override val messagesApi:      MessagesApi,
+  cache:                         QuickCalcCache,
+  val controllerComponents:      MessagesControllerComponents,
+  navigator:                     Navigator,
+  statePensionView:              StatePensionView,
+  statePensionFormProvider:      StatePensionFormProvider
+)(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -52,25 +54,19 @@ class StatePensionController @Inject()(
   def showStatePensionForm(): Action[AnyContent] =
     salaryRequired(cache, showStatePensionFormTestable)
 
-  private[controllers] def showStatePensionFormTestable: ShowForm = {
-    implicit request => agg =>
-      {
-        val filledForm = agg.savedIsOverStatePensionAge
-          .map { s =>
-            form.fill(s)
-          }
-          .getOrElse(form)
-
-        Ok(statePensionView(filledForm, agg.youHaveToldUsItems))
+  private[controllers] def showStatePensionFormTestable: ShowForm = { implicit request => agg =>
+    val filledForm = agg.savedIsOverStatePensionAge
+      .map { s =>
+        form.fill(s)
       }
+      .getOrElse(form)
+
+    Ok(statePensionView(filledForm, agg.youHaveToldUsItems))
   }
 
   def submitStatePensionForm(): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
-        request.headers,
-        Some(request.session)
-      )
+      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       form
         .bindFromRequest()
@@ -83,7 +79,7 @@ class StatePensionController @Inject()(
                 )
               case None =>
                 BadRequest(statePensionView(formWithErrors, Nil))
-          },
+            },
           userAge =>
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
@@ -107,19 +103,16 @@ class StatePensionController @Inject()(
                   .map { _ =>
                     Redirect(routes.TaxCodeController.showTaxCodeForm())
                   }
-          }
+            }
         )
     }
 
   private def salaryRequired[T](
-    cache: QuickCalcCache,
+    cache:         QuickCalcCache,
     furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
   ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
-        request.headers,
-        Some(request.session)
-      )
+      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       cache.fetchAndGetEntry().map {
         case Some(aggregate) =>

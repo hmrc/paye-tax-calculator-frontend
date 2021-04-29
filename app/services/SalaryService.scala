@@ -19,7 +19,8 @@ package services
 import javax.inject.Inject
 import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.mvc.{AnyContent, Request}
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,7 +34,7 @@ class SalaryService @Inject() (
     url:              String
   )(implicit request: Request[AnyContent]
   ): Future[QuickCalcAggregateInput] = {
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     cache
       .fetchAndGetEntry()

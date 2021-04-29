@@ -21,7 +21,6 @@ import javax.inject.Inject
 import models.Salary
 import play.api.data.Form
 import play.api.data.Forms.{mapping, of, optional}
-import play.api.i18n.Messages
 import play.api.data.format.Formats._
 
 class SalaryFormProvider @Inject()() {

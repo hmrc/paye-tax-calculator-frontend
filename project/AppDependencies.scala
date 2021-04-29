@@ -10,7 +10,7 @@ object AppDependencies {
   private val govukTemplateVersion              = "5.65.0-play-26"
   private val playHealthVersion                 = "3.16.0-play-26"
   private val playUiVersion                     = "9.0.0-play-26"
-  private val httpCachingClientVersion          = "9.2.0-play-26"
+  private val httpCachingClientVersion          = "9.4.0-play-26"
   private val playConditionalFormMappingVersion = "1.6.0-play-26"
   private val urlBuilderVersion                 = "3.5.0-play-26"
   private val taxYearVersion                    = "1.2.0"
@@ -18,7 +18,7 @@ object AppDependencies {
   private val catsCoreVersion                   = "2.3.0"
   private val govUkTemplate                     = "0.65.0-play-26"
   private val hmrcFrontend                      = "0.52.0-play-26"
-
+2
   val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc"   %% "bootstrap-frontend-play-26"    % bootstrapPlay26Version,

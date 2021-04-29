@@ -17,12 +17,14 @@
 package controllers
 
 import config.AppConfig
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
 import services.QuickCalcCache
-import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.ActionWithSessionId
 import views.html.pages.ResetView
 
@@ -41,7 +43,7 @@ class ResetController @Inject()(
   override def parser: BodyParser[AnyContent] = parse.anyContent
 
   def reset(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     cache.fetchAndGetEntry().flatMap {
       case Some(aggregate) =>

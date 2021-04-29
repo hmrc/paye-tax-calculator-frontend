@@ -18,14 +18,14 @@ package models
 
 import forms.{YouHaveToldUs, YouHaveToldUsItem}
 import play.api.i18n.Messages
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class QuickCalcAggregateInput(
-                                    savedSalary:                Option[Salary],
-                                    savedPeriod:                Option[PayPeriodDetail],
-                                    savedIsOverStatePensionAge: Option[StatePension],
-                                    savedTaxCode:               Option[UserTaxCode],
-                                    savedScottishRate:          Option[ScottishRate]) {
+  savedSalary:                Option[Salary],
+  savedPeriod:                Option[PayPeriodDetail],
+  savedIsOverStatePensionAge: Option[StatePension],
+  savedTaxCode:               Option[UserTaxCode],
+  savedScottishRate:          Option[ScottishRate]) {
 
   def allQuestionsAnswered: Boolean =
     List(
@@ -43,15 +43,16 @@ case class QuickCalcAggregateInput(
       savedScottishRate.map { YouHaveToldUs(_) }
     ).flatten
 
-  def isEmpty: Boolean =     List(
-    savedSalary,
-    savedIsOverStatePensionAge,
-    savedTaxCode
-  ).forall(_.isEmpty)
+  def isEmpty: Boolean =
+    List(
+      savedSalary,
+      savedIsOverStatePensionAge,
+      savedTaxCode
+    ).forall(_.isEmpty)
 
 }
 
 object QuickCalcAggregateInput {
-  def newInstance     = QuickCalcAggregateInput(None, None, None, None, None)
-  implicit val format = Json.format[QuickCalcAggregateInput]
+  def newInstance:     QuickCalcAggregateInput          = QuickCalcAggregateInput(None, None, None, None, None)
+  implicit val format: OFormat[QuickCalcAggregateInput] = Json.format[QuickCalcAggregateInput]
 }

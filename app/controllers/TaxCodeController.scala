@@ -18,28 +18,30 @@ package controllers
 
 import config.AppConfig
 import forms.UserTaxCodeFormProvider
+
 import javax.inject.{Inject, Singleton}
 import models.{QuickCalcAggregateInput, UserTaxCode}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
-import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.ActionWithSessionId
 import views.html.pages.TaxCodeView
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class TaxCodeController @Inject()(
-  override val messagesApi: MessagesApi,
-  cache: QuickCalcCache,
-  val controllerComponents: MessagesControllerComponents,
-  navigator: Navigator,
-  taxCodeView: TaxCodeView,
-  userTaxCodeFormProvider: UserTaxCodeFormProvider
-)(implicit val appConfig: AppConfig,
+class TaxCodeController @Inject() (
+  override val messagesApi:      MessagesApi,
+  cache:                         QuickCalcCache,
+  val controllerComponents:      MessagesControllerComponents,
+  navigator:                     Navigator,
+  taxCodeView:                   TaxCodeView,
+  userTaxCodeFormProvider:       UserTaxCodeFormProvider
+)(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -50,8 +52,8 @@ class TaxCodeController @Inject()(
   val form: Form[UserTaxCode] = userTaxCodeFormProvider()
 
   def showTaxCodeForm: Action[AnyContent] =
-    salaryRequired(cache, { implicit request => agg =>
-      {
+    salaryRequired(
+      cache, { implicit request => agg =>
         val filledForm = agg.savedTaxCode
           .map { s =>
             form.fill(s)
@@ -59,14 +61,11 @@ class TaxCodeController @Inject()(
           .getOrElse(form)
         Ok(taxCodeView(filledForm, agg.youHaveToldUsItems, UserTaxCode.defaultUkTaxCode))
       }
-    })
+    )
 
   def submitTaxCodeForm(): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
-        request.headers,
-        Some(request.session)
-      )
+      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       form
         .bindFromRequest()
@@ -78,61 +77,56 @@ class TaxCodeController @Inject()(
                   taxCodeView(formWithErrors, aggregate.youHaveToldUsItems, UserTaxCode.defaultUkTaxCode)
                 )
               case None => BadRequest(taxCodeView(formWithErrors, Nil, UserTaxCode.defaultUkTaxCode))
-          },
+            },
           (newTaxCode: UserTaxCode) => {
             val updatedAggregate = cache
               .fetchAndGetEntry()
               .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-              .map(
-                agg =>
-                  agg.copy(
-                    savedTaxCode = Some(
-                      UserTaxCode(
-                        newTaxCode.taxCode.isDefined,
-                        Some(
-                          newTaxCode.taxCode
-                            .getOrElse(UserTaxCode.defaultUkTaxCode)
-                        )
+              .map(agg =>
+                agg.copy(
+                  savedTaxCode = Some(
+                    UserTaxCode(
+                      newTaxCode.taxCode.isDefined,
+                      Some(
+                        newTaxCode.taxCode
+                          .getOrElse(UserTaxCode.defaultUkTaxCode)
                       )
                     )
+                  )
                 )
               )
 
-            updatedAggregate.flatMap(updatedAgg => {
+            updatedAggregate.flatMap { updatedAgg =>
               val agg =
                 if (newTaxCode.taxCode.isDefined)
                   updatedAgg.copy(savedScottishRate = None)
                 else updatedAgg
               cache
                 .save(agg)
-                .map(
-                  _ =>
-                    if (newTaxCode.taxCode.isEmpty) {
-                      Redirect(
-                        routes.ScottishRateController.showScottishRateForm()
-                      )
-                    } else
-                      Redirect(
-                        navigator
-                          .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                            routes.YouHaveToldUsController.summary()
-                          }
+                .map(_ =>
+                  if (newTaxCode.taxCode.isEmpty) {
+                    Redirect(
+                      routes.ScottishRateController.showScottishRateForm()
+                    )
+                  } else
+                    Redirect(
+                      navigator
+                        .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+                          routes.YouHaveToldUsController.summary()
+                        }
                     )
                 )
-            })
+            }
           }
         )
     }
 
   private def salaryRequired[T](
-    cache: QuickCalcCache,
+    cache:         QuickCalcCache,
     furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
   ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
-        request.headers,
-        Some(request.session)
-      )
+      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       cache.fetchAndGetEntry().map {
         case Some(aggregate) =>

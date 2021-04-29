@@ -17,18 +17,16 @@
 package controllers
 
 import config.AppConfig
-import models.Salary._
-import forms._
+
 import javax.inject.{Inject, Singleton}
-import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary, UserTaxCode}
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import models.QuickCalcAggregateInput
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{ControllerComponents, _}
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.ActionWithSessionId
-import views.html.pages.{YouHaveToldUsView, _}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,14 +45,13 @@ class QuickCalcController @Inject() (
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   def redirectToSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc: HeaderCarrier =
-      HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
   }
 
   def restartQuickCalc(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     cache.fetchAndGetEntry().flatMap {
       case Some(aggregate) =>
@@ -70,7 +67,7 @@ class QuickCalcController @Inject() (
     furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
   ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       cache.fetchAndGetEntry().map {
         case Some(aggregate) =>

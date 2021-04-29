@@ -19,7 +19,7 @@ package services
 import controllers.routes
 import javax.inject.Inject
 import models.QuickCalcAggregateInput
-import play.api.mvc.{AnyContent, Call, Request, Result}
+import play.api.mvc.{AnyContent, Call, Request}
 
 class Navigator @Inject() () {
 

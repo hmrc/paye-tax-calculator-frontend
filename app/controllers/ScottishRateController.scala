@@ -18,27 +18,29 @@ package controllers
 
 import config.AppConfig
 import forms.ScottishRateFormProvider
+
 import javax.inject.{Inject, Singleton}
 import models.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
-import services.{Navigator, QuickCalcCache}
-import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import services.QuickCalcCache
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.ActionWithSessionId
 import views.html.pages.ScottishRateView
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ScottishRateController @Inject()(
-  override val messagesApi: MessagesApi,
-  cache: QuickCalcCache,
-  val controllerComponents: MessagesControllerComponents,
-  scottishRateView: ScottishRateView,
-  scottishRateFormProvider: ScottishRateFormProvider
-)(implicit val appConfig: AppConfig,
+class ScottishRateController @Inject() (
+  override val messagesApi:      MessagesApi,
+  cache:                         QuickCalcCache,
+  val controllerComponents:      MessagesControllerComponents,
+  scottishRateView:              ScottishRateView,
+  scottishRateFormProvider:      ScottishRateFormProvider
+)(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -59,15 +61,12 @@ class ScottishRateController @Inject()(
             }
             .getOrElse(form)
           Ok(scottishRateView(filledForm, agg.youHaveToldUsItems))
-      }
+        }
     )
 
   def submitScottishRateForm(): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
-        request.headers,
-        Some(request.session)
-      )
+      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       form
         .bindFromRequest()
@@ -79,10 +78,7 @@ class ScottishRateController @Inject()(
                 case Some(aggregate) => aggregate.youHaveToldUsItems
                 case None            => Nil
               }
-              .map(
-                itemList =>
-                  BadRequest(scottishRateView(formWithErrors, itemList))
-            ),
+              .map(itemList => BadRequest(scottishRateView(formWithErrors, itemList))),
           scottish => {
             val taxCode =
               if (scottish.payScottishRate)
@@ -95,10 +91,8 @@ class ScottishRateController @Inject()(
               .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
               .map(
                 _.copy(
-                  savedTaxCode =
-                    Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode))),
-                  savedScottishRate =
-                    Some(ScottishRate(scottish.payScottishRate))
+                  savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode))),
+                  savedScottishRate = Some(ScottishRate(scottish.payScottishRate))
                 )
               )
             updatedAggregate
@@ -109,14 +103,11 @@ class ScottishRateController @Inject()(
     }
 
   private def salaryRequired[T](
-    cache: QuickCalcCache,
+    cache:         QuickCalcCache,
     furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
   ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
-        request.headers,
-        Some(request.session)
-      )
+      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       cache.fetchAndGetEntry().map {
         case Some(aggregate) =>
