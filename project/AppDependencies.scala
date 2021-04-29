@@ -4,7 +4,7 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay26Version            = "1.14.0"
+  private val bootstrapPlay26Version            = "4.3.0"
   private val playPartialsVersion               = "6.11.0-play-26"
   private val logbackJsonLoggerVersion          = "4.9.0"
   private val govukTemplateVersion              = "5.65.0-play-26"
@@ -21,7 +21,8 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"   %% "bootstrap-play-26"             % bootstrapPlay26Version,
+    "uk.gov.hmrc"   %% "bootstrap-frontend-play-26"    % bootstrapPlay26Version,
+    "uk.gov.hmrc"   %% "bootstrap-backend-play-26"     % bootstrapPlay26Version,
     "uk.gov.hmrc"   %% "play-partials"                 % playPartialsVersion,
     "uk.gov.hmrc"   %% "logback-json-logger"           % logbackJsonLoggerVersion,
     "uk.gov.hmrc"   %% "govuk-template"                % govukTemplateVersion,

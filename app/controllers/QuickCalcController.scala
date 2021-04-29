@@ -26,7 +26,7 @@ import play.api.mvc.{ControllerComponents, _}
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 import utils.ActionWithSessionId
 import views.html.pages.{YouHaveToldUsView, _}
 
