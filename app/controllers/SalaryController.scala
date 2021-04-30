@@ -18,15 +18,16 @@ package controllers
 
 import config.AppConfig
 import forms.SalaryFormProvider
+
 import javax.inject.{Inject, Singleton}
 import models.Salary
-import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
 import services.{Navigator, QuickCalcCache, SalaryService}
-import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.ActionWithSessionId
 import views.html.pages.SalaryView
 
@@ -52,7 +53,7 @@ class SalaryController @Inject() (
   val form: Form[Salary] = salaryFormProvider()
 
   def showSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
@@ -64,7 +65,7 @@ class SalaryController @Inject() (
   }
 
   def submitSalaryAmount(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     val url = request.uri
     val day:  String = Messages("quick_calc.salary.daily.label")

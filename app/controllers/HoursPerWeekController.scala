@@ -18,15 +18,16 @@ package controllers
 
 import config.AppConfig
 import forms.SalaryInHoursFormProvider
+
 import javax.inject.{Inject, Singleton}
-import models.{Days, Hours, PayPeriodDetail, QuickCalcAggregateInput, Salary}
+import models.{Hours, PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.{ActionWithSessionId, BigDecimalFormatter}
 import views.html.pages.HoursAWeekView
 
@@ -51,7 +52,7 @@ class HoursPerWeekController @Inject() (
   val form: Form[Hours] = salaryInHoursFormProvider()
 
   def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     val url   = routes.SalaryController.showSalaryForm().url
     val value = BigDecimal(valueInPence / 100.0)
@@ -110,10 +111,7 @@ class HoursPerWeekController @Inject() (
 
 
     validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
-        request.headers,
-        Some(request.session)
-      )
+      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       cache.fetchAndGetEntry().map {
         case Some(aggregate) =>

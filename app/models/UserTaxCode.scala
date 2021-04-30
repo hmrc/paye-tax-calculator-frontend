@@ -18,7 +18,7 @@ package models
 
 import java.time.MonthDay
 
-import play.api.data.{Form, FormError}
+import play.api.data.FormError
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.calculator.model.ValidationError
 import uk.gov.hmrc.calculator.utils.validation.TaxCodeValidator

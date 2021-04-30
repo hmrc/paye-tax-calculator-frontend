@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat, Reads, Writes, __}
+import play.api.libs.json.{Reads, Writes, __}
 
 case class PayPeriodDetail(
                             amount:       BigDecimal,

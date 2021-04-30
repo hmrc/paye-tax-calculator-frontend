@@ -22,7 +22,7 @@ import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import config.AppConfig
 import models.QuickCalcAggregateInput
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent._
 
@@ -35,8 +35,9 @@ trait QuickCalcCache {
 
 @Singleton
 class QuickCalcKeyStoreCache @Inject() (
-  httpClient: HttpClient,
-  appConfig:  AppConfig)(implicit executionContext: ExecutionContext)
+  httpClient:                HttpClient,
+  appConfig:                 AppConfig
+)(implicit executionContext: ExecutionContext)
     extends QuickCalcCache {
 
   val id = "quick-calc-aggregate-input"
@@ -47,10 +48,10 @@ class QuickCalcKeyStoreCache @Inject() (
   def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[CacheMap] = sessionCache.cache(id, o)
 
   private object sessionCache extends SessionCache {
-    override lazy val http          = httpClient
-    override lazy val defaultSource = "paye-tax-calculator-frontend"
-    override lazy val baseUri       = appConfig.cacheUrl
-    override lazy val domain        = appConfig.domain
+    override lazy val http:          HttpClient = httpClient
+    override lazy val defaultSource: String     = "paye-tax-calculator-frontend"
+    override lazy val baseUri:       String     = appConfig.cacheUrl
+    override lazy val domain:        String     = appConfig.domain
   }
 
 }

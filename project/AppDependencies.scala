@@ -4,24 +4,25 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay26Version            = "1.14.0"
+  private val bootstrapPlay26Version            = "4.3.0"
   private val playPartialsVersion               = "6.11.0-play-26"
   private val logbackJsonLoggerVersion          = "4.9.0"
-  private val govukTemplateVersion              = "5.65.0-play-26"
+  private val govukTemplateVersion              = "5.66.0-play-26"
   private val playHealthVersion                 = "3.16.0-play-26"
-  private val playUiVersion                     = "9.0.0-play-26"
-  private val httpCachingClientVersion          = "9.2.0-play-26"
+  private val playUiVersion                     = "9.2.0-play-26"
+  private val httpCachingClientVersion          = "9.4.0-play-26"
   private val playConditionalFormMappingVersion = "1.6.0-play-26"
   private val urlBuilderVersion                 = "3.5.0-play-26"
   private val taxYearVersion                    = "1.2.0"
   private val taxKalcVersion                    = "1.0.2"
   private val catsCoreVersion                   = "2.3.0"
-  private val govUkTemplate                     = "0.65.0-play-26"
-  private val hmrcFrontend                      = "0.52.0-play-26"
-
+  private val govUkTemplate                     = "0.71.0-play-26"
+  private val hmrcFrontend                      = "0.59.0-play-26"
+2
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"   %% "bootstrap-play-26"             % bootstrapPlay26Version,
+    "uk.gov.hmrc"   %% "bootstrap-frontend-play-26"    % bootstrapPlay26Version,
+    "uk.gov.hmrc"   %% "bootstrap-backend-play-26"     % bootstrapPlay26Version,
     "uk.gov.hmrc"   %% "play-partials"                 % playPartialsVersion,
     "uk.gov.hmrc"   %% "logback-json-logger"           % logbackJsonLoggerVersion,
     "uk.gov.hmrc"   %% "govuk-template"                % govukTemplateVersion,

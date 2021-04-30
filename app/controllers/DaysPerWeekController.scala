@@ -18,6 +18,7 @@ package controllers
 
 import config.AppConfig
 import forms.SalaryInDaysFormProvider
+
 import javax.inject.{Inject, Singleton}
 import models.{Days, PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.data.Form
@@ -25,8 +26,8 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.{ActionWithSessionId, BigDecimalFormatter}
 import views.html.pages.DaysAWeekView
 
@@ -51,7 +52,7 @@ class DaysPerWeekController @Inject() (
   val form: Form[Days] = salaryInDaysFormProvider()
 
   def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     val url   = routes.SalaryController.showSalaryForm().url
     val value = BigDecimal(valueInPence / 100.0)
@@ -87,26 +88,26 @@ class DaysPerWeekController @Inject() (
       )
   }
 
-  def showDaysAWeek(
-    valueInPence: Int
-  ): Action[AnyContent] =
-    salaryRequired(cache, { implicit request => agg => {
-      val filledForm = agg.savedPeriod
-        .map { s =>
-          form.fill(Days(s.amount, BigDecimalFormatter.stripZeros(s.howManyAWeek.bigDecimal)))
-        }
-        .getOrElse(form)
-      Ok(daysPerWeekView(filledForm, BigDecimal(valueInPence / 100.0)))}
-    })
+  def showDaysAWeek(valueInPence: Int): Action[AnyContent] =
+    salaryRequired(
+      cache, { implicit request => agg =>
+        val filledForm = agg.savedPeriod
+          .map { s =>
+            form.fill(Days(s.amount, BigDecimalFormatter.stripZeros(s.howManyAWeek.bigDecimal)))
+          }
+          .getOrElse(form)
+        Ok(daysPerWeekView(filledForm, BigDecimal(valueInPence / 100.0)))
+      }
+    )
 
   private def salaryRequired[T](
     cache:         QuickCalcCache,
     furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
   ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(
-        request.headers,
-        Some(request.session)
+      implicit val hc: HeaderCarrier = fromRequestAndSession(
+        request,
+        request.session
       )
 
       cache.fetchAndGetEntry().map {
