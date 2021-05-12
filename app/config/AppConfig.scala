@@ -54,6 +54,8 @@ class AppConfig @Inject() (config: Configuration) {
   lazy val timeout:   Int = config.get[Int]("timeout.timeout")
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
 
+  lazy val dateOverride: Option[String] = config.getOptional[String]("dateOverride")
+
   def feedbackUrl(signedInUser: Boolean) =
     if (signedInUser) {
       s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"

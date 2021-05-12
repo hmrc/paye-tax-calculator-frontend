@@ -19,8 +19,9 @@ package controllers
 import play.api.test.Helpers._
 import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
+import uk.gov.hmrc.play.test.UnitSpec
 
-class RedirectSpec extends BaseSpec {
+class RedirectSpec extends BaseSpec with UnitSpec {
 
   "Redirect to Salary Form" should {
     "return 303" in {

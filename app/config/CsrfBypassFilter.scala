@@ -32,6 +32,6 @@ class CsrfBypassFilter @Inject() (implicit val mat: Materializer) extends Filter
     rh:  RequestHeader,
     now: () => DateTime = () => DateTime.now.withZone(DateTimeZone.UTC)
   ): RequestHeader =
-    rh.copy(headers = rh.headers.add("Csrf-Token" -> "nocheck"))
+    rh.withHeaders(rh.headers.add("Csrf-Token" -> "nocheck"))
 
 }

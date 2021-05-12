@@ -19,15 +19,15 @@ package setup
 import akka.stream.Materializer
 import config.AppConfig
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.Matchers
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.test.FakeRequest
 import services.Navigator
 import uk.gov.hmrc.http.HeaderNames
-import uk.gov.hmrc.play.test.UnitSpec
 
-class BaseSpec extends UnitSpec with MockFactory with ScalaFutures with GuiceOneAppPerSuite with MetricClearSpec {
+class BaseSpec extends MockFactory with ScalaFutures with GuiceOneAppPerSuite with MetricClearSpec with Matchers {
 
   val appInjector               = app.injector
   implicit val materializer     = appInjector.instanceOf[Materializer]

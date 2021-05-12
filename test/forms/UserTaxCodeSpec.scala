@@ -16,12 +16,12 @@
 
 package forms
 
-import forms.UserTaxCodeFormProvider
 import models.UserTaxCode
 import play.api.data.Form
 import setup.BaseSpec
+import uk.gov.hmrc.play.test.UnitSpec
 
-class UserTaxCodeSpec extends BaseSpec {
+class UserTaxCodeSpec extends BaseSpec with UnitSpec {
 
   val userTaxCodeForm: Form[UserTaxCode] = new UserTaxCodeFormProvider().apply()
 
