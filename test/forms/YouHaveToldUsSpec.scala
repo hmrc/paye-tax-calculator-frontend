@@ -17,13 +17,13 @@
 package forms
 
 import controllers.routes
-import forms.{StatePensionFormProvider, YouHaveToldUs, YouHaveToldUsItem}
 import models.{Salary, StatePension}
 import play.api.i18n.Messages
 import forms.YouHaveToldUs.salaryFormat
 import setup.BaseSpec
+import uk.gov.hmrc.play.test.UnitSpec
 
-class YouHaveToldUsSpec extends BaseSpec {
+class YouHaveToldUsSpec extends BaseSpec with UnitSpec {
 
   "Converting Salary to YouHaveToldUsItem" in {
     val salaryUrl = routes.SalaryController.showSalaryForm().url
