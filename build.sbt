@@ -9,6 +9,10 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 import uk.gov.hmrc.SbtAutoBuildPlugin
 
+githubOwner := "hmrc"
+githubRepository := "tax-kalculator"
+githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
+
 val appName: String = "paye-tax-calculator-frontend"
 
 lazy val scoverageSettings = {
@@ -45,11 +49,10 @@ lazy val microservice = Project(appName, file("."))
       "config.AppConfig"
     ),
     resolvers ++= Seq(
-      Resolver.bintrayRepo("hmrc", "releases"),
-      Resolver.bintrayRepo("hmrc-mobile", "mobile-releases"),
       Resolver.jcenterRepo
     ),
-    // concatenate js
+      resolvers += Resolver.githubPackages("hmrc", "tax-kalculator"),
+          // concatenate js
     Concat.groups := Seq(
       "javascripts/application.js" ->
       group(
@@ -75,4 +78,5 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
+
   )

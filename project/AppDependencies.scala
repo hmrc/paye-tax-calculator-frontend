@@ -14,11 +14,10 @@ object AppDependencies {
   private val playConditionalFormMappingVersion = "1.9.0-play-27"
   private val urlBuilderVersion                 = "3.5.0-play-27"
   private val taxYearVersion                    = "1.2.0"
-  private val taxKalcVersion                    = "1.0.2"
+  private val taxKalcVersion                    = "1.2.0"
   private val catsCoreVersion                   = "2.3.0"
   private val playFrontendGovukVersion          = "0.71.0-play-27"
   private val hmrcFrontend                      = "0.62.0-play-27"
-  2
 
   val compile: Seq[ModuleID] = Seq(
     ws,
