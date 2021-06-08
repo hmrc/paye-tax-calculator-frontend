@@ -1,7 +1,7 @@
 import play.sbt.PlayImport.PlayKeys
 import play.sbt.routes.RoutesKeys
 import sbt.Keys._
-import sbt._
+import sbt.{Resolver, _}
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
@@ -44,12 +44,9 @@ lazy val microservice = Project(appName, file("."))
       "controllers.routes._",
       "config.AppConfig"
     ),
-    resolvers ++= Seq(
-      Resolver.bintrayRepo("hmrc", "releases"),
-      Resolver.bintrayRepo("hmrc-mobile", "mobile-releases"),
-      Resolver.jcenterRepo
-    ),
-    // concatenate js
+      resolvers += Resolver.jcenterRepo,
+      resolvers += "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/",
+          // concatenate js
     Concat.groups := Seq(
       "javascripts/application.js" ->
       group(
@@ -75,4 +72,5 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
+
   )
