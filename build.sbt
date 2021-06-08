@@ -1,17 +1,13 @@
 import play.sbt.PlayImport.PlayKeys
 import play.sbt.routes.RoutesKeys
 import sbt.Keys._
-import sbt._
+import sbt.{Resolver, _}
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 import uk.gov.hmrc.SbtAutoBuildPlugin
-
-githubOwner := "hmrc"
-githubRepository := "tax-kalculator"
-githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
 
 val appName: String = "paye-tax-calculator-frontend"
 
@@ -48,10 +44,8 @@ lazy val microservice = Project(appName, file("."))
       "controllers.routes._",
       "config.AppConfig"
     ),
-    resolvers ++= Seq(
-      Resolver.jcenterRepo
-    ),
-      resolvers += Resolver.githubPackages("hmrc", "tax-kalculator"),
+      resolvers += Resolver.jcenterRepo,
+      resolvers += "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/",
           // concatenate js
     Concat.groups := Seq(
       "javascripts/application.js" ->
