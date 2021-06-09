@@ -18,6 +18,8 @@ package controllers
 
 trait CSRFTestHelper {
 
+  // As we compare pages in a String format for our tests, it is necessary to remove the value of the hidden csrf token
+  // as it uses a randomly generated UUID
   def removeCSRFTagValue(content: String): String = {
     val csrfValueIndex = content.indexOf("\"csrfToken\" value=\"") + 18
     val firstHalf = content.substring(0, csrfValueIndex)
