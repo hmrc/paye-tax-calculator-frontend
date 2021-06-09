@@ -47,7 +47,8 @@ class ScottishRateControllerSpec
     with TryValues
     with ScalaFutures
     with IntegrationPatience
-    with MockitoSugar {
+    with MockitoSugar
+      with CSRFTestHelper {
 
   val formProvider = new ScottishRateFormProvider()
   val form         = formProvider()
@@ -88,10 +89,10 @@ class ScottishRateControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
           formFilled,
           cacheCompleteYearly.value.youHaveToldUsItems
-        )(request, messagesThing(application)).toString
+        )(request, messagesThing(application)).toString)
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }

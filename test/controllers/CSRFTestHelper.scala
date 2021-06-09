@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package config
+package controllers
 
-import javax.inject.Inject
-import play.api.http.DefaultHttpFilters
-import play.filters.csrf.CSRFFilter
-import uk.gov.hmrc.play.bootstrap.filters.FrontendFilters
+trait CSRFTestHelper {
 
-class Filters @Inject() (
-  frontendFilters:  FrontendFilters,
-  sessionIdFilter:  SessionIdFilter,
-  csrfBypassFilter: CsrfBypassFilter)
-    extends DefaultHttpFilters({
-      frontendFilters.filters.filterNot(f => f.isInstanceOf[CsrfBypassFilter]) :+ sessionIdFilter
-    }: _*)
+  // As we compare pages in a String format for our tests, it is necessary to remove the value of the hidden csrf token
+  // as it uses a randomly generated UUID
+  def removeCSRFTagValue(content: String): String = {
+    val csrfValueIndex = content.indexOf("\"csrfToken\" value=\"") + 18
+    val firstHalf = content.substring(0, csrfValueIndex)
+    val secondHalf = content.substring(csrfValueIndex+80)
+    firstHalf.concat(secondHalf)
+  }
+
+}

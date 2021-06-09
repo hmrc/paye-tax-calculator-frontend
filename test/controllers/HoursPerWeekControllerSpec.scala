@@ -56,6 +56,7 @@ import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import views.html.pages.{HoursAWeekView, SalaryView}
 import play.api.test.CSRFTokenHelper._
 import uk.gov.hmrc.http.cache.client.CacheMap
+import controllers.CSRFTestHelper
 
 import scala.concurrent.Future
 
@@ -64,7 +65,8 @@ class HoursPerWeekControllerSpec
     with TryValues
     with ScalaFutures
     with IntegrationPatience
-    with MockitoSugar {
+    with MockitoSugar
+    with CSRFTestHelper {
   val formProvider = new SalaryInHoursFormProvider()
   val form: Form[Hours] = formProvider()
 
@@ -102,10 +104,10 @@ class HoursPerWeekControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
           form.fill(Hours(cacheCompleteHourly.value.savedPeriod.value.amount, howManyAWeek)),
           cacheCompleteHourly.value.savedPeriod.value.amount
-        )(request, messagesForApp(application)).toString
+        )(request, messagesForApp(application)).toString)
       }
     }
 

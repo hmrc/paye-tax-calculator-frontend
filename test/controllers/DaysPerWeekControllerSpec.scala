@@ -48,7 +48,8 @@ class DaysPerWeekControllerSpec
     with TryValues
     with ScalaFutures
     with IntegrationPatience
-    with MockitoSugar {
+    with MockitoSugar
+    with CSRFTestHelper {
   val formProvider = new SalaryInDaysFormProvider()
   val form: Form[Days] = formProvider()
 
@@ -86,13 +87,15 @@ class DaysPerWeekControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(
-          form.fill(
-            Days(cacheCompleteHourly.value.savedPeriod.value.amount,
-                 BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))
-          ),
-          cacheCompleteHourly.value.savedPeriod.value.amount
-        )(request, messagesForApp(application)).toString
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(
+            form.fill(
+              Days(cacheCompleteHourly.value.savedPeriod.value.amount,
+                   BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))
+            ),
+            cacheCompleteHourly.value.savedPeriod.value.amount
+          )(request, messagesForApp(application)).toString
+        )
       }
     }
 
