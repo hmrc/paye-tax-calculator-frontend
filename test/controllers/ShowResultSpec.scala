@@ -40,7 +40,8 @@ import views.html.pages.ResultView
 
 import scala.concurrent.Future
 
-class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar {
+class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar
+  with CSRFTestHelper {
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -73,10 +74,10 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
         val responseBody = contentAsString(result)
         val parseHtml    = Jsoup.parse(responseBody)
 
-        responseBody mustEqual view(taxResult, UserTaxCode.currentTaxYear, false)(
+        removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(view(taxResult, UserTaxCode.currentTaxYear, false)(
           request,
           messagesThing(application)
-        ).toString
+        ).toString)
 
         val sidebar = parseHtml.getElementsByClass("govuk-grid-column-one-third")
         val links = sidebar.get(0).getElementsByClass("govuk-link")

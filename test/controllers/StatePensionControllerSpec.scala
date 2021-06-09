@@ -45,7 +45,8 @@ class StatePensionControllerSpec
     with TryValues
     with ScalaFutures
     with IntegrationPatience
-    with MockitoSugar {
+    with MockitoSugar
+      with CSRFTestHelper {
 
   val formProvider = new StatePensionFormProvider()
   val form         = formProvider()
@@ -85,10 +86,10 @@ class StatePensionControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
           formFilled,
           aggregateCompleteListYearly
-        )(request, messagesThing(application)).toString
+        )(request, messagesThing(application)).toString)
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }

@@ -47,7 +47,8 @@ class TaxCodeControllerSpec
     with TryValues
     with ScalaFutures
     with IntegrationPatience
-    with MockitoSugar {
+    with MockitoSugar
+      with CSRFTestHelper {
   val formProvider = new UserTaxCodeFormProvider()
   val form         = formProvider()
 
@@ -111,14 +112,14 @@ class TaxCodeControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
           form,
           cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).value.youHaveToldUsItems,
           UserTaxCode.defaultUkTaxCode
         )(
           request,
           messagesThing(application)
-        ).toString
+        ).toString)
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
@@ -148,12 +149,12 @@ class TaxCodeControllerSpec
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(formFilled,
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(formFilled,
                                                cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems,
                                                UserTaxCode.defaultUkTaxCode)(
           request,
           messagesThing(application)
-        ).toString
+        ).toString)
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
