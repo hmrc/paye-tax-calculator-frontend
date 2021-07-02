@@ -43,7 +43,8 @@
                     ActionItem(
                         href = item.url,
                         content = Text(Messages("quick_calc.you_have_told_us.edit")),
-                        visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label"))
+                        visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+                        attributes = Map("id" -> s"change-${item.label}-link")
                     )
                 )
             ))

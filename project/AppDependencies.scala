@@ -9,7 +9,6 @@ object AppDependencies {
   private val logbackJsonLoggerVersion          = "4.9.0"
   private val govukTemplateVersion              = "5.66.0-play-27"
   private val playHealthVersion                 = "3.16.0-play-27"
-  private val playUiVersion                     = "9.2.0-play-27"
   private val httpCachingClientVersion          = "9.4.0-play-27"
   private val playConditionalFormMappingVersion = "1.9.0-play-27"
   private val urlBuilderVersion                 = "3.5.0-play-27"
@@ -28,7 +27,6 @@ object AppDependencies {
     "uk.gov.hmrc"   %% "govuk-template"                % govukTemplateVersion,
     "uk.gov.hmrc"   %% "play-frontend-hmrc"            % hmrcFrontend,
     "uk.gov.hmrc"   %% "play-health"                   % playHealthVersion,
-    "uk.gov.hmrc"   %% "play-ui"                       % playUiVersion,
     "uk.gov.hmrc"   %% "http-caching-client"           % httpCachingClientVersion,
     "uk.gov.hmrc"   %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
     "uk.gov.hmrc"   %% "url-builder"                   % urlBuilderVersion,
