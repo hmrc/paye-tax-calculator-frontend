@@ -56,7 +56,7 @@
 
     <logger name="uk.gov" level="INFO"/>
 
-    <logger name="akka.actor" level="DEBUG"/>
+    <logger name="akka.actor" level="INFO"/>
 
     <logger name="application" level="INFO"/>
 
