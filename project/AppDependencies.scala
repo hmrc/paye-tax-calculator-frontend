@@ -24,7 +24,6 @@ object AppDependencies {
     "uk.gov.hmrc"   %% "bootstrap-backend-play-27"     % bootstrapPlay27Version,
     "uk.gov.hmrc"   %% "play-partials"                 % playPartialsVersion,
     "uk.gov.hmrc"   %% "logback-json-logger"           % logbackJsonLoggerVersion,
-    "uk.gov.hmrc"   %% "govuk-template"                % govukTemplateVersion,
     "uk.gov.hmrc"   %% "play-frontend-hmrc"            % hmrcFrontend,
     "uk.gov.hmrc"   %% "play-health"                   % playHealthVersion,
     "uk.gov.hmrc"   %% "http-caching-client"           % httpCachingClientVersion,
