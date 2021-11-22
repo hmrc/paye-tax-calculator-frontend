@@ -81,7 +81,7 @@
 }
 
 
-@govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), showDeskproLink = false, beforeContentBlock = beforeContent(s"${prodRoutes.YouHaveToldUsController.summary()}"), bodyClassess = Some("govuk-grid-row govuk-!-padding-left-2 govuk-!-padding-right-2"), showAppBanner = true) {
+@govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), showDeskproLink = false, beforeContentBlock = beforeContent(s"${prodRoutes.YouHaveToldUsController.summary}"), bodyClassess = Some("govuk-grid-row govuk-!-padding-left-2 govuk-!-padding-right-2"), showAppBanner = true) {
 
     @h1(Messages("quick_calc.result.header"))
 
@@ -95,7 +95,7 @@
         @Messages("quick_calc.result.info_a") @linkNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters", "quick_calc.result.info_b") @Messages("quick_calc.result.info_e")
     }
 
-    @formHelper(action = controllers.routes.QuickCalcController.restartQuickCalc()) {
+    @formHelper(action = controllers.routes.QuickCalcController.restartQuickCalc) {
         @button("restart", Some("restart-button")
         )
     }

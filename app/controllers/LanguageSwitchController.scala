@@ -30,7 +30,7 @@ class LanguageSwitchController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private def fallbackURL: String = routes.QuickCalcController.redirectToSalaryForm().url
+  private def fallbackURL: String = routes.QuickCalcController.redirectToSalaryForm.url
 
   def switchToLanguage(language: Language): Action[AnyContent] = Action { implicit request =>
     val languageToUse = if (appConfig.languageTranslationEnabled) {

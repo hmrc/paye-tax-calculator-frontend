@@ -47,7 +47,7 @@ class QuickCalcController @Inject() (
   def redirectToSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
-    Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
+    Future.successful(Redirect(routes.SalaryController.showSalaryForm))
   }
 
   def restartQuickCalc(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
@@ -56,9 +56,9 @@ class QuickCalcController @Inject() (
     cache.fetchAndGetEntry().flatMap {
       case Some(aggregate) =>
         val updatedAggregate = aggregate.copy(None, None, None, None, None)
-        cache.save(updatedAggregate).map(_ => Redirect(routes.SalaryController.showSalaryForm()))
+        cache.save(updatedAggregate).map(_ => Redirect(routes.SalaryController.showSalaryForm))
       case None =>
-        Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
+        Future.successful(Redirect(routes.SalaryController.showSalaryForm))
     }
   }
 
@@ -74,9 +74,9 @@ class QuickCalcController @Inject() (
           if (aggregate.savedSalary.isDefined)
             furtherAction(request)(aggregate)
           else
-            Redirect(routes.SalaryController.showSalaryForm())
+            Redirect(routes.SalaryController.showSalaryForm)
         case None =>
-          Redirect(routes.SalaryController.showSalaryForm())
+          Redirect(routes.SalaryController.showSalaryForm)
       }
     }
 

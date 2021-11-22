@@ -97,7 +97,7 @@ class ScottishRateController @Inject() (
               )
             updatedAggregate
               .map(cache.save)
-              .map(_ => Redirect(routes.YouHaveToldUsController.summary()))
+              .map(_ => Redirect(routes.YouHaveToldUsController.summary))
           }
         )
     }
@@ -114,9 +114,9 @@ class ScottishRateController @Inject() (
           if (aggregate.savedSalary.isDefined)
             furtherAction(request)(aggregate)
           else
-            Redirect(routes.SalaryController.showSalaryForm())
+            Redirect(routes.SalaryController.showSalaryForm)
         case None =>
-          Redirect(routes.SalaryController.showSalaryForm())
+          Redirect(routes.SalaryController.showSalaryForm)
       }
     }
 

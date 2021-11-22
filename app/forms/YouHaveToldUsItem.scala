@@ -43,7 +43,7 @@ object YouHaveToldUs {
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
       val label = "about_tax_code"
       val idSuffix = "tax-code"
-      val url = routes.TaxCodeController.showTaxCodeForm().url
+      val url = routes.TaxCodeController.showTaxCodeForm.url
       YouHaveToldUsItem(
         if (t.gaveUsTaxCode)
           s"${t.taxCode.getOrElse(UserTaxCode.defaultUkTaxCode)}"
@@ -66,7 +66,7 @@ object YouHaveToldUs {
       ): YouHaveToldUsItem = {
         val label = "over_state_pension_age"
         val idSuffix = "pension-state"
-        val url = routes.StatePensionController.showStatePensionForm().url
+        val url = routes.StatePensionController.showStatePensionForm.url
         YouHaveToldUsItem(
           if (overStatePensionAge.overStatePensionAge)
             Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
@@ -85,7 +85,7 @@ object YouHaveToldUs {
       def toYouHaveToldUsItem(scottish: ScottishRate): YouHaveToldUsItem = {
         val label = SCOTTISH_RATE
         val idSuffix = SCOTTISH_RATE
-        val url = routes.ScottishRateController.showScottishRateForm().url
+        val url = routes.ScottishRateController.showScottishRateForm.url
         YouHaveToldUsItem(
           if (scottish.payScottishRate)
             Messages("quick_calc.you_have_told_us.scottish_rate.yes")
@@ -101,7 +101,7 @@ object YouHaveToldUs {
     new YouHaveToldUs[Salary] {
 
       def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
-        val url = routes.SalaryController.showSalaryForm().url
+        val url = routes.SalaryController.showSalaryForm.url
         val idSuffix = "income"
         def asPounds(v: String) = "£" + v
 
@@ -153,6 +153,6 @@ object YouHaveToldUs {
   def getGoBackLink(items: List[YouHaveToldUsItem]): String =
     items.flatMap(y => if (y.label == SCOTTISH_RATE) y.url else "") match {
       case url if url.nonEmpty => url.mkString
-      case _                   => routes.TaxCodeController.showTaxCodeForm().url
+      case _                   => routes.TaxCodeController.showTaxCodeForm.url
     }
 }

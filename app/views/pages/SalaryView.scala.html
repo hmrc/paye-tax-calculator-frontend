@@ -56,7 +56,7 @@
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = true) {
 
-    @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount()) {
+    @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount) {
 
         @errorSummary(salaryForm.errors)
 

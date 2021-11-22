@@ -90,7 +90,7 @@ class StatePensionController @Inject() (
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(
                       updatedAggregate
                     ) {
-                      routes.TaxCodeController.showTaxCodeForm()
+                      routes.TaxCodeController.showTaxCodeForm
                     }
                   )
                 }
@@ -101,7 +101,7 @@ class StatePensionController @Inject() (
                       .copy(savedIsOverStatePensionAge = Some(userAge))
                   )
                   .map { _ =>
-                    Redirect(routes.TaxCodeController.showTaxCodeForm())
+                    Redirect(routes.TaxCodeController.showTaxCodeForm)
                   }
             }
         )
@@ -119,9 +119,9 @@ class StatePensionController @Inject() (
           if (aggregate.savedSalary.isDefined)
             furtherAction(request)(aggregate)
           else
-            Redirect(routes.SalaryController.showSalaryForm())
+            Redirect(routes.SalaryController.showSalaryForm)
         case None =>
-          Redirect(routes.SalaryController.showSalaryForm())
+          Redirect(routes.SalaryController.showSalaryForm)
       }
     }
 

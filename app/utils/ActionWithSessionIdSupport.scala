@@ -17,7 +17,6 @@
 package utils
 
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import utils.ActionWithSessionIdSupport._
@@ -47,6 +46,8 @@ trait ActionWithSessionId {
 
   def validateAcceptWithSessionId: ActionBuilder[Request, AnyContent] =
     new ActionBuilder[Request, AnyContent] {
+
+      implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
       def invokeBlock[A](
         request: Request[A],

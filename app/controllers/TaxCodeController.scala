@@ -106,13 +106,13 @@ class TaxCodeController @Inject() (
                 .map(_ =>
                   if (newTaxCode.taxCode.isEmpty) {
                     Redirect(
-                      routes.ScottishRateController.showScottishRateForm()
+                      routes.ScottishRateController.showScottishRateForm
                     )
                   } else
                     Redirect(
                       navigator
                         .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                          routes.YouHaveToldUsController.summary()
+                          routes.YouHaveToldUsController.summary
                         }
                     )
                 )
@@ -133,9 +133,9 @@ class TaxCodeController @Inject() (
           if (aggregate.savedSalary.isDefined)
             furtherAction(request)(aggregate)
           else
-            Redirect(routes.SalaryController.showSalaryForm())
+            Redirect(routes.SalaryController.showSalaryForm)
         case None =>
-          Redirect(routes.SalaryController.showSalaryForm())
+          Redirect(routes.SalaryController.showSalaryForm)
       }
     }
 

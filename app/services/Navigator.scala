@@ -28,21 +28,21 @@ class Navigator @Inject() () {
   )(next:             Call
   )(implicit request: Request[_]
   ): Call =
-    if (aggregate.allQuestionsAnswered) routes.YouHaveToldUsController.summary()
+    if (aggregate.allQuestionsAnswered) routes.YouHaveToldUsController.summary
     else next
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(implicit request: Request[AnyContent]): Call =
     nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-      routes.StatePensionController.showStatePensionForm()
+      routes.StatePensionController.showStatePensionForm
     }
 
   def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Call =
     if (aggregate.savedSalary.isEmpty)
-      routes.SalaryController.showSalaryForm()
+      routes.SalaryController.showSalaryForm
     else if (aggregate.savedIsOverStatePensionAge.isEmpty)
-      routes.StatePensionController.showStatePensionForm()
+      routes.StatePensionController.showStatePensionForm
     else if (aggregate.savedTaxCode.isEmpty)
-      routes.TaxCodeController.showTaxCodeForm()
+      routes.TaxCodeController.showTaxCodeForm
     else
-      routes.SalaryController.showSalaryForm()
+      routes.SalaryController.showSalaryForm
 }

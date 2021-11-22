@@ -62,7 +62,7 @@
 
     @govukSummaryList(SummaryList(rows = rows))
 
-    @formHelper(action = routes.ShowResultsController.showResult()) {
+    @formHelper(action = routes.ShowResultsController.showResult) {
         @button("get_results", Some("button-get-results"))
     }
 }

@@ -4,35 +4,30 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay27Version            = "5.1.0"
-  private val playPartialsVersion               = "8.1.0-play-27"
+  private val bootstrapPlay28Version            = "5.16.0"
+  private val playPartialsVersion               = "8.2.0-play-28"
   private val logbackJsonLoggerVersion          = "4.9.0"
-  private val govukTemplateVersion              = "5.66.0-play-27"
-  private val playHealthVersion                 = "3.16.0-play-27"
-  private val httpCachingClientVersion          = "9.4.0-play-27"
-  private val playConditionalFormMappingVersion = "1.9.0-play-27"
-  private val urlBuilderVersion                 = "3.5.0-play-27"
+  private val httpCachingClientVersion          = "9.5.0-play-28"
+  private val playConditionalFormMappingVersion = "1.10.0-play-28"
+  private val urlBuilderVersion                 = "3.5.0-play-28"
   private val taxYearVersion                    = "1.2.0"
   private val taxKalcVersion                    = "1.2.0"
   private val catsCoreVersion                   = "2.3.0"
-  private val playFrontendGovukVersion          = "0.71.0-play-27"
-  private val hmrcFrontend                      = "0.62.0-play-27"
+  private val hmrcFrontend                      = "1.26.0-play-28"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"   %% "bootstrap-frontend-play-27"    % bootstrapPlay27Version,
-    "uk.gov.hmrc"   %% "bootstrap-backend-play-27"     % bootstrapPlay27Version,
+    "uk.gov.hmrc"   %% "bootstrap-frontend-play-28"    % bootstrapPlay28Version,
+    "uk.gov.hmrc"   %% "bootstrap-backend-play-28"     % bootstrapPlay28Version,
     "uk.gov.hmrc"   %% "play-partials"                 % playPartialsVersion,
     "uk.gov.hmrc"   %% "logback-json-logger"           % logbackJsonLoggerVersion,
     "uk.gov.hmrc"   %% "play-frontend-hmrc"            % hmrcFrontend,
-    "uk.gov.hmrc"   %% "play-health"                   % playHealthVersion,
     "uk.gov.hmrc"   %% "http-caching-client"           % httpCachingClientVersion,
     "uk.gov.hmrc"   %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
     "uk.gov.hmrc"   %% "url-builder"                   % urlBuilderVersion,
     "uk.gov.hmrc"   %% "tax-year"                      % taxYearVersion,
     "uk.gov.hmrc"   % "tax-kalculator-jvm"             % taxKalcVersion,
-    "org.typelevel" %% "cats-core"                     % catsCoreVersion,
-    "uk.gov.hmrc"   %% "play-frontend-govuk"           % playFrontendGovukVersion
+    "org.typelevel" %% "cats-core"                     % catsCoreVersion
   )
 
   private val hmrcTestVersion                  = "3.9.0-play-26"

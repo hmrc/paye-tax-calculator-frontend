@@ -54,7 +54,7 @@ class HoursPerWeekController @Inject() (
   def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
-    val url   = routes.SalaryController.showSalaryForm().url
+    val url   = routes.SalaryController.showSalaryForm.url
     val value = BigDecimal(valueInPence / 100.0)
 
     form
@@ -80,7 +80,7 @@ class HoursPerWeekController @Inject() (
               .map(_ =>
                 Redirect(
                   navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
-                    routes.StatePensionController.showStatePensionForm()
+                    routes.StatePensionController.showStatePensionForm
                   )
                 )
               )
@@ -118,9 +118,9 @@ class HoursPerWeekController @Inject() (
           if (aggregate.savedSalary.isDefined)
             furtherAction(request)(aggregate)
           else
-            Redirect(routes.SalaryController.showSalaryForm())
+            Redirect(routes.SalaryController.showSalaryForm)
         case None =>
-          Redirect(routes.SalaryController.showSalaryForm())
+          Redirect(routes.SalaryController.showSalaryForm)
       }
     }
 
