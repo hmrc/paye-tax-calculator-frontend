@@ -16,23 +16,26 @@
 
 package controllers
 
+import org.scalatest.wordspec.AnyWordSpecLike
+import play.api.mvc.Result
 import play.api.test.Helpers._
 import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
-import uk.gov.hmrc.play.test.UnitSpec
 
-class RedirectSpec extends BaseSpec with UnitSpec {
+import scala.concurrent.Future
+
+class RedirectSpec extends BaseSpec with AnyWordSpecLike {
 
   "Redirect to Salary Form" should {
     "return 303" in {
       val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
-      val result     = controller.redirectToSalaryForm().apply(request)
-      val status     = result.header.status
+      val result: Future[Result] = controller.redirectToSalaryForm().apply(request)
+      val status: Int    = await(result.map(_.header.status))
 
       val actualRedirect   = redirectLocation(result).get
       val expectedRedirect = s"${baseURL}your-pay"
 
-      status         shouldBe 303
+      status      shouldBe 303
       actualRedirect shouldBe expectedRedirect
     }
   }

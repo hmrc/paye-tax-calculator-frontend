@@ -20,13 +20,13 @@ import controllers.routes
 import models.{Salary, StatePension}
 import play.api.i18n.Messages
 import forms.YouHaveToldUs.salaryFormat
+import org.scalatest.wordspec.AnyWordSpecLike
 import setup.BaseSpec
-import uk.gov.hmrc.play.test.UnitSpec
 
-class YouHaveToldUsSpec extends BaseSpec with UnitSpec {
+class YouHaveToldUsSpec extends BaseSpec with AnyWordSpecLike {
 
   "Converting Salary to YouHaveToldUsItem" in {
-    val salaryUrl = routes.SalaryController.showSalaryForm().url
+    val salaryUrl = routes.SalaryController.showSalaryForm.url
     val idSuffix  = "income"
 
     val yearlyLabel = "a_year"
@@ -51,7 +51,7 @@ class YouHaveToldUsSpec extends BaseSpec with UnitSpec {
   "Converting OverStatePensionAge to YouHaveToldUsItem" in {
     val label    = "over_state_pension_age"
     val idSuffix = "pension-state"
-    val url      = routes.StatePensionController.showStatePensionForm().url
+    val url      = routes.StatePensionController.showStatePensionForm.url
 
     YouHaveToldUs(StatePension(true)) shouldBe YouHaveToldUsItem(
       Messages("quick_calc.you_have_told_us.over_state_pension_age.yes"),

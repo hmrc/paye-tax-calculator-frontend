@@ -16,11 +16,15 @@
 
 package forms
 
+import com.typesafe.config.Config
+import config.AppConfig
 import models.{QuickCalcAggregateInput, UserTaxCode}
 import uk.gov.hmrc.calculator.Calculator
 import uk.gov.hmrc.calculator.model.{CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod}
 import uk.gov.hmrc.http.BadRequestException
+import utils.DefaultTaxCodeProvider
 
+import javax.inject.Inject
 import scala.math.BigDecimal.RoundingMode
 
 object TaxResult {
@@ -36,9 +40,12 @@ object TaxResult {
   def isOverMaxRate(response: CalculatorResponsePayPeriod): Boolean =
     response.getMaxTaxAmountExceeded
 
-  def taxCalculation(quickCalcAggregateInput: QuickCalcAggregateInput): CalculatorResponse =
+  def taxCalculation(
+    quickCalcAggregateInput: QuickCalcAggregateInput,
+    defaultTaxCodeProvider:  DefaultTaxCodeProvider
+  ): CalculatorResponse =
     new Calculator(
-      extractTaxCode(quickCalcAggregateInput),
+      extractTaxCode(quickCalcAggregateInput, defaultTaxCodeProvider),
       extractSalary(quickCalcAggregateInput).toDouble,
       extractPayPeriod(quickCalcAggregateInput),
       extractOverStatePensionAge(quickCalcAggregateInput),
@@ -46,17 +53,20 @@ object TaxResult {
         case Some(number) => number.toDouble
         case None         => null
       },
-      UserTaxCode.currentTaxYear
+      defaultTaxCodeProvider.currentTaxYear
     ).run()
 
-  def extractTaxCode(quickCalcAggregateInput: QuickCalcAggregateInput): String =
+  def extractTaxCode(
+    quickCalcAggregateInput: QuickCalcAggregateInput,
+    defaultTaxCodeProvider:  DefaultTaxCodeProvider
+  ): String =
     quickCalcAggregateInput.savedTaxCode match {
       case Some(s) =>
         s.taxCode match {
           case Some(taxCode) => taxCode
-          case None          => UserTaxCode.defaultUkTaxCode
+          case None          => defaultTaxCodeProvider.defaultUkTaxCode
         }
-      case None => UserTaxCode.defaultUkTaxCode
+      case None => defaultTaxCodeProvider.defaultUkTaxCode
     }
 
   def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =

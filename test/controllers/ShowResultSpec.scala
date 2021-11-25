@@ -16,15 +16,17 @@
 
 package controllers
 
+import com.codahale.metrics.SharedMetricRegistries
 import forms.TaxResult
 import models.UserTaxCode
 import org.jsoup.Jsoup
-import org.mockito.Matchers.any
 import org.mockito.Mockito.{times, verify, when}
+import org.mockito.ArgumentMatchers.any
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatestplus.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
@@ -34,14 +36,22 @@ import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{status, _}
 import services.QuickCalcCache
+import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
+import utils.DefaultTaxCodeProvider
 import views.html.pages.ResultView
 
 import scala.concurrent.Future
 
-class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar
-  with CSRFTestHelper {
+class ShowResultSpec
+    extends BaseSpec
+    with AnyWordSpecLike
+    with TryValues
+    with ScalaFutures
+    with IntegrationPatience
+    with MockitoSugar
+    with CSRFTestHelper {
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -50,7 +60,7 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
 
   "Show Result Page" should {
     "return 200, with current list of aggregate which contains all answers from previous questions and sidebar links" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary)
 
@@ -59,13 +69,15 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
         .build()
 
       running(application) {
-        val taxResult = TaxResult.taxCalculation(cacheTaxCodeStatePensionSalary.get)
+        val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(appConfig)
+        val taxResult =
+          TaxResult.taxCalculation(cacheTaxCodeStatePensionSalary.get, defaultTaxCodeProvider)
 
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         val view = application.injector.instanceOf[ResultView]
 
@@ -74,13 +86,15 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
         val responseBody = contentAsString(result)
         val parseHtml    = Jsoup.parse(responseBody)
 
-        removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(view(taxResult, UserTaxCode.currentTaxYear, false)(
-          request,
-          messagesThing(application)
-        ).toString)
+        removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false)(
+            request,
+            messagesThing(application)
+          ).toString
+        )
 
         val sidebar = parseHtml.getElementsByClass("govuk-grid-column-one-third")
-        val links = sidebar.get(0).getElementsByClass("govuk-link")
+        val links   = sidebar.get(0).getElementsByClass("govuk-link")
 
         links.size() mustEqual 3
 
@@ -89,7 +103,7 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
     }
 
     "return 303, with current list of aggregate data and redirect to Tax Code Form if Tax Code is not provided" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeSalary)
 
@@ -99,18 +113,18 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.StatePensionController.showStatePensionForm().url
+        redirectLocation(result).get mustEqual routes.StatePensionController.showStatePensionForm.url
       }
     }
 
     "return 303, with current list of aggregate data and redirect to Salary Form if Salary is not provided" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
 
@@ -120,20 +134,22 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm().url
+        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm.url
       }
     }
 
     "return 303, with current list of aggregate data and redirect to TaxCode Form Form if TaxCode is not provided" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode= None)))
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None))
+      )
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -141,34 +157,36 @@ class ShowResultSpec extends PlaySpec with TryValues with ScalaFutures with Inte
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.TaxCodeController.showTaxCodeForm().url
+        redirectLocation(result).get mustEqual routes.TaxCodeController.showTaxCodeForm.url
       }
     }
   }
 
-    "return 200, with current list of aggregate data and isScottish is not provided" in {
-      val mockCache = mock[QuickCalcCache]
+  "return 200, with current list of aggregate data and isScottish is not provided" in {
+    val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary.map(_.copy(savedScottishRate= None)))
+    when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+      cacheTaxCodeStatePensionSalary.map(_.copy(savedScottishRate = None))
+    )
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
+    val application = new GuiceApplicationBuilder()
+      .overrides(bind[QuickCalcCache].toInstance(mockCache))
+      .build()
 
-      running(application) {
+    running(application) {
 
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
+      val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
+        .withHeaders(HeaderNames.xSessionId -> "test")
+        .withCSRFToken
 
-        val result = route(application, request).value
-        status(result) mustEqual OK
-      }
+      val result = route(application, request).get
+      status(result) mustEqual OK
     }
+  }
 }

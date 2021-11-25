@@ -28,7 +28,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, DefaultTaxCodeProvider}
 import views.html.pages.TaxCodeView
 
 import scala.concurrent.ExecutionContext
@@ -40,7 +40,8 @@ class TaxCodeController @Inject() (
   val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
   taxCodeView:                   TaxCodeView,
-  userTaxCodeFormProvider:       UserTaxCodeFormProvider
+  userTaxCodeFormProvider:       UserTaxCodeFormProvider,
+  defaultTaxCodeProvider: DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -59,7 +60,7 @@ class TaxCodeController @Inject() (
             form.fill(s)
           }
           .getOrElse(form)
-        Ok(taxCodeView(filledForm, agg.youHaveToldUsItems, UserTaxCode.defaultUkTaxCode))
+        Ok(taxCodeView(filledForm, agg.youHaveToldUsItems, defaultTaxCodeProvider.defaultUkTaxCode))
       }
     )
 
@@ -74,9 +75,9 @@ class TaxCodeController @Inject() (
             cache.fetchAndGetEntry().map {
               case Some(aggregate) =>
                 BadRequest(
-                  taxCodeView(formWithErrors, aggregate.youHaveToldUsItems, UserTaxCode.defaultUkTaxCode)
+                  taxCodeView(formWithErrors, aggregate.youHaveToldUsItems, defaultTaxCodeProvider.defaultUkTaxCode)
                 )
-              case None => BadRequest(taxCodeView(formWithErrors, Nil, UserTaxCode.defaultUkTaxCode))
+              case None => BadRequest(taxCodeView(formWithErrors, Nil, defaultTaxCodeProvider.defaultUkTaxCode))
             },
           (newTaxCode: UserTaxCode) => {
             val updatedAggregate = cache
@@ -89,7 +90,7 @@ class TaxCodeController @Inject() (
                       newTaxCode.taxCode.isDefined,
                       Some(
                         newTaxCode.taxCode
-                          .getOrElse(UserTaxCode.defaultUkTaxCode)
+                          .getOrElse(defaultTaxCodeProvider.defaultUkTaxCode)
                       )
                     )
                   )

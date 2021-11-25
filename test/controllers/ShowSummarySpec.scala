@@ -17,8 +17,8 @@
 package controllers
 
 import org.jsoup.Jsoup
-import org.mockito.Matchers.any
 import org.mockito.Mockito.when
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
@@ -47,7 +47,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary().url)
+        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -77,7 +77,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary().url)
+        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -107,7 +107,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary().url)
+        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 

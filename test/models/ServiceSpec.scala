@@ -21,8 +21,6 @@ import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.test.Helpers._
-import play.api.test.CSRFTokenHelper._
 
 class ServiceSpec extends PlaySpec
   with TryValues

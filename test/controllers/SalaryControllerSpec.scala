@@ -18,8 +18,8 @@ package controllers
 
 import forms.SalaryFormProvider
 import org.jsoup.Jsoup
-import org.mockito.Matchers._
 import org.mockito.Mockito.{times, verify, when}
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
@@ -68,7 +68,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "", "period" -> "")
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -96,7 +96,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "10", "period" -> "")
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -132,7 +132,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -168,7 +168,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "0", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -204,7 +204,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "-1", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -240,7 +240,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "23.3456547", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -277,7 +277,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "100000000", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -313,7 +313,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "test", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -350,7 +350,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "20000", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -358,7 +358,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm.url
 
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -377,7 +377,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "9999999.99", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -385,7 +385,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm.url
 
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -405,7 +405,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "20000", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -413,7 +413,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm.url
 
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -433,7 +433,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "20000", "period" -> messages("quick_calc.salary.yearly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -441,7 +441,7 @@ class SalaryControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary().url
+        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary.url
 
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -463,7 +463,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "100", "period" -> messages("quick_calc.salary.daily.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -495,7 +495,7 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> "100", "period" -> messages("quick_calc.salary.hourly.label"))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -531,7 +531,7 @@ class SalaryControllerSpec
       val formFilled = form.fill(cacheTaxCodeStatePensionSalary.value.savedSalary.get)
       running(application) {
 
-        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm().url)
+        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -561,7 +561,7 @@ class SalaryControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm().url)
+        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 

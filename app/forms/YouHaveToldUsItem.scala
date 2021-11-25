@@ -20,10 +20,11 @@ import controllers.routes
 import models.{PayPeriodDetail, Salary, ScottishRate, StatePension, UserTaxCode}
 import play.api.i18n.Messages
 
-case class YouHaveToldUsItem(value: String,
-                             label: String,
-                             url: String,
-                             idSuffix: String)
+case class YouHaveToldUsItem(
+  value:    String,
+  label:    String,
+  url:      String,
+  idSuffix: String)
 
 trait YouHaveToldUs[A] {
   def toYouHaveToldUsItem(t: A): YouHaveToldUsItem
@@ -36,21 +37,19 @@ object YouHaveToldUs {
   def apply[A: YouHaveToldUs](a: A): YouHaveToldUsItem =
     implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
-  implicit def taxCodeFormat(
-    implicit messages: Messages
-  ): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
+  implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
 
     def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
-      val label = "about_tax_code"
+      val label    = "about_tax_code"
       val idSuffix = "tax-code"
-      val url = routes.TaxCodeController.showTaxCodeForm.url
+      val url      = routes.TaxCodeController.showTaxCodeForm.url
       YouHaveToldUsItem(
         if (t.gaveUsTaxCode)
-          s"${t.taxCode.getOrElse(UserTaxCode.defaultUkTaxCode)}"
+          s"${t.taxCode.getOrElse("")}"
         else
           s"${Messages("quick_calc.you_have_told_us.about_tax_code.default_a")} " +
-            s" ${t.taxCode.getOrElse(UserTaxCode.defaultUkTaxCode)} " +
-            s" ${Messages("quick_calc.you_have_told_us.about_tax_code.default_b")}",
+          s" ${t.taxCode.getOrElse("")}" +
+          s" ${Messages("quick_calc.you_have_told_us.about_tax_code.default_b")}",
         label,
         url,
         idSuffix
@@ -61,12 +60,10 @@ object YouHaveToldUs {
   implicit def overStatePensionAgeFormat(implicit messages: Messages) =
     new YouHaveToldUs[StatePension] {
 
-      def toYouHaveToldUsItem(
-        overStatePensionAge: StatePension
-      ): YouHaveToldUsItem = {
-        val label = "over_state_pension_age"
+      def toYouHaveToldUsItem(overStatePensionAge: StatePension): YouHaveToldUsItem = {
+        val label    = "over_state_pension_age"
         val idSuffix = "pension-state"
-        val url = routes.StatePensionController.showStatePensionForm.url
+        val url      = routes.StatePensionController.showStatePensionForm.url
         YouHaveToldUsItem(
           if (overStatePensionAge.overStatePensionAge)
             Messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
@@ -83,9 +80,9 @@ object YouHaveToldUs {
     new YouHaveToldUs[ScottishRate] {
 
       def toYouHaveToldUsItem(scottish: ScottishRate): YouHaveToldUsItem = {
-        val label = SCOTTISH_RATE
+        val label    = SCOTTISH_RATE
         val idSuffix = SCOTTISH_RATE
-        val url = routes.ScottishRateController.showScottishRateForm.url
+        val url      = routes.ScottishRateController.showScottishRateForm.url
         YouHaveToldUsItem(
           if (scottish.payScottishRate)
             Messages("quick_calc.you_have_told_us.scottish_rate.yes")
@@ -101,7 +98,7 @@ object YouHaveToldUs {
     new YouHaveToldUs[Salary] {
 
       def toYouHaveToldUsItem(s: Salary): YouHaveToldUsItem = {
-        val url = routes.SalaryController.showSalaryForm.url
+        val url      = routes.SalaryController.showSalaryForm.url
         val idSuffix = "income"
         def asPounds(v: String) = "£" + v
 
@@ -116,11 +113,11 @@ object YouHaveToldUs {
 
   implicit def salaryPeriodFormat(implicit messages: Messages) =
     new YouHaveToldUs[PayPeriodDetail] {
-      val day: String = messages("quick_calc.salary.daily.label")
+      val day:  String = messages("quick_calc.salary.daily.label")
       val hour: String = messages("quick_calc.salary.hourly.label")
 
       def toYouHaveToldUsItem(detail: PayPeriodDetail): YouHaveToldUsItem = {
-        val label = s"${detail.period.replace(" ", "_")}_sub"
+        val label    = s"${detail.period.replace(" ", "_")}_sub"
         val idSuffix = "salary-period"
         val url = {
           detail.period match {
@@ -143,9 +140,8 @@ object YouHaveToldUs {
       }
     }
 
-  def formatForIndividualSalary[T <: Salary](
-    implicit m: Messages
-  ): YouHaveToldUs[T] = new YouHaveToldUs[T] {
+  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
+
     def toYouHaveToldUsItem(salary: T): YouHaveToldUsItem =
       salaryFormat.toYouHaveToldUsItem(salary)
   }

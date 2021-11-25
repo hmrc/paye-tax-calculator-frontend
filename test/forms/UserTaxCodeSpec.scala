@@ -17,11 +17,11 @@
 package forms
 
 import models.UserTaxCode
+import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.data.Form
 import setup.BaseSpec
-import uk.gov.hmrc.play.test.UnitSpec
 
-class UserTaxCodeSpec extends BaseSpec with UnitSpec {
+class UserTaxCodeSpec extends BaseSpec with AnyWordSpecLike {
 
   val userTaxCodeForm: Form[UserTaxCode] = new UserTaxCodeFormProvider().apply()
 

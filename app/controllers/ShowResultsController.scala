@@ -27,7 +27,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, DefaultTaxCodeProvider}
 import views.html.pages.ResultView
 
 import scala.concurrent.ExecutionContext
@@ -38,7 +38,8 @@ class ShowResultsController @Inject() (
   cache:                         QuickCalcCache,
   val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
-  resultView: ResultView
+  resultView: ResultView,
+  defaultTaxCodeProvider: DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -52,7 +53,7 @@ class ShowResultsController @Inject() (
       aggregate =>
         if (aggregate.allQuestionsAnswered) {
           val isScottish = aggregate.savedTaxCode.exists(_.taxCode.exists(_.contains("S")))
-          Ok(resultView(TaxResult.taxCalculation(aggregate), UserTaxCode.startOfCurrentTaxYear, isScottish))
+          Ok(resultView(TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider), defaultTaxCodeProvider.startOfCurrentTaxYear, isScottish))
         } else Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 

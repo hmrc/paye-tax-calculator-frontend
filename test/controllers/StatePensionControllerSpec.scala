@@ -18,8 +18,8 @@ package controllers
 
 import forms.StatePensionFormProvider
 import org.jsoup.Jsoup
-import org.mockito.Matchers._
 import org.mockito.Mockito.{times, verify, when}
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
@@ -77,7 +77,7 @@ class StatePensionControllerSpec
 
         val request = FakeRequest(
           GET,
-          routes.StatePensionController.showStatePensionForm().url
+          routes.StatePensionController.showStatePensionForm.url
         ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
         val result = route(application, request).value
@@ -112,7 +112,7 @@ class StatePensionControllerSpec
 
         val request = FakeRequest(
           GET,
-          routes.StatePensionController.showStatePensionForm().url
+          routes.StatePensionController.showStatePensionForm.url
         ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
         val result = route(application, request).value
@@ -120,7 +120,7 @@ class StatePensionControllerSpec
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value mustEqual routes.SalaryController
-          .showSalaryForm()
+          .showSalaryForm
           .url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
@@ -145,7 +145,7 @@ class StatePensionControllerSpec
 
           val request = FakeRequest(
             POST,
-            routes.StatePensionController.submitStatePensionForm().url
+            routes.StatePensionController.submitStatePensionForm.url
           ).withFormUrlEncodedBody(form.data.toSeq: _*)
             .withHeaders(HeaderNames.xSessionId -> "test")
             .withCSRFToken
@@ -184,7 +184,7 @@ class StatePensionControllerSpec
 
           val request = FakeRequest(
             POST,
-            routes.StatePensionController.submitStatePensionForm().url
+            routes.StatePensionController.submitStatePensionForm.url
           ).withFormUrlEncodedBody(form.data.toSeq: _*)
             .withHeaders(HeaderNames.xSessionId -> "test")
             .withCSRFToken
@@ -228,7 +228,7 @@ class StatePensionControllerSpec
 
           val request = FakeRequest(
             GET,
-            routes.StatePensionController.showStatePensionForm().url
+            routes.StatePensionController.showStatePensionForm.url
           ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
             .withHeaders(HeaderNames.xSessionId -> "test")
             .withCSRFToken
@@ -240,7 +240,7 @@ class StatePensionControllerSpec
           status(result) mustEqual SEE_OTHER
 
           redirectLocation(result).value mustEqual routes.SalaryController
-            .showSalaryForm()
+            .showSalaryForm
             .url
           verify(mockCache, times(1)).fetchAndGetEntry()(any())
         }
@@ -268,7 +268,7 @@ class StatePensionControllerSpec
 
           val request = FakeRequest(
             GET,
-            routes.StatePensionController.showStatePensionForm().url
+            routes.StatePensionController.showStatePensionForm.url
           ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
             .withHeaders(HeaderNames.xSessionId -> "test")
             .withCSRFToken
@@ -279,7 +279,7 @@ class StatePensionControllerSpec
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+          redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
           verify(mockCache, times(1)).fetchAndGetEntry()(any())
         }
       }

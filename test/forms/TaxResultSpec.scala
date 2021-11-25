@@ -16,54 +16,63 @@
 
 package forms
 
+import config.AppConfig
 import models.{QuickCalcAggregateInput, Salary, StatePension, UserTaxCode}
 import org.scalatest.{Tag, TestData}
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import forms.TaxResult._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import uk.gov.hmrc.calculator.model.{CalculatorResponsePayPeriod, PayPeriod}
 import uk.gov.hmrc.http.BadRequestException
-import uk.gov.hmrc.play.test.UnitSpec
+import utils.DefaultTaxCodeProvider
 
-class TaxResultSpec extends UnitSpec with GuiceOneAppPerTest {
+class TaxResultSpec extends AnyWordSpecLike with GuiceOneAppPerTest with Matchers {
 
   "Extracting Tax Code from user response" should {
 
     "return tax code that a user has provided" in {
+      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
       val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = true, Some("K452"))), None)
 
-      extractTaxCode(input) shouldBe "K452"
+      extractTaxCode(input, defaultTaxCodeProvider) shouldBe "K452"
     }
 
     "return the default UK tax code for 2020-21 if the user does not provide one" taggedAs Tag("2020") in {
+      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
       val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
 
-      extractTaxCode(input) shouldBe "1250L"
+      extractTaxCode(input, defaultTaxCodeProvider) shouldBe "1250L"
     }
 
     "return the default UK tax code for 2021-22 if the user does not provide one" taggedAs Tag("2021") in {
+      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
       val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
 
-      extractTaxCode(input) shouldBe "1257L"
+      extractTaxCode(input, defaultTaxCodeProvider) shouldBe "1257L"
     }
 
     "return the default UK tax code for 2020-21 if the user does not provide one and is None" taggedAs Tag(
       "2021"
     ) in {
+      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
       val input = QuickCalcAggregateInput(None, None, None, None, None)
 
-      extractTaxCode(input) shouldBe "1257L"
+      extractTaxCode(input, defaultTaxCodeProvider) shouldBe "1257L"
     }
   }
 
   "Extracting OverStatePensionAge answer from user response" should {
 
     "return true if the response is user is over state pension StatePensionView" in {
+      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
       extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(true)), None, None)) shouldBe true
     }
 
     "return false if the response is user is not over state pension StatePensionView" in {
+      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
       extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(false)), None, None)) shouldBe false
     }
 
