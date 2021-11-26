@@ -28,7 +28,7 @@ import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, DefaultTaxCodeProvider}
 import views.html.pages.ScottishRateView
 
 import scala.concurrent.ExecutionContext
@@ -39,7 +39,8 @@ class ScottishRateController @Inject() (
   cache:                         QuickCalcCache,
   val controllerComponents:      MessagesControllerComponents,
   scottishRateView:              ScottishRateView,
-  scottishRateFormProvider:      ScottishRateFormProvider
+  scottishRateFormProvider:      ScottishRateFormProvider,
+  defaultTaxCodeProvider: DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -82,9 +83,9 @@ class ScottishRateController @Inject() (
           scottish => {
             val taxCode =
               if (scottish.payScottishRate)
-                UserTaxCode.defaultScottishTaxCode
+                defaultTaxCodeProvider.defaultScottishTaxCode
               else
-                UserTaxCode.defaultUkTaxCode
+                defaultTaxCodeProvider.defaultUkTaxCode
 
             val updatedAggregate = cache
               .fetchAndGetEntry()
@@ -97,7 +98,7 @@ class ScottishRateController @Inject() (
               )
             updatedAggregate
               .map(cache.save)
-              .map(_ => Redirect(routes.YouHaveToldUsController.summary()))
+              .map(_ => Redirect(routes.YouHaveToldUsController.summary))
           }
         )
     }
@@ -114,9 +115,9 @@ class ScottishRateController @Inject() (
           if (aggregate.savedSalary.isDefined)
             furtherAction(request)(aggregate)
           else
-            Redirect(routes.SalaryController.showSalaryForm())
+            Redirect(routes.SalaryController.showSalaryForm)
         case None =>
-          Redirect(routes.SalaryController.showSalaryForm())
+          Redirect(routes.SalaryController.showSalaryForm)
       }
     }
 

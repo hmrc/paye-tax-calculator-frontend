@@ -57,7 +57,7 @@
 
 @govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-    @formHelper(action = controllers.routes.ScottishRateController.submitScottishRateForm()) {
+    @formHelper(action = controllers.routes.ScottishRateController.submitScottishRateForm) {
 
         @errorSummary(scottishRateForm.errors)
 

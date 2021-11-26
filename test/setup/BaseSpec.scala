@@ -19,15 +19,22 @@ package setup
 import akka.stream.Materializer
 import config.AppConfig
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.Matchers
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.{Application, Environment, Mode}
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import services.Navigator
 import uk.gov.hmrc.http.HeaderNames
 
 class BaseSpec extends MockFactory with ScalaFutures with GuiceOneAppPerSuite with MetricClearSpec with Matchers {
+
+  override lazy val app: Application = new GuiceApplicationBuilder()
+    .in(Environment.simple(mode = Mode.Dev))
+    .configure("metrics.enabled" -> "false")
+    .build()
 
   val appInjector               = app.injector
   implicit val materializer     = appInjector.instanceOf[Materializer]

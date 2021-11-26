@@ -16,10 +16,11 @@
 
 package models
 
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.libs.json.{Json, Writes}
-import uk.gov.hmrc.play.test.UnitSpec
 
-class SalarySerializationSpec extends UnitSpec {
+class SalarySerializationSpec extends AnyWordSpecLike with Matchers {
 
   "Salary marshalling" should {
     "work for all salary types" in {

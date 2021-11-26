@@ -69,9 +69,9 @@ class YouHaveToldUsController @Inject() (
           if (aggregate.savedSalary.isDefined)
             furtherAction(request)(aggregate)
           else
-            Redirect(routes.SalaryController.showSalaryForm())
+            Redirect(routes.SalaryController.showSalaryForm)
         case None =>
-          Redirect(routes.SalaryController.showSalaryForm())
+          Redirect(routes.SalaryController.showSalaryForm)
       }
     }
 

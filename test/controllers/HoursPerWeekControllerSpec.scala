@@ -32,11 +32,11 @@
 
 package controllers
 
-import forms.{SalaryFormProvider, SalaryInHoursFormProvider}
-import models.{Days, Hours, QuickCalcAggregateInput}
+import forms.SalaryInHoursFormProvider
+import models.Hours
 import org.jsoup.Jsoup
-import org.mockito.Matchers.any
 import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
@@ -46,17 +46,15 @@ import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{AnyContentAsEmpty, RequestHeader}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.QuickCalcCache
 import setup.QuickCalcCacheSetup._
-import setup.{BaseSpec, QuickCalcCacheSetup}
-import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
-import views.html.pages.{HoursAWeekView, SalaryView}
+import uk.gov.hmrc.http.HeaderNames
+import views.html.pages.HoursAWeekView
 import play.api.test.CSRFTokenHelper._
 import uk.gov.hmrc.http.cache.client.CacheMap
-import controllers.CSRFTestHelper
 
 import scala.concurrent.Future
 
@@ -134,7 +132,7 @@ class HoursPerWeekControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
       }
     }
 
@@ -164,7 +162,7 @@ class HoursPerWeekControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
       }
     }
 
@@ -191,7 +189,7 @@ class HoursPerWeekControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
       }
     }
 
@@ -393,7 +391,7 @@ class HoursPerWeekControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary().url
+        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -423,7 +421,7 @@ class HoursPerWeekControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
         verify(mockCache, times(1)).save(any())(any())
       }

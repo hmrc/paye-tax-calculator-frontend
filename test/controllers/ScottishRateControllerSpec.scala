@@ -19,8 +19,8 @@ package controllers
 import forms.ScottishRateFormProvider
 import models.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
 import org.jsoup.Jsoup
-import org.mockito.Matchers.any
 import org.mockito.Mockito.{times, verify, when}
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{Tag, TryValues}
 import org.scalatestplus.mockito.MockitoSugar
@@ -80,7 +80,7 @@ class ScottishRateControllerSpec
 
         val request = FakeRequest(
           GET,
-          routes.ScottishRateController.showScottishRateForm().url
+          routes.ScottishRateController.showScottishRateForm.url
         ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
         val result = route(application, request).value
@@ -115,7 +115,7 @@ class ScottishRateControllerSpec
 
         val request = FakeRequest(
           GET,
-          routes.ScottishRateController.showScottishRateForm().url
+          routes.ScottishRateController.showScottishRateForm.url
         ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
         val result = route(application, request).value
@@ -125,7 +125,7 @@ class ScottishRateControllerSpec
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value mustEqual routes.SalaryController
-          .showSalaryForm()
+          .showSalaryForm
           .url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
@@ -149,7 +149,7 @@ class ScottishRateControllerSpec
 
         val request = FakeRequest(
           POST,
-          routes.ScottishRateController.submitScottishRateForm().url
+          routes.ScottishRateController.submitScottishRateForm.url
         ).withFormUrlEncodedBody(form.data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -189,7 +189,7 @@ class ScottishRateControllerSpec
 
         val request = FakeRequest(
           POST,
-          routes.ScottishRateController.submitScottishRateForm().url
+          routes.ScottishRateController.submitScottishRateForm.url
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -200,7 +200,7 @@ class ScottishRateControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary().url
+        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
@@ -240,7 +240,7 @@ class ScottishRateControllerSpec
         val formData = Map("payScottishRate" -> "false")
         val request = FakeRequest(
           POST,
-          routes.ScottishRateController.submitScottishRateForm().url
+          routes.ScottishRateController.submitScottishRateForm.url
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -286,7 +286,7 @@ class ScottishRateControllerSpec
         val formData = Map("payScottishRate" -> "true")
         val request = FakeRequest(
           POST,
-          routes.ScottishRateController.submitScottishRateForm().url
+          routes.ScottishRateController.submitScottishRateForm.url
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -332,7 +332,7 @@ class ScottishRateControllerSpec
         val formData = Map("payScottishRate" -> "false")
         val request = FakeRequest(
           POST,
-          routes.ScottishRateController.submitScottishRateForm().url
+          routes.ScottishRateController.submitScottishRateForm.url
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -378,7 +378,7 @@ class ScottishRateControllerSpec
         val formData = Map("payScottishRate" -> "true")
         val request = FakeRequest(
           POST,
-          routes.ScottishRateController.submitScottishRateForm().url
+          routes.ScottishRateController.submitScottishRateForm.url
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -424,7 +424,7 @@ class ScottishRateControllerSpec
         val formData = Map("payScottishRate" -> "false")
         val request = FakeRequest(
           POST,
-          routes.ScottishRateController.submitScottishRateForm().url
+          routes.ScottishRateController.submitScottishRateForm.url
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -470,7 +470,7 @@ class ScottishRateControllerSpec
         val formData = Map("payScottishRate" -> "true")
         val request = FakeRequest(
           POST,
-          routes.ScottishRateController.submitScottishRateForm().url
+          routes.ScottishRateController.submitScottishRateForm.url
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken

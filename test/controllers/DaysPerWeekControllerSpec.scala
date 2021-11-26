@@ -19,11 +19,11 @@ package controllers
 import forms.SalaryInDaysFormProvider
 import models.Days
 import org.jsoup.Jsoup
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.Application
 import play.api.data.Form
@@ -122,7 +122,7 @@ class DaysPerWeekControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
       }
     }
 
@@ -152,7 +152,7 @@ class DaysPerWeekControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
       }
     }
 
@@ -179,7 +179,7 @@ class DaysPerWeekControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
       }
     }
   }
@@ -380,7 +380,7 @@ class DaysPerWeekControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary().url
+        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
         verify(mockCache, times(1)).save(any())(any())
       }
@@ -410,7 +410,7 @@ class DaysPerWeekControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm().url
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
         verify(mockCache, times(1)).save(any())(any())
       }

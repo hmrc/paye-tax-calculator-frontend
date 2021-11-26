@@ -17,11 +17,12 @@
 package controllers
 
 import java.util.UUID
-
 import akka.stream.Materializer
 import com.google.inject.Inject
 import config.SessionIdFilter
-import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.DefaultHttpFilters
@@ -49,8 +50,8 @@ object SessionIdFilterSpec {
 }
 
 class SessionIdFilterSpec @Inject() (actionBuilder: DefaultActionBuilder)
-    extends WordSpec
-    with MustMatchers
+    extends AnyWordSpecLike
+    with Matchers
     with GuiceOneAppPerSuite {
 
   import SessionIdFilterSpec._
@@ -93,7 +94,7 @@ class SessionIdFilterSpec @Inject() (actionBuilder: DefaultActionBuilder)
       .build()
   }
 
-  ".apply" must {
+  ".apply" should {
 
     "add a sessionId if one doesn't already exist" in {
 

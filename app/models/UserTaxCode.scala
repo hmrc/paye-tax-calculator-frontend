@@ -22,7 +22,6 @@ import play.api.data.FormError
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.calculator.model.ValidationError
 import uk.gov.hmrc.calculator.utils.validation.TaxCodeValidator
-import utils.LocalDateProvider
 
 case class UserTaxCode(
   gaveUsTaxCode: Boolean = false,
@@ -31,10 +30,6 @@ case class UserTaxCode(
 object UserTaxCode {
 
   implicit val format: OFormat[UserTaxCode] = Json.format[UserTaxCode]
-  private lazy val Default2021ScottishTaxCode     = "S1257L"
-  private lazy val Default20192020ScottishTaxCode = "S1250L"
-  private lazy val Default2021UkTaxCode           = "1257L"
-  private lazy val Default20192020UkTaxCode       = "1250L"
   private lazy val firstDayOfTaxYear              = MonthDay.of(4, 6)
   val HasTaxCode                                  = "hasTaxCode"
   val TaxCode                                     = "taxCode"
@@ -42,22 +37,6 @@ object UserTaxCode {
   val WrongTaxCodePrefixKey                       = "quick_calc.about_tax_code.wrong_tax_code_prefix"
   val WrongTaxCodeSuffixKey                       = "quick_calc.about_tax_code.wrong_tax_code_suffix"
   val WrongTaxCodeKey                             = "quick_calc.about_tax_code.wrong_tax_code"
-
-  def defaultScottishTaxCode: String =
-    if (currentTaxYear == 2021) Default2021ScottishTaxCode else Default20192020ScottishTaxCode
-
-  def currentTaxYear: Int = {
-    val now = LocalDateProvider.now
-
-    if (now.isBefore(firstDayOfTaxYear.atYear(now.getYear))) {
-      now.getYear - 1
-    } else {
-      now.getYear
-    }
-  }
-
-  def defaultUkTaxCode: String =
-    if (currentTaxYear == 2021) Default2021UkTaxCode else Default20192020UkTaxCode
 
   def wrongTaxCode(taxCode: String): Seq[FormError] = {
     val res = TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode)
@@ -70,7 +49,4 @@ object UserTaxCode {
       case _ => Seq(FormError(TaxCode, WrongTaxCodeKey))
     }
   }
-
-  def startOfCurrentTaxYear: Int =
-    firstDayOfTaxYear.atYear(currentTaxYear).getYear
 }

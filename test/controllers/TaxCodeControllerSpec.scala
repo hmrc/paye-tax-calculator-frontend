@@ -16,15 +16,15 @@
 
 package controllers
 
-import forms.{StatePensionFormProvider, UserTaxCodeFormProvider}
-import models.UserTaxCode
+import forms.UserTaxCodeFormProvider
 import org.jsoup.Jsoup
-import org.mockito.Matchers._
 import org.mockito.Mockito.{times, verify, when}
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
@@ -34,16 +34,18 @@ import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{status, _}
 import services.QuickCalcCache
-import setup.QuickCalcCacheSetup
+import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
-import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
+import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.http.cache.client.CacheMap
-import views.html.pages.{StatePensionView, TaxCodeView}
+import utils.DefaultTaxCodeProvider
+import views.html.pages.TaxCodeView
 
 import scala.concurrent.Future
 
 class TaxCodeControllerSpec
-    extends PlaySpec
+    extends BaseSpec
+    with AnyWordSpecLike
     with TryValues
     with ScalaFutures
     with IntegrationPatience
@@ -51,6 +53,7 @@ class TaxCodeControllerSpec
       with CSRFTestHelper {
   val formProvider = new UserTaxCodeFormProvider()
   val form         = formProvider()
+  val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider((appConfig))
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
@@ -62,7 +65,7 @@ class TaxCodeControllerSpec
   "Show Tax Code Form" should {
     "return 200 and an empty list of aggregate data" in {
 
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
 
@@ -74,21 +77,21 @@ class TaxCodeControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm().url)
+        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
+        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
 
     "return 200 and a list of current aggregate data containing Tax Code and pension" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
         cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None))
@@ -102,11 +105,11 @@ class TaxCodeControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm().url)
+        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         val view = application.injector.instanceOf[TaxCodeView]
 
@@ -114,8 +117,8 @@ class TaxCodeControllerSpec
 
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
           form,
-          cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).value.youHaveToldUsItems,
-          UserTaxCode.defaultUkTaxCode
+          cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).get.youHaveToldUsItems,
+          defaultTaxCodeProvider.defaultUkTaxCode
         )(
           request,
           messagesThing(application)
@@ -125,7 +128,7 @@ class TaxCodeControllerSpec
     }
 
     "return 200 and a list of current aggregate data containing Tax Code and pension and tax code answered" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheSalaryStatePensionTaxCode)
 
@@ -137,11 +140,11 @@ class TaxCodeControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm().url)
+        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         val view = application.injector.instanceOf[TaxCodeView]
 
@@ -151,7 +154,7 @@ class TaxCodeControllerSpec
 
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(formFilled,
                                                cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems,
-                                               UserTaxCode.defaultUkTaxCode)(
+                                               defaultTaxCodeProvider.defaultUkTaxCode)(
           request,
           messagesThing(application)
         ).toString)
@@ -162,7 +165,7 @@ class TaxCodeControllerSpec
 
   "Submit Tax Code Form" should {
     "return 400, with aggregate data and an error message for invalid Tax Code" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
 
@@ -174,12 +177,12 @@ class TaxCodeControllerSpec
 
         val formData = Map("hasTaxCode" -> "true", "taxCode" -> "110")
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual BAD_REQUEST
 
@@ -196,7 +199,7 @@ class TaxCodeControllerSpec
     }
 
     "return 400, with no aggregate data and an error message for invalid Tax Code" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
 
@@ -208,12 +211,12 @@ class TaxCodeControllerSpec
 
         val formData = Map("hasTaxCode" -> "true", "taxCode" -> "110")
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual BAD_REQUEST
 
@@ -230,7 +233,7 @@ class TaxCodeControllerSpec
     }
 
     "return 400, with no aggregate data and an error message for invalid Tax Code Prefix" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
 
@@ -242,12 +245,12 @@ class TaxCodeControllerSpec
 
         val formData = Map("hasTaxCode" -> "true", "taxCode" -> "X9999")
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual BAD_REQUEST
 
@@ -265,7 +268,7 @@ class TaxCodeControllerSpec
     }
 
     "return 400, with no aggregate data and an error message for invalid Tax Code Suffix" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
 
@@ -277,12 +280,12 @@ class TaxCodeControllerSpec
 
         val formData = Map("hasTaxCode" -> "true", "taxCode" -> "9999A")
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual BAD_REQUEST
 
@@ -300,7 +303,7 @@ class TaxCodeControllerSpec
     }
 
     "return 400, with no aggregate data and an error message when Tax Code entered is 99999L" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
 
@@ -312,12 +315,12 @@ class TaxCodeControllerSpec
 
         val formData = Map("hasTaxCode" -> "true", "taxCode" -> "99999L")
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual BAD_REQUEST
 
@@ -336,7 +339,7 @@ class TaxCodeControllerSpec
 
     "return 303, with current aggregate data and redirect to Is Over State Pension Page" in {
 
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
       when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
@@ -348,20 +351,20 @@ class TaxCodeControllerSpec
       running(application) {
         val formData = Map("hasTaxCode" -> "true", "taxCode" -> "K425")
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary().url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary.url
       }
     }
 
     "return 303, with no aggregate data and redirect to Is Over State Pension Page" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
       when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
@@ -373,20 +376,20 @@ class TaxCodeControllerSpec
       running(application) {
         val formData = Map("hasTaxCode" -> "true", "taxCode" -> "K425")
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary().url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary.url
       }
     }
 
     "return 303, with current aggregate data and redirect to Summary Result Page" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary)
       when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
@@ -398,21 +401,21 @@ class TaxCodeControllerSpec
       running(application) {
         val formData = Map("hasTaxCode" -> "true", "taxCode" -> "K425")
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary().url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary.url
 
       }
     }
 
     "return 303, with to scottish page if No to tax code" in {
-      val mockCache = mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
         cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None))
@@ -426,15 +429,15 @@ class TaxCodeControllerSpec
       running(application) {
         val formData = Map("hasTaxCode" -> "false")
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val result = route(application, request).value
+        val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.ScottishRateController.showScottishRateForm().url
+        redirectLocation(result).get mustEqual routes.ScottishRateController.showScottishRateForm.url
       }
     }
   }
