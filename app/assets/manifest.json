@@ -1,0 +1,11 @@
+{
+  "short_name": "HMRC",
+  "name": "HMRC",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "uk.gov.hmrc.ptcalc"
+    }
+  ]
+}
