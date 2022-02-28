@@ -52,4 +52,3 @@ function numberInputs() {
             e.preventDefault();
     });
 }
-
