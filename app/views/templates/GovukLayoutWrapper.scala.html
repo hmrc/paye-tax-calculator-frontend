@@ -49,7 +49,7 @@
     <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
         <!--<![endif]-->
 @if(showAppBanner) {
-    Some(Html(s"""
+    @Some(Html(s"""
         <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
         <meta name="google-play-app" content="app-id=uk.gov.hmrc.ptcalc">
         <link rel="manifest" href="${controllers.routes.Assets.versioned(Assets.Asset("manifest.json"))}" />
