@@ -16,101 +16,101 @@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
 @import views.components.FooterLinks
 
 @this(
-        govukLayout: GovukLayout,
-        siteHeader: components.siteHeader,
-        link: components.link,
-        appConfig: config.AppConfig,
-        footerLinks: FooterLinks,
-        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-        timeoutDialog: HmrcTimeoutDialog,
-        hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
+      govukLayout: GovukLayout,
+      siteHeader: components.siteHeader,
+      link: components.link,
+      appConfig: config.AppConfig,
+      footerLinks: FooterLinks,
+      hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
+      timeoutDialog: HmrcTimeoutDialog,
+      hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
 )
 @(
-        pageTitle: Option[String] = None,
-        timeout: Boolean = true,
-        js: Option[Html] = None,
-        signedInUser: Boolean = true,
-        showDeskproLink: Boolean = true,
-        mainClass: Option[String] = None,
-        mainDataAttributes: Option[Html] = None,
-        bodyClassess: Option[String] = None,
-        beforeContentBlock: Html = Html(""),
-        showAppBanner: Boolean = false
+      pageTitle: Option[String] = None,
+      timeout: Boolean = true,
+      js: Option[Html] = None,
+      signedInUser: Boolean = true,
+      showDeskproLink: Boolean = true,
+      mainClass: Option[String] = None,
+      mainDataAttributes: Option[Html] = None,
+      bodyClassess: Option[String] = None,
+      beforeContentBlock: Html = Html(""),
+      showAppBanner: Boolean = true
 
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
-@head = {
-@hmrcTrackingConsentSnippet()
-    <!--[if lte IE 8]><link href='   @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
-        <!--<![endif]-->
-@if(showAppBanner) @{
-    Some(Html("""
-        <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
-        <meta name="google-play-app" content="app-id=uk.gov.hmrc.ptcalc">
-        <link rel="manifest" href='@controllers.routes.Assets.at("manifest.json")' />
-    """))
-}
-@if(timeout) {
-    <meta
-    name="hmrc-timeout-dialog"
-    data-timeout="@{
-        appConfig.timeout
-    }"
-    data-countdown="@{
-        appConfig.countdown
-    }"
-    data-keep-alive-url="@{
-        request.uri
-    }"
-    data-sign-out-url="@{
-        routes.ResetController.reset().url
-    }"
-    data-title=""
-    data-message="@{
-        messages("timeout.message.notSignedIn")
-    }"
-    data-keep-alive-button-text="@{
-        messages("timeout.keepAlive.notSignedIn")
-    }"
-    data-sign-out-button-text="@{
-        messages("timeout.deleteAnswers")
-    }"
-    />
+  @head = {
+  @hmrcTrackingConsentSnippet()
+      <!--[if lte IE 8]><link href=' @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+      <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
+          <!--<![endif]-->
+  @if(showAppBanner) {
+      <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
+      <meta name="google-play-app" content="app-id=uk.gov.hmrc.ptcalc">
+      <link rel="manifest" href="@{controllers.routes.Assets.at("manifest.json")}" />
+  }
+  @if(timeout) {
+      <meta
+      name="hmrc-timeout-dialog"
+      data-timeout="@{
+          appConfig.timeout
+      }"
+      data-countdown="@{
+          appConfig.countdown
+      }"
+      data-keep-alive-url="@{
+          request.uri
+      }"
+      data-sign-out-url="@{
+          routes.ResetController.reset().url
+      }"
+      data-title=""
+      data-message="@{
+          messages("timeout.message.notSignedIn")
+      }"
+      data-keep-alive-button-text="@{
+          messages("timeout.keepAlive.notSignedIn")
+      }"
+      data-sign-out-button-text="@{
+          messages("timeout.deleteAnswers")
+      }"
+      />
 
-}
-}
+  }
+  }
 
-@scriptElement = {
-    <script src='@controllers.routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
-    <script src='@controllers.routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
-    <script src='@controllers.routes.Assets.at("javascripts/application.min.js")'></script>
-    <script>window.GOVUKFrontend.initAll();</script>
-    <script>window.HMRCFrontend.initAll();</script>
-@js.map(x => x)
-}
+  @scriptElement = {
+      <script src='@controllers.routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
+      <script src='@controllers.routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
+      <script src='@controllers.routes.Assets.at("javascripts/application.min.js")'></script>
+      <script src='@controllers.routes.Assets.at("javascripts/androidInstallBanner.js")'></script>
+      <script>window.GOVUKFrontend.initAll();</script>
+      <script>window.HMRCFrontend.initAll();</script>
+  @js.map(x => x)
+  }
 
-@content = {
+  @content = {
 
-@contentBlock
+  @contentBlock
 
-@if(showDeskproLink) {
-    <div class="govuk-!-margin-top-5">
-    @hmrcReportTechnicalIssueHelper()
-    </div>
-}
-}
+  @if(showDeskproLink) {
+      <div class="govuk-!-margin-top-5">
+      @hmrcReportTechnicalIssue(
+          ReportTechnicalIssue(appConfig.appName, messages.lang.language)
+      )
+      </div>
+  }
+  }
 
-@govukLayout(
-    pageTitle = pageTitle,
-    headBlock = Some(head),
-    scriptsBlock = Some(scriptElement),
-    beforeContentBlock = Some(beforeContentBlock),
-    headerBlock = Some(siteHeader()),
-    footerItems = footerLinks.items,
-    bodyEndBlock = None
-)(content)
+  @govukLayout(
+      pageTitle = pageTitle,
+      headBlock = Some(head),
+      scriptsBlock = Some(scriptElement),
+      beforeContentBlock = Some(beforeContentBlock),
+      headerBlock = Some(siteHeader()),
+      footerItems = footerLinks.items,
+      bodyEndBlock = None
+  )(content)
