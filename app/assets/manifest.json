@@ -1,0 +1,19 @@
+{
+  "short_name": "HMRC",
+  "name": "HMRC",
+  "prefer_related_applications": true,
+  "start_url": "/estimate-paye-take-home-pay",
+  "icons": [
+    {
+      "src": "icons/hmrc-logo-web.png",
+      "type": "image/png+xml",
+      "sizes": "480x480"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "uk.gov.hmrc.ptcalc"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@
         mainDataAttributes: Option[Html] = None,
         bodyClassess: Option[String] = None,
         beforeContentBlock: Html = Html(""),
-        showAppBanner: Boolean = false
+        showAppBanner: Boolean = true
 
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
     @head = {
@@ -49,6 +49,8 @@
             <!--<![endif]-->
     @if(showAppBanner) {
         <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
+        <meta name="google-play-app" content="app-id=uk.gov.hmrc.ptcalc">
+        <link rel="manifest" href="@{controllers.routes.Assets.at("manifest.json")}" />
     }
     @if(timeout) {
         <meta
@@ -84,6 +86,7 @@
         <script src='@controllers.routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
         <script src='@controllers.routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
         <script src='@controllers.routes.Assets.at("javascripts/application.min.js")'></script>
+        <script src='@controllers.routes.Assets.at("javascripts/androidInstallBanner.js")'></script>
         <script>window.GOVUKFrontend.initAll();</script>
         <script>window.HMRCFrontend.initAll();</script>
     @js.map(x => x)
