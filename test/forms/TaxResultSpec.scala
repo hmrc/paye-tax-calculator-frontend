@@ -40,13 +40,6 @@ class TaxResultSpec extends AnyWordSpecLike with GuiceOneAppPerTest with Matcher
       extractTaxCode(input, defaultTaxCodeProvider) shouldBe "K452"
     }
 
-    "return the default UK tax code for 2020-21 if the user does not provide one" taggedAs Tag("2020") in {
-      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
-      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
-
-      extractTaxCode(input, defaultTaxCodeProvider) shouldBe "1250L"
-    }
-
     "return the default UK tax code for 2021-22 if the user does not provide one" taggedAs Tag("2021") in {
       val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
       val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
@@ -54,8 +47,15 @@ class TaxResultSpec extends AnyWordSpecLike with GuiceOneAppPerTest with Matcher
       extractTaxCode(input, defaultTaxCodeProvider) shouldBe "1257L"
     }
 
-    "return the default UK tax code for 2020-21 if the user does not provide one and is None" taggedAs Tag(
-      "2021"
+    "return the default UK tax code for 2022-23 if the user does not provide one" taggedAs Tag("2022") in {
+      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
+      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None)
+
+      extractTaxCode(input, defaultTaxCodeProvider) shouldBe "1257L"
+    }
+
+    "return the default UK tax code for 2022-23 if the user does not provide one and is None" taggedAs Tag(
+      "2022"
     ) in {
       val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(new AppConfig(app.configuration))
       val input = QuickCalcAggregateInput(None, None, None, None, None)
@@ -237,11 +237,11 @@ class TaxResultSpec extends AnyWordSpecLike with GuiceOneAppPerTest with Matcher
   }
 
   override def newAppForTest(testData: TestData): Application =
-    if (testData.tags.contains("2020")) {
-      GuiceApplicationBuilder().configure("dateOverride" -> "2020-05-12").build()
-    } else if (testData.tags.contains("2021")) {
-      GuiceApplicationBuilder().configure("dateOverride" -> "2021-04-06").build()
+    if (testData.tags.contains("2021")) {
+      GuiceApplicationBuilder().configure("dateOverride" -> "2021-05-12").build()
+    } else if (testData.tags.contains("2022")) {
+      GuiceApplicationBuilder().configure("dateOverride" -> "2022-04-06").build()
     } else {
-      GuiceApplicationBuilder().configure("dateOverride" -> "2020-04-06").build()
+      GuiceApplicationBuilder().configure("dateOverride" -> "2021-04-06").build()
     }
 }

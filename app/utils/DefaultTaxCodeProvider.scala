@@ -24,18 +24,18 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class DefaultTaxCodeProvider @Inject()(appConfig: AppConfig) {
 
+  private lazy val Default2022UkTaxCode           = "1257L"
   private lazy val Default2021UkTaxCode           = "1257L"
-  private lazy val Default20192020UkTaxCode       = "1250L"
+  private lazy val Default2022ScottishTaxCode     = "S1257L"
   private lazy val Default2021ScottishTaxCode     = "S1257L"
-  private lazy val Default20192020ScottishTaxCode = "S1250L"
   private lazy val firstDayOfTaxYear              = MonthDay.of(4, 6)
 
   def defaultScottishTaxCode: String = {
-    if (currentTaxYear == 2021) Default2021ScottishTaxCode else Default20192020ScottishTaxCode
+    if (currentTaxYear == 2022) Default2022ScottishTaxCode else Default2021ScottishTaxCode
   }
 
   def defaultUkTaxCode: String =
-    if (currentTaxYear == 2021) Default2021UkTaxCode else Default20192020UkTaxCode
+    if (currentTaxYear == 2022) Default2022UkTaxCode else Default2021UkTaxCode
 
   def startOfCurrentTaxYear: Int =
     firstDayOfTaxYear.atYear(currentTaxYear).getYear
