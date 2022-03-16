@@ -20,22 +20,19 @@ import config.AppConfig
 
 import java.time.{LocalDate, MonthDay}
 import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.calculator.CalculatorUtils
 
 @Singleton
 class DefaultTaxCodeProvider @Inject()(appConfig: AppConfig) {
 
-  private lazy val Default2022UkTaxCode           = "1257L"
-  private lazy val Default2021UkTaxCode           = "1257L"
-  private lazy val Default2022ScottishTaxCode     = "S1257L"
-  private lazy val Default2021ScottishTaxCode     = "S1257L"
   private lazy val firstDayOfTaxYear              = MonthDay.of(4, 6)
 
   def defaultScottishTaxCode: String = {
-    if (currentTaxYear == 2022) Default2022ScottishTaxCode else Default2021ScottishTaxCode
+    if (currentTaxYear == 2022) CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode + "S" else CalculatorUtils.INSTANCE.defaultTaxCode(2021).getTaxCode + "S"
   }
 
   def defaultUkTaxCode: String =
-    if (currentTaxYear == 2022) Default2022UkTaxCode else Default2021UkTaxCode
+    if (currentTaxYear == 2022) CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode else CalculatorUtils.INSTANCE.defaultTaxCode(2021).getTaxCode
 
   def startOfCurrentTaxYear: Int =
     firstDayOfTaxYear.atYear(currentTaxYear).getYear
