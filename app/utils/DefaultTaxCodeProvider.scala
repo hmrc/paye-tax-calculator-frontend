@@ -28,7 +28,7 @@ class DefaultTaxCodeProvider @Inject()(appConfig: AppConfig) {
   private lazy val firstDayOfTaxYear = MonthDay.of(4, 6)
 
   def defaultScottishTaxCode: String = {
-    if (currentTaxYear == 2022) CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode + "S" else CalculatorUtils.INSTANCE.defaultTaxCode(2021).getTaxCode + "S"
+    if (currentTaxYear == 2022) "S" + CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode else "S" + CalculatorUtils.INSTANCE.defaultTaxCode(2021).getTaxCode
   }
 
   def defaultUkTaxCode: String =
