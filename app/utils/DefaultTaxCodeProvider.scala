@@ -25,17 +25,11 @@ import uk.gov.hmrc.calculator.CalculatorUtils
 @Singleton
 class DefaultTaxCodeProvider @Inject()(appConfig: AppConfig) {
 
-  private lazy val firstDayOfTaxYear              = MonthDay.of(4, 6)
+  private lazy val firstDayOfTaxYear = MonthDay.of(4, 6)
 
   def defaultScottishTaxCode: String = {
     if (currentTaxYear == 2022) CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode + "S" else CalculatorUtils.INSTANCE.defaultTaxCode(2021).getTaxCode + "S"
   }
-
-  def defaultUkTaxCode: String =
-    if (currentTaxYear == 2022) CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode else CalculatorUtils.INSTANCE.defaultTaxCode(2021).getTaxCode
-
-  def startOfCurrentTaxYear: Int =
-    firstDayOfTaxYear.atYear(currentTaxYear).getYear
 
   def currentTaxYear: Int = {
     if (now.isBefore(firstDayOfTaxYear.atYear(now.getYear))) {
@@ -48,8 +42,14 @@ class DefaultTaxCodeProvider @Inject()(appConfig: AppConfig) {
   private def now: LocalDate =
     appConfig.dateOverride match {
       case Some(s) => LocalDate.parse(s)
-      case None    => LocalDate.now
+      case None => LocalDate.now
     }
+
+  def defaultUkTaxCode: String =
+    if (currentTaxYear == 2022) CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode else CalculatorUtils.INSTANCE.defaultTaxCode(2021).getTaxCode
+
+  def startOfCurrentTaxYear: Int =
+    firstDayOfTaxYear.atYear(currentTaxYear).getYear
 
 }
 
