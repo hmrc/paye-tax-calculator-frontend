@@ -52,8 +52,7 @@ object TaxResult {
       extractHours(quickCalcAggregateInput) match {
         case Some(number) => number.toDouble
         case None         => null
-      },
-      defaultTaxCodeProvider.currentTaxYear
+      }
     ).run()
 
   def extractTaxCode(
