@@ -106,6 +106,10 @@ quick_calc.result.info_url_a=Check how much Income Tax you paid last year
 quick_calc.result.info_url_b=Check if you have paid the right amount of tax
 quick_calc.result.info_url_c=Claim a tax refund
 
+quick_calc.result.22_23.disclaimer.yearly=Your take-home pay for the 2022 to 2023 tax year will be lower than the estimate shown. The difference will be less than 1.4%. This is because of changes to National Insurance in July and November 2022.
+quick_calc.result.22_23.disclaimer.monthly=Your take-home pay for any month from April 2022, paid before 6 November 2022, will be lower than the estimate shown. The difference will be less than 2.84%. This is because of changes to National Insurance in July and November 2022.
+quick_calc.result.22_23.disclaimer.weekly=Your take-home pay for any week from 6 April 2022, paid before 6 November 2022, will be lower than the estimate shown. The difference will be less than 2.84%. This is because of changes to National Insurance in July and November 2022.
+
 quick_calc.salary.header=How much do you get paid?
 quick_calc.salary.sub_header=How often do you get paid?
 quick_calc.salary.description_a=For each job you have, use the amount before tax and National Insurance are taken off, for example £7.20 an hour or £26500 a year.
