@@ -12,7 +12,7 @@ object AppDependencies {
   private val taxYearVersion                    = "3.0.0"
   private val taxKalcVersion                    = "2.9.1"
   private val catsCoreVersion                   = "2.3.0"
-  private val hmrcFrontend                      = "3.21.0-play-28"
+  private val hmrcFrontend                      = "7.14.0-play-28"
 
 
   val compile: Seq[ModuleID] = Seq(
