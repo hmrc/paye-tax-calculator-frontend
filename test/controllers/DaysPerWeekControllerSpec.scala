@@ -209,7 +209,7 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
@@ -243,7 +243,7 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
@@ -278,7 +278,7 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
@@ -313,7 +313,7 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
@@ -348,7 +348,7 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader      = parseHtml.getElementById("error-summary-title").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
