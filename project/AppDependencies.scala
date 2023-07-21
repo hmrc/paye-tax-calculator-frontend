@@ -4,32 +4,28 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay28Version            = "5.24.0"
+  private val bootstrapPlay28Version            = "7.19.0"
   private val playPartialsVersion               = "8.3.0-play-28"
-  private val logbackJsonLoggerVersion          = "5.2.0"
   private val httpCachingClientVersion          = "9.6.0-play-28"
   private val playConditionalFormMappingVersion = "1.11.0-play-28"
   private val urlBuilderVersion                 = "3.6.0-play-28"
   private val taxYearVersion                    = "3.0.0"
   private val taxKalcVersion                    = "2.9.1"
   private val catsCoreVersion                   = "2.3.0"
-  private val hmrcFrontend                      = "3.21.0-play-28"
-  private val flexmarkVersion                   = "0.62.2"
+  private val hmrcFrontend                      = "7.14.0-play-28"
+
 
   val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc"          %% "bootstrap-frontend-play-28"    % bootstrapPlay28Version,
     "uk.gov.hmrc"          %% "bootstrap-backend-play-28"     % bootstrapPlay28Version,
     "uk.gov.hmrc"          %% "play-partials"                 % playPartialsVersion,
-    "uk.gov.hmrc"          %% "logback-json-logger"           % logbackJsonLoggerVersion,
     "uk.gov.hmrc"          %% "play-frontend-hmrc"            % hmrcFrontend,
     "uk.gov.hmrc"          %% "http-caching-client"           % httpCachingClientVersion,
     "uk.gov.hmrc"          %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
-    "uk.gov.hmrc"          %% "url-builder"                   % urlBuilderVersion,
     "uk.gov.hmrc"          %% "tax-year"                      % taxYearVersion,
     "uk.gov.hmrc"          % "tax-kalculator-jvm"             % taxKalcVersion,
-    "org.typelevel"        %% "cats-core"                     % catsCoreVersion,
-    "com.vladsch.flexmark" % "flexmark-all"                   % flexmarkVersion
+    "org.typelevel"        %% "cats-core"                     % catsCoreVersion
   )
 
   private val pegdownVersion                   = "1.6.0"
@@ -38,6 +34,7 @@ object AppDependencies {
   private val scalacheckVersion                = "1.14.1"
   private val scalamockScalaTestSupportVersion = "3.6.0"
   private val mockitoVersion                   = "4.1.0"
+  private val flexmarkVersion                   = "0.62.2"
 
   def test(scope: String = "test"): Seq[ModuleID] = Seq(
     "uk.gov.hmrc"          %% "bootstrap-test-play-28"      % bootstrapPlay28Version           % scope,
@@ -46,7 +43,8 @@ object AppDependencies {
     "org.scalatestplus"    %% "mockito-3-12"                % scalaTestPlusMockitoVersion      % scope,
     "org.scalacheck"       %% "scalacheck"                  % scalacheckVersion                % scope,
     "org.mockito"          % "mockito-core"                 % mockitoVersion                   % scope,
-    "org.scalamock"        %% "scalamock-scalatest-support" % scalamockScalaTestSupportVersion % scope
+    "org.scalamock"        %% "scalamock-scalatest-support" % scalamockScalaTestSupportVersion % scope,
+    "com.vladsch.flexmark" % "flexmark-all"                   % flexmarkVersion                   % scope,
   )
 
   def apply(): Seq[ModuleID] = compile ++ test()

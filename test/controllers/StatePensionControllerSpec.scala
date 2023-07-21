@@ -157,7 +157,7 @@ class StatePensionControllerSpec
           val parseHtml = Jsoup.parse(contentAsString(result))
 
           val errorHeader =
-            parseHtml.getElementById("error-summary-title").text()
+            parseHtml.getElementsByClass("govuk-error-summary__title").text()
           val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
           val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
@@ -196,7 +196,7 @@ class StatePensionControllerSpec
           val parseHtml = Jsoup.parse(contentAsString(result))
 
           val errorHeader =
-            parseHtml.getElementById("error-summary-title").text()
+            parseHtml.getElementsByClass("govuk-error-summary__title").text()
           val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
           val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
