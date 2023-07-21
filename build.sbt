@@ -30,7 +30,6 @@ lazy val microservice = Project(appName, file("."))
   .settings(scoverageSettings: _*)
   .settings(scalaSettings: _*)
   .settings(majorVersion := 0)
-  .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
     RoutesKeys.routesImport += "models._",
