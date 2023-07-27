@@ -209,6 +209,10 @@ quick_calc.about_k_code_b_k = the K in your tax code (opens in a new tab)
 quick_calc.about_k_code_b_sk = the SK in your tax code (opens in a new tab)
 quick_calc.about_k_code_c = The K code is used across the UK and usually indicates you owe tax from a previous year.
 
+survey.title = Help improve the HMRC app
+survey.button.label = Take this short survey about the tax calculator (opens in a new tab)
+
+
 
 #######################################################
 ## Beta Banner
