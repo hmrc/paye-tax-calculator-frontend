@@ -31,6 +31,7 @@
         link: components.link,
         h1: components.h1,
         h2: components.h2,
+        h3: components.h3,
         govukTabs: GovukTabs,
         button: components.button,
         p: components.p,
@@ -95,6 +96,12 @@
         @Messages("quick_calc.result.info_a") @linkNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters", "quick_calc.result.info_b") @Messages("quick_calc.result.info_e")
     }
 
+    @h3(Messages("survey.title"))
+    @p{
+        @linkNewTab("https://forms.gle/6rC65nQXnYu4eEQ87", "survey.button.label")
+    }
+
+
     @formHelper(action = controllers.routes.QuickCalcController.restartQuickCalc) {
         @button("restart", Some("restart-button")
         )
@@ -104,9 +111,9 @@
 
     @printLink("site.print_and_save")
 
-    @p {
-        @linkNewTab(appConfig.betaFeedbackUrl, "feedback")
-    }
+<!--    @p {-->
+<!--        @linkNewTab(appConfig.betaFeedbackUrl, "feedback")-->
+<!--    }-->
 
     @sectionBreak("l")
 
