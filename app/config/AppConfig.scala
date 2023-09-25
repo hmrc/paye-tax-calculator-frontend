@@ -56,6 +56,7 @@ class AppConfig @Inject() (config: Configuration) {
 
   lazy val dateOverride: Option[String] = config.getOptional[String]("dateOverride")
 
+  val mongoTtl : Int = config.get[Int]("mongodb.timeToLiveInSeconds")
   def feedbackUrl(signedInUser: Boolean) =
     if (signedInUser) {
       s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"

@@ -13,6 +13,7 @@ object AppDependencies {
   private val taxKalcVersion                    = "2.9.1"
   private val catsCoreVersion                   = "2.3.0"
   private val hmrcFrontend                      = "7.14.0-play-28"
+  private val mongoVersion                      = "1.3.0"
 
 
   val compile: Seq[ModuleID] = Seq(
@@ -25,7 +26,8 @@ object AppDependencies {
     "uk.gov.hmrc"          %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
     "uk.gov.hmrc"          %% "tax-year"                      % taxYearVersion,
     "uk.gov.hmrc"          % "tax-kalculator-jvm"             % taxKalcVersion,
-    "org.typelevel"        %% "cats-core"                     % catsCoreVersion
+    "org.typelevel"        %% "cats-core"                     % catsCoreVersion,
+    "uk.gov.hmrc.mongo"    %% "hmrc-mongo-play-28"            % mongoVersion,
   )
 
   private val pegdownVersion                   = "1.6.0"
