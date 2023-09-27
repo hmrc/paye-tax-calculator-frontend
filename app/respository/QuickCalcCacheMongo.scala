@@ -16,23 +16,26 @@
 
 package respository
 
+import akka.Done
 import config.AppConfig
-import errors.MongoDBError
-import models.{QuickCalcAggregateInput, QuickCalcMongoCache}
+import models.QuickCalcMongoCache
+import org.mongodb.scala.bson.conversions.Bson
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
-import org.mongodb.scala.model.{IndexModel, IndexOptions}
+import org.mongodb.scala.model.{Filters, IndexModel, IndexOptions, ReplaceOptions, Updates}
 import org.mongodb.scala.model.Indexes.ascending
-import org.mongodb.scala.model.Filters.equal
-import utils.ServiceResponse
 
+
+import java.time.{Clock, Instant}
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 case class QuickCalcCacheMongo @Inject()(
                                           mongo: MongoComponent,
-                                          appConfig: AppConfig
+                                          appConfig: AppConfig,
+                                          clock: Clock
                                         )(implicit executionContext: ExecutionContext) extends PlayMongoRepository[QuickCalcMongoCache](
   collectionName = "quickCalcCache",
   mongoComponent = mongo,
@@ -49,19 +52,38 @@ case class QuickCalcCacheMongo @Inject()(
         .name("id")
         .unique(true))
   )
-){
+) {
 
-  def add(quickCalcMongoCache: QuickCalcMongoCache): ServiceResponse[QuickCalcMongoCache] =
+  private def byId(id: String): Bson = Filters.equal("id", id)
+
+  def add(quickCalcMongoCache: QuickCalcMongoCache): Future[Done] = {
+
+    val updatedQuickCalcMongoCache = quickCalcMongoCache copy (createdAt = Instant.now(clock))
     collection
-      .insertOne(quickCalcMongoCache)
+      .replaceOne(filter = byId(updatedQuickCalcMongoCache.id),
+        replacement = updatedQuickCalcMongoCache,
+        options = ReplaceOptions().upsert(true))
       .toFuture()
-      .map(_=> Right(quickCalcMongoCache))
-      .recover {
-        case _ => Left(MongoDBError("Unexpected error while writing a document"))
-      }
-
-  def findById(id: String): Future[Seq[QuickCalcMongoCache]] = {
-     collection.find(equal("id", id)).toFuture()
+      .map(_ => Done)
   }
 
+  def keepAlive(id: String): Future[Done] =
+    collection
+      .updateOne(
+        filter = byId(id),
+        update = Updates.set("createdAt", Instant.now(clock)),
+      )
+      .toFuture()
+      .map(_ => Done)
+
+  def findById(id: String): Future[Option[QuickCalcMongoCache]] = {
+    keepAlive(id).flatMap {
+      _ =>
+        collection
+          .find(byId(id))
+          .headOption()
+    }
+
+  }
 }
+

@@ -16,6 +16,7 @@
 
 package controllers
 
+import akka.Done
 import forms.StatePensionFormProvider
 import org.jsoup.Jsoup
 import org.mockito.Mockito.{times, verify, when}
@@ -35,7 +36,6 @@ import play.api.test.Helpers._
 import services.QuickCalcCache
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
-import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.pages.StatePensionView
 
 import scala.concurrent.Future
@@ -213,7 +213,7 @@ class StatePensionControllerSpec
           cacheTaxCode
         )
         when(mockCache.save(any())(any())) thenReturn Future.successful(
-          CacheMap("id", Map.empty)
+         Done
         )
 
         val application = new GuiceApplicationBuilder()
@@ -252,9 +252,7 @@ class StatePensionControllerSpec
         when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
           cacheTaxCode
         )
-        when(mockCache.save(any())(any())) thenReturn Future.successful(
-          CacheMap("id", Map.empty)
-        )
+        when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
         val application = new GuiceApplicationBuilder()
           .overrides(bind[QuickCalcCache].toInstance(mockCache))

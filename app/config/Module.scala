@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package config
 
-import play.api.libs.json.{Format, JsObject, Json, OFormat, OWrites, Reads, __}
-import uk.gov.hmrc.http.SessionId
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import play.api.inject.Binding
+import play.api.{Configuration, Environment}
+import java.time.Clock
 
-import java.time.{Instant, ZoneOffset}
+class Module extends play.api.inject.Module {
 
-case class QuickCalcMongoCache (id: String,
-                                createdAt : Instant, quickCalcAggregateInput: QuickCalcAggregateInput)
-object QuickCalcMongoCache {
+  override def bindings(environment: Environment, configuration: Configuration): collection.Seq[Binding[_]] = {
 
-  implicit val dateFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
-
-  implicit val format: Format[QuickCalcMongoCache] = Json.format[QuickCalcMongoCache]
-
+    Seq(
+      bind[Clock].toInstance(Clock.systemUTC()),
+    )
+  }
 }
