@@ -16,6 +16,7 @@
 
 package controllers
 
+import akka.Done
 import forms.ScottishRateFormProvider
 import models.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
 import org.jsoup.Jsoup
@@ -36,7 +37,6 @@ import play.api.test.Helpers._
 import services.QuickCalcCache
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
-import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import views.html.pages.ScottishRateView
 
@@ -226,7 +226,7 @@ class ScottishRateControllerSpec
       )
 
       when(mockCache.save(expectedAggregate)(hc)) thenReturn Future
-        .successful(CacheMap("id", Map.empty))
+        .successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -272,7 +272,7 @@ class ScottishRateControllerSpec
       )
 
       when(mockCache.save(expectedAggregate)(hc)) thenReturn Future
-        .successful(CacheMap("id", Map.empty))
+        .successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -318,7 +318,7 @@ class ScottishRateControllerSpec
       )
 
       when(mockCache.save(expectedAggregate)(hc)) thenReturn Future
-        .successful(CacheMap("id", Map.empty))
+        .successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -364,7 +364,7 @@ class ScottishRateControllerSpec
       )
 
       when(mockCache.save(expectedAggregate)(hc)) thenReturn Future
-        .successful(CacheMap("id", Map.empty))
+        .successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -410,7 +410,7 @@ class ScottishRateControllerSpec
       )
 
       when(mockCache.save(expectedAggregate)(hc)) thenReturn Future
-        .successful(CacheMap("id", Map.empty))
+        .successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -456,7 +456,7 @@ class ScottishRateControllerSpec
       )
 
       when(mockCache.save(expectedAggregate)(hc)) thenReturn Future
-        .successful(CacheMap("id", Map.empty))
+        .successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))

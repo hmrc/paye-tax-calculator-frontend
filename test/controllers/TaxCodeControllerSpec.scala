@@ -16,6 +16,7 @@
 
 package controllers
 
+import akka.Done
 import forms.UserTaxCodeFormProvider
 import org.jsoup.Jsoup
 import org.mockito.Mockito.{times, verify, when}
@@ -37,7 +38,6 @@ import services.QuickCalcCache
 import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
-import uk.gov.hmrc.http.cache.client.CacheMap
 import utils.DefaultTaxCodeProvider
 import views.html.pages.TaxCodeView
 
@@ -342,7 +342,7 @@ class TaxCodeControllerSpec
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -367,7 +367,7 @@ class TaxCodeControllerSpec
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -392,7 +392,7 @@ class TaxCodeControllerSpec
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary)
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -420,7 +420,7 @@ class TaxCodeControllerSpec
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
         cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None))
       )
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))

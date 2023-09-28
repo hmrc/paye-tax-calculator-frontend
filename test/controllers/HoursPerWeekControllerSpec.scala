@@ -32,6 +32,7 @@
 
 package controllers
 
+import akka.Done
 import forms.SalaryInHoursFormProvider
 import models.Hours
 import org.jsoup.Jsoup
@@ -54,7 +55,6 @@ import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
 import views.html.pages.HoursAWeekView
 import play.api.test.CSRFTokenHelper._
-import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
 
@@ -374,7 +374,7 @@ class HoursPerWeekControllerSpec
       val mockCache = mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteHourly)
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -404,7 +404,7 @@ class HoursPerWeekControllerSpec
         cacheTaxCodeStatePension
           .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None))
       )
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))

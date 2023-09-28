@@ -16,12 +16,12 @@
 
 package setup
 
+import akka.Done
 import forms.YouHaveToldUsItem
 import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary, ScottishRate, StatePension, UserTaxCode}
 import play.api.i18n.Messages
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
 
@@ -36,8 +36,8 @@ object QuickCalcCacheSetup {
           case _    => Future.successful(mockedResultOfFetching)
         }
 
-      def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[CacheMap] =
-        Future.successful(CacheMap("test-empty", Map.empty))
+      def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[Done] =
+        Future.successful(Done)
     }
 
   val baseURL = "/estimate-paye-take-home-pay/"

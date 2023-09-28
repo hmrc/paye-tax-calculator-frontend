@@ -16,6 +16,7 @@
 
 package controllers
 
+import akka.Done
 import forms.SalaryInDaysFormProvider
 import models.Days
 import org.jsoup.Jsoup
@@ -37,7 +38,6 @@ import play.api.test.Helpers._
 import services.QuickCalcCache
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
-import uk.gov.hmrc.http.cache.client.CacheMap
 import utils.BigDecimalFormatter
 import views.html.pages.DaysAWeekView
 
@@ -363,7 +363,7 @@ class DaysPerWeekControllerSpec
       val mockCache = mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteDaily)
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -393,7 +393,7 @@ class DaysPerWeekControllerSpec
         cacheTaxCodeStatePension
           .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None))
       )
-      when(mockCache.save(any())(any())) thenReturn Future.successful(CacheMap("id", Map.empty))
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))

@@ -16,42 +16,42 @@
 
 package services
 
+import akka.Done
 import com.google.inject.{ImplementedBy, Singleton}
+
 import javax.inject.Inject
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import config.AppConfig
-import models.QuickCalcAggregateInput
+import models.{QuickCalcAggregateInput, QuickCalcMongoCache}
+import respository.QuickCalcCacheMongo
 import uk.gov.hmrc.http.HttpClient
 
+import java.time.{Clock, Instant}
 import scala.concurrent._
 
 @ImplementedBy(classOf[QuickCalcKeyStoreCache])
 trait QuickCalcCache {
   def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]]
 
-  def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[CacheMap]
+  def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[Done]
 }
 
 @Singleton
 class QuickCalcKeyStoreCache @Inject() (
   httpClient:                HttpClient,
-  appConfig:                 AppConfig
+  appConfig:                 AppConfig,
+  quickCalcCacheMongo: QuickCalcCacheMongo
 )(implicit executionContext: ExecutionContext)
     extends QuickCalcCache {
 
   val id = "quick-calc-aggregate-input"
 
-  def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]] =
-    sessionCache.fetchAndGetEntry[QuickCalcAggregateInput](id)
-
-  def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[CacheMap] = sessionCache.cache(id, o)
-
-  private object sessionCache extends SessionCache {
-    override lazy val http:          HttpClient = httpClient
-    override lazy val defaultSource: String     = "paye-tax-calculator-frontend"
-    override lazy val baseUri:       String     = appConfig.cacheUrl
-    override lazy val domain:        String     = appConfig.domain
+  def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]] = {
+    quickCalcCacheMongo.findById(hc.sessionId.getOrElse(throw new  BadRequestException("No Session id found")).value).flatMap((test: Option[QuickCalcMongoCache]) =>
+      Future.successful(test.headOption.map(_.quickCalcAggregateInput)))
   }
-
+  def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[Done] = {
+    val cacheId = hc.sessionId.getOrElse(throw new BadRequestException("No Session id found"))
+    quickCalcCacheMongo.add(QuickCalcMongoCache(cacheId.value,quickCalcAggregateInput = o, createdAt = Instant.now()))
+  }
 }
