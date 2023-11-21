@@ -19,7 +19,7 @@ package utils
 object StripCharUtil {
 
   def stripAll(text: String): String = {
-    text.trim.stripPrefix("£").replaceAll(",","").stripSuffix(".")
+    text.trim.stripPrefix("£").replaceAll(",","")
   }
 
 }

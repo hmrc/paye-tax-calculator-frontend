@@ -179,7 +179,7 @@ quick_calc.salary.question.error.invalid_salary=Enter the amount you are paid in
 
 quick_calc.salary.question_error_invalid_input=Enter the amount you are paid in the correct format, for example £600 or £193.54
 
-quick_calc.salary.question.error.maximum_salary_input=Enter an amount that is less than 10000000
+quick_calc.salary.question.error.maximum_salary_input=The amount you are paid must be £9,999,999.99 or less
 
 quick_calc.salary.question.error.minimum_salary_input=Enter a payment amount that is more than 0
 

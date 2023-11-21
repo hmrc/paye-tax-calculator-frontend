@@ -281,7 +281,7 @@ object QuickCalcCacheSetup {
     "Enter a number between 1 and 7"
 
   val expectedMaxGrossPayErrorMessage =
-    "Enter an amount that is less than 10000000"
+    "The amount you are paid must be £9,999,999.99 or less"
 
   val expectedMaxHourlyRateErrorMessage =
     "Enter your pay as a number less than 10000000.00"
