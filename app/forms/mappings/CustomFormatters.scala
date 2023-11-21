@@ -21,6 +21,7 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, TaxCodeValidator, WageValidator}
 import utils.BigDecimalFormatter
+import utils.StripCharUtil.stripAll
 
 object CustomFormatters {
 
@@ -231,8 +232,9 @@ object CustomFormatters {
     ): Either[Seq[FormError], BigDecimal] =
       (data.get(key).filter(_.nonEmpty) match {
         case Some(s) =>
+          val strippedValue = stripAll(s)
           try {
-            val salary = BigDecimal(s).setScale(2)
+            val salary = BigDecimal(strippedValue).setScale(2)
             if (!WageValidator.INSTANCE.isAboveMinimumWages(salary.toDouble)) {
               Left(
                 Seq(
@@ -256,7 +258,7 @@ object CustomFormatters {
               Right(salary)
             }
           } catch {
-            case _: Throwable if !s.matches("([0-9])+(\\.\\d+)") =>
+            case _: Throwable if !strippedValue.matches("([0-9])+(\\.\\d+)") =>
               Left(
                 Seq(
                   FormError(
@@ -265,7 +267,7 @@ object CustomFormatters {
                   )
                 )
               )
-            case _: Throwable if !s.matches("([0-9])+(\\.\\d{1,2})") =>
+            case _: Throwable if !strippedValue.matches("([0-9])+(\\.\\d{1,2})") =>
               Left(
                 Seq(
                   FormError(

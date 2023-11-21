@@ -391,7 +391,7 @@ class SalaryControllerSpec
       }
     }
 
-    """return 303, with new Yearly Salary data "£20000" saved on a new list of aggregate data and redirect to State Pension Page""" in {
+    """return 303, with new Yearly Salary data "£20000" and pound signs and commas included saved on a new list of aggregate data and redirect to State Pension Page""" in {
       val mockCache = mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
@@ -403,7 +403,7 @@ class SalaryControllerSpec
       implicit val messages: Messages = messagesThing(application)
       running(application) {
 
-        val formData = Map("amount" -> "20000", "period" -> messages("quick_calc.salary.yearly.label"))
+        val formData = Map("amount" -> "£200,00", "period" -> messages("quick_calc.salary.yearly.label"))
 
         val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)

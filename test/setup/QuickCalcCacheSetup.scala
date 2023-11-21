@@ -253,10 +253,10 @@ object QuickCalcCacheSetup {
     "Enter a payment amount that is more than 0"
 
   val expectedInvalidSalaryErrorMessage =
-    "Enter a number, like 7.20 or 26500"
+    "Enter the amount you are paid in the correct format, for example £600 or £193.54"
 
   val invalidInputErrorMessage =
-    "Enter a number, like 7.20 or 26500"
+    "Enter the amount you are paid in the correct format, for example £600 or £193.54"
 
   val expectedMinHourlyRateErrorMessage = "Hourly rate must be at least 0.01"
 
@@ -286,7 +286,7 @@ object QuickCalcCacheSetup {
   val expectedMaxHourlyRateErrorMessage =
     "Enter your pay as a number less than 10000000.00"
 
-  val expectedEmptyErrorMessage            = "Enter an amount that you get paid"
+  val expectedEmptyErrorMessage            = "Enter the amount you are paid"
 
   val expectedPayFrequencyErrorMessage     = "Select how often you are paid"
 

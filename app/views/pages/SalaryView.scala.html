@@ -28,14 +28,15 @@
         p: components.p,
         inputRadio: components.inputRadio,
         button: components.button,
-        beforeContent: components.beforeContent
+        beforeContent: components.beforeContent,
+        label: components.label
 )
 
 
 @(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
 
 @periodLabels = @{
-    Seq("hourly", "daily", "weekly", "monthly", "yearly")
+    Seq("yearly", "monthly", "fourWeeks", "weekly", "daily", "hourly")
 }
 @radioFieldAmount = @{
     salaryForm("amount")
@@ -62,10 +63,11 @@
 
         @h1(messages("quick_calc.salary.header"))
 
+        @label(messages("quick_calc.salary.grossAmount.label"))
+
         @hmrcCurrencyInput(CurrencyInput(
             id = "amount",
             name = "amount",
-            label = Label(content = Text(Messages("quick_calc.salary.amount.label"))),
             hint = Some(Hint(
                 content = Text(Messages("hint.salary"))
             )),
@@ -76,9 +78,9 @@
         ))
 
         @inputRadio(
-            legendAsHeading = false,
+            legendAsHeading = true,
             form = salaryForm,
-            classes = "",
+            classes = "govuk-fieldset__legend govuk-fieldset__legend--m",
             legendKey = Messages("label.payperiod"),
             name = "period",
             items = periodRadioButtons
