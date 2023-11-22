@@ -290,13 +290,11 @@ object QuickCalcCacheSetup {
 
   val expectedPayFrequencyErrorMessage     = "Select how often you are paid"
 
+  val expectedEmptyDaysErrorMessage        = "Enter the number of days a week you work"
+
   //Hours
   def expectedEmptyHoursErrorMessage(implicit messages: Messages) =
     messages("quick_calc.salary.question.error.empty_number_hourly")
-
-  //Days
-  def expectedEmptyDaysErrorMessage(implicit messages: Messages) =
-    messages("quick_calc.salary.question.error.empty_number_daily")
 
   //Over State Pension
   def expectedInvalidStatePensionAnswer(implicit messages: Messages) =
