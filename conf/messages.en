@@ -173,7 +173,7 @@ quick_calc.salary.question.error.number_of_hours.more_than_168=Enter your hours 
 
 quick_calc.salary.question.error.empty_number_daily=Enter how many days you work in a week
 
-quick_calc.salary.question.error.empty_number_hourly=Enter how many hours a week you work
+quick_calc.salary.question.error.empty_number_hourly=Enter the number of hours a week you work
 
 quick_calc.salary.question.error.invalid_salary=Enter the amount you are paid in the correct format, for example £600 or £193.54
 

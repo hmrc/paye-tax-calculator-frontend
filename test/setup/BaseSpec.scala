@@ -29,11 +29,16 @@ import play.api.test.FakeRequest
 import services.Navigator
 import uk.gov.hmrc.http.HeaderNames
 
-class BaseSpec extends MockFactory with ScalaFutures with GuiceOneAppPerSuite with MetricClearSpec with Matchers {
+class BaseSpec
+  extends MockFactory
+    with ScalaFutures
+    with GuiceOneAppPerSuite
+    with MetricClearSpec
+    with Matchers {
 
   override lazy val app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
-    .configure("metrics.enabled" -> "false")
+    .configure("metrics.enabled" -> "false", "auditing.enabled" -> "false")
     .build()
 
   val appInjector               = app.injector
