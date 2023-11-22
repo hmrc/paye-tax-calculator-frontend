@@ -65,6 +65,7 @@ quick_calc.you_have_told_us.a_month.label=How much do you get paid?
 quick_calc.you_have_told_us.a_week.label=How much do you get paid?
 quick_calc.you_have_told_us.a_day.label=How much do you get paid?
 quick_calc.you_have_told_us.an_hour.label=How much do you get paid?
+quick_calc.you_have_told_us.every_4_weeks.label=How much do you get paid?
 
 quick_calc.you_have_told_us.a_day_sub.label=How many days a week do you usually work?
 quick_calc.you_have_told_us.an_hour_sub.label=How many hours a week do you usually work?
@@ -110,28 +111,33 @@ quick_calc.result.22_23.disclaimer.yearly=Your take-home pay for the 2022 to 202
 quick_calc.result.22_23.disclaimer.monthly=Your take-home pay for any month from April 2022, paid before 6 November 2022, will be lower than the estimate shown. The difference will be less than 2.84%. This is because of changes to National Insurance in July and November 2022.
 quick_calc.result.22_23.disclaimer.weekly=Your take-home pay for any week from 6 April 2022, paid before 6 November 2022, will be lower than the estimate shown. The difference will be less than 2.84%. This is because of changes to National Insurance in July and November 2022.
 
-quick_calc.salary.header=How much do you get paid?
+quick_calc.salary.header=How much are you paid?
 quick_calc.salary.sub_header=How often do you get paid?
 quick_calc.salary.description_a=For each job you have, use the amount before tax and National Insurance are taken off, for example £7.20 an hour or £26500 a year.
 quick_calc.salary.description_b=You can use the calculator as many times as you need.
 
 quick_calc.salary.yearly.label=a year
+quick_calc.salary.fourWeeks.label=every 4 weeks
 quick_calc.salary.monthly.label=a month
 quick_calc.salary.weekly.label=a week
 quick_calc.salary.daily.label=a day
 quick_calc.salary.hourly.label=an hour
-quick_calc.salary.yearly.text=Annually
+quick_calc.salary.yearly.text=Yearly
 quick_calc.salary.monthly.text=Monthly
+quick_calc.salary.fourWeeks.text=Every 4 weeks
 quick_calc.salary.weekly.text=Weekly
 quick_calc.salary.daily.text=Daily
 quick_calc.salary.hourly.text=Hourly
-quick_calc.salary.option_error=Select how often you are paid
+quick_calc.salary.option_error=Select how often you are paid this amount
 quick_calc.salary.error_header=Something’s wrong
 quick_calc.salary.amount.label=Amount paid
+quick_calc.salary.grossAmount.label=Gross amount, in pounds
+
 
 quick_calc.salary.yearly.sub_label=a_year
 quick_calc.salary.monthly.sub_label=a_month
 quick_calc.salary.weekly.sub_label=a_week
+quick_calc.salary.fourWeeks.sub_label=every_4_weeks
 quick_calc.salary.daily.sub_label=a_day_sub
 quick_calc.salary.hourly.sub_label=an_hour_sub
 
@@ -169,15 +175,15 @@ quick_calc.salary.question.error.empty_number_daily=Enter how many days you work
 
 quick_calc.salary.question.error.empty_number_hourly=Enter how many hours a week you work
 
-quick_calc.salary.question.error.invalid_salary=Enter a number, like 7.20 or 26500
+quick_calc.salary.question.error.invalid_salary=Enter the amount you are paid in the correct format, for example £600 or £193.54
 
-quick_calc.salary.question_error_invalid_input=Enter a number, like 7.20 or 26500
+quick_calc.salary.question_error_invalid_input=Enter the amount you are paid in the correct format, for example £600 or £193.54
 
-quick_calc.salary.question.error.maximum_salary_input=Enter an amount that is less than 10000000
+quick_calc.salary.question.error.maximum_salary_input=The amount you are paid must be £9,999,999.99 or less
 
 quick_calc.salary.question.error.minimum_salary_input=Enter a payment amount that is more than 0
 
-quick_calc.salary.question.error.empty_salary_input=Enter an amount that you get paid
+quick_calc.salary.question.error.empty_salary_input=Enter the amount you are paid
 
 quick_calc.salary.question.error.empty_daily_salary_input=Please enter your daily rate
 quick_calc.salary.question.error.empty_hourly_salary_input=Please enter your hourly rate
@@ -253,8 +259,8 @@ quick_calc.salary.question.error.number_of_days.invalid_number=Enter days worked
 quick_calc.salary.question.error.invalid_number_hourly=Enter hours worked in a week as a number, like 8 or 37.5
 
 label.salary=How much do you get paid?
-hint.salary=For example, 1300 or 193.50
-label.payperiod=How are you paid?
+hint.salary=This is the amount you are paid before any deductions are made.
+label.payperiod=How often are you paid this amount?
 label.state-pension-details=Check your State Pension age
 label.tax-code=Find your current tax code
 label.scottish-rate-details=Check if you pay Scottish Income Tax

@@ -78,11 +78,12 @@ object TaxResult {
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
         s.period match {
-          case "a year"  => s.amount
-          case "a month" => s.amount
-          case "a week"  => s.amount
-          case "a day"   => s.amount
-          case "an hour" => s.amount
+          case "a year"        => s.amount
+          case "a month"       => s.amount
+          case "a week"        => s.amount
+          case "a day"         => s.amount
+          case "an hour"       => s.amount
+          case "every 4 weeks" => s.amount
           case _         => throw new Exception("No Salary has been provided.")
         }
       case None => throw new Exception("No Salary has been provided.")
@@ -92,11 +93,12 @@ object TaxResult {
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
         s.period match {
-          case "a year"  => PayPeriod.YEARLY
-          case "a month" => PayPeriod.MONTHLY
-          case "a week"  => PayPeriod.WEEKLY
-          case "a day"   => PayPeriod.DAILY
-          case "an hour" => PayPeriod.HOURLY
+          case "a year"        => PayPeriod.YEARLY
+          case "a month"       => PayPeriod.MONTHLY
+          case "a week"        => PayPeriod.WEEKLY
+          case "a day"         => PayPeriod.DAILY
+          case "an hour"       => PayPeriod.HOURLY
+          case "every 4 weeks" => PayPeriod.FOUR_WEEKLY
           case e         => throw new BadRequestException(s"$e is not a valid PayPeriod")
         }
       case _ => throw new BadRequestException(s"Invalid PayPeriod")

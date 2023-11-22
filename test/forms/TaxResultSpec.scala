@@ -143,6 +143,10 @@ class TaxResultSpec extends AnyWordSpecLike with GuiceOneAppPerTest with Matcher
       extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "an hour", None)), None, None, None, None)) shouldBe PayPeriod.HOURLY
     }
 
+    "return empty string if response is Every 4 weeks" in {
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, "every 4 weeks", None)), None, None, None, None)) shouldBe PayPeriod.FOUR_WEEKLY
+    }
+
     """return an error with message "a decade is not a valid PayPeriod" if incorrect salary duration""" in {
       val thrown = intercept[BadRequestException] {
         extractPayPeriod(QuickCalcAggregateInput(Some(Salary(2, "a decade", None)), None, None, None, None))
