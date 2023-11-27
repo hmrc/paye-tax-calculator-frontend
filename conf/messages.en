@@ -49,7 +49,7 @@ quick_calc.you_have_told_us.edit=Change
 quick_calc.you_have_told_us.about_tax_code.label=What is your tax code? (Optional)
 quick_calc.you_have_told_us.about_tax_code.no=No
 quick_calc.you_have_told_us.about_tax_code.yes=Yes
-quick_calc.you_have_told_us.about_tax_code.default_a=We have used the default tax code
+quick_calc.you_have_told_us.about_tax_code.default_a=Not provided
 quick_calc.you_have_told_us.about_tax_code.default_b=because you did not enter one.
 
 quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
@@ -144,6 +144,7 @@ quick_calc.salary.hourly.sub_label=an_hour_sub
 quick_calc.salary.question.approximate=If you don’t know, an approximate number is fine.
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
 quick_calc.salary.question.hours_a_week=How many hours a week do you usually work?
+quick_calc.salary.question.state_pension_info= If you are over the State Pension age, you do not pay National Insurance - unless you're self-employed and pay Class 4 contributions.
 quick_calc.salary.question.state_pension_url_a=You can
 quick_calc.salary.question.state_pension_url_b=check your State Pension age (opens in a new tab)
 quick_calc.salary.question.state_pension_url_c=if you are not sure.
@@ -261,7 +262,7 @@ quick_calc.salary.question.error.invalid_number_hourly=Enter hours worked in a w
 label.salary=How much do you get paid?
 hint.salary=This is the amount you are paid before any deductions are made.
 label.payperiod=How often are you paid this amount?
-label.state-pension-details=Check your State Pension age
+label.state-pension-details=Why we ask this
 label.tax-code=Find your current tax code
 label.scottish-rate-details=Check if you pay Scottish Income Tax
 

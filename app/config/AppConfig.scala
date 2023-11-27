@@ -39,7 +39,7 @@ class AppConfig @Inject() (config: Configuration) {
     .getOrElse(throw new Exception(s"Could not find config 'services.cachable.session-cache.domain'"))
   private val contactHost:                  String = loadConfig(s"contact-frontend.host")
   private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
-
+  lazy val checkStatePensionAge:   String = config.get[String]("gov-uk.checkStatePensionAge")
   private def loadConfig(key: String): String =
     config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
@@ -48,9 +48,7 @@ class AppConfig @Inject() (config: Configuration) {
   lazy val termsConditions:        String = host + config.get[String]("urls.footer.termsConditions")
   lazy val govukHelp:              String = config.get[String]("urls.footer.govukHelp")
   lazy val accessibilityStatement: String = config.get[String]("urls.footer.accessibilityStatement")
-
   lazy val languageTranslationEnabled: Boolean = config.get[Boolean]("features.welsh-translation")
-
   lazy val timeout:   Int = config.get[Int]("timeout.timeout")
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
 
