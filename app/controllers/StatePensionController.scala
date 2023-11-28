@@ -84,7 +84,7 @@ class StatePensionController @Inject() (
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
                 val updatedAggregate =
-                  aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(false,None)))
+                  aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(false,Some("1257L"))))
                 cache.save(updatedAggregate).map { _ =>
                   Redirect(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(

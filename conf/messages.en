@@ -49,7 +49,7 @@ quick_calc.you_have_told_us.edit=Change
 quick_calc.you_have_told_us.about_tax_code.label=What is your tax code? (Optional)
 quick_calc.you_have_told_us.about_tax_code.no=No
 quick_calc.you_have_told_us.about_tax_code.yes=Yes
-quick_calc.you_have_told_us.about_tax_code.default_a=Not provided
+quick_calc.you_have_told_us.about_tax_code.default_a=We have used the default tax code
 quick_calc.you_have_told_us.about_tax_code.default_b=because you did not enter one.
 
 quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
@@ -195,6 +195,7 @@ quick_calc.salary.question.error.minimum_daily_salary_input=Daily rate must be a
 quick_calc.over_state_pension_age.header=Are you over the State Pension age?
 quick_calc.over_state_pension_age.yes=Yes
 quick_calc.over_state_pension_age.no=No
+quick_calc.over_state_pension_age_error1=There is a problem
 quick_calc.over_state_pension_age_error=Select yes if you are over the State Pension age
 
 quick_calc.about_tax_code.header=What is your tax code? (Optional)

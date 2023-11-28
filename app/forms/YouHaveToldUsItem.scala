@@ -48,7 +48,8 @@ object YouHaveToldUs {
           s"${t.taxCode.getOrElse("")}"
         else
           s"${Messages("quick_calc.you_have_told_us.about_tax_code.default_a")} " +
-          s" ${t.taxCode.getOrElse("")}",
+            s" ${t.taxCode.getOrElse("")}" +
+            s" ${Messages("quick_calc.you_have_told_us.about_tax_code.default_b")}",
         label,
         url,
         idSuffix
