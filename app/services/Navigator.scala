@@ -41,6 +41,8 @@ class Navigator @Inject() () {
       routes.SalaryController.showSalaryForm
     else if (aggregate.savedIsOverStatePensionAge.isEmpty)
       routes.StatePensionController.showStatePensionForm
+    else if (aggregate.savedTaxCode.isEmpty)
+      routes.TaxCodeController.showTaxCodeForm
     else
       routes.SalaryController.showSalaryForm
 }

@@ -28,7 +28,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, DefaultTaxCodeProvider}
 import views.html.pages.StatePensionView
 
 import scala.concurrent.ExecutionContext
@@ -40,7 +40,8 @@ class StatePensionController @Inject() (
   val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
   statePensionView:              StatePensionView,
-  statePensionFormProvider:      StatePensionFormProvider
+  statePensionFormProvider:      StatePensionFormProvider,
+  defaultTaxCodeProvider: DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -84,7 +85,7 @@ class StatePensionController @Inject() (
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
                 val updatedAggregate =
-                  aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(false,Some("1257L"))))
+                  aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(false,Some(defaultTaxCodeProvider.defaultUkTaxCode))))
                 cache.save(updatedAggregate).map { _ =>
                   Redirect(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(

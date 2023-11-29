@@ -195,7 +195,6 @@ quick_calc.salary.question.error.minimum_daily_salary_input=Daily rate must be a
 quick_calc.over_state_pension_age.header=Are you over the State Pension age?
 quick_calc.over_state_pension_age.yes=Yes
 quick_calc.over_state_pension_age.no=No
-quick_calc.over_state_pension_age_error1=There is a problem
 quick_calc.over_state_pension_age_error=Select yes if you are over the State Pension age
 
 quick_calc.about_tax_code.header=What is your tax code? (Optional)

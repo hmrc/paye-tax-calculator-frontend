@@ -292,13 +292,11 @@ object QuickCalcCacheSetup {
 
   val expectedEmptyDaysErrorMessage        = "Enter the number of days a week you work"
 
+  val expectedInvalidStatePensionAnswer    = "Select yes if you are over the State Pension age"
+
   //Hours
   def expectedEmptyHoursErrorMessage(implicit messages: Messages) =
     messages("quick_calc.salary.question.error.empty_number_hourly")
-
-  //Over State Pension
-  def expectedInvalidStatePensionAnswer(implicit messages: Messages) =
-    messages("quick_calc.over_state_pension_age_error")
 
   //Scottish Rate
   def expectedInvalidScottishRateAnswer(implicit messages: Messages) =
