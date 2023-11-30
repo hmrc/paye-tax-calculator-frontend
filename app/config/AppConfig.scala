@@ -39,7 +39,7 @@ class AppConfig @Inject() (config: Configuration) {
     .getOrElse(throw new Exception(s"Could not find config 'services.cachable.session-cache.domain'"))
   private val contactHost:                  String = loadConfig(s"contact-frontend.host")
   private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
-  lazy val checkStatePensionAge:   String = config.get[String]("gov-uk.checkStatePensionAge")
+  lazy val checkStatePensionAge:   String = config.get[String]("urls.checkStatePensionAge")
   private def loadConfig(key: String): String =
     config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
