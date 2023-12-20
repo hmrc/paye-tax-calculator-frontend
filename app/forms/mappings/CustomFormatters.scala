@@ -23,6 +23,8 @@ import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, TaxCodeValid
 import utils.BigDecimalFormatter
 import utils.StripCharUtil.stripAll
 
+import scala.collection.immutable.Map
+
 object CustomFormatters {
 
   def scottishRateValidation: Formatter[Boolean] = new Formatter[Boolean] {
@@ -66,6 +68,29 @@ object CustomFormatters {
     ) = Map(key -> value.toString)
   }
 
+  def removeTaxCodeValidation: Formatter[Boolean] = new Formatter[Boolean] {
+
+    override def bind(
+                       key: String,
+                       data: Map[String, String]
+                     ) =
+      Right(data.getOrElse(key, "")).right.flatMap {
+        case "true" => Right(true)
+        case "false" => Right(false)
+        case _ =>
+          Left(
+            Seq(
+              FormError(key, "quick_calc.remove_tax_code_error")
+            )
+          )
+      }
+
+    override def unbind(
+                         key: String,
+                         value: Boolean
+                       ) = Map(key -> value.toString)
+  }
+
   def hasTaxCodeBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
@@ -81,6 +106,24 @@ object CustomFormatters {
       key:   String,
       value: Boolean
     ) =
+      Map(key -> value.toString)
+  }
+
+  def hasScottishRateBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
+
+    override def bind(
+                       key: String,
+                       data: Map[String, String]
+                     ) =
+      Right(data.getOrElse(key, "")).right.flatMap {
+        case "" => Right(false)
+        case _ => Right(true)
+      }
+
+    override def unbind(
+                         key: String,
+                         value: Boolean
+                       ) =
       Map(key -> value.toString)
   }
 

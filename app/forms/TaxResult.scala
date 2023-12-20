@@ -56,17 +56,26 @@ object TaxResult {
     ).run()
 
   def extractTaxCode(
-    quickCalcAggregateInput: QuickCalcAggregateInput,
-    defaultTaxCodeProvider:  DefaultTaxCodeProvider
-  ): String =
-    quickCalcAggregateInput.savedTaxCode match {
+                      quickCalcAggregateInput: QuickCalcAggregateInput,
+                      defaultTaxCodeProvider: DefaultTaxCodeProvider
+                    ): String = {
+    val baseTaxCode = quickCalcAggregateInput.savedTaxCode match {
       case Some(s) =>
         s.taxCode match {
           case Some(taxCode) => taxCode
-          case None          => defaultTaxCodeProvider.defaultUkTaxCode
+          case None => defaultTaxCodeProvider.defaultUkTaxCode
         }
       case None => defaultTaxCodeProvider.defaultUkTaxCode
     }
+   val result =(baseTaxCode, quickCalcAggregateInput.savedScottishRate) match {
+      case (taxCode, Some(scottishRate))
+        if !taxCode.startsWith("S") && scottishRate.payScottishRate => "S" + taxCode
+      case _ =>
+        baseTaxCode
+    }
+    result
+  }
+
 
   def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedIsOverStatePensionAge match {

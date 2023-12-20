@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package forms
+@import play.api.i18n._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
+@import views.html.components.beforeContent
 
-import forms.mappings.CustomFormatters._
-import javax.inject.Inject
-import models.ScottishRate
-import play.api.data.Form
-import play.api.data.Forms._
+@this(
+govuk_wrapper: templates.GovukLayoutWrapper,
+formHelper: FormWithCSRF,
+h1: components.h1,
+button: components.button,
+beforeContent: components.beforeContent
+)
 
-class ScottishRateFormProvider @Inject() () {
+@()(implicit request: Request[_], messages: Messages)
 
-  def apply(): Form[ScottishRate] = Form(
-    mapping(
-      "hasScottishRate" -> of(hasScottishRateBooleanFormatter),
-      "payScottishRate" -> of(scottishRateValidation)
-    )(ScottishRate.apply)(ScottishRate.unapply)
-  )
-}
+@govuk_wrapper(Some(titleNoForm(Messages("reset.h1"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = false, timeout = false) {
+
+@h1("reset.h1")
+
+ }

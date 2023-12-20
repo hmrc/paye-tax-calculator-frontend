@@ -52,7 +52,7 @@
 }
 
 @backButtonUrl = @{
-    s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "").mkString}"
+   controllers.routes.YouHaveToldUsController.summary.url
 }
 
 @govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income"))), beforeContentBlock = beforeContent(backButtonUrl)) {

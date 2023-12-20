@@ -72,7 +72,6 @@ class DaysPerWeekController @Inject() (
                   Some(PayPeriodDetail(value, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
               )
             )
-
           updatedAggregate.flatMap { agg =>
             cache
               .save(agg)

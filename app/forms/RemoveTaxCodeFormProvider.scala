@@ -16,18 +16,16 @@
 
 package forms
 
-import forms.mappings.CustomFormatters._
-import javax.inject.Inject
-import models.ScottishRate
+import models.UserTaxCode
 import play.api.data.Form
 import play.api.data.Forms._
-
-class ScottishRateFormProvider @Inject() () {
-
-  def apply(): Form[ScottishRate] = Form(
-    mapping(
-      "hasScottishRate" -> of(hasScottishRateBooleanFormatter),
-      "payScottishRate" -> of(scottishRateValidation)
-    )(ScottishRate.apply)(ScottishRate.unapply)
-  )
-}
+import javax.inject.Inject
+import forms.mappings.CustomFormatters._
+//
+//  class RemoveTaxCodeFormProvider @Inject()() {
+//    def apply(): Form[UserTaxCode] = Form(
+//      mapping(
+//        "removeTaxCode" -> of(removeTaxCodeValidation),
+//      )(UserTaxCode.apply)(UserTaxCode.unapply)
+//    )
+//  }

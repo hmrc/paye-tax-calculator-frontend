@@ -15,6 +15,7 @@
  *@
 
 @import forms.YouHaveToldUsItem
+@import forms.AdditionalQuestionItems
 @import forms.YouHaveToldUs.getGoBackLink
 @import play.api.i18n._
 @import controllers.routes
@@ -24,14 +25,16 @@
 @this(
         govukTemplate: templates.GovukLayoutWrapper,
         h1: components.h1,
+        h3: components.h3,
         govukBackLink: GovukBackLink,
         formHelper: FormWithCSRF,
         button: components.button,
         govukSummaryList: GovukSummaryList,
-        beforeContent: components.beforeContent
+        beforeContent: components.beforeContent,
+        warningText: components.warningText
 )
 
-@(items: List[YouHaveToldUsItem])(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
+@(items: List[YouHaveToldUsItem], additionalQuestions: List[AdditionalQuestionItems], warningMessages: Map[String, String], taxCodeExists: Boolean)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 
 @rows = @{
     items.map { item =>
@@ -52,6 +55,58 @@
     }.toSeq
 }
 
+@changeLinks(item: AdditionalQuestionItems) =@{
+    if(item.label == "about_tax_code" && !taxCodeExists) {
+        Seq(
+            ActionItem(
+                href = item.url,
+                content = Text(Messages("quick_calc.you_have_told_us.taxCode.add")),
+                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
+                attributes = Map("id" -> s"change-${item.label}-link")
+            )
+        )
+    } else if(item.label == "about_tax_code" && taxCodeExists){
+            Seq(
+                ActionItem(
+                href = item.url,
+                content = Text(Messages("quick_calc.you_have_told_us.edit")),
+                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+                attributes = Map("id" -> s"change-${item.label}-link")
+                ),
+                ActionItem(
+                href = item.url,
+                content = Text(Messages("quick_calc.you_have_told_us.taxCode.remove")),
+                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+                attributes = Map("id" -> s"change-${item.label}-link")
+                ),
+            )
+    } else {
+        Seq(
+        ActionItem(
+        href = item.url,
+        content = Text(Messages("quick_calc.you_have_told_us.edit")),
+        visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+        attributes = Map("id" -> s"change-${item.label}-link")
+        ),
+    )
+    }
+
+}
+
+@additionalQuestionRows = @{
+    additionalQuestions.map { item =>
+            SummaryListRow(
+                key = Key(content = Text(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label"))),
+                value = Value(content = HtmlContent(
+                        s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warningMessages(item.label)) else Html("")}"""
+                    )),
+                actions = Some(Actions(
+                    items = changeLinks(item)
+                ))
+            )
+        }.toSeq
+}
+
 @backButtonUrl = @{
     s"${getGoBackLink(items)}"
 }
@@ -59,8 +114,14 @@
 @govukTemplate(Some(titleNoForm(Messages("quick_calc.you_have_told_us.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
     @h1("quick_calc.you_have_told_us.header")
+    <br><br>
+    @h3("quick_calc.you_have_told_us.subheading")
 
     @govukSummaryList(SummaryList(rows = rows))
+
+    @h3("quick_calc.you_have_told_us.subheading.additional")
+
+    @govukSummaryList(SummaryList(rows = additionalQuestionRows))
 
     @formHelper(action = routes.ShowResultsController.showResult) {
         @button("get_results", Some("button-get-results"))

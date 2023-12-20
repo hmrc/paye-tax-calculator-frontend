@@ -93,7 +93,7 @@ class ScottishRateController @Inject() (
               .map(
                 _.copy(
                   savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode))),
-                  savedScottishRate = Some(ScottishRate(scottish.payScottishRate))
+                  savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, payScottishRate = scottish.payScottishRate))
                 )
               )
             updatedAggregate

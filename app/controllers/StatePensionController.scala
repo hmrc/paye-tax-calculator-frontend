@@ -20,7 +20,7 @@ import config.AppConfig
 import forms.StatePensionFormProvider
 
 import javax.inject.{Inject, Singleton}
-import models.{QuickCalcAggregateInput, StatePension, UserTaxCode}
+import models.{QuickCalcAggregateInput, ScottishRate, StatePension, UserTaxCode}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
@@ -85,7 +85,7 @@ class StatePensionController @Inject() (
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
                 val updatedAggregate =
-                  aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(false,Some(defaultTaxCodeProvider.defaultUkTaxCode))))
+                  aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false,None)), savedScottishRate = Some(ScottishRate(payScottishRate = false)))
                 cache.save(updatedAggregate).map { _ =>
                   Redirect(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(

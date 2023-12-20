@@ -29,7 +29,7 @@ index.language_version.target_language=welsh
 continue=Continue
 back = Back
 restart = Start again
-get_results=Get results
+get_results=Calculate take-home pay
 a=a
 
 feedback=Tell us what you think of this calculator (opens in a new tab)
@@ -41,31 +41,36 @@ quick_calc.header.title=Estimate your take-home pay
 site.govuk=GOV.UK
 
 quick_calc.you_have_told_us.header=Check your answers
+quick_calc.you_have_told_us.subheading=Your Income
+quick_calc.you_have_told_us.subheading.additional=Additional questions (Optional)
 quick_calc.you_have_told_us.header_question=We asked
 quick_calc.you_have_told_us.header_answers=You answered
 quick_calc.you_have_told_us.header_change_link=You can
 quick_calc.you_have_told_us.edit=Change
+quick_calc.you_have_told_us.taxCode.add = Add
+quick_calc.you_have_told_us.taxCode.remove = Remove
 
+quick_calc.you_have_told_us.additional_questions.about_tax_code.label=Tax code
 quick_calc.you_have_told_us.about_tax_code.label=What is your tax code? (Optional)
 quick_calc.you_have_told_us.about_tax_code.no=No
 quick_calc.you_have_told_us.about_tax_code.yes=Yes
-quick_calc.you_have_told_us.about_tax_code.default_a=We have used the default tax code
+quick_calc.you_have_told_us.about_tax_code.default_a=Not provided
 quick_calc.you_have_told_us.about_tax_code.default_b=because you did not enter one.
 
-quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
+quick_calc.you_have_told_us.additional_questions.scottish_rate.label=Scottish Income Tax
 quick_calc.you_have_told_us.scottish_rate.yes=Yes
 quick_calc.you_have_told_us.scottish_rate.no=No
 
-quick_calc.you_have_told_us.over_state_pension_age.label=Are you over the State Pension age?
+quick_calc.you_have_told_us.over_state_pension_age.label=Over State Pension age
 quick_calc.you_have_told_us.over_state_pension_age.yes=Yes
 quick_calc.you_have_told_us.over_state_pension_age.no=No
 
-quick_calc.you_have_told_us.a_year.label=How much do you get paid?
-quick_calc.you_have_told_us.a_month.label=How much do you get paid?
-quick_calc.you_have_told_us.a_week.label=How much do you get paid?
-quick_calc.you_have_told_us.a_day.label=How much do you get paid?
-quick_calc.you_have_told_us.an_hour.label=How much do you get paid?
-quick_calc.you_have_told_us.every_4_weeks.label=How much do you get paid?
+quick_calc.you_have_told_us.a_year.label=Gross income
+quick_calc.you_have_told_us.a_month.label=Gross income
+quick_calc.you_have_told_us.a_week.label=Gross income
+quick_calc.you_have_told_us.a_day.label=Gross income
+quick_calc.you_have_told_us.an_hour.label=Gross income
+quick_calc.you_have_told_us.every_4_weeks.label=Gross income
 
 quick_calc.you_have_told_us.a_day_sub.label=How many days a week do you usually work?
 quick_calc.you_have_told_us.an_hour_sub.label=How many hours a week do you usually work?
@@ -196,6 +201,7 @@ quick_calc.over_state_pension_age.header=Are you over the State Pension age?
 quick_calc.over_state_pension_age.yes=Yes
 quick_calc.over_state_pension_age.no=No
 quick_calc.over_state_pension_age_error=Select yes if you are over the State Pension age
+quick_calc.remove_tax_code_error=Select yes if you want to remove your tax code
 
 quick_calc.about_tax_code.header=What is your tax code? (Optional)
 quick_calc.about_tax_code.has_tax_code=Enter your tax code

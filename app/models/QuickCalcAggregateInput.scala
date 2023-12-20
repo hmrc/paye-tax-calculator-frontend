@@ -16,7 +16,7 @@
 
 package models
 
-import forms.{YouHaveToldUs, YouHaveToldUsItem}
+import forms.{AdditionalQuestionItems, AdditionalQuestions, YouHaveToldUs, YouHaveToldUsItem}
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 
@@ -38,10 +38,14 @@ case class QuickCalcAggregateInput(
     List(
       savedSalary.map { YouHaveToldUs(_) },
       savedPeriod.map { YouHaveToldUs(_) },
-      savedIsOverStatePensionAge.map { YouHaveToldUs(_) },
-      savedTaxCode.map { YouHaveToldUs(_) },
-      savedScottishRate.map { YouHaveToldUs(_) }
+      savedIsOverStatePensionAge.map { YouHaveToldUs(_) }
     ).flatten
+
+  def additionalQuestionItems(implicit m: Messages) : List[AdditionalQuestionItems] =
+    List(
+      AdditionalQuestions(savedTaxCode),
+      AdditionalQuestions(savedScottishRate)
+    )
 
   def isEmpty: Boolean =
     List(

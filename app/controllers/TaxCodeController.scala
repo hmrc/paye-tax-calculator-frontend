@@ -98,10 +98,7 @@ class TaxCodeController @Inject() (
               )
 
             updatedAggregate.flatMap { updatedAgg =>
-              val agg =
-                if (newTaxCode.taxCode.isDefined)
-                  updatedAgg.copy(savedScottishRate = None)
-                else updatedAgg
+              val agg = updatedAgg
               cache
                 .save(agg)
                 .map(_ =>
