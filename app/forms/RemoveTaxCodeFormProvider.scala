@@ -19,13 +19,16 @@ package forms
 import models.UserTaxCode
 import play.api.data.Form
 import play.api.data.Forms._
+
 import javax.inject.Inject
 import forms.mappings.CustomFormatters._
-//
-//  class RemoveTaxCodeFormProvider @Inject()() {
-//    def apply(): Form[UserTaxCode] = Form(
-//      mapping(
-//        "removeTaxCode" -> of(removeTaxCodeValidation),
-//      )(UserTaxCode.apply)(UserTaxCode.unapply)
-//    )
-//  }
+import play.api.data.format.Formats.stringFormat
+
+  class RemoveTaxCodeFormProvider @Inject()() {
+    def apply(): Form[UserTaxCode] = Form(
+      mapping(
+        "removeTaxCode" -> of(removeTaxCodeValidation),
+        "gaveUsTaxCode" -> optional(of[String])
+      )(UserTaxCode.apply)(UserTaxCode.unapply)
+    )
+  }
