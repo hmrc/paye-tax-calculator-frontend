@@ -112,6 +112,7 @@ quick_calc.result.22_23.disclaimer.monthly=Your take-home pay for any month from
 quick_calc.result.22_23.disclaimer.weekly=Your take-home pay for any week from 6 April 2022, paid before 6 November 2022, will be lower than the estimate shown. The difference will be less than 2.84%. This is because of changes to National Insurance in July and November 2022.
 
 quick_calc.salary.header=How much are you paid?
+quick_calc.salary.oldHeader=How much do you get paid?
 quick_calc.salary.sub_header=How often do you get paid?
 quick_calc.salary.description_a=For each job you have, use the amount before tax and National Insurance are taken off, for example £7.20 an hour or £26500 a year.
 quick_calc.salary.description_b=You can use the calculator as many times as you need.
@@ -260,9 +261,13 @@ quick_calc.salary.question.error.number_of_days.invalid_number=Enter days worked
 quick_calc.salary.question.error.invalid_number_hourly=Enter hours worked in a week as a number, like 8 or 37.5
 
 label.salary=How much do you get paid?
+label.salaryNew =
 hint.salary=This is the amount you are paid before any deductions are made.
+hint.oldSalary=For example, 1300 or 193.50
 label.payperiod=How often are you paid this amount?
+label.old.payperiod=How are you paid?
 label.state-pension-details=Why we ask this
+label.state-pension-details.old=Check your State Pension age
 label.tax-code=Find your current tax code
 label.scottish-rate-details=Check if you pay Scottish Income Tax
 

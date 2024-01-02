@@ -33,11 +33,12 @@
 )
 
 
-@(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
+@(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
 @periodLabels = @{
-    Seq("yearly", "monthly", "fourWeeks", "weekly", "daily", "hourly")
+if(appConfig.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "weekly", "daily", "hourly") else Seq("hourly", "daily", "weekly", "monthly", "yearly")
 }
+
 @radioFieldAmount = @{
     salaryForm("amount")
 }
@@ -61,15 +62,21 @@
 
         @errorSummary(salaryForm.errors)
 
-        @h1(messages("quick_calc.salary.header"))
+        @if(appConfig.newScreenContentFeature()) {
+            @h1(messages("quick_calc.salary.header"))
+        } else {
+            @h1(messages("quick_calc.salary.oldHeader"))
+        }
 
-        @label(messages("quick_calc.salary.grossAmount.label"))
+        @if(appConfig.newScreenContentFeature()) {
+            @label(messages("quick_calc.salary.grossAmount.label"))
+        }
 
         @hmrcCurrencyInput(CurrencyInput(
             id = "amount",
             name = "amount",
-            hint = Some(Hint(
-                content = Text(Messages("hint.salary"))
+            label = Label(content = Text(Messages("quick_calc.salary.amount.label"))),
+            hint = Some(Hint(content = if(appConfig.newScreenContentFeature()) Text(Messages("hint.salary")) else Text(Messages("hint.oldSalary"))
             )),
             value = salaryForm("amount").value,
             classes = "govuk-input--width-10",
@@ -77,14 +84,27 @@
             errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
         ))
 
-        @inputRadio(
-            legendAsHeading = true,
-            form = salaryForm,
-            classes = "govuk-fieldset__legend govuk-fieldset__legend--m",
-            legendKey = Messages("label.payperiod"),
-            name = "period",
-            items = periodRadioButtons
-        )
+
+        @if(appConfig.newScreenContentFeature()) {
+            @inputRadio(
+                legendAsHeading = true,
+                form = salaryForm,
+                classes = "govuk-fieldset__legend govuk-fieldset__legend--m",
+                legendKey = Messages("label.payperiod"),
+                name = "period",
+                items = periodRadioButtons
+                )
+        } else {
+            @inputRadio(
+                legendAsHeading = false,
+                form = salaryForm,
+                classes = "",
+                legendKey = Messages("label.old.payperiod"),
+                name = "period",
+                items = periodRadioButtons
+            )
+        }
+
 
         @button("continue", Some("button-continue"))
     }

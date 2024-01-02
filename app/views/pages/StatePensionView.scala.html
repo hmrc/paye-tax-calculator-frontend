@@ -30,7 +30,7 @@
         details: components.details
 )
 
-@(overStatePensionAgeForm: Form[StatePension], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
+@(overStatePensionAgeForm: Form[StatePension], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
 @labels = @{
     List(Messages("quick_calc.salary.yearly.sub_label"),
@@ -79,10 +79,11 @@
         )
 
         @details(
-            summaryText = Messages("label.state-pension-details")
+            summaryText = if(appConfig.newScreenContentFeature()) Messages("label.state-pension-details") else Messages("label.state-pension-details.old")
         ) {
-            <p>@Messages("quick_calc.salary.question.state_pension_info")</p>
-
+            @if(appConfig.newScreenContentFeature()) {
+                <p>@Messages("quick_calc.salary.question.state_pension_info")</p>
+            }
             <p>@Messages("quick_calc.salary.question.state_pension_url_a") @link(appConfig.checkStatePensionAge,
             "quick_calc.salary.question.state_pension_url_b") @Messages("quick_calc.salary.question.state_pension_url_c")
             </p>
