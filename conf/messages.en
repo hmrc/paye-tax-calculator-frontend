@@ -95,6 +95,7 @@ quick_calc.result.adjusted.head=What is adjusted Income Tax?
 quick_calc.result.adjusted.info=HMRC can’t take more than 50% of your total pay to cover Income Tax. Your estimated Income Tax is more than 50% in this case, so we’ve adjusted it to reflect this limit.
 
 quick_calc.result.tabLabels.yearly=Yearly
+quick_calc.result.tabLabels.annually=Annually
 quick_calc.result.tabLabels.monthly=Monthly
 quick_calc.result.tabLabels.weekly=Weekly
 quick_calc.result.info_a=We have estimated your National Insurance contribution based on the most common
