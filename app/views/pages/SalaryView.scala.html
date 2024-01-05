@@ -29,14 +29,15 @@
         inputRadio: components.inputRadio,
         button: components.button,
         beforeContent: components.beforeContent,
-        label: components.label
+        label: components.label,
+        features: config.features.Features
 )
 
 
-@(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
+@(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
 
 @periodLabels = @{
-if(appConfig.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "weekly", "daily", "hourly") else Seq("hourly", "daily", "weekly", "monthly", "yearly")
+if(features.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "weekly", "daily", "hourly") else Seq("hourly", "daily", "weekly", "monthly", "yearly")
 }
 
 @radioFieldAmount = @{
@@ -62,13 +63,13 @@ if(appConfig.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "w
 
         @errorSummary(salaryForm.errors)
 
-        @if(appConfig.newScreenContentFeature()) {
+        @if(features.newScreenContentFeature()) {
             @h1(messages("quick_calc.salary.header"))
         } else {
             @h1(messages("quick_calc.salary.oldHeader"))
         }
 
-        @if(appConfig.newScreenContentFeature()) {
+        @if(features.newScreenContentFeature()) {
             @label(messages("quick_calc.salary.grossAmount.label"))
         }
 
@@ -76,7 +77,7 @@ if(appConfig.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "w
             id = "amount",
             name = "amount",
             label = Label(content = Text(Messages("quick_calc.salary.amount.label"))),
-            hint = Some(Hint(content = if(appConfig.newScreenContentFeature()) Text(Messages("hint.salary")) else Text(Messages("hint.oldSalary"))
+            hint = Some(Hint(content = if(features.newScreenContentFeature()) Text(Messages("hint.salary")) else Text(Messages("hint.oldSalary"))
             )),
             value = salaryForm("amount").value,
             classes = "govuk-input--width-10",
@@ -85,7 +86,7 @@ if(appConfig.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "w
         ))
 
 
-        @if(appConfig.newScreenContentFeature()) {
+        @if(features.newScreenContentFeature()) {
             @inputRadio(
                 legendAsHeading = true,
                 form = salaryForm,

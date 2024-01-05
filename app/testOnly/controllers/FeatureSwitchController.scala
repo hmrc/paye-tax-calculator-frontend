@@ -34,7 +34,7 @@ class FeatureSwitchController @Inject()(implicit val appConfig: AppConfig,
   def featureSwitch: Action[AnyContent] = Action { implicit request =>
     Ok(featureSwitch(FeatureSwitchForm.form.fill(
       FeatureSwitchModel(
-        newScreenContentEnabled = appConfig.newScreenContentFeature()
+        newScreenContentEnabled = appConfig.features.newScreenContentFeature()
       )
     )))
   }
@@ -47,7 +47,7 @@ class FeatureSwitchController @Inject()(implicit val appConfig: AppConfig,
   }
 
   def handleSuccess(model: FeatureSwitchModel): Result = {
-    appConfig.newScreenContentFeature(model.newScreenContentEnabled)
+    appConfig.features.newScreenContentFeature(model.newScreenContentEnabled)
     Redirect(routes.FeatureSwitchController.featureSwitch)
   }
 }

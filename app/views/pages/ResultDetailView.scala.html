@@ -40,10 +40,10 @@
 
 @resultsPanel(calculatorResponse, taxYear, label, formattedAmount)
 
-@if(LocalDate.now.isBefore(LocalDate.of(2023, Month.APRIL, 6))) {
+@if(LocalDate.now.isBefore(LocalDate.of(2024, Month.APRIL, 5))) {
     @govukInsetText(InsetText(
         content = Text(Messages(
-            s"quick_calc.result.22_23.disclaimer.${headerFrequency.toLowerCase}"))
+            s"quick_calc.result.23_24.disclaimer.${headerFrequency.toLowerCase}"))
     ))
 }
 @h2(Messages("quick_calc.result.total_deductions.info_a") + " " + headerFrequency.toLowerCase + " " + Messages("quick_calc.result.total_deductions.info_b"))
