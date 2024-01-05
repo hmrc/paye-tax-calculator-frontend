@@ -16,6 +16,8 @@
 
 package config
 
+import config.features.{Feature, FeatureConfigKey, Features}
+
 import javax.inject.Inject
 import play.api.Configuration
 
@@ -23,6 +25,7 @@ class AppConfig @Inject() (config: Configuration) {
 
   lazy val host:    String = config.get[String]("host")
   lazy val appName: String = config.get[String]("appName")
+  lazy val features = new Features()(config)
 
   lazy val betaFeedbackUrl: String =
     s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"

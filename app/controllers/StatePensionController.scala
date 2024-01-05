@@ -41,8 +41,8 @@ class StatePensionController @Inject() (
   navigator:                     Navigator,
   statePensionView:              StatePensionView,
   statePensionFormProvider:      StatePensionFormProvider,
-  defaultTaxCodeProvider: DefaultTaxCodeProvider
-)(implicit val appConfig:        AppConfig,
+  defaultTaxCodeProvider:        DefaultTaxCodeProvider
+)(implicit val appConfig:         AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -84,14 +84,23 @@ class StatePensionController @Inject() (
           userAge =>
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
-                val updatedAggregate =
-                  aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(false,Some(defaultTaxCodeProvider.defaultUkTaxCode))))
+                val updatedAggregate = {
+                  if(appConfig.features.newScreenContentFeature()) {
+                    aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(false,Some(defaultTaxCodeProvider.defaultUkTaxCode))))
+                  }else {
+                    aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
+                  }
+                }
                 cache.save(updatedAggregate).map { _ =>
                   Redirect(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(
                       updatedAggregate
                     ) {
-                      routes.YouHaveToldUsController.summary
+                      if(appConfig.features.newScreenContentFeature()) {
+                        routes.YouHaveToldUsController.summary
+                      } else {
+                        routes.TaxCodeController.showTaxCodeForm
+                      }
                     }
                   )
                 }
@@ -102,7 +111,11 @@ class StatePensionController @Inject() (
                       .copy(savedIsOverStatePensionAge = Some(userAge))
                   )
                   .map { _ =>
-                    Redirect(routes.YouHaveToldUsController.summary)
+                    if(appConfig.features.newScreenContentFeature()) {
+                      Redirect(routes.YouHaveToldUsController.summary)
+                    } else {
+                      Redirect(routes.TaxCodeController.showTaxCodeForm)
+                    }
                   }
             }
         )

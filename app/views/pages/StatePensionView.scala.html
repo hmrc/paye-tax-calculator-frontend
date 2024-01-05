@@ -16,7 +16,6 @@
 
 @import forms.YouHaveToldUsItem
 @import play.api.i18n._
-@import config.AppConfig
 
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
@@ -26,8 +25,9 @@
         inputRadio: components.inputRadio,
         button: components.button,
         beforeContent: components.beforeContent,
-        appConfig: AppConfig,
-        details: components.details
+        appConfig: config.AppConfig,
+        details: components.details,
+        features: config.features.Features
 )
 
 @(overStatePensionAgeForm: Form[StatePension], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
@@ -79,10 +79,11 @@
         )
 
         @details(
-            summaryText = Messages("label.state-pension-details")
+            summaryText = if(features.newScreenContentFeature()) Messages("label.state-pension-details") else Messages("label.state-pension-details.old")
         ) {
-            <p>@Messages("quick_calc.salary.question.state_pension_info")</p>
-
+            @if(features.newScreenContentFeature()) {
+                <p>@Messages("quick_calc.salary.question.state_pension_info")</p>
+            }
             <p>@Messages("quick_calc.salary.question.state_pension_url_a") @link(appConfig.checkStatePensionAge,
             "quick_calc.salary.question.state_pension_url_b") @Messages("quick_calc.salary.question.state_pension_url_c")
             </p>

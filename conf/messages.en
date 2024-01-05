@@ -95,6 +95,7 @@ quick_calc.result.adjusted.head=What is adjusted Income Tax?
 quick_calc.result.adjusted.info=HMRC can’t take more than 50% of your total pay to cover Income Tax. Your estimated Income Tax is more than 50% in this case, so we’ve adjusted it to reflect this limit.
 
 quick_calc.result.tabLabels.yearly=Yearly
+quick_calc.result.tabLabels.annually=Annually
 quick_calc.result.tabLabels.monthly=Monthly
 quick_calc.result.tabLabels.weekly=Weekly
 quick_calc.result.info_a=We have estimated your National Insurance contribution based on the most common
@@ -107,11 +108,12 @@ quick_calc.result.info_url_a=Check how much Income Tax you paid last year
 quick_calc.result.info_url_b=Check if you have paid the right amount of tax
 quick_calc.result.info_url_c=Claim a tax refund
 
-quick_calc.result.22_23.disclaimer.yearly=Your take-home pay for the 2022 to 2023 tax year will be lower than the estimate shown. The difference will be less than 1.4%. This is because of changes to National Insurance in July and November 2022.
-quick_calc.result.22_23.disclaimer.monthly=Your take-home pay for any month from April 2022, paid before 6 November 2022, will be lower than the estimate shown. The difference will be less than 2.84%. This is because of changes to National Insurance in July and November 2022.
-quick_calc.result.22_23.disclaimer.weekly=Your take-home pay for any week from 6 April 2022, paid before 6 November 2022, will be lower than the estimate shown. The difference will be less than 2.84%. This is because of changes to National Insurance in July and November 2022.
+quick_calc.result.23_24.disclaimer.yearly=Your take-home pay will be higher than the estimate shown. This is because of changes to National Insurance in January 2024.
+quick_calc.result.23_24.disclaimer.monthly=Your take-home pay for any month from 6 April 2023 to 6 January 2024 will be higher than the estimate shown. This is because of changes to National Insurance in January 2024.
+quick_calc.result.23_24.disclaimer.weekly=Your take-home pay for any week from 6 April 2023 to 6 January 2024 will be higher than the estimate shown. This is because of changes to National Insurance in January 2024.
 
 quick_calc.salary.header=How much are you paid?
+quick_calc.salary.oldHeader=How much do you get paid?
 quick_calc.salary.sub_header=How often do you get paid?
 quick_calc.salary.description_a=For each job you have, use the amount before tax and National Insurance are taken off, for example £7.20 an hour or £26500 a year.
 quick_calc.salary.description_b=You can use the calculator as many times as you need.
@@ -261,8 +263,11 @@ quick_calc.salary.question.error.invalid_number_hourly=Enter hours worked in a w
 
 label.salary=How much do you get paid?
 hint.salary=This is the amount you are paid before any deductions are made.
+hint.oldSalary=For example, 1300 or 193.50
 label.payperiod=How often are you paid this amount?
+label.old.payperiod=How are you paid?
 label.state-pension-details=Why we ask this
+label.state-pension-details.old=Check your State Pension age
 label.tax-code=Find your current tax code
 label.scottish-rate-details=Check if you pay Scottish Income Tax
 

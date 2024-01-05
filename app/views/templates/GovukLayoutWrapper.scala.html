@@ -40,7 +40,6 @@
       bodyClassess: Option[String] = None,
       beforeContentBlock: Html = Html(""),
       showAppBanner: Boolean = false
-
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
   @head = {
   @hmrcTrackingConsentSnippet()
