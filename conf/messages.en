@@ -261,7 +261,6 @@ quick_calc.salary.question.error.number_of_days.invalid_number=Enter days worked
 quick_calc.salary.question.error.invalid_number_hourly=Enter hours worked in a week as a number, like 8 or 37.5
 
 label.salary=How much do you get paid?
-label.salaryNew =
 hint.salary=This is the amount you are paid before any deductions are made.
 hint.oldSalary=For example, 1300 or 193.50
 label.payperiod=How often are you paid this amount?

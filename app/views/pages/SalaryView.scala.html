@@ -76,7 +76,7 @@ if(features.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "we
         @hmrcCurrencyInput(CurrencyInput(
             id = "amount",
             name = "amount",
-            label = Label(content = Text(Messages("quick_calc.salary.amount.label"))),
+            label = Label(content = if(features.newScreenContentFeature()) Text("") else Text(Messages("quick_calc.salary.amount.label"))),
             hint = Some(Hint(content = if(features.newScreenContentFeature()) Text(Messages("hint.salary")) else Text(Messages("hint.oldSalary"))
             )),
             value = salaryForm("amount").value,

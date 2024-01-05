@@ -51,7 +51,6 @@ class StatePensionControllerSpec
   val formProvider = new StatePensionFormProvider()
   val form         = formProvider()
 
-
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
