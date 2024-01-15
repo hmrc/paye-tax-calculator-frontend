@@ -16,7 +16,8 @@
 
 package forms
 
-import forms.mappings.CustomFormatters
+import mappings.CustomFormatters
+
 import javax.inject.Inject
 import models.Days
 import play.api.data.Form

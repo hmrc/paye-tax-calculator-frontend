@@ -1,0 +1,81 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.api.i18n._
+@import forms.AdditionalQuestionItem
+
+@this(
+       govuk_wrapper: templates.GovukLayoutWrapper,
+       formHelper: FormWithCSRF,
+       errorSummary: components.errorSummary,
+       inputRadio: components.inputRadio,
+       h1: components.h1,
+       button: components.button,
+       beforeContent: components.beforeContent
+)
+
+@(userTaxCodeForm: Form[UserTaxCode], additionalQuestionItems: List[AdditionalQuestionItem])(implicit request: Request[_], messages: Messages)
+
+@labels = @{
+   List(Messages("quick_calc.salary.yearly.sub_label"),
+        Messages("quick_calc.salary.monthly.sub_label"),
+        Messages("quick_calc.salary.weekly.sub_label"),
+        Messages("quick_calc.salary.daily.sub_label"),
+        Messages("quick_calc.salary.hourly.sub_label"),
+        Messages("quick_calc.salary.fourWeeks.sub_label"))
+}
+
+@radioRemoveTaxCode = @{
+    userTaxCodeForm("removeTaxCode")
+}
+
+@pensionAgeRadios = @{
+    Seq(
+        RadioItem(
+            content = Text(Messages("quick_calc.over_state_pension_age.yes")),
+            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
+            value = Some("true"),
+            checked = radioRemoveTaxCode.value.contains("true")
+        ),
+        RadioItem(
+            content = Text(Messages("quick_calc.over_state_pension_age.no")),
+            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
+            value = Some("false"),
+            checked = radioRemoveTaxCode.value.contains("false"))
+    )
+}
+
+@backButtonUrl = @{
+    s"${additionalQuestionItems.flatMap((y: AdditionalQuestionItem) => if(labels.contains(y.label)) y.url else "").mkString}"
+}
+
+@govuk_wrapper(Some(title(userTaxCodeForm, "Are you sure you want to remove your tax code?")), beforeContentBlock = beforeContent(backButtonUrl)) {
+
+    @formHelper(action = controllers.routes.RemoveTaxCodeController.submitRemoveTaxCodeForm) {
+
+        @errorSummary(userTaxCodeForm.errors)
+
+        @inputRadio(
+            form = userTaxCodeForm,
+            legendKey = "Are you sure you want to remove your tax code?",
+            name = "removeTaxCode",
+            items = pensionAgeRadios
+        )
+
+    @button("continue", Some("button-continue"))
+    }
+}
+

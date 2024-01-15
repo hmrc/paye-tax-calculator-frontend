@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package forms
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-import mappings.CustomFormatters
-import javax.inject.Inject
-import models.Salary
-import play.api.data.Form
-import play.api.data.Forms.{mapping, of, optional}
-import play.api.data.format.Formats._
+@this(govukWarningText : GovukWarningText)
 
-class SalaryFormProvider @Inject()() {
+@(content: String)(implicit messages: Messages, request: RequestHeader)
 
-  def apply(): Form[Salary] = Form(
-    mapping(
-      "amount"       -> of(CustomFormatters.salaryValidation),
-      "period"       -> of(CustomFormatters.requiredSalaryPeriodFormatter),
-      "how-many-a-week" -> optional(of[BigDecimal])
-    )(Salary.apply)(Salary.unapply)
-  )
-}
+
+@govukWarningText(WarningText(
+iconFallbackText = Some("Warning"),
+content = Text(content)
+))
+
+            

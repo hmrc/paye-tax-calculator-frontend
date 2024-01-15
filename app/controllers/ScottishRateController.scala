@@ -87,18 +87,33 @@ class ScottishRateController @Inject() (
               else
                 defaultTaxCodeProvider.defaultUkTaxCode
 
-            val updatedAggregate = cache
-              .fetchAndGetEntry()
-              .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-              .map(
-                _.copy(
-                  savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode))),
-                  savedScottishRate = Some(ScottishRate(scottish.payScottishRate))
+            val updatedAggregate = if(appConfig.features.newScreenContentFeature()){
+              cache
+                .fetchAndGetEntry()
+                .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+                .map(
+                  _.copy(
+                    savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, scottish.payScottishRate))
+                  )
                 )
-              )
+            } else{
+              cache
+                .fetchAndGetEntry()
+                .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+                .map(
+                  _.copy(
+                    savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode))),
+                    savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, scottish.payScottishRate))
+                  )
+                )
+            }
             updatedAggregate
               .map(cache.save)
-              .map(_ => Redirect(routes.YouHaveToldUsController.summary))
+              .map(_ => if(appConfig.features.newScreenContentFeature()){
+                Redirect(routes.YouHaveToldUsNewController.summary)
+              } else {
+                Redirect(routes.YouHaveToldUsController.summary)
+              })
           }
         )
     }

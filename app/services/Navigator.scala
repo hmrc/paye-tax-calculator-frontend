@@ -16,20 +16,27 @@
 
 package services
 
+import config.AppConfig
 import controllers.routes
+
 import javax.inject.Inject
 import models.QuickCalcAggregateInput
 import play.api.mvc.{AnyContent, Call, Request}
 
-class Navigator @Inject() () {
+class Navigator @Inject() (appConfig: AppConfig) {
 
   def nextPageOrSummaryIfAllQuestionsAnswered(
     aggregate:        QuickCalcAggregateInput
   )(next:             Call
   )(implicit request: Request[_]
   ): Call =
-    if (aggregate.allQuestionsAnswered) routes.YouHaveToldUsController.summary
-    else next
+    if (aggregate.allQuestionsAnswered) {
+      if(appConfig.features.newScreenContentFeature()) {
+        routes.YouHaveToldUsNewController.summary
+      } else {
+        routes.YouHaveToldUsController.summary
+      }
+    } else next
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(implicit request: Request[AnyContent]): Call =
     nextPageOrSummaryIfAllQuestionsAnswered(agg) {

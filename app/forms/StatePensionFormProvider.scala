@@ -16,7 +16,7 @@
 
 package forms
 
-import forms.mappings.CustomFormatters._
+import mappings.CustomFormatters._
 import javax.inject.Inject
 import models.StatePension
 import play.api.data.Form
