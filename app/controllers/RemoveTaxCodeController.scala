@@ -50,19 +50,14 @@ class RemoveTaxCodeController @Inject()(
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  val form: Form[UserTaxCode] = removeTaxCodeFormProvider()
+  val form: Form[Boolean] = removeTaxCodeFormProvider()
 
   def showRemoveTaxCodeForm(): Action[AnyContent]=
     salaryRequired(cache,showRemoveTaxCodeFormTestable)
 
   private[controllers] def showRemoveTaxCodeFormTestable: ShowForm = { implicit request => agg =>
-    val filledForm = agg.savedTaxCode
-      .map{ s =>
-        form.fill(s)
-      }
-      .getOrElse(form)
 
-    Ok(removeTaxCodeView(filledForm, agg.additionalQuestionItems))
+    Ok(removeTaxCodeView(form, agg.additionalQuestionItems))
   }
 
   def submitRemoveTaxCodeForm(): Action[AnyContent] =
@@ -81,12 +76,14 @@ class RemoveTaxCodeController @Inject()(
               case None =>
                 BadRequest(removeTaxCodeView(formWithErrors, Nil))
             },
-          userTaxCode => {
-            println("WH User Tax Code" + userTaxCode)
+          removeTaxCodeBoolean => {
+            println("WH User Tax Code" + removeTaxCodeBoolean)
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
-                val updatedAggregate = {
-                  aggregate.copy(savedTaxCode = Some(userTaxCode))
+                val updatedAggregate = if (removeTaxCodeBoolean) {
+                  aggregate.copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
+                } else {
+                  aggregate
                 }
                 println("WH + Updated Aggregate" + updatedAggregate)
                 cache.save(updatedAggregate).map { _ =>
@@ -98,14 +95,14 @@ class RemoveTaxCodeController @Inject()(
                     }
                   )
                 }
-              case None =>
-                cache
-                  .save(
-                    QuickCalcAggregateInput.newInstance
-                      .copy(savedTaxCode = Some(userTaxCode))
-                  ).map { _ =>
-                  Redirect(routes.YouHaveToldUsNewController.summary)
-                }
+//              case None =>
+//                cache
+//                  .save(
+//                    QuickCalcAggregateInput.newInstance
+//                      .copy(savedTaxCode = Some(UserTaxCode.TaxCode))
+//                  ).map { _ =>
+//                  Redirect(routes.YouHaveToldUsNewController.summary)
+//                }
             }
           }
         )

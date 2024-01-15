@@ -41,12 +41,9 @@ import mappings.CustomFormatters._
 
 import javax.inject.Inject
 import play.api.data.format.Formats.stringFormat
-
 class RemoveTaxCodeFormProvider @Inject()() {
-  def apply(): Form[UserTaxCode] = Form(
-    mapping(
-      "removeTaxCode" -> of(removeTaxCodeValidation),
-      "gaveUsTaxCode" -> optional(of[String])
-    )(UserTaxCode.apply)(UserTaxCode.unapply)
-  )
-}
+    val form: Form[Boolean] = Form(
+      single("removeTaxCode" -> of(removeTaxCodeValidation)
+      ))
+    def apply(): Form[Boolean] = form
+  }

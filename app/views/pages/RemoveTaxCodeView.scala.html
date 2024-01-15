@@ -27,7 +27,7 @@
        beforeContent: components.beforeContent
 )
 
-@(userTaxCodeForm: Form[UserTaxCode], additionalQuestionItems: List[AdditionalQuestionItem])(implicit request: Request[_], messages: Messages)
+@(userTaxCodeForm: Form[Boolean], additionalQuestionItems: List[AdditionalQuestionItem])(implicit request: Request[_], messages: Messages)
 
 @labels = @{
    List(Messages("quick_calc.salary.yearly.sub_label"),
