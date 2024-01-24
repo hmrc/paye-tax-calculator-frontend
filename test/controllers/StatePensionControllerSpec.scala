@@ -140,7 +140,9 @@ class StatePensionControllerSpec
         val application = new GuiceApplicationBuilder()
           .overrides(bind[QuickCalcCache].toInstance(mockCache))
           .build()
+
         implicit val messages: Messages = messagesThing(application)
+
         running(application) {
 
           val request = FakeRequest(

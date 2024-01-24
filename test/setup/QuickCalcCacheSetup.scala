@@ -89,8 +89,8 @@ object QuickCalcCacheSetup {
 
   val cacheTestTaxCode           = Some(UserTaxCode(false, Some("1250L")))
   val cacheTestTaxCodeScottish   = Some(UserTaxCode(false, Some("S1250L")))
-  val cacheTestScottishNO        = Some(ScottishRate(false))
-  val cacheTestScottishYES       = Some(ScottishRate(true))
+  val cacheTestScottishNO        = Some(ScottishRate(false, false))
+  val cacheTestScottishYES       = Some(ScottishRate(true, true))
   val cacheTestStatePensionYES   = Some(StatePension(true))
   val cacheTestStatusPensionNO   = Some(StatePension(false))
   val cacheTestYearlySalary      = Some(Salary(20000, "a year", None))
@@ -294,11 +294,10 @@ object QuickCalcCacheSetup {
 
   val expectedInvalidStatePensionAnswer    = "Select yes if you are over the State Pension age"
 
+  val expectedInvalidRemoveTaxCodeAnswer    = "Select yes if you want to remove your tax code"
   //Hours
-  def expectedEmptyHoursErrorMessage(implicit messages: Messages) =
-    messages("quick_calc.salary.question.error.empty_number_hourly")
+  val expectedEmptyHoursErrorMessage = "Enter the number of hours a week you work"
 
   //Scottish Rate
-  def expectedInvalidScottishRateAnswer(implicit messages: Messages) =
-    messages("quick_calc.scottish_rate_error")
+  val expectedInvalidScottishRateAnswer = "Select yes if you pay Scottish Income Tax"
 }

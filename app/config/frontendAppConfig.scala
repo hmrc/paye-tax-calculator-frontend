@@ -18,14 +18,36 @@ package config
 
 import config.features.{Feature, FeatureConfigKey, Features}
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 
-class AppConfig @Inject() (config: Configuration) {
+trait AppConfig {
+  val host: String
+  val appName: String
+  val features: Features
+  val betaFeedbackUrl: String
+  val reportAProblemPartialUrl: String
+  val reportAProblemNonJSUrl: String
+  val checkStatePensionAge: String
+  val cookies: String
+  val privacy: String
+  val termsConditions: String
+  val govukHelp: String
+  val accessibilityStatement: String
+  val languageTranslationEnabled: Boolean
+  val timeout: Int
+  val countdown: Int
+  val dateOverride: Option[String]
+  val mongoTtl: Int
+  def feedbackUrl(signedInUser: Boolean): String
+}
+
+@Singleton
+class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
 
   lazy val host:    String = config.get[String]("host")
   lazy val appName: String = config.get[String]("appName")
-  lazy val features = new Features()(config)
+  override val features = new Features()(config)
 
   lazy val betaFeedbackUrl: String =
     s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
@@ -35,11 +57,7 @@ class AppConfig @Inject() (config: Configuration) {
 
   lazy val reportAProblemNonJSUrl: String =
     s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-  lazy val cacheUrl: String = config.get[Service]("microservice.services.cachable.session-cache").baseUrl
 
-  lazy val domain: String = config
-    .getOptional[String]("microservice.services.cachable.session-cache.domain")
-    .getOrElse(throw new Exception(s"Could not find config 'services.cachable.session-cache.domain'"))
   private val contactHost:                  String = loadConfig(s"contact-frontend.host")
   private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
   lazy val checkStatePensionAge:   String = config.get[String]("urls.checkStatePensionAge")
@@ -58,7 +76,7 @@ class AppConfig @Inject() (config: Configuration) {
   lazy val dateOverride: Option[String] = config.getOptional[String]("dateOverride")
 
   lazy val mongoTtl : Int = config.get[Int]("mongodb.timeToLiveInSeconds")
-  def feedbackUrl(signedInUser: Boolean) =
+  def feedbackUrl(signedInUser: Boolean): String =
     if (signedInUser) {
       s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
     } else {

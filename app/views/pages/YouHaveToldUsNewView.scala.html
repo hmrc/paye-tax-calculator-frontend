@@ -100,6 +100,7 @@
 s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warningMessages(item.label)) else Html("")}"""
 )),
             actions = Some(Actions(
+                classes = "govuk-summary-list__actions govuk-!-width-one-third",
                 items = changeLinks(item)
             ))
         )
@@ -120,9 +121,11 @@ s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warning
 
     @h3("quick_calc.you_have_told_us.subheading.additional")
 
+    <p class="govuk-body">@messages("quick_calc.you_have_told_us.body.additional")</p>
+
     @govukSummaryList(SummaryList(rows = additionalQuestionRows))
 
     @formHelper(action = routes.ShowResultsController.showResult) {
-        @button("get_results", Some("button-get-results"))
+        @button("calculate_take_home_pay", Some("button-get-results"))
     }
 }

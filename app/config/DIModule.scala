@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package config
 
-import config.AppConfig
-import play.api.i18n.Messages
+import com.google.inject.AbstractModule
 
-trait CSRFTestHelper {
+class DIModule extends AbstractModule{
 
-  // As we compare pages in a String format for our tests, it is necessary to remove the value of the hidden csrf token
-  // as it uses a randomly generated UUID
-  def removeCSRFTagValue(content: String): String = {
-    val csrfValueIndex = content.indexOf("\"csrfToken\" value=\"") + 18
-    val firstHalf = content.substring(0, csrfValueIndex)
-    val secondHalf = content.substring(csrfValueIndex+80)
-    firstHalf.concat(secondHalf)
+  override def configure(): Unit = {
+    bind(classOf[AppConfig]).to(classOf[FrontendAppConfig]).asEagerSingleton()
   }
 
 }

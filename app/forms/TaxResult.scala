@@ -63,7 +63,7 @@ object TaxResult {
       case Some(s) =>
         s.taxCode match {
           case Some(taxCode) => taxCode
-          case None          => defaultTaxCodeProvider.defaultUkTaxCode
+          case None => defaultTaxCodeProvider.defaultUkTaxCode
         }
       case None => defaultTaxCodeProvider.defaultUkTaxCode
     }

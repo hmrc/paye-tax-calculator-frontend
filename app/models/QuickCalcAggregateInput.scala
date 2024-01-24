@@ -36,7 +36,7 @@ import play.api.libs.json.{Json, OFormat}
       savedTaxCode
     ).forall(_.isDefined)
 
-  def youHaveToldUsItems(implicit m: Messages, appConfig: AppConfig): List[YouHaveToldUsItem] = {
+  def youHaveToldUsItems()(implicit m: Messages, appConfig: AppConfig): List[YouHaveToldUsItem] = {
     if(appConfig.features.newScreenContentFeature()) {
       List(
         savedSalary.map {YouHaveToldUs(_)},
@@ -55,7 +55,7 @@ import play.api.libs.json.{Json, OFormat}
     }
   }
 
- def additionalQuestionItems(implicit m: Messages, appConfig: AppConfig): List[AdditionalQuestionItem] = {
+ def additionalQuestionItems()(implicit m: Messages, appConfig: AppConfig): List[AdditionalQuestionItem] = {
    if(appConfig.features.newScreenContentFeature()){
      List(
        AdditionalQuestionItem(savedTaxCode),

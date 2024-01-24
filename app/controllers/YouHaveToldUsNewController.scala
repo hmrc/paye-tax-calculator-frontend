@@ -20,7 +20,7 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import models.QuickCalcAggregateInput
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -47,6 +47,9 @@ class YouHaveToldUsNewController @Inject() (
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
+  val taxCodeLabel: String = "about_tax_code"
+  val scottishRateLabel: String = "scottish_rate"
+
   def summary(): Action[AnyContent] =
     salaryRequired(
       cache,
@@ -62,29 +65,39 @@ class YouHaveToldUsNewController @Inject() (
     aggregateInput.savedTaxCode.flatMap(_.taxCode).isDefined
   }
 
-  private def taxCodeCheck(aggregateInput: QuickCalcAggregateInput): Map[String, String] = {
-    val condition1: Boolean = aggregateInput.savedTaxCode.flatMap(_.taxCode.map(_.contains("S"))).getOrElse(false)
-    val condition2: Boolean = aggregateInput.savedScottishRate.exists(!_.payScottishRate)
-    val condition3: Boolean = aggregateInput.savedScottishRate.exists(_.payScottishRate)
-    val condition4: Boolean = !condition1
-    val counter = 0
-    val taxCodeWarning: List[(String, String)] =
-      if (aggregateInput.savedSalary.exists(_.amount > 100000)
-        && !aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultUkTaxCode)
-        || !aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultScottishTaxCode)))) {
-        List("about_tax_code" -> "This tax code is not usually for those on more than £100,000 a year.")
-      }
-      else if (aggregateInput.savedSalary.exists(_.amount > 100000)
-      && aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultUkTaxCode)
-      || aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultScottishTaxCode)))) {
-      List("about_tax_code" -> "This tax code is not usually for those on more than £100,000 a year.")
-    } else if (condition1 && condition2) {
-      List("about_tax_code" -> "You've used a Scottish tax code so we will apply Scottish Income Tax rates.")
+  def taxCodeContainsS(aggregateInput: QuickCalcAggregateInput) : Boolean = {
+    aggregateInput.savedTaxCode.flatMap(_.taxCode.map(_.contains("S"))).getOrElse(false)
+  }
+
+  def payScottishRate(aggregateInput: QuickCalcAggregateInput) : Boolean = {
+    aggregateInput.savedScottishRate.exists(_.payScottishRate)
+  }
+
+  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput) : Boolean = {
+    aggregateInput.savedSalary.exists(_.amount > 100000)
+  }
+  def isUkOrScottishTaxCode(aggregateInput: QuickCalcAggregateInput) : Boolean = {
+    aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultUkTaxCode)
+      || aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultScottishTaxCode)))
+  }
+
+  def taxCodeWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages) : List[(String, String)] = {
+    if (salaryOverHundredThousand(aggregateInput) && isUkOrScottishTaxCode(aggregateInput)) {
+      List(taxCodeLabel -> Messages("quick_calc.tax_code.over_hundred_thousand.warning"))
+    } else if (taxCodeContainsS(aggregateInput) && !payScottishRate(aggregateInput)) {
+      List(taxCodeLabel -> Messages("quick_calc.tax_code.scottish_rate.warning"))
     } else {
       List.empty
     }
-    val scotRate: List[(String, String)] = if (condition3 && condition4) List("scottish_rate" -> "You said you pay Scottish Income Tax so we will apply Scottish Income Tax rates.") else List.empty
-    val finalList = taxCodeWarning ++ scotRate
+  }
+
+  def scottishRateWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): List[(String,String)] = {
+    if (payScottishRate(aggregateInput) && !taxCodeContainsS(aggregateInput))
+      List(scottishRateLabel -> Messages("quick_calc.scottish_rate.payScottishRate.warning")) else List.empty
+  }
+
+  private def taxCodeCheck(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Map[String, String] = {
+    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput)
     finalList.toMap
   }
 

@@ -69,7 +69,7 @@ object AdditionalQuestionItem {
           (scottish.map(_.gaveUsScottishRate), scottish.map(_.payScottishRate)) match {
             case (Some(true), Some(true)) => Messages("quick_calc.you_have_told_us.scottish_rate.yes")
             case (Some(true), Some(false)) => Messages("quick_calc.you_have_told_us.scottish_rate.no")
-            case _ => "Not provided"
+            case _ => "No"
           },
           label,
           url,

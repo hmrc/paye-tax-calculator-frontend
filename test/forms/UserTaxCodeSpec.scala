@@ -28,19 +28,19 @@ class UserTaxCodeSpec extends BaseSpec with AnyWordSpecLike {
   "The form function can create and verify the form for tax-code, and" should {
     "return false if all input is valid such as the tax-code etc, otherwise false." in {
       val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "taxCode" -> "K475"))
-      form.hasErrors shouldBe false
+      form.hasErrors mustBe false
     }
     "return false if all input is valid such hasTaxCode false." in {
       val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "false"))
-      form.hasErrors shouldBe false
+      form.hasErrors mustBe false
     }
     "return error message if some input is invalid such as the tax-code etc." in {
       val form     = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "taxCode" -> "foo"))
       val hasError = form.hasErrors
       val errorMessageKey =
         "quick_calc.about_tax_code.wrong_tax_code"
-      hasError        shouldBe true
-      errorMessageKey shouldBe form.errors.head.message
+      hasError        mustBe true
+      errorMessageKey mustBe form.errors.head.message
     }
   }
 }

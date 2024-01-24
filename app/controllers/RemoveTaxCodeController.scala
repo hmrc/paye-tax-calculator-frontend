@@ -77,7 +77,6 @@ class RemoveTaxCodeController @Inject()(
                 BadRequest(removeTaxCodeView(formWithErrors, Nil))
             },
           removeTaxCodeBoolean => {
-            println("WH User Tax Code" + removeTaxCodeBoolean)
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
                 val updatedAggregate = if (removeTaxCodeBoolean) {
@@ -85,7 +84,6 @@ class RemoveTaxCodeController @Inject()(
                 } else {
                   aggregate
                 }
-                println("WH + Updated Aggregate" + updatedAggregate)
                 cache.save(updatedAggregate).map { _ =>
                   Redirect(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(
@@ -95,14 +93,6 @@ class RemoveTaxCodeController @Inject()(
                     }
                   )
                 }
-//              case None =>
-//                cache
-//                  .save(
-//                    QuickCalcAggregateInput.newInstance
-//                      .copy(savedTaxCode = Some(UserTaxCode.TaxCode))
-//                  ).map { _ =>
-//                  Redirect(routes.YouHaveToldUsNewController.summary)
-//                }
             }
           }
         )

@@ -30,6 +30,7 @@ continue=Continue
 back = Back
 restart = Start again
 get_results=Get results
+calculate_take_home_pay=Calculate take-home pay
 a=a
 
 feedback=Tell us what you think of this calculator (opens in a new tab)
@@ -37,7 +38,7 @@ feedback=Tell us what you think of this calculator (opens in a new tab)
 select_one=Answer ‘Yes’ or ‘No’
 
 quick_calc.title=HMRC Estimate your take-home pay calculator
-quick_calc.header.title=Estimate your take-home pay
+quick_calc.header.title=PAYE Tax Calculator
 site.govuk=GOV.UK
 
 quick_calc.you_have_told_us.header=Check your answers
@@ -68,7 +69,7 @@ quick_calc.you_have_told_us.over_state_pension_age.no=No
 
 quick_calc.you_have_told_us.subheading=Your Income
 quick_calc.you_have_told_us.subheading.additional=Additional questions (Optional)
-
+quick_calc.you_have_told_us.body.additional=Your results may be more accurate if you answer additional questions.
 
 
 quick_calc.you_have_told_us.a_year.label=How much do you get paid?
@@ -153,6 +154,7 @@ quick_calc.salary.error_header=Something’s wrong
 quick_calc.salary.amount.label=Amount paid
 quick_calc.salary.grossAmount.label=Gross amount, in pounds
 
+quick_calc.remove_tax_code_error=Select yes if you want to remove your tax code
 
 quick_calc.salary.yearly.sub_label=a_year
 quick_calc.salary.monthly.sub_label=a_month
@@ -235,6 +237,10 @@ quick_calc.about_k_code_a = Your adjusted Income Tax is an estimate including an
 quick_calc.about_k_code_b_k = the K in your tax code (opens in a new tab)
 quick_calc.about_k_code_b_sk = the SK in your tax code (opens in a new tab)
 quick_calc.about_k_code_c = The K code is used across the UK and usually indicates you owe tax from a previous year.
+
+quick_calc.tax_code.over_hundred_thousand.warning = This tax code is not usually for those on more than £100,000 a year.
+quick_calc.tax_code.scottish_rate.warning = You've used a Scottish tax code so we will apply Scottish Income Tax rates.
+quick_calc.scottish_rate.payScottishRate.warning = You said you pay Scottish Income Tax so we will apply Scottish Income Tax rates.
 
 
 
