@@ -53,7 +53,7 @@ class TaxCodeControllerSpec
       with CSRFTestHelper {
   val formProvider = new UserTaxCodeFormProvider()
   val form         = formProvider()
-  val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider((appConfig))
+  val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
@@ -117,7 +117,7 @@ class TaxCodeControllerSpec
 
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
           form,
-          cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).get.youHaveToldUsItems,
+          cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).get.youHaveToldUsItems()(messages,mockAppConfig),
           defaultTaxCodeProvider.defaultUkTaxCode
         )(
           request,
@@ -141,8 +141,7 @@ class TaxCodeControllerSpec
       running(application) {
 
         val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
+          .withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
         val result = route(application, request).get
 
@@ -153,7 +152,7 @@ class TaxCodeControllerSpec
         status(result) mustEqual OK
 
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(formFilled,
-                                               cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems,
+                                               cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems()(messages,mockAppConfig),
                                                defaultTaxCodeProvider.defaultUkTaxCode)(
           request,
           messagesThing(application)

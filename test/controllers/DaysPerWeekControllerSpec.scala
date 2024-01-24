@@ -75,6 +75,7 @@ class DaysPerWeekControllerSpec
       val amount       = (cacheCompleteHourly.value.savedPeriod.value.amount * 100.0).toInt
       val howManyAweek = cacheCompleteDaily.value.savedPeriod.value.howManyAWeek
 
+      val formFilled =
       running(application) {
 
         val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(amount).url)

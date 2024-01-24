@@ -30,6 +30,7 @@ continue=Continue
 back = Back
 restart = Start again
 get_results=Get results
+calculate_take_home_pay=Calculate take-home pay
 a=a
 
 feedback=Tell us what you think of this calculator (opens in a new tab)
@@ -37,7 +38,7 @@ feedback=Tell us what you think of this calculator (opens in a new tab)
 select_one=Answer ‘Yes’ or ‘No’
 
 quick_calc.title=HMRC Estimate your take-home pay calculator
-quick_calc.header.title=Estimate your take-home pay
+quick_calc.header.title=PAYE Tax Calculator
 site.govuk=GOV.UK
 
 quick_calc.you_have_told_us.header=Check your answers
@@ -47,18 +48,29 @@ quick_calc.you_have_told_us.header_change_link=You can
 quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=What is your tax code? (Optional)
+quick_calc.you_have_told_us.about_tax_code.label.new=Tax Code
 quick_calc.you_have_told_us.about_tax_code.no=No
 quick_calc.you_have_told_us.about_tax_code.yes=Yes
 quick_calc.you_have_told_us.about_tax_code.default_a=We have used the default tax code
 quick_calc.you_have_told_us.about_tax_code.default_b=because you did not enter one.
+quick_calc.you_have_told_us.about_tax_code.default.not.provided=Not provided
+quick_calc.you_have_told_us.taxCode.add=Add
+quick_calc.you_have_told_us.taxCode.remove=Remove
 
 quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
+quick_calc.you_have_told_us.scottish_rate.label.new=Scottish Income Tax
 quick_calc.you_have_told_us.scottish_rate.yes=Yes
 quick_calc.you_have_told_us.scottish_rate.no=No
 
 quick_calc.you_have_told_us.over_state_pension_age.label=Are you over the State Pension age?
+quick_calc.you_have_told_us.over_state_pension_age.label.new=Over State Pension age
 quick_calc.you_have_told_us.over_state_pension_age.yes=Yes
 quick_calc.you_have_told_us.over_state_pension_age.no=No
+
+quick_calc.you_have_told_us.subheading=Your Income
+quick_calc.you_have_told_us.subheading.additional=Additional questions (Optional)
+quick_calc.you_have_told_us.body.additional=Your results may be more accurate if you answer additional questions.
+
 
 quick_calc.you_have_told_us.a_year.label=How much do you get paid?
 quick_calc.you_have_told_us.a_month.label=How much do you get paid?
@@ -66,6 +78,13 @@ quick_calc.you_have_told_us.a_week.label=How much do you get paid?
 quick_calc.you_have_told_us.a_day.label=How much do you get paid?
 quick_calc.you_have_told_us.an_hour.label=How much do you get paid?
 quick_calc.you_have_told_us.every_4_weeks.label=How much do you get paid?
+
+quick_calc.you_have_told_us.a_year.label.new=Gross income
+quick_calc.you_have_told_us.a_month.label.new=Gross income
+quick_calc.you_have_told_us.a_week.label.new=Gross income
+quick_calc.you_have_told_us.a_day.label.new=Gross income
+quick_calc.you_have_told_us.an_hour.label.new=Gross income
+quick_calc.you_have_told_us.every_4_weeks.label.new=Gross income
 
 quick_calc.you_have_told_us.a_day_sub.label=How many days a week do you usually work?
 quick_calc.you_have_told_us.an_hour_sub.label=How many hours a week do you usually work?
@@ -135,6 +154,7 @@ quick_calc.salary.error_header=Something’s wrong
 quick_calc.salary.amount.label=Amount paid
 quick_calc.salary.grossAmount.label=Gross amount, in pounds
 
+quick_calc.remove_tax_code_error=Select yes if you want to remove your tax code
 
 quick_calc.salary.yearly.sub_label=a_year
 quick_calc.salary.monthly.sub_label=a_month
@@ -217,6 +237,10 @@ quick_calc.about_k_code_a = Your adjusted Income Tax is an estimate including an
 quick_calc.about_k_code_b_k = the K in your tax code (opens in a new tab)
 quick_calc.about_k_code_b_sk = the SK in your tax code (opens in a new tab)
 quick_calc.about_k_code_c = The K code is used across the UK and usually indicates you owe tax from a previous year.
+
+quick_calc.tax_code.over_hundred_thousand.warning = This tax code is not usually for those on more than £100,000 a year.
+quick_calc.tax_code.scottish_rate.warning = You've used a Scottish tax code so we will apply Scottish Income Tax rates.
+quick_calc.scottish_rate.payScottishRate.warning = You said you pay Scottish Income Tax so we will apply Scottish Income Tax rates.
 
 
 

@@ -16,16 +16,13 @@
 
 package controllers
 
-import com.codahale.metrics.SharedMetricRegistries
 import forms.TaxResult
-import models.UserTaxCode
 import org.jsoup.Jsoup
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.ArgumentMatchers.any
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
@@ -69,7 +66,7 @@ class ShowResultSpec
         .build()
 
       running(application) {
-        val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(appConfig)
+        val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
         val taxResult =
           TaxResult.taxCalculation(cacheTaxCodeStatePensionSalary.get, defaultTaxCodeProvider)
 

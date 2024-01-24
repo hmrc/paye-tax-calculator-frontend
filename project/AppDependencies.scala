@@ -4,14 +4,14 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay28Version            = "7.19.0"
+  private val bootstrapPlay28Version            = "8.2.0"
   private val playPartialsVersion               = "8.3.0-play-28"
   private val playConditionalFormMappingVersion = "1.11.0-play-28"
   private val urlBuilderVersion                 = "3.6.0-play-28"
   private val taxYearVersion                    = "3.0.0"
   private val taxKalcVersion                    = "2.9.3"
   private val catsCoreVersion                   = "2.3.0"
-  private val hmrcFrontend                      = "7.14.0-play-28"
+  private val hmrcFrontend                      = "7.29.0-play-28"
   private val mongoVersion                      = "1.3.0"
 
 
@@ -44,8 +44,8 @@ object AppDependencies {
     "org.scalacheck"       %% "scalacheck"                  % scalacheckVersion                % scope,
     "org.mockito"          % "mockito-core"                 % mockitoVersion                   % scope,
     "org.scalamock"        %% "scalamock-scalatest-support" % scalamockScalaTestSupportVersion % scope,
-    "com.vladsch.flexmark"  % "flexmark-all"                   % flexmarkVersion                   % scope,
-    "uk.gov.hmrc.mongo"    %% "hmrc-mongo-test-play-28"    % mongoVersion                   % scope
+    "com.vladsch.flexmark"  % "flexmark-all"                   % flexmarkVersion                  % scope,
+    "uk.gov.hmrc.mongo"    %% "hmrc-mongo-test-play-28"    % mongoVersion                      % scope
   )
 
   def apply(): Seq[ModuleID] = compile ++ test()

@@ -20,7 +20,7 @@ import config.AppConfig
 import forms.StatePensionFormProvider
 
 import javax.inject.{Inject, Singleton}
-import models.{QuickCalcAggregateInput, StatePension, UserTaxCode}
+import models.{QuickCalcAggregateInput, ScottishRate, StatePension, UserTaxCode}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
@@ -86,23 +86,23 @@ class StatePensionController @Inject() (
               case Some(aggregate) =>
                 val updatedAggregate = {
                   if(appConfig.features.newScreenContentFeature()) {
-                    aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(false,Some(defaultTaxCodeProvider.defaultUkTaxCode))))
-                  }else {
+                    aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false,None)), savedScottishRate = Some(ScottishRate(payScottishRate = false, gaveUsScottishRate = false)))
+                  } else {
                     aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
                   }
                 }
                 cache.save(updatedAggregate).map { _ =>
-                  Redirect(
-                    navigator.nextPageOrSummaryIfAllQuestionsAnswered(
-                      updatedAggregate
-                    ) {
-                      if(appConfig.features.newScreenContentFeature()) {
-                        routes.YouHaveToldUsController.summary
-                      } else {
-                        routes.TaxCodeController.showTaxCodeForm
+                    Redirect(
+                      navigator.nextPageOrSummaryIfAllQuestionsAnswered(
+                        updatedAggregate
+                      ) {
+                        if (appConfig.features.newScreenContentFeature()) {
+                          routes.YouHaveToldUsNewController.summary
+                        } else {
+                          routes.TaxCodeController.showTaxCodeForm
+                        }
                       }
-                    }
-                  )
+                    )
                 }
               case None =>
                 cache
@@ -112,7 +112,7 @@ class StatePensionController @Inject() (
                   )
                   .map { _ =>
                     if(appConfig.features.newScreenContentFeature()) {
-                      Redirect(routes.YouHaveToldUsController.summary)
+                      Redirect(routes.YouHaveToldUsNewController.summary)
                     } else {
                       Redirect(routes.TaxCodeController.showTaxCodeForm)
                     }

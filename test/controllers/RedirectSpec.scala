@@ -35,8 +35,8 @@ class RedirectSpec extends BaseSpec with AnyWordSpecLike {
       val actualRedirect   = redirectLocation(result).get
       val expectedRedirect = s"${baseURL}your-pay"
 
-      status      shouldBe 303
-      actualRedirect shouldBe expectedRedirect
+      status      mustBe 303
+      actualRedirect mustBe expectedRedirect
     }
   }
 

@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package controllers
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-import config.AppConfig
-import play.api.i18n.Messages
+@this(govukWarningText : GovukWarningText)
 
-trait CSRFTestHelper {
+@(content: String)(implicit messages: Messages, request: RequestHeader)
 
-  // As we compare pages in a String format for our tests, it is necessary to remove the value of the hidden csrf token
-  // as it uses a randomly generated UUID
-  def removeCSRFTagValue(content: String): String = {
-    val csrfValueIndex = content.indexOf("\"csrfToken\" value=\"") + 18
-    val firstHalf = content.substring(0, csrfValueIndex)
-    val secondHalf = content.substring(csrfValueIndex+80)
-    firstHalf.concat(secondHalf)
-  }
 
-}
+@govukWarningText(WarningText(
+iconFallbackText = Some("Warning"),
+content = Text(content)
+))
+
+            
