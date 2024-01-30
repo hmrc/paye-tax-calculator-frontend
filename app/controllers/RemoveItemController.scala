@@ -18,9 +18,8 @@ package controllers
 
 import config.AppConfig
 import forms.forms.RemoveTaxCodeFormProvider
-import models.{QuickCalcAggregateInput, UserTaxCode}
+import models.QuickCalcAggregateInput
 import play.api.data.Form
-
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents, Request, Result}
@@ -29,18 +28,18 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.ActionWithSessionId
-import views.html.pages.RemoveTaxCodeView
+import views.html.pages.RemoveItemView
 
 import scala.concurrent.ExecutionContext
 
 
 @Singleton
-class RemoveTaxCodeController @Inject()(
+class RemoveItemController @Inject()(
                                          override val messagesApi:      MessagesApi,
                                          cache:                         QuickCalcCache,
                                          val controllerComponents:      MessagesControllerComponents,
                                          navigator:                     Navigator,
-                                         removeTaxCodeView:             RemoveTaxCodeView,
+                                         removeItemView:                RemoveItemView,
                                          removeTaxCodeFormProvider:     RemoveTaxCodeFormProvider
                                        )(implicit val app:              AppConfig,
                                          implicit val executionContext: ExecutionContext)
@@ -50,36 +49,36 @@ class RemoveTaxCodeController @Inject()(
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  val form: Form[Boolean] = removeTaxCodeFormProvider()
+  val form: String => Form[Boolean] = option => removeTaxCodeFormProvider(option)
 
-  def showRemoveTaxCodeForm(): Action[AnyContent]=
-    salaryRequired(cache,showRemoveTaxCodeFormTestable)
+  def showRemoveItemForm(option: String): Action[AnyContent]=
+    salaryRequired(cache,showRemoveTaxCodeFormTestable(option))
 
-  private[controllers] def showRemoveTaxCodeFormTestable: ShowForm = { implicit request => agg =>
-
-    Ok(removeTaxCodeView(form, agg.additionalQuestionItems))
+  private[controllers] def showRemoveTaxCodeFormTestable(option: String): ShowForm = { implicit request =>
+    agg =>
+      Ok(removeItemView(form(option), agg.additionalQuestionItems,option))
   }
 
-  def submitRemoveTaxCodeForm(): Action[AnyContent] =
+  def submitRemoveItemForm(option: String): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
-      form
+      form(option)
         .bindFromRequest()
         .fold(
           formWithErrors =>
             cache.fetchAndGetEntry().map {
               case Some(aggregate) =>
                 BadRequest(
-                  removeTaxCodeView(formWithErrors, aggregate.additionalQuestionItems)
+                  removeItemView(formWithErrors, aggregate.additionalQuestionItems, option)
                 )
               case None =>
-                BadRequest(removeTaxCodeView(formWithErrors, Nil))
+                BadRequest(removeItemView(formWithErrors, Nil, option))
             },
-          removeTaxCodeBoolean => {
+          removeItemBoolean => {
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
-                val updatedAggregate = if (removeTaxCodeBoolean) {
+                val updatedAggregate= if (removeItemBoolean) {
                   aggregate.copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
                 } else {
                   aggregate
@@ -98,7 +97,7 @@ class RemoveTaxCodeController @Inject()(
         )
     }
 
-  private def salaryRequired[T](
+  private def salaryRequired(
                                  cache: QuickCalcCache,
                                  furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
                                ): Action[AnyContent] =

@@ -27,7 +27,7 @@
        beforeContent: components.beforeContent
 )
 
-@(userTaxCodeForm: Form[Boolean], additionalQuestionItems: List[AdditionalQuestionItem])(implicit request: Request[_], messages: Messages)
+@(userTaxCodeForm: Form[Boolean], additionalQuestionItems: List[AdditionalQuestionItem], item: String)(implicit request: Request[_], messages: Messages)
 
 @labels = @{
    List(Messages("quick_calc.salary.yearly.sub_label"),
@@ -59,18 +59,18 @@
 }
 
 @backButtonUrl = @{
-    s"${additionalQuestionItems.flatMap((y: AdditionalQuestionItem) => if(labels.contains(y.label)) y.url else "").mkString}"
+    controllers.routes.YouHaveToldUsNewController.summary.url
 }
 
-@govuk_wrapper(Some(title(userTaxCodeForm, "Are you sure you want to remove your tax code?")), beforeContentBlock = beforeContent(backButtonUrl)) {
+@govuk_wrapper(Some(title(userTaxCodeForm, Messages(s"quick_calc.remove.$item"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-    @formHelper(action = controllers.routes.RemoveTaxCodeController.submitRemoveTaxCodeForm) {
+    @formHelper(action = controllers.routes.RemoveItemController.submitRemoveItemForm(item)) {
 
         @errorSummary(userTaxCodeForm.errors)
 
         @inputRadio(
             form = userTaxCodeForm,
-            legendKey = "Are you sure you want to remove your tax code?",
+            legendKey = Messages(s"quick_calc.remove.$item"),
             name = "removeTaxCode",
             items = pensionAgeRadios
         )

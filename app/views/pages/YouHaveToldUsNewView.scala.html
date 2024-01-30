@@ -74,7 +74,7 @@
                 attributes = Map("id" -> s"change-${item.label}-link")
             ),
                 ActionItem(
-                href = controllers.routes.RemoveTaxCodeController.showRemoveTaxCodeForm.url,
+                href = controllers.routes.RemoveItemController.showRemoveItemForm("taxcode").url,
                 content = Text(Messages("quick_calc.you_have_told_us.taxCode.remove")),
                 visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
                 attributes = Map("id" -> s"change-${item.label}-link")

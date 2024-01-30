@@ -51,7 +51,6 @@ class TaxCodeController @Inject() (
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[UserTaxCode] = userTaxCodeFormProvider()
-
   def showTaxCodeForm: Action[AnyContent] =
     salaryRequired(
       cache, { implicit request => agg =>
