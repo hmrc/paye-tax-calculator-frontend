@@ -42,8 +42,16 @@ import mappings.CustomFormatters._
 import javax.inject.Inject
 import play.api.data.format.Formats.stringFormat
 class RemoveTaxCodeFormProvider @Inject()() {
-    val form: Form[Boolean] = Form(
+
+    val taxCodeValidation: Form[Boolean] = Form(
       single("removeTaxCode" -> of(removeTaxCodeValidation)
       ))
-    def apply(): Form[Boolean] = form
+
+    def apply(queryParam: String): Form[Boolean] = {
+      queryParam match {
+        case "taxcode" => taxCodeValidation
+      }
+    }
+
+
   }

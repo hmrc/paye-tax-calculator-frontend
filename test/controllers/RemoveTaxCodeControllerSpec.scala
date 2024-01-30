@@ -26,6 +26,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -37,7 +38,7 @@ import services.QuickCalcCache
 import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
-import views.html.pages.{RemoveTaxCodeView, ScottishRateView}
+import views.html.pages.RemoveItemView
 
 import scala.concurrent.Future
 
@@ -48,8 +49,9 @@ class RemoveTaxCodeControllerSpec
     with IntegrationPatience
     with CSRFTestHelper {
 
+  val taxCodeQueryParam = "taxcode"
   val formProvider = new RemoveTaxCodeFormProvider()
-  val form = formProvider()
+  val form: Form[Boolean] = formProvider(taxCodeQueryParam)
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
@@ -58,7 +60,7 @@ class RemoveTaxCodeControllerSpec
   def messagesThing(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
-  "The remove tax code page" should {
+  "The remove item page with taxcode set as the query param" should {
     "return 200 - Ok with an empty form" in {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
@@ -72,12 +74,10 @@ class RemoveTaxCodeControllerSpec
 
       val request = FakeRequest(
         GET,
-        routes.RemoveTaxCodeController.showRemoveTaxCodeForm.url
+        routes.RemoveItemController.showRemoveItemForm(taxCodeQueryParam).url
       ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
       val result = route(application, request).get
-
-      val view = application.injector.instanceOf[RemoveTaxCodeView]
 
       status(result) mustEqual OK
 
@@ -101,7 +101,7 @@ class RemoveTaxCodeControllerSpec
 
         val request = FakeRequest(
           GET,
-          routes.RemoveTaxCodeController.showRemoveTaxCodeForm.url
+          routes.RemoveItemController.showRemoveItemForm(taxCodeQueryParam).url
         ).withHeaders(HeaderNames.xSessionId -> "test")
 
         val result = route(application, request).get
@@ -136,7 +136,7 @@ class RemoveTaxCodeControllerSpec
 
         val request = FakeRequest(
           POST,
-          routes.RemoveTaxCodeController.submitRemoveTaxCodeForm.url
+          routes.RemoveItemController.submitRemoveItemForm(taxCodeQueryParam).url
         ).withFormUrlEncodedBody(form.data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -177,7 +177,7 @@ class RemoveTaxCodeControllerSpec
 
         val request = FakeRequest(
           POST,
-          routes.RemoveTaxCodeController.submitRemoveTaxCodeForm.url
+          routes.RemoveItemController.submitRemoveItemForm(taxCodeQueryParam).url
         ).withFormUrlEncodedBody(form.data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken

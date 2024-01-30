@@ -22,12 +22,12 @@ POST        /scottish-tax          controllers.ScottishRateController.submitScot
 GET         /tax-code              controllers.TaxCodeController.showTaxCodeForm
 POST        /tax-code              controllers.TaxCodeController.submitTaxCodeForm
 
-GET         /remove-tax-code       controllers.RemoveTaxCodeController.showRemoveTaxCodeForm
-POST        /remove-tax-code       controllers.RemoveTaxCodeController.submitRemoveTaxCodeForm
+GET         /remove                controllers.RemoveItemController.showRemoveItemForm(option: String)
+POST        /remove                controllers.RemoveItemController.submitRemoveItemForm(option: String)
 
 GET         /your-answers          controllers.YouHaveToldUsController.summary
 
-GET         /check-your-answers      controllers.YouHaveToldUsNewController.summary
+GET         /check-your-answers    controllers.YouHaveToldUsNewController.summary
 
 GET         /your-results          controllers.ShowResultsController.showResult
 

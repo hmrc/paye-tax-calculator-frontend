@@ -242,6 +242,7 @@ quick_calc.tax_code.over_hundred_thousand.warning = This tax code is not usually
 quick_calc.tax_code.scottish_rate.warning = You've used a Scottish tax code so we will apply Scottish Income Tax rates.
 quick_calc.scottish_rate.payScottishRate.warning = You said you pay Scottish Income Tax so we will apply Scottish Income Tax rates.
 
+quick_calc.remove.taxcode = Are you sure you want to remove your tax code
 
 
 #######################################################
