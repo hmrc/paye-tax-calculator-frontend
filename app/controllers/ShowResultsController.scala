@@ -47,6 +47,22 @@ class ShowResultsController @Inject() (
     with ActionWithSessionId {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
+  def isUkOrScottishTaxCode(aggregateInput: QuickCalcAggregateInput): Boolean = {
+    aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultUkTaxCode)
+      || aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultScottishTaxCode)))
+  }
+
+  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean = {
+    aggregateInput.savedSalary.exists(_.amount >= 100002)
+  }
+
+  def salaryCheck(aggregateInput: QuickCalcAggregateInput) : Boolean = {
+    if(salaryOverHundredThousand(aggregateInput) && isUkOrScottishTaxCode(aggregateInput)){
+      true
+    } else {
+      false
+    }
+  }
 
   def showResult(): Action[AnyContent] =
     salaryRequired(cache, implicit request =>
@@ -59,7 +75,7 @@ class ShowResultsController @Inject() (
           } else {
             false
           }
-          Ok(resultView(TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider), defaultTaxCodeProvider.startOfCurrentTaxYear, isScottish))
+          Ok(resultView(TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider), defaultTaxCodeProvider.startOfCurrentTaxYear, isScottish, salaryCheck(aggregate)))
         } else Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 

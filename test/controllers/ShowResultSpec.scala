@@ -84,7 +84,7 @@ class ShowResultSpec
         val parseHtml    = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false)(
             request,
             messagesThing(application)
           ).toString
@@ -95,6 +95,50 @@ class ShowResultSpec
 
         links.size() mustEqual 3
 
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+      }
+    }
+
+    "return 200, and show disclaimer text if salary is over 100,002 and tax code is default uk or scottish" in {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheShowDisclaimer)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
+        val taxResult =
+          TaxResult.taxCalculation(cacheShowDisclaimer.get, defaultTaxCodeProvider)
+
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).get
+
+        val view = application.injector.instanceOf[ResultView]
+
+        status(result) mustEqual OK
+
+        val responseBody = contentAsString(result)
+        val parseHtml = Jsoup.parse(responseBody)
+
+        removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true)(
+            request,
+            messagesThing(application)
+          ).toString
+        )
+
+        val sidebar = parseHtml.getElementsByClass("govuk-grid-column-one-third")
+        val links = sidebar.get(0).getElementsByClass("govuk-link")
+        val disclaimerText = parseHtml.getElementsByClass("govuk-warning-text__text").text()
+
+        links.size() mustEqual 3
+        disclaimerText.contains(disclaimerWarning) mustEqual true
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }

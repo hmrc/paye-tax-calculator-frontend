@@ -244,6 +244,8 @@ quick_calc.scottish_rate.payScottishRate.warning = You said you pay Scottish Inc
 
 quick_calc.remove.taxcode = Are you sure you want to remove your tax code
 
+quick_calc.results.disclaimer = We have not reduced your Personal Allowance. If you earn over £100,000, you must enter your tax code for that job to get the most accurate results.
+
 
 #######################################################
 ## Beta Banner
