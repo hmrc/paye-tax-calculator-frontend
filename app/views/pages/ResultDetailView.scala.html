@@ -29,7 +29,7 @@
         h2: components.h2,
         linkNewTab: components.linkNewTab,
         resultsPanel: components.resultsPanel,
-        govukInsetText: GovukInsetText
+        disclaimerInsetText: components.disclaimerInsetText
 )
 
 @(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean, isScottish: Boolean, headerFrequency: String)(implicit request: Request[_], messages: Messages)
@@ -41,11 +41,11 @@
 @resultsPanel(calculatorResponse, taxYear, label, formattedAmount)
 
 @if(LocalDate.now.isBefore(LocalDate.of(2024, Month.APRIL, 5))) {
-    @govukInsetText(InsetText(
-        content = Text(Messages(
-            s"quick_calc.result.23_24.disclaimer.${headerFrequency.toLowerCase}"))
-    ))
+    @disclaimerInsetText() {
+        <p>@Messages("quick_calc.results.opening") @Messages(s"quick_calc.result.23_24.disclaimer.${headerFrequency.toLowerCase}")</p>
+    }
 }
+
 @h2(Messages("quick_calc.result.total_deductions.info_a") + " " + headerFrequency.toLowerCase + " " + Messages("quick_calc.result.total_deductions.info_b"))
 
 @govukSummaryList(
