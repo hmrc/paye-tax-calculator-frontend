@@ -45,10 +45,11 @@
         sectionBreakVisible: components.sectionBreakVisible,
         sidebar: components.sidebar,
         hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
-        features: config.features.Features
+        features: config.features.Features,
+        warningText: components.warning
 )
 
-@(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean)(implicit request: Request[_], messages: Messages)
+@(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean, salaryCheck: Boolean)(implicit request: Request[_], messages: Messages)
 
 @tabsItems = @{
     Seq(
@@ -90,10 +91,18 @@
     }
 }
 
+@disclaimer = @{
+    if(salaryCheck) {
+        warningText(Messages("quick_calc.results.disclaimer"))
+    }
+}
+
 
 @govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), showDeskproLink = false, beforeContentBlock = beforeContent(s"${backButton}"), bodyClassess = Some("govuk-grid-row govuk-!-padding-left-2 govuk-!-padding-right-2"), showAppBanner = true) {
 
     @h1(Messages("quick_calc.result.header"))
+
+    @disclaimer
 
     @govukTabs(
         Tabs(
