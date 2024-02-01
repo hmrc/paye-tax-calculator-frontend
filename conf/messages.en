@@ -173,7 +173,9 @@ quick_calc.salary.question.state_pension_url_c=if you are not sure.
 quick_calc.salary.question.state_pension_inf=If you’re over State Pension age you don’t pay National Insurance contributions.
 
 quick_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax Rate?
+quick_calc.salary.question.scottish_income.new=Do you pay the Scottish Income Tax rate?
 quick_calc.salary.question.scottish_income_info=You usually pay Scottish Income Tax if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
+quick_calc.salary.question.scottish_income_info.new=You usually pay Scottish Income Tax if you live in Scotland for more than half the tax year. It does not matter where you work.
 quick_calc.salary.question.scottish_income_url_a=You can check if you pay
 quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a new tab)
 quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
