@@ -127,9 +127,9 @@ quick_calc.result.info_url_a=Check how much Income Tax you paid last year
 quick_calc.result.info_url_b=Check if you have paid the right amount of tax
 quick_calc.result.info_url_c=Claim a tax refund
 
-quick_calc.result.23_24.disclaimer.yearly=Your take-home pay will be lower than the estimate shown. This is because of changes to National Insurance in January 2024.
-quick_calc.result.23_24.disclaimer.monthly=Your take-home pay for any month from 6 April 2023 to 6 January 2024 will be lower than the estimate shown. This is because of changes to National Insurance in January 2024.
-quick_calc.result.23_24.disclaimer.weekly=Your take-home pay for any week from 6 April 2023 to 6 January 2024 will be lower than the estimate shown. This is because of changes to National Insurance in January 2024.
+quick_calc.result.23_24.disclaimer.yearly=As a result, your actual take-home pay will be less than the estimate shown.
+quick_calc.result.23_24.disclaimer.monthly=As a result, your take-home pay for any month from 6 April 2023 to 6 January 2024 will be lower than the estimate shown.
+quick_calc.result.23_24.disclaimer.weekly=As a result, your take-home pay for any week from 6 April 2023 to 6 January 2024 will be lower than the estimate shown.
 
 quick_calc.salary.header=How much are you paid?
 quick_calc.salary.oldHeader=How much do you get paid?
@@ -245,6 +245,8 @@ quick_calc.scottish_rate.payScottishRate.warning = You said you pay Scottish Inc
 quick_calc.remove.taxcode = Are you sure you want to remove your tax code
 
 quick_calc.results.disclaimer = We have not reduced your Personal Allowance. If you earn over £100,000, you must enter your tax code for that job to get the most accurate results.
+
+quick_calc.results.opening = Your take-home pay will be lower than the estimate shown. This is because of changes to National Insurance in January 2024.
 
 
 #######################################################
