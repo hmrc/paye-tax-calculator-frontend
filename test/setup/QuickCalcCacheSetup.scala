@@ -252,7 +252,7 @@ object QuickCalcCacheSetup {
     "Enter a tax code that ends with with the letter L, M, N or T"
 
   val expectedInvalidTaxCodeErrorMessage =
-    "You must enter a tax code in the correct format, like 1117L, K497, S1117L or SK497"
+    "Enter a tax code in the correct format, for example 1117L, K497, S1117L or SK497"
 
   val expectedPrefixTaxCodeErrorMessage =
     "Enter a tax code that starts with the letters S, K, SK, C or CK followed by numbers"
