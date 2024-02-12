@@ -48,6 +48,7 @@ quick_calc.you_have_told_us.header_change_link=You can
 quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=What is your tax code? (Optional)
+quick_calc.you_have_told_us.about_tax_code.label.newTitle=What is your tax code?
 quick_calc.you_have_told_us.about_tax_code.label.new=Tax Code
 quick_calc.you_have_told_us.about_tax_code.no=No
 quick_calc.you_have_told_us.about_tax_code.yes=Yes
@@ -181,6 +182,7 @@ quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a
 quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
 quick_calc.scottish_rate_error=Select yes if you pay Scottish Income Tax
 
+quick_calc.salary.question.tax_code_info=Your tax code will tell us if you owe tax from a previous year or have any allowances, such as Blind Person’s Allowance.
 quick_calc.salary.question.tax_code_info_a=If you do not enter a tax code we will use the default tax code
 quick_calc.salary.question.tax_code_info_b=to calculate your take-home pay.
 quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
@@ -222,11 +224,23 @@ quick_calc.over_state_pension_age.no=No
 quick_calc.over_state_pension_age_error=Select yes if you are over the State Pension age
 
 quick_calc.about_tax_code.header=What is your tax code? (Optional)
+quick_calc.about_tax_code.header.new=What is your tax code?
 quick_calc.about_tax_code.has_tax_code=Enter your tax code
+
+quick_calc.about_tax_code.subheading=Tax code
+quick_calc.about_tax_code.details.start=You can usually find your tax code:
+quick_calc.about_tax_code.details.firstBullet_a=in the
+quick_calc.about_tax_code.details.firstBullet_b=HMRC app (opens in a new tab)
+quick_calc.about_tax_code.details.secondBullet=on a recent payslip
+quick_calc.about_tax_code.details.thirdBullet=on a P45
+quick_calc.about_tax_code.details.fourthBullet=on a ‘Tax Code Notice’ letter from HMRC if you get one
+quick_calc.about_tax_code.details.firstInfoPara=If you leave it blank, we will use 1257L (unless you earn over £100,000 a year). 1257L is the most common tax code.
+quick_calc.about_tax_code.details.secondInfoPara_a=If you do not know it and you earn over £100,000 a year, we will still calculate your
+quick_calc.about_tax_code.details.secondInfoPara_b=reduced Personal Allowance (opens in a new tab).
 
 quick_calc.about_tax_code.wrong_tax_code_prefix=Enter a tax code that starts with the letters S, K, SK, C or CK followed by numbers
 
-quick_calc.about_tax_code.wrong_tax_code=You must enter a tax code in the correct format, like 1117L, K497, S1117L or SK497
+quick_calc.about_tax_code.wrong_tax_code=Enter a tax code in the correct format, for example 1117L, K497, S1117L or SK497
 
 quick_calc.about_tax_code.has_tax_code_yes=Yes
 quick_calc.about_tax_code.has_tax_code_no=No
@@ -300,6 +314,7 @@ label.old.payperiod=How are you paid?
 label.state-pension-details=Why we ask this
 label.state-pension-details.old=Check your State Pension age
 label.tax-code=Find your current tax code
+label.tax-code.new=I do not know my tax code
 label.scottish-rate-details=Check if you pay Scottish Income Tax
 
 label.breakdown_per = Breakdown per:

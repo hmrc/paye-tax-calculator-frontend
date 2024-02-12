@@ -118,7 +118,7 @@ class TaxCodeControllerSpec
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
           form,
           cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).get.youHaveToldUsItems()(messages,mockAppConfig),
-          defaultTaxCodeProvider.defaultUkTaxCode
+          defaultTaxCodeProvider.defaultUkTaxCode, false
         )(
           request,
           messagesThing(application)
@@ -153,7 +153,7 @@ class TaxCodeControllerSpec
 
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(formFilled,
                                                cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems()(messages,mockAppConfig),
-                                               defaultTaxCodeProvider.defaultUkTaxCode)(
+                                               defaultTaxCodeProvider.defaultUkTaxCode, false)(
           request,
           messagesThing(application)
         ).toString)

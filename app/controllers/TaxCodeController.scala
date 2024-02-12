@@ -51,6 +51,10 @@ class TaxCodeController @Inject() (
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[UserTaxCode] = userTaxCodeFormProvider()
+
+  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean = {
+    aggregateInput.savedSalary.exists(_.amount > 100000)
+  }
   def showTaxCodeForm: Action[AnyContent] =
     salaryRequired(
       cache, { implicit request => agg =>
@@ -59,7 +63,7 @@ class TaxCodeController @Inject() (
             form.fill(s)
           }
           .getOrElse(form)
-        Ok(taxCodeView(filledForm, agg.youHaveToldUsItems, defaultTaxCodeProvider.defaultUkTaxCode))
+        Ok(taxCodeView(filledForm, agg.youHaveToldUsItems, defaultTaxCodeProvider.defaultUkTaxCode, salaryOverHundredThousand(agg)))
       }
     )
 
@@ -74,9 +78,9 @@ class TaxCodeController @Inject() (
             cache.fetchAndGetEntry().map {
               case Some(aggregate) =>
                 BadRequest(
-                  taxCodeView(formWithErrors, aggregate.youHaveToldUsItems, defaultTaxCodeProvider.defaultUkTaxCode)
+                  taxCodeView(formWithErrors, aggregate.youHaveToldUsItems, defaultTaxCodeProvider.defaultUkTaxCode, salaryOverHundredThousand(aggregate))
                 )
-              case None => BadRequest(taxCodeView(formWithErrors, Nil, defaultTaxCodeProvider.defaultUkTaxCode))
+              case None => BadRequest(taxCodeView(formWithErrors, Nil, defaultTaxCodeProvider.defaultUkTaxCode, salaryCheck = false))
             },
           (newTaxCode: UserTaxCode) => {
             val updatedAggregate = cache
@@ -111,7 +115,7 @@ class TaxCodeController @Inject() (
                 .map(_ =>
                   if(appConfig.features.newScreenContentFeature()){
                     if(newTaxCode.taxCode.isEmpty) {
-                      Redirect(routes.YouHaveToldUsNewController.summary)
+                      Redirect(routes.ScottishRateController.showScottishRateForm)
                     } else {
                       Redirect(
                         navigator
