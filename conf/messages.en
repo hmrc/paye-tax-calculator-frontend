@@ -235,7 +235,7 @@ quick_calc.about_tax_code.details.secondBullet=on a recent payslip
 quick_calc.about_tax_code.details.thirdBullet=on a P45
 quick_calc.about_tax_code.details.fourthBullet=on a ‘Tax Code Notice’ letter from HMRC if you get one
 quick_calc.about_tax_code.details.firstInfoPara=If you leave it blank, we will use 1257L (unless you earn over £100,000 a year). 1257L is the most common tax code.
-quick_calc.about_tax_code.details.secondInfoPara_a=If you do not know it and you earn over £100,000 a year, we will still calculate your
+quick_calc.about_tax_code.details.secondInfoPara_a=If you do not know your tax code, you can leave it blank and we will calculate your
 quick_calc.about_tax_code.details.secondInfoPara_b=reduced Personal Allowance (opens in a new tab).
 
 quick_calc.about_tax_code.wrong_tax_code_prefix=Enter a tax code that starts with the letters S, K, SK, C or CK followed by numbers
