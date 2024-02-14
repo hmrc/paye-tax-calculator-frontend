@@ -88,6 +88,8 @@ quick_calc.you_have_told_us.an_hour.label.new=Gross income
 quick_calc.you_have_told_us.every_4_weeks.label.new=Gross income
 
 quick_calc.you_have_told_us.a_day_sub.label=How many days a week do you usually work?
+quick_calc.you_have_told_us.a_day_sub.label.new=Days worked a week
+quick_calc.you_have_told_us.an_hour_sub.label.new=Hours worked a week
 quick_calc.you_have_told_us.an_hour_sub.label=How many hours a week do you usually work?
 
 quick_calc.result.header=Your estimated take-home pay
