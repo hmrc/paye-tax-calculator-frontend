@@ -19,7 +19,6 @@ lazy val scoverageSettings = {
     coverageMinimumStmtTotal := 73,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
-    Test / parallelExecution := false
   )
 }
 

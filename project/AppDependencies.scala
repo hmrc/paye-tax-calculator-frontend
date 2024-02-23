@@ -8,7 +8,7 @@ object AppDependencies {
   private val playPartialsVersion               = "8.3.0-play-28"
   private val playConditionalFormMappingVersion = "1.11.0-play-28"
   private val urlBuilderVersion                 = "3.6.0-play-28"
-  private val taxYearVersion                    = "3.0.0"
+  private val taxYearVersion                    = "4.0.0"
   private val taxKalcVersion                    = "2.9.3"
   private val catsCoreVersion                   = "2.3.0"
   private val hmrcFrontend                      = "7.29.0-play-28"

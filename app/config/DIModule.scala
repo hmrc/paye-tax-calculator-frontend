@@ -17,6 +17,7 @@
 package config
 
 import com.google.inject.AbstractModule
+import uk.gov.hmrc.calculator.model.CalculatorResponsePayPeriod
 
 class DIModule extends AbstractModule{
 
