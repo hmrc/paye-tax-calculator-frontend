@@ -84,7 +84,7 @@ class ShowResultSpec
         val parseHtml    = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false,"2023/24",Seq.empty)(
             request,
             messagesThing(application)
           ).toString
@@ -127,7 +127,7 @@ class ShowResultSpec
         val parseHtml = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true,"2023/24",Seq.empty)(
             request,
             messagesThing(application)
           ).toString

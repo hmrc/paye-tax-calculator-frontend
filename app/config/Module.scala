@@ -18,6 +18,8 @@ package config
 
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.calculator.model.CalculatorResponsePayPeriod
+
 import java.time.Clock
 
 class Module extends play.api.inject.Module {

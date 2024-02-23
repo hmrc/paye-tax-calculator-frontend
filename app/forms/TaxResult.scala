@@ -20,10 +20,12 @@ import com.typesafe.config.Config
 import config.AppConfig
 import models.{QuickCalcAggregateInput, UserTaxCode}
 import uk.gov.hmrc.calculator.Calculator
-import uk.gov.hmrc.calculator.model.{CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod}
+import uk.gov.hmrc.calculator.model.{BandBreakdown, CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod}
 import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
+import scala.collection.JavaConverters._
 
+import java.util
 import javax.inject.Inject
 import scala.math.BigDecimal.RoundingMode
 
@@ -36,6 +38,17 @@ object TaxResult {
 
   def extractIncomeTax(response: CalculatorResponsePayPeriod): BigDecimal =
     response.getTaxToPay
+
+  def incomeTaxBands(response: CalculatorResponsePayPeriod): Map[Double, Double] = {
+    Option(response.getTaxBreakdown) match {
+      case Some(breakdownList) if !breakdownList.isEmpty =>
+        breakdownList.asScala.map { band =>
+          (band.getPercentage * 100, band.getAmount)
+        }.toMap
+      case _ =>
+        Map.empty
+    }
+  }
 
   def isOverMaxRate(response: CalculatorResponsePayPeriod): Boolean =
     response.getMaxTaxAmountExceeded

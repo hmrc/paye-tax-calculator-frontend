@@ -18,6 +18,7 @@ package setup
 
 import akka.stream.Materializer
 import config.AppConfig
+import forms.{AdditionalQuestionItem, YouHaveToldUsItem}
 import mocks.MockAppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
@@ -75,6 +76,13 @@ class BaseSpec
     element(selector).text()
   }
 
+  val youHaveToldUsItems : List[YouHaveToldUsItem] =
+    List(YouHaveToldUsItem("£2000","a_year",controllers.routes.SalaryController.showSalaryForm.url,"income"),
+      YouHaveToldUsItem("No","over_state_pension_age",controllers.routes.StatePensionController.showStatePensionForm.url,"pension-state"))
+
+  val additionalQuestionItem: List[AdditionalQuestionItem] =
+    List(AdditionalQuestionItem("1257L","about_tax_code",controllers.routes.TaxCodeController.showTaxCodeForm.url,"tax-code"),
+      AdditionalQuestionItem("No","scottish_rate",controllers.routes.ScottishRateController.showScottishRateForm.url,"scottish_rate"))
 }
 
   import com.codahale.metrics.SharedMetricRegistries

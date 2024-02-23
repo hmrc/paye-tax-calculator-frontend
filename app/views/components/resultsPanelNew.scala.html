@@ -16,12 +16,10 @@
 
 @this()
 
-@(content: Seq[Option[Html]], classes: String = "govuk-list")(implicit messages: Messages)
+@(formattedAmount: String)(implicit messages: Messages)
 
-<ul class="@classes govuk-list--bullet">
-    @content.map { bullet =>
-    @if(bullet.isDefined){
-    <li>@bullet</li>
-     }
-    }
-</ul>
+<div class="govuk-panel govuk-panel--confirmation">
+    <h2 class="govuk-panel__title">£@formattedAmount<br>
+        <span class="govuk-panel__body">@{messages("quick_calc.salary.yearly.label")}</span>
+    </h2>
+</div>

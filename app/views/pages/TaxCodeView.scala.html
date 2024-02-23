@@ -84,7 +84,7 @@
         ) {
             @if(features.newScreenContentFeature()) {
                 <p>@Messages("quick_calc.about_tax_code.details.start")</p>
-                @bullets(Seq(Html(Messages("quick_calc.about_tax_code.details.firstBullet_a") + link("https://www.gov.uk/guidance/download-the-hmrc-app", "quick_calc.about_tax_code.details.firstBullet_b", endWithFullStop = false)),Html(Messages("quick_calc.about_tax_code.details.secondBullet")),Html(Messages("quick_calc.about_tax_code.details.thirdBullet")),Html(Messages("quick_calc.about_tax_code.details.fourthBullet"))))
+                @bullets(Seq(Some(Html(Messages("quick_calc.about_tax_code.details.firstBullet_a") + link("https://www.gov.uk/guidance/download-the-hmrc-app", "quick_calc.about_tax_code.details.firstBullet_b", endWithFullStop = false))),Some(Html(Messages("quick_calc.about_tax_code.details.secondBullet"))),Some(Html(Messages("quick_calc.about_tax_code.details.thirdBullet"))),Some(Html(Messages("quick_calc.about_tax_code.details.fourthBullet")))))
             @if(salaryCheck) {
                 <p>@Messages("quick_calc.about_tax_code.details.secondInfoPara_a") @link("https://www.gov.uk/income-tax-rates/income-over-100000", "quick_calc.about_tax_code.details.secondInfoPara_b", endWithFullStop = true)</p>
             } else {

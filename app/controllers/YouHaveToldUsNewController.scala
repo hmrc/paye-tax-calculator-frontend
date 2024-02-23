@@ -26,7 +26,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.{ActionWithSessionId, DefaultTaxCodeProvider}
+import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider}
 import views.html.pages.{YouHaveToldUsNewView, YouHaveToldUsView}
 
 import scala.concurrent.ExecutionContext
@@ -38,7 +38,8 @@ class YouHaveToldUsNewController @Inject() (
                                           val controllerComponents:      MessagesControllerComponents,
                                           navigator:                     Navigator,
                                           yourHaveToldUsView:            YouHaveToldUsNewView,
-                                          defaultTaxCodeProvider: DefaultTaxCodeProvider
+                                          defaultTaxCodeProvider: DefaultTaxCodeProvider,
+                                          aggregateConditionsUtil: AggregateConditionsUtil
                                         )(implicit val appConfig:        AppConfig,
                                           implicit val executionContext: ExecutionContext)
   extends FrontendBaseController
@@ -56,35 +57,15 @@ class YouHaveToldUsNewController @Inject() (
       implicit request =>
         aggregate =>
           if (aggregate.allQuestionsAnswered)
-            Ok(yourHaveToldUsView(aggregate.youHaveToldUsItems,aggregate.additionalQuestionItems,  taxCodeCheck(aggregate), isTaxCodeDefined(aggregate)))
+            Ok(yourHaveToldUsView(aggregate.youHaveToldUsItems,aggregate.additionalQuestionItems,  taxCodeCheck(aggregate), aggregateConditionsUtil.isTaxCodeDefined(aggregate)))
           else
             Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 
-  def isTaxCodeDefined(aggregateInput: QuickCalcAggregateInput): Boolean = {
-    aggregateInput.savedTaxCode.flatMap(_.taxCode).isDefined
-  }
-
-  def taxCodeContainsS(aggregateInput: QuickCalcAggregateInput) : Boolean = {
-    aggregateInput.savedTaxCode.flatMap(_.taxCode.map(_.contains("S"))).getOrElse(false)
-  }
-
-  def payScottishRate(aggregateInput: QuickCalcAggregateInput) : Boolean = {
-    aggregateInput.savedScottishRate.exists(_.payScottishRate)
-  }
-
-  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput) : Boolean = {
-    aggregateInput.savedSalary.exists(_.amount > 100000)
-  }
-  def isUkOrScottishTaxCode(aggregateInput: QuickCalcAggregateInput) : Boolean = {
-    aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultUkTaxCode)
-      || aggregateInput.savedTaxCode.flatMap(_.taxCode).exists(_.equals(defaultTaxCodeProvider.defaultScottishTaxCode)))
-  }
-
   def taxCodeWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages) : List[(String, String)] = {
-    if (salaryOverHundredThousand(aggregateInput) && isUkOrScottishTaxCode(aggregateInput)) {
+    if (aggregateConditionsUtil.salaryOverHundredThousand(aggregateInput) && aggregateConditionsUtil.isUkOrScottishTaxCode(aggregateInput)) {
       List(taxCodeLabel -> Messages("quick_calc.tax_code.over_hundred_thousand.warning"))
-    } else if (taxCodeContainsS(aggregateInput) && !payScottishRate(aggregateInput)) {
+    } else if (aggregateConditionsUtil.taxCodeContainsS(aggregateInput) && !aggregateConditionsUtil.payScottishRate(aggregateInput)) {
       List(taxCodeLabel -> Messages("quick_calc.tax_code.scottish_rate.warning"))
     } else {
       List.empty
@@ -92,7 +73,7 @@ class YouHaveToldUsNewController @Inject() (
   }
 
   def scottishRateWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): List[(String,String)] = {
-    if (payScottishRate(aggregateInput) && !taxCodeContainsS(aggregateInput))
+    if (aggregateConditionsUtil.payScottishRate(aggregateInput) && !aggregateConditionsUtil.taxCodeContainsS(aggregateInput))
       List(scottishRateLabel -> Messages("quick_calc.scottish_rate.payScottishRate.warning")) else List.empty
   }
 

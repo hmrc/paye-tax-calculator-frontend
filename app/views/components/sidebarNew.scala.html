@@ -16,12 +16,9 @@
 
 @this()
 
-@(content: Seq[Option[Html]], classes: String = "govuk-list")(implicit messages: Messages)
+@(header: String)(content: Html)
 
-<ul class="@classes govuk-list--bullet">
-    @content.map { bullet =>
-    @if(bullet.isDefined){
-    <li>@bullet</li>
-     }
-    }
-</ul>
+<div class="govuk-grid-column-one-third" style="padding-top: 15px; padding-bottom: 15px; background-color: #F8F8F8;">
+    <h3 class="govuk-heading-s">@header</h3>
+    @content
+</div>

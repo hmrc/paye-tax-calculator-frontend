@@ -29,7 +29,9 @@
         h2: components.h2,
         linkNewTab: components.linkNewTab,
         resultsPanel: components.resultsPanel,
-        disclaimerInsetText: components.disclaimerInsetText
+        resultsPanelNew: components.resultsPanelNew,
+        disclaimerInsetText: components.disclaimerInsetText,
+        features: config.features.Features,
 )
 
 @(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean, isScottish: Boolean, headerFrequency: String)(implicit request: Request[_], messages: Messages)
@@ -38,7 +40,13 @@
     moneyFormatter(calculatorResponse.getTakeHome)
 }
 
-@resultsPanel(calculatorResponse, taxYear, label, formattedAmount)
+@if(features.newScreenContentFeature()) {
+    @resultsPanelNew(formattedAmount)
+} else {
+    @resultsPanel(calculatorResponse, taxYear, label, formattedAmount)
+}
+
+
 
 @if(LocalDate.now.isBefore(LocalDate.of(2024, Month.APRIL, 5))) {
     @disclaimerInsetText() {
@@ -46,8 +54,48 @@
     }
 }
 
-@h2(Messages("quick_calc.result.total_deductions.info_a") + " " + headerFrequency.toLowerCase + " " + Messages("quick_calc.result.total_deductions.info_b"))
+@if(features.newScreenContentFeature()) {
+        @h2(Messages("quick_calc.result.total_deductions.info.new"), "govuk-heading-m")
+    } else {
+        @h2(Messages("quick_calc.result.total_deductions.info_a") + " " + headerFrequency.toLowerCase + " " + Messages("quick_calc.result.total_deductions.info_b"))
+    }
 
+@if(features.newScreenContentFeature()) {
+@govukSummaryList(
+    SummaryList(
+        rows = Seq(
+            SummaryListRow(
+                key = Key(content = HtmlContent(Messages("quick_calc.result.gross.income"))),
+                value = Value(content = HtmlContent("<strong>" + s"£${moneyFormatter(calculatorResponse.getWages)}" + "</strong>"), classes = "govuk-!-padding-left-9")
+            ),
+            SummaryListRow(
+                key = Key(content = Text(Messages("quick_calc.result.personal_allowance")), classes = "govuk-!-font-weight-regular"),
+                value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getTaxFree)}"), classes = "govuk-!-padding-left-9")
+            ),
+            SummaryListRow(
+                key = Key(content = HtmlContent(Messages("quick_calc.result.taxable_income"))),
+                value = Value(content = HtmlContent("<strong>" + s"£${moneyFormatter(if (calculatorResponse.getWages - calculatorResponse.getTaxFree < 0) 0 else if (isKCode) calculatorResponse.getWages + calculatorResponse.getKCodeAdjustment else calculatorResponse.getWages - calculatorResponse.getTaxFree)}" + "</strong>"), classes = "govuk-!-padding-left-9")
+            )
+            ) ++
+        incomeTaxBands(calculatorResponse).map { case (percentage, amount) =>
+            SummaryListRow(
+                key = Key(content = Text(Messages("quick_calc.result.incomeTaxPercentage") + " " + s"${"%.0f".format(percentage.toDouble)}%"), classes = "govuk-!-font-weight-regular"),
+                value = Value(content = Text(s"£${moneyFormatter(amount)}"), classes = "govuk-!-padding-left-9")
+            )
+    }.toSeq ++
+        Seq(
+            SummaryListRow(
+                key = Key(content = Text(Messages("quick_calc.result.your_national_insurance")), classes = "govuk-!-font-weight-regular"),
+                value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getEmployeesNI)}"), classes = "govuk-!-padding-left-9")
+            ),
+            SummaryListRow(
+                key = Key(content = HtmlContent(Messages("quick_calc.result.take_home_pay"))),
+                value = Value(content = HtmlContent("<strong>" + s"£${moneyFormatter(calculatorResponse.getTakeHome)}" + "</strong>"), classes = "govuk-!-padding-left-9")
+            )
+        )
+    )
+)
+} else {
 @govukSummaryList(
     SummaryList(
         rows = Seq(
@@ -75,9 +123,8 @@
             )
         )
     )
-)
-
-
+    )
+}
 @if(calculatorResponse.getMaxTaxAmountExceeded) {
     @h3(Messages("quick_calc.result.adjusted.head"))
     @p {
@@ -85,6 +132,7 @@
     }
 }
 
+@if(!features.newScreenContentFeature()) {
 @if(isKCode) {
     @p {
         @Messages("quick_calc.about_k_code_a")
@@ -135,9 +183,7 @@
         )
     )
 } else {
-
     @h2(Messages("quick_calc.result.how_we_calculate_a") + " " + headerFrequency.toLowerCase + " " + Messages("quick_calc.result.how_we_calculate_b"))
-
     @govukSummaryList(
         SummaryList(
             rows = Seq(
@@ -170,7 +216,7 @@
                 )
             )
         )
-    )
+    )}
 }
 
 
