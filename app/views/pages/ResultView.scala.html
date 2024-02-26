@@ -128,9 +128,18 @@
     }
 
 
+    @if(features.newScreenContentFeature()){
+    @formHelper(action = controllers.routes.YouHaveToldUsNewController.summary) {
+        @button("update_answers", Some("update-button"))
+    }
+    @p{
+        @link(controllers.routes.QuickCalcController.restartQuickCalc.url, "clear_results")
+    }
+    } else {
     @formHelper(action = controllers.routes.QuickCalcController.restartQuickCalc) {
         @button("restart", Some("restart-button")
         )
+    }
     }
 
     @sectionBreakVisible("m")
