@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider}
-import views.html.pages.{YouHaveToldUsNewView, YouHaveToldUsView}
+import views.html.pages.YouHaveToldUsNewView
 
 import scala.concurrent.ExecutionContext
 

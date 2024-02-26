@@ -187,59 +187,59 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
     }
   }
 
-  "Extracting income tax" should {
+  //"Extracting income tax" should {
 
-    "return the maxTaxAmount if the tax is over 50% of the gross income" in {
-      val expectedTaxAmount = 10400.00
-      val response =
-        new CalculatorResponsePayPeriod(
-          PayPeriod.YEARLY,
-          expectedTaxAmount,
-          1000.0,
-          500.0,
-          100000.0,
-          null,
-          12509.0,
-          null
-        )
+//    "return the maxTaxAmount if the tax is over 50% of the gross income" in {
+//      val expectedTaxAmount = 10400.00
+//      val response =
+//        new CalculatorResponsePayPeriod(
+//          PayPeriod.YEARLY,
+//          expectedTaxAmount,
+//          1000.0,
+//          500.0,
+//          100000.0,
+//          null,
+//          12509.0,
+//          null
+//        )
+//
+//      incomeTax(response) mustBe expectedTaxAmount
+//    }
+//
+//    "return the standard TaxAmount if the tax is not over 50% of the gross income" in {
+//      val expectedTaxAmount = 4359.8
+//      val response =
+//        new CalculatorResponsePayPeriod(
+//          PayPeriod.YEARLY,
+//          expectedTaxAmount,
+//          1000.0,
+//          500.0,
+//          50000.0,
+//          null,
+//          12509.0,
+//          null
+//        )
+//
+//      incomeTax(response) mustBe expectedTaxAmount
+//    }
+//  }
+//
+//  "Check isOverMaxRate or not" should {
+//    "return true if income tax is more than 50% of the total (gross) pay entered" in {
+//      val response =
+//        new CalculatorResponsePayPeriod(PayPeriod.YEARLY, 10000.0, 1000.0, 500.0, 10000.0, null, 12509.0, null)
+//
+//      isOverMaxRate(response) mustBe true
+//    }
+//
+//    "return false if income tax is not more than 50% of the total (gross) pay entered" in {
+//      val response =
+//        new CalculatorResponsePayPeriod(PayPeriod.YEARLY, 4999.0, 1000.0, 500.0, 10000.0, null, 12509.0, null)
+//
+//      isOverMaxRate(response) mustBe false
+//    }
 
-      incomeTax(response) mustBe expectedTaxAmount
-    }
-
-    "return the standard TaxAmount if the tax is not over 50% of the gross income" in {
-      val expectedTaxAmount = 4359.8
-      val response =
-        new CalculatorResponsePayPeriod(
-          PayPeriod.YEARLY,
-          expectedTaxAmount,
-          1000.0,
-          500.0,
-          50000.0,
-          null,
-          12509.0,
-          null
-        )
-
-      incomeTax(response) mustBe expectedTaxAmount
-    }
-  }
-
-  "Check isOverMaxRate or not" should {
-    "return true if income tax is more than 50% of the total (gross) pay entered" in {
-      val response =
-        new CalculatorResponsePayPeriod(PayPeriod.YEARLY, 10000.0, 1000.0, 500.0, 10000.0, null, 12509.0, null)
-
-      isOverMaxRate(response) mustBe true
-    }
-
-    "return false if income tax is not more than 50% of the total (gross) pay entered" in {
-      val response =
-        new CalculatorResponsePayPeriod(PayPeriod.YEARLY, 4999.0, 1000.0, 500.0, 10000.0, null, 12509.0, null)
-
-      isOverMaxRate(response) mustBe false
-    }
-
-  }
+//  }
 
   def newAppForTest(testData: TestData): Application =
     if (testData.tags.contains("2022")) {

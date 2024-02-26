@@ -20,13 +20,11 @@ import config.AppConfig
 import forms.TaxResult
 
 import javax.inject.{Inject, Singleton}
-import models.{QuickCalcAggregateInput, UserTaxCode}
-import play.api.i18n.{I18nSupport, Messages, MessagesApi, MessagesProvider}
+import models.QuickCalcAggregateInput
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{Navigator, QuickCalcCache}
-import uk.gov.hmrc.calculator.model.CalculatorResponsePayPeriod
-import uk.gov.hmrc.govukfrontend.views.html.components
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession

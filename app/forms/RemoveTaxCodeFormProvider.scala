@@ -34,13 +34,12 @@ package forms
 
 package forms
 
-import models.UserTaxCode
 import play.api.data.Form
 import play.api.data.Forms._
 import mappings.CustomFormatters._
 
 import javax.inject.Inject
-import play.api.data.format.Formats.stringFormat
+
 class RemoveTaxCodeFormProvider @Inject()() {
 
     val taxCodeValidation: Form[Boolean] = Form(

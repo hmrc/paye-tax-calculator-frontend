@@ -59,6 +59,7 @@ object TaxResult {
   ): CalculatorResponse =
     new Calculator(
       extractTaxCode(quickCalcAggregateInput, defaultTaxCodeProvider),
+      true,
       extractSalary(quickCalcAggregateInput).toDouble,
       extractPayPeriod(quickCalcAggregateInput),
       extractOverStatePensionAge(quickCalcAggregateInput),
