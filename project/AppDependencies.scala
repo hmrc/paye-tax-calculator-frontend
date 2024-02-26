@@ -11,7 +11,7 @@ object AppDependencies {
   private val taxYearVersion                    = "4.0.0"
   private val taxKalcVersion                    = "2.9.3"
   private val catsCoreVersion                   = "2.3.0"
-  private val hmrcFrontend                      = "7.29.0-play-28"
+  private val hmrcFrontend                      = "8.5.0"
   private val mongoVersion                      = "1.3.0"
 
 
@@ -20,7 +20,7 @@ object AppDependencies {
     "uk.gov.hmrc"          %% "bootstrap-frontend-play-28"    % bootstrapPlay28Version,
     "uk.gov.hmrc"          %% "bootstrap-backend-play-28"     % bootstrapPlay28Version,
     "uk.gov.hmrc"          %% "play-partials"                 % playPartialsVersion,
-    "uk.gov.hmrc"          %% "play-frontend-hmrc"            % hmrcFrontend,
+    "uk.gov.hmrc"          %% "play-frontend-hmrc-play-28"    % hmrcFrontend,
     "uk.gov.hmrc"          %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
     "uk.gov.hmrc"          %% "tax-year"                      % taxYearVersion,
     "uk.gov.hmrc"          % "tax-kalculator-jvm"             % taxKalcVersion,

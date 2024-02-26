@@ -30,8 +30,10 @@ continue=Continue
 back = Back
 restart = Start again
 get_results=Get results
+update_answers=Update answers
 calculate_take_home_pay=Calculate take-home pay
 a=a
+clear_results=Clear and start again
 
 feedback=Tell us what you think of this calculator (opens in a new tab)
 #TODO Allow formatting for quote marks
