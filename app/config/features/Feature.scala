@@ -18,8 +18,6 @@ package config.features
 
 import play.api.Configuration
 
-import java.awt.RenderingHints.Key
-
 class Feature(val key: String)(implicit config: Configuration) {
 
   def apply(value: Boolean): Unit = sys.props += key -> value.toString
