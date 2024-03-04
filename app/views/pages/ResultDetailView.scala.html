@@ -41,7 +41,7 @@
 }
 
 @if(features.newScreenContentFeature()) {
-    @resultsPanelNew(formattedAmount)
+    @resultsPanelNew(formattedAmount, label)
 } else {
     @resultsPanel(calculatorResponse, taxYear, label, formattedAmount)
 }

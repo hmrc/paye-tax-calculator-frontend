@@ -16,10 +16,10 @@
 
 @this()
 
-@(formattedAmount: String)(implicit messages: Messages)
+@(formattedAmount: String, label: String)(implicit messages: Messages)
 
 <div class="govuk-panel govuk-panel--confirmation">
     <h2 class="govuk-panel__title">£@formattedAmount<br>
-        <span class="govuk-panel__body">@{messages("quick_calc.salary.yearly.label")}</span>
+        <span class="govuk-panel__body">@messages("a") @label.toLowerCase</span>
     </h2>
 </div>
