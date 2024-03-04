@@ -44,10 +44,8 @@ trait ActionWithSessionId {
 
   def executionContext: ExecutionContext
 
-  def validateAcceptWithSessionId: ActionBuilder[Request, AnyContent] =
+  def validateAcceptWithSessionId()(implicit ec: ExecutionContext): ActionBuilder[Request, AnyContent] =
     new ActionBuilder[Request, AnyContent] {
-
-      implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
       def invokeBlock[A](
         request: Request[A],

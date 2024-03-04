@@ -6,7 +6,7 @@ object AppDependencies {
 
   private val bootstrapPlay28Version            = "8.2.0"
   private val playPartialsVersion               = "8.3.0-play-28"
-  private val playConditionalFormMappingVersion = "1.11.0-play-28"
+  private val playConditionalFormMappingVersion = "1.13.0-play-28"
   private val urlBuilderVersion                 = "3.6.0-play-28"
   private val taxYearVersion                    = "4.0.0"
   private val taxKalcVersion                    = "2.10.0"
@@ -32,7 +32,7 @@ object AppDependencies {
   private val jsoupVersion                     = "1.11.3"
   private val scalaTestPlusMockitoVersion      = "3.2.10.0"
   private val scalacheckVersion                = "1.14.1"
-  private val scalamockScalaTestSupportVersion = "3.6.0"
+  private val scalamockScalaTestSupportVersion = "6.0.0-M2"
   private val mockitoVersion                   = "4.1.0"
   private val flexmarkVersion                   = "0.62.2"
 
@@ -43,7 +43,7 @@ object AppDependencies {
     "org.scalatestplus"    %% "mockito-3-12"                % scalaTestPlusMockitoVersion      % scope,
     "org.scalacheck"       %% "scalacheck"                  % scalacheckVersion                % scope,
     "org.mockito"          % "mockito-core"                 % mockitoVersion                   % scope,
-    "org.scalamock"        %% "scalamock-scalatest-support" % scalamockScalaTestSupportVersion % scope,
+    "org.scalamock"        %% "scalamock"                   % scalamockScalaTestSupportVersion % scope,
     "com.vladsch.flexmark"  % "flexmark-all"                   % flexmarkVersion                  % scope,
     "uk.gov.hmrc.mongo"    %% "hmrc-mongo-test-play-28"    % mongoVersion                      % scope
   )

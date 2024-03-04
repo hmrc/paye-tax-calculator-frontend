@@ -43,11 +43,8 @@ import scala.concurrent.Future
 
 class ShowResultSpec
     extends BaseSpec
-    with AnyWordSpecLike
     with TryValues
-    with ScalaFutures
     with IntegrationPatience
-    with MockitoSugar
     with CSRFTestHelper {
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =

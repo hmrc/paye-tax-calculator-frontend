@@ -40,10 +40,10 @@ import uk.gov.hmrc.http.HeaderNames
 import scala.concurrent.ExecutionContext
 
 class BaseSpec
-  extends MockFactory
+  extends AnyWordSpecLike with MockFactory
     with ScalaFutures
     with GuiceOneAppPerSuite
-    with MetricClearSpec with Matchers with MockitoSugar with AnyWordSpecLike {
+    with MetricClearSpec with Matchers with MockitoSugar {
 
   override lazy val app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))

@@ -69,7 +69,7 @@ lazy val microservice = Project(appName, file("."))
     uglify / includeFilter := GlobFilter("application.js")
   )
   .settings(
-    scalaVersion := "2.12.15",
+    scalaVersion := "2.13.8",
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
     update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)

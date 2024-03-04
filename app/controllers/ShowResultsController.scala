@@ -30,7 +30,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import uk.gov.hmrc.time.TaxYear
 import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider}
-import views.html.components.link
+import views.html.components.linkNewTab
 import views.html.pages.ResultView
 
 import java.time.{LocalDate, ZoneId}
@@ -45,7 +45,7 @@ class ShowResultsController @Inject() (
   resultView: ResultView,
   defaultTaxCodeProvider: DefaultTaxCodeProvider,
   aggregateConditions: AggregateConditionsUtil,
-  link: link
+  linkInNewTab: linkNewTab
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -91,7 +91,7 @@ class ShowResultsController @Inject() (
         Some(Html(Messages("quick_calc.result.sidebar.personal_allowance"))) else None,
       if(!aggregateConditions.isOverStatePensionAge(aggregateInput))
         Some(Html(Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
-          + link("https://www.gov.uk/national-insurance-rates-letters/category-letters",
+          + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
           Messages("quick_calc.result.sidebar.not_over_state_pension_age_b")))) else None,
       if (aggregateConditions.isOverStatePensionAge(aggregateInput))
         Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age"))) else None
