@@ -40,7 +40,9 @@ class SalaryService @Inject() (
       .fetchAndGetEntry()
       .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
       .map { oldAggregate =>
-        val newAggregate = oldAggregate.copy(savedSalary = Some(salaryAmount))
+        val newAggregate = if(oldAggregate.savedSalary.isDefined){
+          oldAggregate.copy(savedSalary = Some(salaryAmount.copy(previousAmountYearly = salaryAmount.amount)))
+        } else { oldAggregate.copy(savedSalary = Some(salaryAmount)) }
         (newAggregate.savedSalary, newAggregate.savedPeriod) match {
           case (Some(salary), Some(detail)) =>
             if (salary.period == oldAggregate.savedSalary.map(_.period).getOrElse("")) {
