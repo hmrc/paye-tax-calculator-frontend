@@ -17,7 +17,7 @@
 package controllers
 
 import config.AppConfig
-import forms.SalaryInDaysFormProvider
+import forms.{SalaryInDaysFormProvider, TaxResult}
 
 import javax.inject.{Inject, Singleton}
 import models.{Days, PayPeriodDetail, QuickCalcAggregateInput, Salary}
@@ -62,12 +62,13 @@ class DaysPerWeekController @Inject() (
       .fold(
         formWithErrors => Future(BadRequest(daysPerWeekView(formWithErrors, value))),
         days => {
+          val currentYearlyAmount: BigDecimal = TaxResult.convertWagesToYearly(value, Messages("quick_calc.salary.daily.label"), Some(days.howManyAWeek))
           val updatedAggregate = cache
             .fetchAndGetEntry()
             .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
             .map(
-              _.copy(
-                savedSalary = Some(Salary(value, Messages("quick_calc.salary.daily.label"), Some(days.howManyAWeek))),
+              oldAggregate => oldAggregate.copy(
+                savedSalary = Some(Salary(value, Some(currentYearlyAmount), oldAggregate.savedSalary.flatMap(_.amountYearly), Messages("quick_calc.salary.daily.label"), Some(days.howManyAWeek))),
                 savedPeriod =
                   Some(PayPeriodDetail(value, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
               )

@@ -97,7 +97,7 @@
         SummaryListRow(
             key = Key(content = Text(Messages(s"quick_calc.you_have_told_us.${item.label}.label.new"))),
             value =Value(content = HtmlContent(
-s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warningMessages(item.label)) else Html("")}"""
+s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(Html(warningMessages(item.label))) else Html("")}"""
 )),
             actions = Some(Actions(
                 classes = "govuk-summary-list__actions govuk-!-width-one-third",

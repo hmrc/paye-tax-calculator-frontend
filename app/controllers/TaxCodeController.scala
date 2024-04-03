@@ -94,12 +94,12 @@ class TaxCodeController @Inject() (
                       Some(
                         newTaxCode.taxCode
                           .getOrElse(defaultTaxCodeProvider.defaultUkTaxCode)
-                      )
+                      ),
+                        agg.savedTaxCode.flatMap(_.taxCode)
                     )
                   )
                 )
               )
-
             updatedAggregate.flatMap { updatedAgg =>
               val agg = {
                 if(appConfig.features.newScreenContentFeature()){

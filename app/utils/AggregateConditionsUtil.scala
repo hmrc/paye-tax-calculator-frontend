@@ -48,7 +48,7 @@ class AggregateConditionsUtil @Inject()(defaultTaxCodeProvider: DefaultTaxCodePr
   }
 
   def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput) : Boolean = {
-    aggregateInput.savedSalary.exists(_.amount > 100000)
+    aggregateInput.savedSalary.exists(_.amountYearly.getOrElse(BigDecimal(0.0)) > BigDecimal(100000))
   }
 
 }

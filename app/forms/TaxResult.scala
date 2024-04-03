@@ -21,10 +21,11 @@ import config.AppConfig
 import models.{QuickCalcAggregateInput, UserTaxCode}
 import uk.gov.hmrc.calculator.Calculator
 import uk.gov.hmrc.calculator.model.{BandBreakdown, CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod}
+import uk.gov.hmrc.calculator.utils.PayPeriodExtensionsKt
 import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
-import scala.collection.JavaConverters._
 
+import scala.collection.JavaConverters._
 import java.util
 import javax.inject.Inject
 import scala.math.BigDecimal.RoundingMode
@@ -38,6 +39,9 @@ object TaxResult {
 
   def extractIncomeTax(response: CalculatorResponsePayPeriod): BigDecimal =
     response.getTaxToPay
+
+  def extractTaperingDeductions(response: CalculatorResponsePayPeriod): BigDecimal =
+    response.getTaperingAmountDeduction
 
   def incomeTaxBands(response: CalculatorResponsePayPeriod): Map[Double, Double] = {
     Option(response.getTaxBreakdown) match {
@@ -56,10 +60,10 @@ object TaxResult {
   def taxCalculation(
     quickCalcAggregateInput: QuickCalcAggregateInput,
     defaultTaxCodeProvider:  DefaultTaxCodeProvider
-  ): CalculatorResponse =
+  ): CalculatorResponse = {
     new Calculator(
       extractTaxCode(quickCalcAggregateInput, defaultTaxCodeProvider),
-      true,
+      if(quickCalcAggregateInput.savedTaxCode.exists(_.gaveUsTaxCode)) true else false,
       extractSalary(quickCalcAggregateInput).toDouble,
       extractPayPeriod(quickCalcAggregateInput),
       extractOverStatePensionAge(quickCalcAggregateInput),
@@ -68,12 +72,29 @@ object TaxResult {
         case None         => null
       }
     ).run()
+  }
+
+  def convertWagesToYearly(wages: BigDecimal, period: String, hoursOrDaysWorked: Option[BigDecimal] = None) : BigDecimal = {
+
+    val kotlinPeriod = period match {
+      case "a year" => PayPeriod.YEARLY
+      case "a month" => PayPeriod.MONTHLY
+      case "a day" => PayPeriod.DAILY
+      case "an hour" => PayPeriod.HOURLY
+      case "a week" => PayPeriod.WEEKLY
+      case "every 4 weeks" => PayPeriod.FOUR_WEEKLY
+      case _ => throw new IllegalArgumentException("Unknown period")
+    }
+    val result = PayPeriodExtensionsKt.convertWageToYearly(wages.toDouble, kotlinPeriod, hoursOrDaysWorked.getOrElse(BigDecimal(0)).toDouble)
+
+    BigDecimal(result)
+  }
 
   def extractTaxCode(
     quickCalcAggregateInput: QuickCalcAggregateInput,
     defaultTaxCodeProvider:  DefaultTaxCodeProvider
-  ): String =
-    quickCalcAggregateInput.savedTaxCode match {
+  ): String = {
+  quickCalcAggregateInput.savedTaxCode match {
       case Some(s) =>
         s.taxCode match {
           case Some(taxCode) => taxCode
@@ -81,6 +102,7 @@ object TaxResult {
         }
       case None => defaultTaxCodeProvider.defaultUkTaxCode
     }
+  }
 
   def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedIsOverStatePensionAge match {

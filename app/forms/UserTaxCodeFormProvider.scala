@@ -17,17 +17,21 @@
 package forms
 
 import mappings.CustomFormatters._
+
 import javax.inject.Inject
 import models.UserTaxCode
-import models.UserTaxCode.{HasTaxCode, TaxCode}
+import models.UserTaxCode.{HasTaxCode, TaxCode, previousTaxCode}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.format.Formats.{booleanFormat, stringFormat}
 
 class UserTaxCodeFormProvider @Inject()() {
   def apply(): Form[UserTaxCode] = Form(
     mapping(
       HasTaxCode -> of(hasTaxCodeBooleanFormatter),
-      TaxCode -> of(taxCodeFormatter)
+      TaxCode -> of(taxCodeFormatter),
+      previousTaxCode -> optional(of[String]),
+
     )(UserTaxCode.apply)(UserTaxCode.unapply)
   )
 }

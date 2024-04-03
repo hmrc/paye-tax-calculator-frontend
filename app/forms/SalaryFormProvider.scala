@@ -28,6 +28,8 @@ class SalaryFormProvider @Inject()() {
   def apply(): Form[Salary] = Form(
     mapping(
       "amount"       -> of(CustomFormatters.salaryValidation),
+      "amountYearly" -> optional(of[BigDecimal]),
+      "previousAmountYearly" -> optional(of[BigDecimal]),
       "period"       -> of(CustomFormatters.requiredSalaryPeriodFormatter),
       "how-many-a-week" -> optional(of[BigDecimal])
     )(Salary.apply)(Salary.unapply)

@@ -17,6 +17,7 @@
 package controllers
 
 import config.AppConfig
+import forms.TaxResult
 
 import javax.inject.{Inject, Singleton}
 import models.QuickCalcAggregateInput
@@ -56,29 +57,54 @@ class YouHaveToldUsNewController @Inject() (
       cache,
       implicit request =>
         aggregate =>
-          if (aggregate.allQuestionsAnswered)
+          if (aggregate.allQuestionsAnswered) {
             Ok(yourHaveToldUsView(aggregate.youHaveToldUsItems,aggregate.additionalQuestionItems,  taxCodeCheck(aggregate), aggregateConditionsUtil.isTaxCodeDefined(aggregate)))
-          else
+          } else
             Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 
-  def taxCodeWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages) : List[(String, String)] = {
-    if (aggregateConditionsUtil.salaryOverHundredThousand(aggregateInput) && aggregateConditionsUtil.isUkOrScottishTaxCode(aggregateInput)) {
-      List(taxCodeLabel -> Messages("quick_calc.tax_code.over_hundred_thousand.warning"))
-    } else if (aggregateConditionsUtil.taxCodeContainsS(aggregateInput) && !aggregateConditionsUtil.payScottishRate(aggregateInput)) {
+  private def taxCodeWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages) : List[(String, String)] = {
+    if (aggregateConditionsUtil.taxCodeContainsS(aggregateInput) && !aggregateConditionsUtil.payScottishRate(aggregateInput)) {
       List(taxCodeLabel -> Messages("quick_calc.tax_code.scottish_rate.warning"))
     } else {
       List.empty
     }
   }
 
-  def scottishRateWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): List[(String,String)] = {
+  def isTaxCodeSame(aggregateInput: QuickCalcAggregateInput): Boolean = {
+    aggregateInput.savedTaxCode.flatMap(_.taxCode) == aggregateInput.savedTaxCode.flatMap(_.previousTaxCode)
+  }
+
+  private def taperingWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages) : List[(String, String)] = {
+    if(aggregateInput.savedSalary.map(_.amountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) && !isTaxCodeSame(aggregateInput)) {
+      List(taxCodeLabel -> Messages("This tax code is not usually for those on more than £100,000 a year."))
+    } else if(aggregateInput.savedSalary.map(_.previousAmountYearly.getOrElse(BigDecimal(0.0))) <= Some(BigDecimal(100000)) &&
+      aggregateInput.savedSalary.map(_.amountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) && isTaxCodeSame(aggregateInput)
+    ){
+      List(taxCodeLabel -> Messages("You updated your income. This tax code may no longer apply."))
+    } else if(aggregateInput.savedSalary.map(_.previousAmountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) &&
+      aggregateInput.savedSalary.map(_.amountYearly.getOrElse(BigDecimal(0.0))) <= Some(BigDecimal(100000)) && isTaxCodeSame(aggregateInput)
+    ) {
+      List(taxCodeLabel -> Messages("You updated your income. This tax code may no longer apply."))
+    } else if(aggregateInput.savedSalary.map(_.previousAmountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) &&
+      aggregateInput.savedSalary.map(_.amountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) && isTaxCodeSame(aggregateInput)
+    ) {
+      List(taxCodeLabel -> Messages("You updated your income. This tax code may no longer apply."))
+    }
+    else {
+      List.empty
+    }
+  }
+
+
+
+  private def scottishRateWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): List[(String,String)] = {
     if (aggregateConditionsUtil.payScottishRate(aggregateInput) && !aggregateConditionsUtil.taxCodeContainsS(aggregateInput))
       List(scottishRateLabel -> Messages("quick_calc.scottish_rate.payScottishRate.warning")) else List.empty
   }
 
   private def taxCodeCheck(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Map[String, String] = {
-    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput)
+    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput) ++ taperingWarnings(aggregateInput)
     finalList.toMap
   }
 

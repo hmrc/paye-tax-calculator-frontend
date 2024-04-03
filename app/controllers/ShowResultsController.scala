@@ -16,6 +16,7 @@
 
 package controllers
 
+import akka.http.javadsl.model.ws.Message
 import config.AppConfig
 import forms.TaxResult
 
@@ -25,6 +26,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{Navigator, QuickCalcCache}
+import uk.gov.hmrc.calculator.model.CalculatorResponse
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
@@ -77,9 +79,17 @@ class ShowResultsController @Inject() (
     }
   }
 
+  def getTaxCalculation(aggregateInput: QuickCalcAggregateInput, defaultTaxCodeProvider: DefaultTaxCodeProvider): CalculatorResponse = {
+    TaxResult.taxCalculation(aggregateInput, defaultTaxCodeProvider)
+  }
+
   def sideBarBullets(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Seq[Option[Html]] = {
     Seq(
       Some(Html(Messages("quick_calc.result.sidebar.one_job"))),
+      if(getTaxCalculation(aggregateInput,defaultTaxCodeProvider).getYearly.getTaperingAmountDeduction > 0 && !aggregateConditions.isUkOrScottishTaxCode(aggregateInput))
+        Some(Html(Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_a")
+          + linkInNewTab("https://www.gov.uk/income-tax-rates/income-over-100000",
+          Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_b")) + Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_c"))) else None,
       if(aggregateConditions.payScottishRate(aggregateInput) && aggregateConditions.taxCodeContainsS(aggregateInput))
         Some(Html(Messages("quick_calc.result.sidebar.appliedScottishIncomeTaxRates"))) else None,
       if(!aggregateConditions.payScottishRate(aggregateInput) &&
@@ -94,7 +104,7 @@ class ShowResultsController @Inject() (
           + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
           Messages("quick_calc.result.sidebar.not_over_state_pension_age_b")))) else None,
       if (aggregateConditions.isOverStatePensionAge(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age"))) else None
+        Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age"))) else None,
     )
   }
 
