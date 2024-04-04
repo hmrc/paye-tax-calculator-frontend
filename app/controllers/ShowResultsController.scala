@@ -31,6 +31,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import uk.gov.hmrc.time.TaxYear
+import utils.GetCurrentTaxYear.getCurrentTaxYear
 import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider}
 import views.html.components.linkNewTab
 import views.html.pages.ResultView
@@ -65,17 +66,6 @@ class ShowResultsController @Inject() (
     } else {
       false
     }
-
-  private def getCurrentTaxYear: String = {
-    val currentDate = LocalDate.now(ZoneId.of("Europe/London"))
-    val taxYear     = TaxYear(currentDate.getYear)
-    if (currentDate isBefore taxYear.starts) {
-      val previousTaxYear = taxYear.previous
-      s"${previousTaxYear.startYear}/${taxYear.startYear.toString.takeRight(2)}"
-    } else {
-      s"${taxYear.startYear}/${(taxYear.startYear + 1).toString.takeRight(2)}"
-    }
-  }
 
   def getTaxCalculation(
     aggregateInput:         QuickCalcAggregateInput,

@@ -27,7 +27,8 @@ case class QuickCalcAggregateInput(
   savedPeriod:                Option[PayPeriodDetail],
   savedIsOverStatePensionAge: Option[StatePension],
   savedTaxCode:               Option[UserTaxCode],
-  savedScottishRate:          Option[ScottishRate]) {
+  savedScottishRate:          Option[ScottishRate],
+  savedPensionContributions:  Option[PensionContributions]) {
 
   def allQuestionsAnswered: Boolean =
     List(

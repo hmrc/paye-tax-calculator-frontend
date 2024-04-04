@@ -16,8 +16,6 @@
 
 package forms
 
-import com.typesafe.config.Config
-import config.AppConfig
 import models.{QuickCalcAggregateInput, UserTaxCode}
 import uk.gov.hmrc.calculator.Calculator
 import uk.gov.hmrc.calculator.model.{BandBreakdown, CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod}
@@ -25,9 +23,7 @@ import uk.gov.hmrc.calculator.utils.PayPeriodExtensionsKt
 import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
 
-import scala.collection.JavaConverters._
-import java.util
-import javax.inject.Inject
+import scala.jdk.CollectionConverters._
 import scala.math.BigDecimal.RoundingMode
 
 object TaxResult {

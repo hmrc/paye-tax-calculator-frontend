@@ -16,12 +16,15 @@
 
 package forms.mappings
 
+import models.PensionContributions.pensionPercentage
 import models.UserTaxCode._
 import play.api.data.FormError
 import play.api.data.format.Formatter
-import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, TaxCodeValidator, WageValidator}
+import uk.gov.hmrc.calculator.model.TaxYear
+import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, PensionValidator, TaxCodeValidator, WageValidator}
 import utils.BigDecimalFormatter
-import utils.StripCharUtil.stripAll
+import utils.GetCurrentTaxYear.getTaxYear
+import utils.StripCharUtil.{stripAll, stripPercentage}
 
 object CustomFormatters {
 
@@ -370,6 +373,37 @@ object CustomFormatters {
         value: Option[String]
       ): Map[String, String] =
         Map(key -> value.getOrElse(""))
+    }
+
+  def pensionPercentageFormatter: Formatter[Option[String]] =
+    new Formatter[Option[String]] {
+      override def bind(
+                         key: String,
+                         data: Map[String, String]): Either[Seq[FormError], Option[String]] =
+        data.get(pensionPercentage)
+          .filter(_.nonEmpty)
+          .map(_.replaceAll("/%","")) match {
+          case Some(p) =>
+            val strippedValue = stripPercentage(p)
+            try {
+              if(strippedValue.split("\\.").lastOption.getOrElse("" ).length > 2) {
+                Left(
+                  Seq(
+                    FormError(
+                      key,
+                      "quick_calc.salary.question.error.empty_salary_input"
+                    )
+                  )
+                )
+              } else {
+                Right(Some(strippedValue))
+              }
+
+            }
+
+        }
+
+      override def unbind(key: String, value: Option[String]): Map[String, String] = ???
     }
 
 }

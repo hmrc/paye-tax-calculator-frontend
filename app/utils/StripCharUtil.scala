@@ -21,4 +21,8 @@ object StripCharUtil {
   def stripAll(text: String): String =
     text.trim.stripPrefix("£").replaceAll(",", "")
 
+  def stripPercentage(text: String): String = {
+    text.trim.replaceAll("/%","")
+  }
+
 }
