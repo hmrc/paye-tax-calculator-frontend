@@ -25,34 +25,34 @@ import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import org.mongodb.scala.model.{Filters, IndexModel, IndexOptions, ReplaceOptions, Updates}
 import org.mongodb.scala.model.Indexes.ascending
 
-
 import java.time.{Clock, Instant}
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-case class QuickCalcCacheMongo @Inject()(
-                                          mongo: MongoComponent,
-                                          appConfig: AppConfig,
-                                          clock: Clock
-                                        )(implicit executionContext: ExecutionContext) extends PlayMongoRepository[QuickCalcMongoCache](
-  collectionName = "quickCalcCache",
-  mongoComponent = mongo,
-  domainFormat = QuickCalcMongoCache.format,
-  indexes = Seq(
-    IndexModel(ascending("createdAt"),
-      IndexOptions()
-        .background(false)
-        .name("createdAt")
-        .expireAfter(appConfig.mongoTtl, TimeUnit.SECONDS)),
-    IndexModel(ascending("id"),
-      IndexOptions()
-        .background(false)
-        .name("id")
-        .unique(true))
-  )
-) {
+case class QuickCalcCacheMongo @Inject() (
+  mongo:                     MongoComponent,
+  appConfig:                 AppConfig,
+  clock:                     Clock
+)(implicit executionContext: ExecutionContext)
+    extends PlayMongoRepository[QuickCalcMongoCache](
+      collectionName = "quickCalcCache",
+      mongoComponent = mongo,
+      domainFormat   = QuickCalcMongoCache.format,
+      indexes = Seq(
+        IndexModel(ascending("createdAt"),
+                   IndexOptions()
+                     .background(false)
+                     .name("createdAt")
+                     .expireAfter(appConfig.mongoTtl, TimeUnit.SECONDS)),
+        IndexModel(ascending("id"),
+                   IndexOptions()
+                     .background(false)
+                     .name("id")
+                     .unique(true))
+      )
+    ) {
 
   private def byId(id: String): Bson = Filters.equal("id", id)
 
@@ -60,9 +60,9 @@ case class QuickCalcCacheMongo @Inject()(
 
     val updatedQuickCalcMongoCache = quickCalcMongoCache copy (createdAt = Instant.now(clock))
     collection
-      .replaceOne(filter = byId(updatedQuickCalcMongoCache.id),
-        replacement = updatedQuickCalcMongoCache,
-        options = ReplaceOptions().upsert(true))
+      .replaceOne(filter      = byId(updatedQuickCalcMongoCache.id),
+                  replacement = updatedQuickCalcMongoCache,
+                  options     = ReplaceOptions().upsert(true))
       .toFuture()
       .map(_ => Done)
   }
@@ -71,19 +71,16 @@ case class QuickCalcCacheMongo @Inject()(
     collection
       .updateOne(
         filter = byId(id),
-        update = Updates.set("createdAt", Instant.now(clock)),
+        update = Updates.set("createdAt", Instant.now(clock))
       )
       .toFuture()
       .map(_ => Done)
 
-  def findById(id: String): Future[Option[QuickCalcMongoCache]] = {
-    keepAlive(id).flatMap {
-      _ =>
-        collection
-          .find(byId(id))
-          .headOption()
+  def findById(id: String): Future[Option[QuickCalcMongoCache]] =
+    keepAlive(id).flatMap { _ =>
+      collection
+        .find(byId(id))
+        .headOption()
     }
 
-  }
 }
-

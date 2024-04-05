@@ -46,29 +46,29 @@ object CustomFormatters {
   def hasScottishRateBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ) =
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
         case "" => Right(false)
-        case _ => Right(true)
+        case _  => Right(true)
       }
 
     override def unbind(
-                         key: String,
-                         value: Boolean
-                       ) =
+      key:   String,
+      value: Boolean
+    ) =
       Map(key -> value.toString)
   }
 
   def removeTaxCodeValidation: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ) =
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
-        case "true" => Right(true)
+        case "true"  => Right(true)
         case "false" => Right(false)
         case _ =>
           Left(
@@ -79,9 +79,9 @@ object CustomFormatters {
       }
 
     override def unbind(
-                         key: String,
-                         value: Boolean
-                       ) = Map(key -> value.toString)
+      key:   String,
+      value: Boolean
+    ) = Map(key -> value.toString)
   }
 
   def statePensionAgeValidation: Formatter[Boolean] = new Formatter[Boolean] {

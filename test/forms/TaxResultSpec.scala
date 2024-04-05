@@ -88,11 +88,15 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
   "Extracting Salary from user response" should {
 
     "return if response provided is the Yearly Salary: £20000" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(20000, Some(20000), None, "a year", None)), None, None, None, None)) mustBe 20000
+      extractSalary(
+        QuickCalcAggregateInput(Some(Salary(20000, Some(20000), None, "a year", None)), None, None, None, None)
+      ) mustBe 20000
     }
 
     "return if response provided is the Monthly Salary: £2000" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(2000, Some(2000), Some(300), "a month", None)), None, None, None, None)) mustBe 2000
+      extractSalary(
+        QuickCalcAggregateInput(Some(Salary(2000, Some(2000), Some(300), "a month", None)), None, None, None, None)
+      ) mustBe 2000
     }
 
     "return if response provided is the Weekly Salary: £200" in {
@@ -109,7 +113,7 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
 
     """return an error with message "No Salary has been provided" if incorrect salary duration""" in {
       val thrown = intercept[Exception] {
-        extractSalary(QuickCalcAggregateInput(Some(Salary(2, None, None,"a decade", None)), None, None, None, None))
+        extractSalary(QuickCalcAggregateInput(Some(Salary(2, None, None, "a decade", None)), None, None, None, None))
       }
       thrown.getMessage mustBe "No Salary has been provided."
     }
@@ -145,7 +149,9 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
     }
 
     "return empty string if response is Every 4 weeks" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, "every 4 weeks", None)), None, None, None, None)) mustBe PayPeriod.FOUR_WEEKLY
+      extractPayPeriod(
+        QuickCalcAggregateInput(Some(Salary(0, None, None, "every 4 weeks", None)), None, None, None, None)
+      ) mustBe PayPeriod.FOUR_WEEKLY
     }
 
     """return an error with message "a decade is not a valid PayPeriod" if incorrect salary duration""" in {

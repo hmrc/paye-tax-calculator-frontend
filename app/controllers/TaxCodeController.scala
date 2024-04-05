@@ -41,7 +41,7 @@ class TaxCodeController @Inject() (
   navigator:                     Navigator,
   taxCodeView:                   TaxCodeView,
   userTaxCodeFormProvider:       UserTaxCodeFormProvider,
-  defaultTaxCodeProvider: DefaultTaxCodeProvider
+  defaultTaxCodeProvider:        DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -52,9 +52,9 @@ class TaxCodeController @Inject() (
 
   val form: Form[UserTaxCode] = userTaxCodeFormProvider()
 
-  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean = {
+  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedSalary.exists(_.amount > 100000)
-  }
+
   def showTaxCodeForm: Action[AnyContent] =
     salaryRequired(
       cache, { implicit request => agg =>
@@ -63,7 +63,12 @@ class TaxCodeController @Inject() (
             form.fill(s)
           }
           .getOrElse(form)
-        Ok(taxCodeView(filledForm, agg.youHaveToldUsItems, defaultTaxCodeProvider.defaultUkTaxCode, salaryOverHundredThousand(agg)))
+        Ok(
+          taxCodeView(filledForm,
+                      agg.youHaveToldUsItems,
+                      defaultTaxCodeProvider.defaultUkTaxCode,
+                      salaryOverHundredThousand(agg))
+        )
       }
     )
 
@@ -78,9 +83,15 @@ class TaxCodeController @Inject() (
             cache.fetchAndGetEntry().map {
               case Some(aggregate) =>
                 BadRequest(
-                  taxCodeView(formWithErrors, aggregate.youHaveToldUsItems, defaultTaxCodeProvider.defaultUkTaxCode, salaryOverHundredThousand(aggregate))
+                  taxCodeView(formWithErrors,
+                              aggregate.youHaveToldUsItems,
+                              defaultTaxCodeProvider.defaultUkTaxCode,
+                              salaryOverHundredThousand(aggregate))
                 )
-              case None => BadRequest(taxCodeView(formWithErrors, Nil, defaultTaxCodeProvider.defaultUkTaxCode, salaryCheck = false))
+              case None =>
+                BadRequest(
+                  taxCodeView(formWithErrors, Nil, defaultTaxCodeProvider.defaultUkTaxCode, salaryCheck = false)
+                )
             },
           (newTaxCode: UserTaxCode) => {
             val updatedAggregate = cache
@@ -99,45 +110,46 @@ class TaxCodeController @Inject() (
                   )
                 )
               )
-            updatedAggregate.flatMap { updatedAgg =>
-              val agg = {
-                if(appConfig.features.newScreenContentFeature()){
-                  updatedAgg
-                }else {
-                  if (newTaxCode.taxCode.isDefined)
-                    updatedAgg.copy(savedScottishRate = None)
-                  else updatedAgg
-                }
-              }
-              cache
-                .save(agg)
-                .map(_ =>
-                  if(appConfig.features.newScreenContentFeature()){
-                    if(newTaxCode.taxCode.isEmpty) {
-                      Redirect(routes.ScottishRateController.showScottishRateForm)
-                    } else {
-                      Redirect(
-                        navigator
-                          .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                            routes.YouHaveToldUsController.summary
-                          }
-                      )
-                    }
-                  }else {
-                    if (newTaxCode.taxCode.isEmpty) {
-                      Redirect(
-                        routes.ScottishRateController.showScottishRateForm
-                      )
-                    } else {
-                      Redirect(
-                        navigator
-                          .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                            routes.YouHaveToldUsController.summary
-                          }
-                      )
-                    }
+            updatedAggregate.flatMap {
+              updatedAgg =>
+                val agg = {
+                  if (appConfig.features.newScreenContentFeature()) {
+                    updatedAgg
+                  } else {
+                    if (newTaxCode.taxCode.isDefined)
+                      updatedAgg.copy(savedScottishRate = None)
+                    else updatedAgg
                   }
-              )
+                }
+                cache
+                  .save(agg)
+                  .map(_ =>
+                    if (appConfig.features.newScreenContentFeature()) {
+                      if (newTaxCode.taxCode.isEmpty) {
+                        Redirect(routes.ScottishRateController.showScottishRateForm)
+                      } else {
+                        Redirect(
+                          navigator
+                            .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+                              routes.YouHaveToldUsController.summary
+                            }
+                        )
+                      }
+                    } else {
+                      if (newTaxCode.taxCode.isEmpty) {
+                        Redirect(
+                          routes.ScottishRateController.showScottishRateForm
+                        )
+                      } else {
+                        Redirect(
+                          navigator
+                            .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+                              routes.YouHaveToldUsController.summary
+                            }
+                        )
+                      }
+                    }
+                  )
             }
           }
         )

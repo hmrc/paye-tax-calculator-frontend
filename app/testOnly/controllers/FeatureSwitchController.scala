@@ -26,24 +26,32 @@ import testOnly.views.html.FeatureSwitchView
 
 import javax.inject.Inject
 
-class FeatureSwitchController @Inject()(implicit val appConfig: AppConfig,
-                                        mcc: MessagesControllerComponents,
-                                        featureSwitch: FeatureSwitchView)
-  extends FrontendController(mcc) with I18nSupport {
+class FeatureSwitchController @Inject() (
+  implicit val appConfig: AppConfig,
+  mcc:                    MessagesControllerComponents,
+  featureSwitch:          FeatureSwitchView)
+    extends FrontendController(mcc)
+    with I18nSupport {
 
   def featureSwitch: Action[AnyContent] = Action { implicit request =>
-    Ok(featureSwitch(FeatureSwitchForm.form.fill(
-      FeatureSwitchModel(
-        newScreenContentEnabled = appConfig.features.newScreenContentFeature()
+    Ok(
+      featureSwitch(
+        FeatureSwitchForm.form.fill(
+          FeatureSwitchModel(
+            newScreenContentEnabled = appConfig.features.newScreenContentFeature()
+          )
+        )
       )
-    )))
+    )
   }
 
   def submitFeatureSwitch: Action[AnyContent] = Action { implicit request =>
-    FeatureSwitchForm.form.bindFromRequest().fold(
-      _ => Redirect(routes.FeatureSwitchController.featureSwitch),
-      success = handleSuccess
-    )
+    FeatureSwitchForm.form
+      .bindFromRequest()
+      .fold(
+        _ => Redirect(routes.FeatureSwitchController.featureSwitch),
+        success = handleSuccess
+      )
   }
 
   def handleSuccess(model: FeatureSwitchModel): Result = {

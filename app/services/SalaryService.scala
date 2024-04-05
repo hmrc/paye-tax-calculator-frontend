@@ -42,15 +42,23 @@ class SalaryService @Inject() (
       .fetchAndGetEntry()
       .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
       .map { oldAggregate =>
-        val newAggregate =  salaryAmount.period match {
+        val newAggregate = salaryAmount.period match {
           case "an hour" | "a day" => {
-            oldAggregate.copy(savedSalary = Some(salaryAmount.copy(amountYearly = oldAggregate.savedSalary.flatMap(_.amountYearly),
-              previousAmountYearly = oldAggregate.savedSalary.flatMap(_.previousAmountYearly))))
+            oldAggregate.copy(savedSalary = Some(
+              salaryAmount.copy(amountYearly         = oldAggregate.savedSalary.flatMap(_.amountYearly),
+                                previousAmountYearly = oldAggregate.savedSalary.flatMap(_.previousAmountYearly))
+            )
+            )
           }
           case _ => {
-            val currentYearlyAmount: BigDecimal = TaxResult.convertWagesToYearly(salaryAmount.amount, salaryAmount.period)
-             if(oldAggregate.savedSalary.isDefined){
-              oldAggregate.copy(savedSalary = Some(salaryAmount.copy(amountYearly = Some(currentYearlyAmount), previousAmountYearly = oldAggregate.savedSalary.flatMap(_.amountYearly))))
+            val currentYearlyAmount: BigDecimal =
+              TaxResult.convertWagesToYearly(salaryAmount.amount, salaryAmount.period)
+            if (oldAggregate.savedSalary.isDefined) {
+              oldAggregate.copy(savedSalary = Some(
+                salaryAmount.copy(amountYearly         = Some(currentYearlyAmount),
+                                  previousAmountYearly = oldAggregate.savedSalary.flatMap(_.amountYearly))
+              )
+              )
             } else {
               oldAggregate.copy(savedSalary = Some(salaryAmount.copy(amountYearly = Some(currentYearlyAmount))))
             }
@@ -60,8 +68,15 @@ class SalaryService @Inject() (
           case (Some(salary), Some(detail)) =>
             if (salary.period == oldAggregate.savedSalary.map(_.period).getOrElse("")) {
               newAggregate.copy(
-                savedSalary =
-                  Some(Salary(salaryAmount.amount, newAggregate.savedSalary.flatMap(_.amountYearly), newAggregate.savedSalary.flatMap(_.previousAmountYearly), salary.period, oldAggregate.savedSalary.get.howManyAWeek)),
+                savedSalary = Some(
+                  Salary(
+                    salaryAmount.amount,
+                    newAggregate.savedSalary.flatMap(_.amountYearly),
+                    newAggregate.savedSalary.flatMap(_.previousAmountYearly),
+                    salary.period,
+                    oldAggregate.savedSalary.get.howManyAWeek
+                  )
+                ),
                 savedPeriod = Some(PayPeriodDetail(salaryAmount.amount, detail.howManyAWeek, detail.period, url))
               )
             } else newAggregate.copy(savedPeriod = None)
@@ -70,4 +85,3 @@ class SalaryService @Inject() (
       }
   }
 }
-

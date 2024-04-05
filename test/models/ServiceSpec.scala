@@ -22,11 +22,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
-class ServiceSpec extends PlaySpec
-  with TryValues
-  with ScalaFutures
-  with IntegrationPatience
-  with MockitoSugar {
+class ServiceSpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar {
 
   "Test that the baseUrl generated correctly when all strings are empty" should {
     ".baseUrl" in {

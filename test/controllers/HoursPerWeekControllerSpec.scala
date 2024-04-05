@@ -102,10 +102,12 @@ class HoursPerWeekControllerSpec
 
         status(result) mustEqual OK
 
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
-          form.fill(Hours(cacheCompleteHourly.value.savedPeriod.value.amount, howManyAWeek)),
-          cacheCompleteHourly.value.savedPeriod.value.amount
-        )(request, messagesForApp(application)).toString)
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(
+            form.fill(Hours(cacheCompleteHourly.value.savedPeriod.value.amount, howManyAWeek)),
+            cacheCompleteHourly.value.savedPeriod.value.amount
+          )(request, messagesForApp(application)).toString
+        )
       }
     }
 

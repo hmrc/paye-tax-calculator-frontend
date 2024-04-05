@@ -21,10 +21,10 @@ import models.{ScottishRate, UserTaxCode}
 import play.api.i18n.Messages
 
 case class AdditionalQuestionItem(
-                              value:    String,
-                              label:    String,
-                              url:      String,
-                              idSuffix: String)
+  value:    String,
+  label:    String,
+  url:      String,
+  idSuffix: String)
 
 trait AdditionalQuestion[A] {
   def toAdditionalQuestionItem(t: Option[A]): AdditionalQuestionItem
@@ -37,39 +37,40 @@ object AdditionalQuestionItem {
   def apply[A: AdditionalQuestion](a: Option[A]): AdditionalQuestionItem =
     implicitly[AdditionalQuestion[A]].toAdditionalQuestionItem(a)
 
-  implicit def taxCodeFormat(implicit messages: Messages): AdditionalQuestion[UserTaxCode] = new AdditionalQuestion[UserTaxCode] {
+  implicit def taxCodeFormat(implicit messages: Messages): AdditionalQuestion[UserTaxCode] =
+    new AdditionalQuestion[UserTaxCode] {
 
-    def toAdditionalQuestionItem(t: Option[UserTaxCode]): AdditionalQuestionItem = {
-      val label = "about_tax_code"
-      val idSuffix = "tax-code"
-      val url = routes.TaxCodeController.showTaxCodeForm.url
+      def toAdditionalQuestionItem(t: Option[UserTaxCode]): AdditionalQuestionItem = {
+        val label    = "about_tax_code"
+        val idSuffix = "tax-code"
+        val url      = routes.TaxCodeController.showTaxCodeForm.url
 
-      val labelText = t.flatMap(_.taxCode) match {
-        case Some(taxCode) => s"$taxCode"
-        case None => Messages("quick_calc.you_have_told_us.about_tax_code.default.not.provided")
+        val labelText = t.flatMap(_.taxCode) match {
+          case Some(taxCode) => s"$taxCode"
+          case None          => Messages("quick_calc.you_have_told_us.about_tax_code.default.not.provided")
+        }
+
+        AdditionalQuestionItem(
+          labelText,
+          label,
+          url,
+          idSuffix
+        )
       }
-
-      AdditionalQuestionItem(
-        labelText,
-        label,
-        url,
-        idSuffix
-      )
     }
-  }
 
   implicit def scottishIncomeFormat(implicit messages: Messages) =
     new AdditionalQuestion[ScottishRate] {
 
       def toAdditionalQuestionItem(scottish: Option[ScottishRate]): AdditionalQuestionItem = {
-        val label = SCOTTISH_RATE
+        val label    = SCOTTISH_RATE
         val idSuffix = SCOTTISH_RATE
-        val url = routes.ScottishRateController.showScottishRateForm.url
+        val url      = routes.ScottishRateController.showScottishRateForm.url
         AdditionalQuestionItem(
           (scottish.map(_.gaveUsScottishRate), scottish.map(_.payScottishRate)) match {
-            case (Some(true), Some(true)) => Messages("quick_calc.you_have_told_us.scottish_rate.yes")
+            case (Some(true), Some(true))  => Messages("quick_calc.you_have_told_us.scottish_rate.yes")
             case (Some(true), Some(false)) => Messages("quick_calc.you_have_told_us.scottish_rate.no")
-            case _ => "No"
+            case _                         => "No"
           },
           label,
           url,
@@ -78,6 +79,3 @@ object AdditionalQuestionItem {
       }
     }
 }
-
-
-

@@ -41,11 +41,7 @@ import views.html.pages.ResultView
 
 import scala.concurrent.Future
 
-class ShowResultSpec
-    extends BaseSpec
-    with TryValues
-    with IntegrationPatience
-    with CSRFTestHelper {
+class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience with CSRFTestHelper {
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -81,7 +77,7 @@ class ShowResultSpec
         val parseHtml    = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false,"2023/24",Seq.empty)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty)(
             request,
             messagesThing(application)
           ).toString
@@ -121,17 +117,17 @@ class ShowResultSpec
         status(result) mustEqual OK
 
         val responseBody = contentAsString(result)
-        val parseHtml = Jsoup.parse(responseBody)
+        val parseHtml    = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true,"2023/24",Seq.empty)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true, "2023/24", Seq.empty)(
             request,
             messagesThing(application)
           ).toString
         )
 
-        val sidebar = parseHtml.getElementsByClass("govuk-grid-column-one-third")
-        val links = sidebar.get(0).getElementsByClass("govuk-link")
+        val sidebar        = parseHtml.getElementsByClass("govuk-grid-column-one-third")
+        val links          = sidebar.get(0).getElementsByClass("govuk-link")
         val disclaimerText = parseHtml.getElementsByClass("govuk-warning-text__text").text()
 
         links.size() mustEqual 3

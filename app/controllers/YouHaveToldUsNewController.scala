@@ -34,22 +34,21 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class YouHaveToldUsNewController @Inject() (
-                                          override val messagesApi:      MessagesApi,
-                                          cache:                         QuickCalcCache,
-                                          val controllerComponents:      MessagesControllerComponents,
-                                          navigator:                     Navigator,
-                                          yourHaveToldUsView:            YouHaveToldUsNewView,
-                                          defaultTaxCodeProvider: DefaultTaxCodeProvider,
-                                          aggregateConditionsUtil: AggregateConditionsUtil
-                                        )(implicit val appConfig:        AppConfig,
-                                          implicit val executionContext: ExecutionContext)
-  extends FrontendBaseController
+  override val messagesApi:      MessagesApi,
+  cache:                         QuickCalcCache,
+  val controllerComponents:      MessagesControllerComponents,
+  navigator:                     Navigator,
+  yourHaveToldUsView:            YouHaveToldUsNewView,
+  aggregateConditionsUtil:       AggregateConditionsUtil
+)(implicit val appConfig:        AppConfig,
+  implicit val executionContext: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  val taxCodeLabel: String = "about_tax_code"
+  val taxCodeLabel:      String = "about_tax_code"
   val scottishRateLabel: String = "scottish_rate"
 
   def summary(): Action[AnyContent] =
@@ -58,34 +57,50 @@ class YouHaveToldUsNewController @Inject() (
       implicit request =>
         aggregate =>
           if (aggregate.allQuestionsAnswered) {
-            Ok(yourHaveToldUsView(aggregate.youHaveToldUsItems,aggregate.additionalQuestionItems,  taxCodeCheck(aggregate), aggregateConditionsUtil.isTaxCodeDefined(aggregate)))
+            Ok(
+              yourHaveToldUsView(aggregate.youHaveToldUsItems,
+                                 aggregate.additionalQuestionItems,
+                                 taxCodeCheck(aggregate),
+                                 aggregateConditionsUtil.isTaxCodeDefined(aggregate))
+            )
           } else
             Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 
-  private def taxCodeWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages) : List[(String, String)] = {
-    if (aggregateConditionsUtil.taxCodeContainsS(aggregateInput) && !aggregateConditionsUtil.payScottishRate(aggregateInput)) {
+  private def taxCodeWarnings(
+    aggregateInput:    QuickCalcAggregateInput
+  )(implicit messages: Messages
+  ): List[(String, String)] =
+    if (aggregateConditionsUtil.taxCodeContainsS(aggregateInput) && !aggregateConditionsUtil.payScottishRate(
+          aggregateInput
+        )) {
       List(taxCodeLabel -> Messages("quick_calc.tax_code.scottish_rate.warning"))
     } else {
       List.empty
     }
-  }
 
+  private def scottishRateWarnings(
+    aggregateInput:    QuickCalcAggregateInput
+  )(implicit messages: Messages
+  ): List[(String, String)] =
+    if (aggregateConditionsUtil.payScottishRate(aggregateInput) && !aggregateConditionsUtil.taxCodeContainsS(
+          aggregateInput
+        ))
+      List(scottishRateLabel -> Messages("quick_calc.scottish_rate.payScottishRate.warning"))
+    else List.empty
 
-  private def scottishRateWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): List[(String,String)] = {
-    if (aggregateConditionsUtil.payScottishRate(aggregateInput) && !aggregateConditionsUtil.taxCodeContainsS(aggregateInput))
-      List(scottishRateLabel -> Messages("quick_calc.scottish_rate.payScottishRate.warning")) else List.empty
-  }
-
-  private def taxCodeCheck(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Map[String, String] = {
+  private def taxCodeCheck(
+    aggregateInput:    QuickCalcAggregateInput
+  )(implicit messages: Messages
+  ): Map[String, String] = {
     val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput)
     finalList.toMap
   }
 
   private def salaryRequired[T](
-                                 cache:         QuickCalcCache,
-                                 furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-                               ): Action[AnyContent] =
+    cache:         QuickCalcCache,
+    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
+  ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 

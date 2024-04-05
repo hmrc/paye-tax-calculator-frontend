@@ -17,7 +17,7 @@
 package utils
 
 object BigDecimalFormatter {
-    def stripZeros(bigDecimal: BigDecimal): scala.BigDecimal = {
-      if ( bigDecimal.bigDecimal.scale > 0 ) bigDecimal.bigDecimal.stripTrailingZeros else bigDecimal.bigDecimal
-    }
+
+  def stripZeros(bigDecimal: BigDecimal): scala.BigDecimal =
+    if (bigDecimal.bigDecimal.scale > 0) bigDecimal.bigDecimal.stripTrailingZeros else bigDecimal.bigDecimal
 }

@@ -25,8 +25,8 @@ trait CSRFTestHelper {
   // as it uses a randomly generated UUID
   def removeCSRFTagValue(content: String): String = {
     val csrfValueIndex = content.indexOf("\"csrfToken\" value=\"") + 18
-    val firstHalf = content.substring(0, csrfValueIndex)
-    val secondHalf = content.substring(csrfValueIndex+80)
+    val firstHalf      = content.substring(0, csrfValueIndex)
+    val secondHalf     = content.substring(csrfValueIndex + 80)
     firstHalf.concat(secondHalf)
   }
 

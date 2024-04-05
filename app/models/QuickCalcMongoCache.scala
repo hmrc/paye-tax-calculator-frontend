@@ -22,8 +22,11 @@ import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.{Instant, ZoneOffset}
 
-case class QuickCalcMongoCache (id: String,
-                                createdAt : Instant, quickCalcAggregateInput: QuickCalcAggregateInput)
+case class QuickCalcMongoCache(
+  id:                      String,
+  createdAt:               Instant,
+  quickCalcAggregateInput: QuickCalcAggregateInput)
+
 object QuickCalcMongoCache {
 
   implicit val dateFormat: Format[Instant] = MongoJavatimeFormats.instantFormat

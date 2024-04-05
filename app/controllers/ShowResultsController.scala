@@ -44,10 +44,10 @@ class ShowResultsController @Inject() (
   cache:                         QuickCalcCache,
   val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
-  resultView: ResultView,
-  defaultTaxCodeProvider: DefaultTaxCodeProvider,
-  aggregateConditions: AggregateConditionsUtil,
-  linkInNewTab: linkNewTab
+  resultView:                    ResultView,
+  defaultTaxCodeProvider:        DefaultTaxCodeProvider,
+  aggregateConditions:           AggregateConditionsUtil,
+  linkInNewTab:                  linkNewTab
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -56,21 +56,19 @@ class ShowResultsController @Inject() (
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean = {
+  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedSalary.exists(_.amount >= 100002)
-  }
 
-  def salaryCheck(aggregateInput: QuickCalcAggregateInput) : Boolean = {
-    if(salaryOverHundredThousand(aggregateInput) && aggregateConditions.isUkOrScottishTaxCode(aggregateInput)){
+  def salaryCheck(aggregateInput: QuickCalcAggregateInput): Boolean =
+    if (salaryOverHundredThousand(aggregateInput) && aggregateConditions.isUkOrScottishTaxCode(aggregateInput)) {
       true
     } else {
       false
     }
-  }
 
   private def getCurrentTaxYear: String = {
     val currentDate = LocalDate.now(ZoneId.of("Europe/London"))
-    val taxYear = TaxYear(currentDate.getYear)
+    val taxYear     = TaxYear(currentDate.getYear)
     if (currentDate isBefore taxYear.starts) {
       val previousTaxYear = taxYear.previous
       s"${previousTaxYear.startYear}/${taxYear.startYear.toString.takeRight(2)}"
@@ -79,54 +77,84 @@ class ShowResultsController @Inject() (
     }
   }
 
-  def getTaxCalculation(aggregateInput: QuickCalcAggregateInput, defaultTaxCodeProvider: DefaultTaxCodeProvider): CalculatorResponse = {
+  def getTaxCalculation(
+    aggregateInput:         QuickCalcAggregateInput,
+    defaultTaxCodeProvider: DefaultTaxCodeProvider
+  ): CalculatorResponse =
     TaxResult.taxCalculation(aggregateInput, defaultTaxCodeProvider)
-  }
 
-  def sideBarBullets(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Seq[Option[Html]] = {
+  def sideBarBullets(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Seq[Option[Html]] =
     Seq(
       Some(Html(Messages("quick_calc.result.sidebar.one_job"))),
-      if(getTaxCalculation(aggregateInput,defaultTaxCodeProvider).getYearly.getTaperingAmountDeduction > 0 && !aggregateConditions.isUkOrScottishTaxCode(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_a")
-          + linkInNewTab("https://www.gov.uk/income-tax-rates/income-over-100000",
-          Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_b")) + Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_c"))) else None,
-      if(aggregateConditions.payScottishRate(aggregateInput) && aggregateConditions.taxCodeContainsS(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.appliedScottishIncomeTaxRates"))) else None,
-      if(!aggregateConditions.payScottishRate(aggregateInput) &&
-        aggregateConditions.taxCodeContainsS(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.scottish_tax_code"))) else None,
-      if(!aggregateConditions.taxCodeContainsS(aggregateInput) && aggregateConditions.payScottishRate(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.pay_scottish_income_tax"))) else None,
-      if(!aggregateConditions.isTaxCodeDefined(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.personal_allowance"))) else None,
-      if(!aggregateConditions.isOverStatePensionAge(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
-          + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
-          Messages("quick_calc.result.sidebar.not_over_state_pension_age_b")))) else None,
+      if (getTaxCalculation(aggregateInput, defaultTaxCodeProvider).getYearly.getTaperingAmountDeduction > 0 && !aggregateConditions
+            .isUkOrScottishTaxCode(aggregateInput))
+        Some(
+          Html(
+            Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_a")
+            + linkInNewTab("https://www.gov.uk/income-tax-rates/income-over-100000",
+                           Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_b")) + Messages(
+              "quick_calc.result.sidebar.youHaveReducedPersonal_allowance_c"
+            )
+          )
+        )
+      else None,
+      if (aggregateConditions.payScottishRate(aggregateInput) && aggregateConditions.taxCodeContainsS(aggregateInput))
+        Some(Html(Messages("quick_calc.result.sidebar.appliedScottishIncomeTaxRates")))
+      else None,
+      if (!aggregateConditions.payScottishRate(aggregateInput) &&
+          aggregateConditions.taxCodeContainsS(aggregateInput))
+        Some(Html(Messages("quick_calc.result.sidebar.scottish_tax_code")))
+      else None,
+      if (!aggregateConditions.taxCodeContainsS(aggregateInput) && aggregateConditions.payScottishRate(aggregateInput))
+        Some(Html(Messages("quick_calc.result.sidebar.pay_scottish_income_tax")))
+      else None,
+      if (!aggregateConditions.isTaxCodeDefined(aggregateInput))
+        Some(Html(Messages("quick_calc.result.sidebar.personal_allowance")))
+      else None,
+      if (!aggregateConditions.isOverStatePensionAge(aggregateInput))
+        Some(
+          Html(
+            Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
+            + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
+                           Messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
+          )
+        )
+      else None,
       if (aggregateConditions.isOverStatePensionAge(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age"))) else None,
+        Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age")))
+      else None
     )
-  }
 
   def showResult(): Action[AnyContent] =
-    salaryRequired(cache, implicit request =>
-      aggregate =>
-        if (aggregate.allQuestionsAnswered) {
-          val isScottish = if(aggregate.savedTaxCode.exists(_.taxCode.exists(_.contains("S")))){
-            true
-          } else if(aggregate.savedScottishRate.exists(_.payScottishRate)) {
-            true
-          } else {
-            false
-          }
-          Ok(resultView(TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider), defaultTaxCodeProvider.startOfCurrentTaxYear, isScottish, salaryCheck(aggregate), getCurrentTaxYear,sideBarBullets(aggregate)))
-        } else Redirect(navigator.redirectToNotYetDonePage(aggregate))
+    salaryRequired(
+      cache,
+      implicit request =>
+        aggregate =>
+          if (aggregate.allQuestionsAnswered) {
+            val isScottish = if (aggregate.savedTaxCode.exists(_.taxCode.exists(_.contains("S")))) {
+              true
+            } else if (aggregate.savedScottishRate.exists(_.payScottishRate)) {
+              true
+            } else {
+              false
+            }
+            Ok(
+              resultView(
+                TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider),
+                defaultTaxCodeProvider.startOfCurrentTaxYear,
+                isScottish,
+                salaryCheck(aggregate),
+                getCurrentTaxYear,
+                sideBarBullets(aggregate)
+              )
+            )
+          } else Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 
   private def salaryRequired[T](
-                                 cache: QuickCalcCache,
-                                 furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-                               ): Action[AnyContent] =
+    cache:         QuickCalcCache,
+    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
+  ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
@@ -140,6 +168,5 @@ class ShowResultsController @Inject() (
           Redirect(routes.SalaryController.showSalaryForm)
       }
     }
-
 
 }

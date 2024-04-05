@@ -58,7 +58,7 @@ class SalaryController @Inject() (
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         val filledForm = aggregate.savedSalary.map(s => form.fill(s)).getOrElse(form)
-        Ok(salaryView(filledForm))   //Only timeout when there is data in view
+        Ok(salaryView(filledForm)) //Only timeout when there is data in view
       case None =>
         Ok(salaryView(form))
     }
@@ -82,15 +82,14 @@ class SalaryController @Inject() (
           updatedAggregate.flatMap(agg =>
             cache
               .save(agg)
-              .map {
-                _ =>
-                  salaryAmount.period match {
-                    case `day` =>
-                        Redirect(routes.DaysPerWeekController.showDaysAWeek((salaryAmount.amount * 100.0).toInt))
-                    case `hour` =>
-                      Redirect(routes.HoursPerWeekController.showHoursAWeek((salaryAmount.amount * 100.0).toInt))
-                    case _ => Redirect(navigator.tryGetShowStatePension(agg))
-                  }
+              .map { _ =>
+                salaryAmount.period match {
+                  case `day` =>
+                    Redirect(routes.DaysPerWeekController.showDaysAWeek((salaryAmount.amount * 100.0).toInt))
+                  case `hour` =>
+                    Redirect(routes.HoursPerWeekController.showHoursAWeek((salaryAmount.amount * 100.0).toInt))
+                  case _ => Redirect(navigator.tryGetShowStatePension(agg))
+                }
               }
           )
         }

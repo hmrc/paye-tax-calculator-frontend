@@ -16,6 +16,4 @@
 
 package models
 
-case class FeatureSwitchModel(
-                               newScreenContentEnabled: Boolean
-                             )
+case class FeatureSwitchModel(newScreenContentEnabled: Boolean)

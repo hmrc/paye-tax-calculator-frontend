@@ -16,7 +16,6 @@
 
 package utils
 
-
 import play.api.mvc._
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import utils.ActionWithSessionIdSupport._

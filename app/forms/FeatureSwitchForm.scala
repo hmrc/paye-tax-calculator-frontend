@@ -22,9 +22,10 @@ import play.api.data.Form
 import play.api.data.Forms._
 
 object FeatureSwitchForm {
+
   val form: Form[FeatureSwitchModel] = Form(
     mapping(
-      FeatureConfigKey.enableNewScreenContent -> boolean,
+      FeatureConfigKey.enableNewScreenContent -> boolean
     )(FeatureSwitchModel.apply)(FeatureSwitchModel.unapply)
   )
 }

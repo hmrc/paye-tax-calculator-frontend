@@ -25,11 +25,12 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.format.Formats.{booleanFormat, stringFormat}
 
-class UserTaxCodeFormProvider @Inject()() {
+class UserTaxCodeFormProvider @Inject() () {
+
   def apply(): Form[UserTaxCode] = Form(
     mapping(
       HasTaxCode -> of(hasTaxCodeBooleanFormatter),
-      TaxCode -> of(taxCodeFormatter)
+      TaxCode    -> of(taxCodeFormatter)
     )(UserTaxCode.apply)(UserTaxCode.unapply)
   )
 }

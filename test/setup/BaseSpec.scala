@@ -40,27 +40,30 @@ import uk.gov.hmrc.http.HeaderNames
 import scala.concurrent.ExecutionContext
 
 class BaseSpec
-  extends AnyWordSpecLike with MockFactory
+    extends AnyWordSpecLike
+    with MockFactory
     with ScalaFutures
     with GuiceOneAppPerSuite
-    with MetricClearSpec with Matchers with MockitoSugar {
+    with MetricClearSpec
+    with Matchers
+    with MockitoSugar {
 
   override lazy val app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
     .configure("metrics.enabled" -> "false", "auditing.enabled" -> "false")
     .build()
 
-  val appInjector = app.injector
-  implicit val materializer = appInjector.instanceOf[Materializer]
+  val appInjector               = app.injector
+  implicit val materializer     = appInjector.instanceOf[Materializer]
   implicit val executionContext = appInjector.instanceOf[ExecutionContext]
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
     .withHeaders(HeaderNames.xSessionId -> "test")
 
-  implicit val mockAppConfig: AppConfig = new MockAppConfig(app.configuration)
-  implicit val messagesApi: MessagesApi = appInjector.instanceOf[MessagesApi]
-  val navigator: Navigator = appInjector.instanceOf[Navigator]
-  implicit val messagesImplicit: Messages = MessagesImpl(Lang("en-GB"), messagesApi)
+  implicit val mockAppConfig:    AppConfig   = new MockAppConfig(app.configuration)
+  implicit val messagesApi:      MessagesApi = appInjector.instanceOf[MessagesApi]
+  val navigator:                 Navigator   = appInjector.instanceOf[Navigator]
+  implicit val messagesImplicit: Messages    = MessagesImpl(Lang("en-GB"), messagesApi)
 
   def element(cssSelector: String)(implicit document: Document): Element = {
     val elements = document.select(cssSelector)
@@ -72,20 +75,33 @@ class BaseSpec
     document.select(cssSelector).first()
   }
 
-  def elementText(selector: String)(implicit document: Document): String = {
+  def elementText(selector: String)(implicit document: Document): String =
     element(selector).text()
-  }
 
-  val youHaveToldUsItems : List[YouHaveToldUsItem] =
-    List(YouHaveToldUsItem("£2000","a_year",controllers.routes.SalaryController.showSalaryForm.url,"income"),
-      YouHaveToldUsItem("No","over_state_pension_age",controllers.routes.StatePensionController.showStatePensionForm.url,"pension-state"))
+  val youHaveToldUsItems: List[YouHaveToldUsItem] =
+    List(
+      YouHaveToldUsItem("£2000", "a_year", controllers.routes.SalaryController.showSalaryForm.url, "income"),
+      YouHaveToldUsItem("No",
+                        "over_state_pension_age",
+                        controllers.routes.StatePensionController.showStatePensionForm.url,
+                        "pension-state")
+    )
 
   val additionalQuestionItem: List[AdditionalQuestionItem] =
-    List(AdditionalQuestionItem("1257L","about_tax_code",controllers.routes.TaxCodeController.showTaxCodeForm.url,"tax-code"),
-      AdditionalQuestionItem("No","scottish_rate",controllers.routes.ScottishRateController.showScottishRateForm.url,"scottish_rate"))
+    List(
+      AdditionalQuestionItem("1257L",
+                             "about_tax_code",
+                             controllers.routes.TaxCodeController.showTaxCodeForm.url,
+                             "tax-code"),
+      AdditionalQuestionItem("No",
+                             "scottish_rate",
+                             controllers.routes.ScottishRateController.showScottishRateForm.url,
+                             "scottish_rate")
+    )
 }
 
-  import com.codahale.metrics.SharedMetricRegistries
+import com.codahale.metrics.SharedMetricRegistries
+
 trait MetricClearSpec {
-    SharedMetricRegistries.clear()
-  }
+  SharedMetricRegistries.clear()
+}

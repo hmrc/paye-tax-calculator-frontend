@@ -23,10 +23,11 @@ import java.time.Clock
 
 class Module extends play.api.inject.Module {
 
-  override def bindings(environment: Environment, configuration: Configuration): collection.Seq[Binding[_]] = {
-
+  override def bindings(
+    environment:   Environment,
+    configuration: Configuration
+  ): collection.Seq[Binding[_]] =
     Seq(
-      bind[Clock].toInstance(Clock.systemUTC()),
+      bind[Clock].toInstance(Clock.systemUTC())
     )
-  }
 }

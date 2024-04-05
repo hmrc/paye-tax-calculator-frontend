@@ -23,27 +23,27 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.calculator.CalculatorUtils
 
 @Singleton
-class DefaultTaxCodeProvider @Inject()(appConfig: AppConfig) {
+class DefaultTaxCodeProvider @Inject() (appConfig: AppConfig) {
 
   private lazy val firstDayOfTaxYear = MonthDay.of(4, 6)
 
-  def defaultScottishTaxCode: String = {
-    if (currentTaxYear == 2023) "S" + CalculatorUtils.INSTANCE.defaultTaxCode(2023).getTaxCode else "S" + CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode
-  }
+  def defaultScottishTaxCode: String =
+    if (currentTaxYear == 2023) "S" + CalculatorUtils.INSTANCE.defaultTaxCode(2023).getTaxCode
+    else "S" + CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode
 
   def defaultUkTaxCode: String =
-    if (currentTaxYear == 2023) CalculatorUtils.INSTANCE.defaultTaxCode(2023).getTaxCode else CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode
+    if (currentTaxYear == 2023) CalculatorUtils.INSTANCE.defaultTaxCode(2023).getTaxCode
+    else CalculatorUtils.INSTANCE.defaultTaxCode(2022).getTaxCode
 
   def startOfCurrentTaxYear: Int =
     firstDayOfTaxYear.atYear(currentTaxYear).getYear
 
-  def currentTaxYear: Int = {
+  def currentTaxYear: Int =
     if (now.isBefore(firstDayOfTaxYear.atYear(now.getYear))) {
       now.getYear - 1
     } else {
       now.getYear
     }
-  }
 
   private def now: LocalDate =
     appConfig.dateOverride match {

@@ -40,7 +40,7 @@ class ScottishRateController @Inject() (
   val controllerComponents:      MessagesControllerComponents,
   scottishRateView:              ScottishRateView,
   scottishRateFormProvider:      ScottishRateFormProvider,
-  defaultTaxCodeProvider: DefaultTaxCodeProvider
+  defaultTaxCodeProvider:        DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -87,7 +87,7 @@ class ScottishRateController @Inject() (
               else
                 defaultTaxCodeProvider.defaultUkTaxCode
 
-            val updatedAggregate = if(appConfig.features.newScreenContentFeature()){
+            val updatedAggregate = if (appConfig.features.newScreenContentFeature()) {
               cache
                 .fetchAndGetEntry()
                 .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
@@ -96,24 +96,26 @@ class ScottishRateController @Inject() (
                     savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, scottish.payScottishRate))
                   )
                 )
-            } else{
+            } else {
               cache
                 .fetchAndGetEntry()
                 .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
                 .map(
                   _.copy(
-                    savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode))),
+                    savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some(taxCode))),
                     savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, scottish.payScottishRate))
                   )
                 )
             }
             updatedAggregate
               .map(cache.save)
-              .map(_ => if(appConfig.features.newScreenContentFeature()){
-                Redirect(routes.YouHaveToldUsNewController.summary)
-              } else {
-                Redirect(routes.YouHaveToldUsController.summary)
-              })
+              .map(_ =>
+                if (appConfig.features.newScreenContentFeature()) {
+                  Redirect(routes.YouHaveToldUsNewController.summary)
+                } else {
+                  Redirect(routes.YouHaveToldUsController.summary)
+                }
+              )
           }
         )
     }

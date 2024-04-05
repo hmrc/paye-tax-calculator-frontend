@@ -43,7 +43,7 @@ object TaxResult {
   def extractTaperingDeductions(response: CalculatorResponsePayPeriod): BigDecimal =
     response.getTaperingAmountDeduction
 
-  def incomeTaxBands(response: CalculatorResponsePayPeriod): Map[Double, Double] = {
+  def incomeTaxBands(response: CalculatorResponsePayPeriod): Map[Double, Double] =
     Option(response.getTaxBreakdown) match {
       case Some(breakdownList) if !breakdownList.isEmpty =>
         breakdownList.asScala.map { band =>
@@ -52,7 +52,6 @@ object TaxResult {
       case _ =>
         Map.empty
     }
-  }
 
   def isOverMaxRate(response: CalculatorResponsePayPeriod): Boolean =
     response.getMaxTaxAmountExceeded
@@ -60,10 +59,10 @@ object TaxResult {
   def taxCalculation(
     quickCalcAggregateInput: QuickCalcAggregateInput,
     defaultTaxCodeProvider:  DefaultTaxCodeProvider
-  ): CalculatorResponse = {
+  ): CalculatorResponse =
     new Calculator(
       extractTaxCode(quickCalcAggregateInput, defaultTaxCodeProvider),
-      if(quickCalcAggregateInput.savedTaxCode.exists(_.gaveUsTaxCode)) true else false,
+      if (quickCalcAggregateInput.savedTaxCode.exists(_.gaveUsTaxCode)) true else false,
       extractSalary(quickCalcAggregateInput).toDouble,
       extractPayPeriod(quickCalcAggregateInput),
       extractOverStatePensionAge(quickCalcAggregateInput),
@@ -72,20 +71,24 @@ object TaxResult {
         case None         => null
       }
     ).run()
-  }
 
-  def convertWagesToYearly(wages: BigDecimal, period: String, hoursOrDaysWorked: Option[BigDecimal] = None) : BigDecimal = {
+  def convertWagesToYearly(
+    wages:             BigDecimal,
+    period:            String,
+    hoursOrDaysWorked: Option[BigDecimal] = None
+  ): BigDecimal = {
 
     val kotlinPeriod = period match {
-      case "a year" => PayPeriod.YEARLY
-      case "a month" => PayPeriod.MONTHLY
-      case "a day" => PayPeriod.DAILY
-      case "an hour" => PayPeriod.HOURLY
-      case "a week" => PayPeriod.WEEKLY
+      case "a year"        => PayPeriod.YEARLY
+      case "a month"       => PayPeriod.MONTHLY
+      case "a day"         => PayPeriod.DAILY
+      case "an hour"       => PayPeriod.HOURLY
+      case "a week"        => PayPeriod.WEEKLY
       case "every 4 weeks" => PayPeriod.FOUR_WEEKLY
-      case _ => throw new IllegalArgumentException("Unknown period")
+      case _               => throw new IllegalArgumentException("Unknown period")
     }
-    val result = PayPeriodExtensionsKt.convertWageToYearly(wages.toDouble, kotlinPeriod, hoursOrDaysWorked.getOrElse(BigDecimal(0)).toDouble)
+    val result = PayPeriodExtensionsKt
+      .convertWageToYearly(wages.toDouble, kotlinPeriod, hoursOrDaysWorked.getOrElse(BigDecimal(0)).toDouble)
 
     BigDecimal(result)
   }
@@ -93,16 +96,15 @@ object TaxResult {
   def extractTaxCode(
     quickCalcAggregateInput: QuickCalcAggregateInput,
     defaultTaxCodeProvider:  DefaultTaxCodeProvider
-  ): String = {
-  quickCalcAggregateInput.savedTaxCode match {
+  ): String =
+    quickCalcAggregateInput.savedTaxCode match {
       case Some(s) =>
         s.taxCode match {
           case Some(taxCode) => taxCode
-          case None => defaultTaxCodeProvider.defaultUkTaxCode
+          case None          => defaultTaxCodeProvider.defaultUkTaxCode
         }
       case None => defaultTaxCodeProvider.defaultUkTaxCode
     }
-  }
 
   def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedIsOverStatePensionAge match {
@@ -120,7 +122,7 @@ object TaxResult {
           case "a day"         => s.amount
           case "an hour"       => s.amount
           case "every 4 weeks" => s.amount
-          case _         => throw new Exception("No Salary has been provided.")
+          case _               => throw new Exception("No Salary has been provided.")
         }
       case None => throw new Exception("No Salary has been provided.")
     }
@@ -135,7 +137,7 @@ object TaxResult {
           case "a day"         => PayPeriod.DAILY
           case "an hour"       => PayPeriod.HOURLY
           case "every 4 weeks" => PayPeriod.FOUR_WEEKLY
-          case e         => throw new BadRequestException(s"$e is not a valid PayPeriod")
+          case e               => throw new BadRequestException(s"$e is not a valid PayPeriod")
         }
       case _ => throw new BadRequestException(s"Invalid PayPeriod")
     }

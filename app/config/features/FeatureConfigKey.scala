@@ -18,6 +18,6 @@ package config.features
 
 object FeatureConfigKey {
 
-  val enableNewScreenContent : String = "features.newScreenContent"
+  val enableNewScreenContent: String = "features.newScreenContent"
 
 }

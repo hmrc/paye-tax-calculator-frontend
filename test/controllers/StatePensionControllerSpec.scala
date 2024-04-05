@@ -46,7 +46,7 @@ class StatePensionControllerSpec
     with ScalaFutures
     with IntegrationPatience
     with MockitoSugar
-      with CSRFTestHelper {
+    with CSRFTestHelper {
 
   val formProvider = new StatePensionFormProvider()
   val form         = formProvider()
@@ -86,10 +86,12 @@ class StatePensionControllerSpec
 
         status(result) mustEqual OK
 
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
-          formFilled,
-          aggregateCompleteListYearly
-        )(request, messagesThing(application)).toString)
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(
+            formFilled,
+            aggregateCompleteListYearly
+          )(request, messagesThing(application)).toString
+        )
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
@@ -119,9 +121,7 @@ class StatePensionControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController
-          .showSalaryForm
-          .url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
@@ -215,7 +215,7 @@ class StatePensionControllerSpec
           cacheTaxCode
         )
         when(mockCache.save(any())(any())) thenReturn Future.successful(
-         Done
+          Done
         )
 
         val application = new GuiceApplicationBuilder()
@@ -241,9 +241,7 @@ class StatePensionControllerSpec
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustEqual routes.SalaryController
-            .showSalaryForm
-            .url
+          redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
           verify(mockCache, times(1)).fetchAndGetEntry()(any())
         }
       }

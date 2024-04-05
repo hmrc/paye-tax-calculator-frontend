@@ -42,7 +42,7 @@ class StatePensionController @Inject() (
   statePensionView:              StatePensionView,
   statePensionFormProvider:      StatePensionFormProvider,
   defaultTaxCodeProvider:        DefaultTaxCodeProvider
-)(implicit val appConfig:         AppConfig,
+)(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -85,24 +85,28 @@ class StatePensionController @Inject() (
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
                 val updatedAggregate = {
-                  if(appConfig.features.newScreenContentFeature()) {
-                    aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, None)), savedScottishRate = Some(ScottishRate(payScottishRate = false, gaveUsScottishRate = false)))
+                  if (appConfig.features.newScreenContentFeature()) {
+                    aggregate.copy(
+                      savedIsOverStatePensionAge = Some(userAge),
+                      savedTaxCode               = Some(UserTaxCode(gaveUsTaxCode = false, None)),
+                      savedScottishRate          = Some(ScottishRate(payScottishRate = false, gaveUsScottishRate = false))
+                    )
                   } else {
                     aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
                   }
                 }
                 cache.save(updatedAggregate).map { _ =>
-                    Redirect(
-                      navigator.nextPageOrSummaryIfAllQuestionsAnswered(
-                        updatedAggregate
-                      ) {
-                        if (appConfig.features.newScreenContentFeature()) {
-                          routes.YouHaveToldUsNewController.summary
-                        } else {
-                          routes.TaxCodeController.showTaxCodeForm
-                        }
+                  Redirect(
+                    navigator.nextPageOrSummaryIfAllQuestionsAnswered(
+                      updatedAggregate
+                    ) {
+                      if (appConfig.features.newScreenContentFeature()) {
+                        routes.YouHaveToldUsNewController.summary
+                      } else {
+                        routes.TaxCodeController.showTaxCodeForm
                       }
-                    )
+                    }
+                  )
                 }
               case None =>
                 cache
@@ -111,7 +115,7 @@ class StatePensionController @Inject() (
                       .copy(savedIsOverStatePensionAge = Some(userAge))
                   )
                   .map { _ =>
-                    if(appConfig.features.newScreenContentFeature()) {
+                    if (appConfig.features.newScreenContentFeature()) {
                       Redirect(routes.YouHaveToldUsNewController.summary)
                     } else {
                       Redirect(routes.TaxCodeController.showTaxCodeForm)

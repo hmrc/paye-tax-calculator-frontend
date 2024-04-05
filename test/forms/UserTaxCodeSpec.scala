@@ -39,7 +39,7 @@ class UserTaxCodeSpec extends BaseSpec with AnyWordSpecLike {
       val hasError = form.hasErrors
       val errorMessageKey =
         "quick_calc.about_tax_code.wrong_tax_code"
-      hasError        mustBe true
+      hasError mustBe true
       errorMessageKey mustBe form.errors.head.message
     }
   }

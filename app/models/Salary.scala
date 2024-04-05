@@ -19,11 +19,11 @@ package models
 import play.api.libs.json._
 
 case class Salary(
-  amount:       BigDecimal,
-  amountYearly: Option[BigDecimal],
+  amount:               BigDecimal,
+  amountYearly:         Option[BigDecimal],
   previousAmountYearly: Option[BigDecimal],
-  period:       String,
-  howManyAWeek: Option[BigDecimal])
+  period:               String,
+  howManyAWeek:         Option[BigDecimal])
 
 object Salary {
 
@@ -44,6 +44,6 @@ object Salary {
       (__ \ "previousAmountYearly").writeNullable[BigDecimal] and
       (__ \ "period").write[String] and
       (__ \ "how-many-a-week").writeNullable[BigDecimal]
-    )(a => (a.amount, a.amountYearly,  a.previousAmountYearly, a.period, a.howManyAWeek))
+    )(a => (a.amount, a.amountYearly, a.previousAmountYearly, a.period, a.howManyAWeek))
 
 }

@@ -30,22 +30,34 @@ class YouHaveToldUsSpec extends BaseSpec with AnyWordSpecLike {
     val idSuffix  = "income"
 
     val yearlyLabel = "a_year"
-    YouHaveToldUs(Salary(2, None, None, "a year", None)) mustBe YouHaveToldUsItem("£2 a year", yearlyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(2, None, None, "a year", None)) mustBe YouHaveToldUsItem("£2 a year",
+                                                                                  yearlyLabel,
+                                                                                  salaryUrl,
+                                                                                  idSuffix)
 
     val monthlyLabel = "a_month"
     YouHaveToldUs(Salary(3, None, None, "a month", None)) mustBe YouHaveToldUsItem("£3 a month",
-                                                                         monthlyLabel,
-                                                                         salaryUrl,
-                                                                         idSuffix)
+                                                                                   monthlyLabel,
+                                                                                   salaryUrl,
+                                                                                   idSuffix)
 
     val weeklyLabel = "a_week"
-    YouHaveToldUs(Salary(1, None, None, "a week", None)) mustBe YouHaveToldUsItem("£1 a week", weeklyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(1, None, None, "a week", None)) mustBe YouHaveToldUsItem("£1 a week",
+                                                                                  weeklyLabel,
+                                                                                  salaryUrl,
+                                                                                  idSuffix)
 
     val dailyLabel = "a_day"
-    YouHaveToldUs(Salary(1, None, None, "a day", None)) mustBe YouHaveToldUsItem("£1 a day", dailyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(1, None, None, "a day", None)) mustBe YouHaveToldUsItem("£1 a day",
+                                                                                 dailyLabel,
+                                                                                 salaryUrl,
+                                                                                 idSuffix)
 
     val hourlyLabel = "an_hour"
-    YouHaveToldUs(Salary(2, None, None, "an hour", None)) mustBe YouHaveToldUsItem("£2 an hour", hourlyLabel, salaryUrl, idSuffix)
+    YouHaveToldUs(Salary(2, None, None, "an hour", None)) mustBe YouHaveToldUsItem("£2 an hour",
+                                                                                   hourlyLabel,
+                                                                                   salaryUrl,
+                                                                                   idSuffix)
   }
 
   "Converting OverStatePensionAge to YouHaveToldUsItem" in {
@@ -88,7 +100,7 @@ class YouHaveToldUsSpec extends BaseSpec with AnyWordSpecLike {
     )
     val taxCodeUrl  = "/estimate-paye-take-home-pay/tax-code"
     val scottishUrl = "/estimate-paye-take-home-pay/scottish-tax"
-    taxCodeUrl  mustBe YouHaveToldUs.getGoBackLink(itemsWithTaxCode)
+    taxCodeUrl mustBe YouHaveToldUs.getGoBackLink(itemsWithTaxCode)
     scottishUrl mustBe YouHaveToldUs.getGoBackLink(itemsWithOutTaxCode)
 
   }
