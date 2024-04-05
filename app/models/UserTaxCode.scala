@@ -33,7 +33,6 @@ object UserTaxCode {
   private lazy val firstDayOfTaxYear = MonthDay.of(4, 6)
   val HasTaxCode                     = "hasTaxCode"
   val TaxCode                        = "taxCode"
-  val previousTaxCode                = "previousTaxCode"
   val suffixKeys                     = List('L', 'M', 'N', 'T')
   val WrongTaxCodePrefixKey          = "quick_calc.about_tax_code.wrong_tax_code_prefix"
   val WrongTaxCodeSuffixKey          = "quick_calc.about_tax_code.wrong_tax_code_suffix"

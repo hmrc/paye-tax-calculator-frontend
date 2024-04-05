@@ -62,7 +62,7 @@ object TaxResult {
   ): CalculatorResponse =
     new Calculator(
       extractTaxCode(quickCalcAggregateInput, defaultTaxCodeProvider),
-      if (quickCalcAggregateInput.savedTaxCode.exists(_.gaveUsTaxCode)) true else false,
+      quickCalcAggregateInput.savedTaxCode.exists(_.gaveUsTaxCode),
       extractSalary(quickCalcAggregateInput).toDouble,
       extractPayPeriod(quickCalcAggregateInput),
       extractOverStatePensionAge(quickCalcAggregateInput),

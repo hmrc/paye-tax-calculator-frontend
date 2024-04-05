@@ -20,10 +20,9 @@ import mappings.CustomFormatters._
 
 import javax.inject.Inject
 import models.UserTaxCode
-import models.UserTaxCode.{HasTaxCode, TaxCode, previousTaxCode}
+import models.UserTaxCode.{HasTaxCode, TaxCode}
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.format.Formats.{booleanFormat, stringFormat}
 
 class UserTaxCodeFormProvider @Inject() () {
 
