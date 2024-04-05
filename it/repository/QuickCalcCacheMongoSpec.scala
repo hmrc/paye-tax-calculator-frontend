@@ -27,7 +27,7 @@ class QuickCalcCacheMongoSpec
 
   private val instant = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val quickCalcMongoCache = QuickCalcMongoCache("id", Instant.ofEpochSecond(1),
-    quickCalcAggregateInput = QuickCalcAggregateInput(Some(Salary(12.00, "5", Some(12.00))), Some(PayPeriodDetail(12.00, 5.00, "period", "url")), None, None, None))
+    quickCalcAggregateInput = QuickCalcAggregateInput(Some(Salary(12.00, None, None, "5", Some(12.00))), Some(PayPeriodDetail(12.00, 5.00, "period", "url")), None, None, None))
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
   private val mockAppConfig = mock[AppConfig]
 

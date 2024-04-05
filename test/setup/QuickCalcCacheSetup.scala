@@ -94,10 +94,10 @@ object QuickCalcCacheSetup {
   val cacheTestScottishYES                          = Some(ScottishRate(true, true))
   val cacheTestStatePensionYES                      = Some(StatePension(true))
   val cacheTestStatusPensionNO                      = Some(StatePension(false))
-  val cacheTestYearlySalary                         = Some(Salary(20000, "a year", None))
-  val cacheTestYearlyOverHundredThoudandSalary      = Some(Salary(100003, "a year", None))
-  val cacheTestDailySalary                          = Some(Salary(40, "a day", None))
-  val cacheTestHourlySalary                         = Some(Salary(8.5, "an hour", None))
+  val cacheTestYearlySalary                         = Some(Salary(20000, None, None, "a year", None))
+  val cacheTestYearlyOverHundredThoudandSalary      = Some(Salary(100003, None, None, "a year", None))
+  val cacheTestDailySalary                          = Some(Salary(40, None, None, "a day", None))
+  val cacheTestHourlySalary                         = Some(Salary(8.5, None, None, "an hour", None))
   val cacheTestSalaryPeriodDaily                    = Some(PayPeriodDetail(1, 5, "a day", ""))
 
   val cacheTestSalaryPeriodHourly = Some(

@@ -24,9 +24,9 @@ class SalarySerializationSpec extends AnyWordSpecLike with Matchers {
 
   "Salary marshalling" should {
     "work for all salary types" in {
-      jsonOf(Salary(1, "yearly", None))  shouldBe yearlyJson
-      jsonOf(Salary(1, "monthly", None, None, None)) shouldBe monthlyJson
-      jsonOf(Salary(1, "weekly", None, None, None))  shouldBe weeklyJson
+      jsonOf(Salary(1,  None, None, "yearly", None))  shouldBe yearlyJson
+      jsonOf(Salary(1, None, None, "monthly", None)) shouldBe monthlyJson
+      jsonOf(Salary(1, None, None,"weekly", None))  shouldBe weeklyJson
       jsonOf(Days(1, 2))   shouldBe dailyJson
       jsonOf(Hours(1, 2))  shouldBe hourlyJson
     }
