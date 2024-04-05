@@ -102,7 +102,7 @@ class ScottishRateController @Inject() (
                 .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
                 .map(
                   _.copy(
-                    savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode), previousTaxCode = Some(taxCode))),
+                    savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some(taxCode))),
                     savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, scottish.payScottishRate))
                   )
                 )

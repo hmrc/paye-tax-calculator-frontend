@@ -29,9 +29,7 @@ class UserTaxCodeFormProvider @Inject()() {
   def apply(): Form[UserTaxCode] = Form(
     mapping(
       HasTaxCode -> of(hasTaxCodeBooleanFormatter),
-      TaxCode -> of(taxCodeFormatter),
-      previousTaxCode -> optional(of[String]),
-
+      TaxCode -> of(taxCodeFormatter)
     )(UserTaxCode.apply)(UserTaxCode.unapply)
   )
 }

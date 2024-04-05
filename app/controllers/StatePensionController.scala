@@ -86,7 +86,7 @@ class StatePensionController @Inject() (
               case Some(aggregate) =>
                 val updatedAggregate = {
                   if(appConfig.features.newScreenContentFeature()) {
-                    aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, None, None)), savedScottishRate = Some(ScottishRate(payScottishRate = false, gaveUsScottishRate = false)))
+                    aggregate.copy(savedIsOverStatePensionAge = Some(userAge), savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, None)), savedScottishRate = Some(ScottishRate(payScottishRate = false, gaveUsScottishRate = false)))
                   } else {
                     aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
                   }

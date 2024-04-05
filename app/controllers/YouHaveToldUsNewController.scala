@@ -71,32 +71,6 @@ class YouHaveToldUsNewController @Inject() (
     }
   }
 
-  def isTaxCodeSame(aggregateInput: QuickCalcAggregateInput): Boolean = {
-    aggregateInput.savedTaxCode.flatMap(_.taxCode) == aggregateInput.savedTaxCode.flatMap(_.previousTaxCode)
-  }
-
-  private def taperingWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages) : List[(String, String)] = {
-    if(aggregateInput.savedSalary.map(_.amountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) && !isTaxCodeSame(aggregateInput)) {
-      List(taxCodeLabel -> Messages("This tax code is not usually for those on more than £100,000 a year."))
-    } else if(aggregateInput.savedSalary.map(_.previousAmountYearly.getOrElse(BigDecimal(0.0))) <= Some(BigDecimal(100000)) &&
-      aggregateInput.savedSalary.map(_.amountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) && isTaxCodeSame(aggregateInput)
-    ){
-      List(taxCodeLabel -> Messages("You updated your income. This tax code may no longer apply."))
-    } else if(aggregateInput.savedSalary.map(_.previousAmountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) &&
-      aggregateInput.savedSalary.map(_.amountYearly.getOrElse(BigDecimal(0.0))) <= Some(BigDecimal(100000)) && isTaxCodeSame(aggregateInput)
-    ) {
-      List(taxCodeLabel -> Messages("You updated your income. This tax code may no longer apply."))
-    } else if(aggregateInput.savedSalary.map(_.previousAmountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) &&
-      aggregateInput.savedSalary.map(_.amountYearly.getOrElse(BigDecimal(0.0))) > Some(BigDecimal(100000)) && isTaxCodeSame(aggregateInput)
-    ) {
-      List(taxCodeLabel -> Messages("You updated your income. This tax code may no longer apply."))
-    }
-    else {
-      List.empty
-    }
-  }
-
-
 
   private def scottishRateWarnings(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): List[(String,String)] = {
     if (aggregateConditionsUtil.payScottishRate(aggregateInput) && !aggregateConditionsUtil.taxCodeContainsS(aggregateInput))
@@ -104,7 +78,7 @@ class YouHaveToldUsNewController @Inject() (
   }
 
   private def taxCodeCheck(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Map[String, String] = {
-    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput) ++ taperingWarnings(aggregateInput)
+    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput)
     finalList.toMap
   }
 
