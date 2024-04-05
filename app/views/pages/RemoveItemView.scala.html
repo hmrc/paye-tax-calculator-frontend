@@ -18,64 +18,64 @@
 @import forms.AdditionalQuestionItem
 
 @this(
-       govuk_wrapper: templates.GovukLayoutWrapper,
-       formHelper: FormWithCSRF,
-       errorSummary: components.errorSummary,
-       inputRadio: components.inputRadio,
-       h1: components.h1,
-       button: components.button,
-       beforeContent: components.beforeContent
+govuk_wrapper: templates.GovukLayoutWrapper,
+formHelper: FormWithCSRF,
+errorSummary: components.errorSummary,
+inputRadio: components.inputRadio,
+h1: components.h1,
+button: components.button,
+beforeContent: components.beforeContent
 )
 
 @(userTaxCodeForm: Form[Boolean], additionalQuestionItems: List[AdditionalQuestionItem], item: String)(implicit request: Request[_], messages: Messages)
 
 @labels = @{
-   List(Messages("quick_calc.salary.yearly.sub_label"),
-        Messages("quick_calc.salary.monthly.sub_label"),
-        Messages("quick_calc.salary.weekly.sub_label"),
-        Messages("quick_calc.salary.daily.sub_label"),
-        Messages("quick_calc.salary.hourly.sub_label"),
-        Messages("quick_calc.salary.fourWeeks.sub_label"))
+List(Messages("quick_calc.salary.yearly.sub_label"),
+Messages("quick_calc.salary.monthly.sub_label"),
+Messages("quick_calc.salary.weekly.sub_label"),
+Messages("quick_calc.salary.daily.sub_label"),
+Messages("quick_calc.salary.hourly.sub_label"),
+Messages("quick_calc.salary.fourWeeks.sub_label"))
 }
 
 @radioRemoveTaxCode = @{
-    userTaxCodeForm("removeTaxCode")
+userTaxCodeForm("removeTaxCode")
 }
 
 @pensionAgeRadios = @{
-    Seq(
-        RadioItem(
-            content = Text(Messages("quick_calc.over_state_pension_age.yes")),
-            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
-            value = Some("true"),
-            checked = radioRemoveTaxCode.value.contains("true")
-        ),
-        RadioItem(
-            content = Text(Messages("quick_calc.over_state_pension_age.no")),
-            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
-            value = Some("false"),
-            checked = radioRemoveTaxCode.value.contains("false"))
-    )
+Seq(
+RadioItem(
+content = Text(Messages("quick_calc.over_state_pension_age.yes")),
+label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
+value = Some("true"),
+checked = radioRemoveTaxCode.value.contains("true")
+),
+RadioItem(
+content = Text(Messages("quick_calc.over_state_pension_age.no")),
+label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
+value = Some("false"),
+checked = radioRemoveTaxCode.value.contains("false"))
+)
 }
 
 @backButtonUrl = @{
-    controllers.routes.YouHaveToldUsNewController.summary.url
+controllers.routes.YouHaveToldUsNewController.summary.url
 }
 
 @govuk_wrapper(Some(title(userTaxCodeForm, Messages(s"quick_calc.remove.$item"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-    @formHelper(action = controllers.routes.RemoveItemController.submitRemoveItemForm(item)) {
+@formHelper(action = controllers.routes.RemoveItemController.submitRemoveItemForm(item)) {
 
-        @errorSummary(userTaxCodeForm.errors)
+@errorSummary(userTaxCodeForm.errors)
 
-        @inputRadio(
-            form = userTaxCodeForm,
-            legendKey = Messages(s"quick_calc.remove.$item"),
-            name = "removeTaxCode",
-            items = pensionAgeRadios
-        )
+@inputRadio(
+form = userTaxCodeForm,
+legendKey = Messages(s"quick_calc.remove.$item"),
+name = "removeTaxCode",
+items = pensionAgeRadios
+)
 
-    @button("continue", Some("button-continue"))
-    }
+@button("continue", Some("button-continue"))
+}
 }
 

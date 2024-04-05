@@ -61,10 +61,22 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
         actualTable.size() mustBe 4
 
-        actualTable.get(0).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedYearlySalaryAnswer
+        actualTable
+          .get(0)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe expectedYearlySalaryAnswer
         actualTable.get(1).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
-        actualTable.get(2).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedTaxCodeAnswerScottish
-        actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedScottishAnswerYes
+        actualTable
+          .get(2)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe expectedTaxCodeAnswerScottish
+        actualTable
+          .get(3)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe expectedScottishAnswerYes
       }
     }
 
@@ -91,8 +103,16 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
         actualTable.size() mustBe 5
 
-        actualTable.get(0).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedDailySalaryAnswer
-        actualTable.get(1).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedDailyPeriodAnswer
+        actualTable
+          .get(0)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe expectedDailySalaryAnswer
+        actualTable
+          .get(1)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe expectedDailyPeriodAnswer
         actualTable.get(2).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
         actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedTaxCodeAnswer
         actualTable.get(4).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedScottishAnswer
@@ -121,8 +141,16 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
         actualTable.size() mustBe 5
 
-        actualTable.get(0).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedHourlySalaryAnswer
-        actualTable.get(1).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedHourlyPeriodAnswer
+        actualTable
+          .get(0)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe expectedHourlySalaryAnswer
+        actualTable
+          .get(1)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe expectedHourlyPeriodAnswer
         actualTable.get(2).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
         actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedTaxCodeAnswer
         actualTable.get(4).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedScottishAnswer

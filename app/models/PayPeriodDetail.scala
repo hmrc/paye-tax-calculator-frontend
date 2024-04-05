@@ -19,27 +19,26 @@ package models
 import play.api.libs.json.{Reads, Writes, __}
 
 case class PayPeriodDetail(
-                            amount:       BigDecimal,
-                            howManyAWeek: BigDecimal,
-                            period:       String,
-                            urlForChange: String)
+  amount:       BigDecimal,
+  howManyAWeek: BigDecimal,
+  period:       String,
+  urlForChange: String)
 
 object PayPeriodDetail {
   import play.api.libs.functional.syntax._
 
   implicit lazy val reads: Reads[PayPeriodDetail] = (
     (__ \ "amount").read[BigDecimal] and
-      (__ \ "how-many-a-week").read[BigDecimal] and
-        (__ \ "period").read[String] and
-        (__ \ "urlForChange").read[String]
-
-    )(PayPeriodDetail(_, _, _,_))
+    (__ \ "how-many-a-week").read[BigDecimal] and
+    (__ \ "period").read[String] and
+    (__ \ "urlForChange").read[String]
+  )(PayPeriodDetail(_, _, _, _))
 
   implicit lazy val writes: Writes[PayPeriodDetail] =
     (
       (__ \ "amount").write[BigDecimal] and
-        (__ \ "how-many-a-week").write[BigDecimal] and
-          (__ \ "period").write[String] and
-        (__ \ "urlForChange").write[String]
-      )(a => (a.amount, a.howManyAWeek, a.period, a.urlForChange))
+      (__ \ "how-many-a-week").write[BigDecimal] and
+      (__ \ "period").write[String] and
+      (__ \ "urlForChange").write[String]
+    )(a => (a.amount, a.howManyAWeek, a.period, a.urlForChange))
 }

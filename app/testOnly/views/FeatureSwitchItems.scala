@@ -22,22 +22,26 @@ import models.FeatureSwitchModel
 import play.api.data.Form
 import uk.gov.hmrc.govukfrontend.views.Aliases.{CheckboxItem, Text}
 
-class FeatureSwitchItems @Inject()(){
+class FeatureSwitchItems @Inject() () {
 
-  private def formCheckBoxItem(form: Form[FeatureSwitchModel], configKey: String, description: String): CheckboxItem = {
+  private def formCheckBoxItem(
+    form:        Form[FeatureSwitchModel],
+    configKey:   String,
+    description: String
+  ): CheckboxItem =
     CheckboxItem(
-      id = Some(form(configKey).name),
-      name = Some(form(configKey).name),
+      id      = Some(form(configKey).name),
+      name    = Some(form(configKey).name),
       content = Text(description),
-      value = "true",
+      value   = "true",
       checked = form(configKey).value.contains("true")
     )
-  }
 
-  def items(form: Form[FeatureSwitchModel]): Seq[CheckboxItem] = {
+  def items(form: Form[FeatureSwitchModel]): Seq[CheckboxItem] =
     Seq(
-      formCheckBoxItem(form, FeatureConfigKey.enableNewScreenContent, "Enable new screen content for Paye Tax Calculator"),
+      formCheckBoxItem(form,
+                       FeatureConfigKey.enableNewScreenContent,
+                       "Enable new screen content for Paye Tax Calculator")
     )
-  }
 
 }

@@ -87,18 +87,18 @@ object QuickCalcCacheSetup {
     salaryHourlyPeriodTest
   )
 
-  val cacheTestTaxCode                              = Some(UserTaxCode(false, Some("1250L")))
-  val cacheDefaultTestTaxCode                       = Some(UserTaxCode(false, Some("1257L")))
-  val cacheTestTaxCodeScottish                      = Some(UserTaxCode(false, Some("S1250L")))
-  val cacheTestScottishNO                           = Some(ScottishRate(false, false))
-  val cacheTestScottishYES                          = Some(ScottishRate(true, true))
-  val cacheTestStatePensionYES                      = Some(StatePension(true))
-  val cacheTestStatusPensionNO                      = Some(StatePension(false))
-  val cacheTestYearlySalary                         = Some(Salary(20000, "a year", None))
-  val cacheTestYearlyOverHundredThoudandSalary      = Some(Salary(100003, "a year", None))
-  val cacheTestDailySalary                          = Some(Salary(40, "a day", None))
-  val cacheTestHourlySalary                         = Some(Salary(8.5, "an hour", None))
-  val cacheTestSalaryPeriodDaily                    = Some(PayPeriodDetail(1, 5, "a day", ""))
+  val cacheTestTaxCode                         = Some(UserTaxCode(false, Some("1250L")))
+  val cacheDefaultTestTaxCode                  = Some(UserTaxCode(false, Some("1257L")))
+  val cacheTestTaxCodeScottish                 = Some(UserTaxCode(false, Some("S1250L")))
+  val cacheTestScottishNO                      = Some(ScottishRate(false, false))
+  val cacheTestScottishYES                     = Some(ScottishRate(true, true))
+  val cacheTestStatePensionYES                 = Some(StatePension(true))
+  val cacheTestStatusPensionNO                 = Some(StatePension(false))
+  val cacheTestYearlySalary                    = Some(Salary(20000, None, None, "a year", None))
+  val cacheTestYearlyOverHundredThoudandSalary = Some(Salary(100003, None, None, "a year", None))
+  val cacheTestDailySalary                     = Some(Salary(40, None, None, "a day", None))
+  val cacheTestHourlySalary                    = Some(Salary(8.5, None, None, "an hour", None))
+  val cacheTestSalaryPeriodDaily               = Some(PayPeriodDetail(1, 5, "a day", ""))
 
   val cacheTestSalaryPeriodHourly = Some(
     PayPeriodDetail(8.5, 40, "an hour", "")
@@ -195,10 +195,10 @@ object QuickCalcCacheSetup {
 
   val cacheShowDisclaimer = Some(
     QuickCalcAggregateInput.newInstance.copy(
-      savedSalary = cacheTestYearlyOverHundredThoudandSalary,
-      savedTaxCode = cacheDefaultTestTaxCode,
+      savedSalary                = cacheTestYearlyOverHundredThoudandSalary,
+      savedTaxCode               = cacheDefaultTestTaxCode,
       savedIsOverStatePensionAge = cacheTestStatusPensionNO,
-      savedScottishRate = cacheTestScottishNO,
+      savedScottishRate          = cacheTestScottishNO
     )
   )
 
@@ -300,15 +300,15 @@ object QuickCalcCacheSetup {
   val disclaimerWarning =
     "Warning We have not reduced your Personal Allowance. If you earn over £100,000, you must enter your tax code for that job to get the most accurate results."
 
-  val expectedEmptyErrorMessage            = "Enter the amount you are paid"
+  val expectedEmptyErrorMessage = "Enter the amount you are paid"
 
-  val expectedPayFrequencyErrorMessage     = "Select how often you are paid"
+  val expectedPayFrequencyErrorMessage = "Select how often you are paid"
 
-  val expectedEmptyDaysErrorMessage        = "Enter the number of days a week you work"
+  val expectedEmptyDaysErrorMessage = "Enter the number of days a week you work"
 
-  val expectedInvalidStatePensionAnswer    = "Select yes if you are over the State Pension age"
+  val expectedInvalidStatePensionAnswer = "Select yes if you are over the State Pension age"
 
-  val expectedInvalidRemoveTaxCodeAnswer    = "Select yes if you want to remove your tax code"
+  val expectedInvalidRemoveTaxCodeAnswer = "Select yes if you want to remove your tax code"
   //Hours
   val expectedEmptyHoursErrorMessage = "Enter the number of hours a week you work"
 

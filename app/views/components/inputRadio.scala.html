@@ -17,35 +17,35 @@
 @this(govukRadios: GovukRadios)
 
 @(form: Form[_],
-        legendKey: String,
-        name: String,
-        items: Seq[RadioItem],
-        legendAsHeading: Boolean = true,
-        hintKey: Option[String] = None,
-        classes: String = "govuk-fieldset__legend--xl",
-        inline: Boolean = false
+legendKey: String,
+name: String,
+items: Seq[RadioItem],
+legendAsHeading: Boolean = true,
+hintKey: Option[String] = None,
+classes: String = "govuk-fieldset__legend--xl",
+inline: Boolean = false
 )(implicit messages: Messages)
 
 @govukRadios(Radios(
-    idPrefix = Some(name),
-    classes = s"${
-        if(inline) {
-            "govuk-radios--inline"
-        }
-    }",
-    name = name,
-    fieldset = Some(Fieldset(
-        legend = Some(Legend(
-            content = Text(messages(legendKey)),
-            isPageHeading = legendAsHeading,
-            classes = classes
-        ))
-    )),
-    hint = hintKey.map { hint =>
-        Hint(
-            content = Text(messages(hint))
-        )
-    },
-    items = items,
-    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+idPrefix = Some(name),
+classes = s"${
+if(inline) {
+"govuk-radios--inline"
+}
+}",
+name = name,
+fieldset = Some(Fieldset(
+legend = Some(Legend(
+content = Text(messages(legendKey)),
+isPageHeading = legendAsHeading,
+classes = classes
+))
+)),
+hint = hintKey.map { hint =>
+Hint(
+content = Text(messages(hint))
+)
+},
+items = items,
+errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
 ))

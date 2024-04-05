@@ -21,14 +21,14 @@ import setup.BaseSpec
 import views.html.pages.ResetView
 import org.jsoup.nodes.Document
 
-class ResetViewSpec  extends BaseSpec{
+class ResetViewSpec extends BaseSpec {
 
   val resetView: ResetView = appInjector.instanceOf[ResetView]
 
   "Rendering the reset page" should {
 
     object Selectors {
-      val pageHeading = "#main-content > div > div > h1"
+      val pageHeading   = "#main-content > div > div > h1"
       val restartButton = "#restart-button"
     }
 

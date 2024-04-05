@@ -23,109 +23,109 @@
 @import config.AppConfig
 
 @this(
-        govukTemplate: templates.GovukLayoutWrapper,
-        h1: components.h1,
-        h3: components.h3,
-        warningText: components.warning,
-        govukBackLink: GovukBackLink,
-        formHelper: FormWithCSRF,
-        button: components.button,
-        govukSummaryList: GovukSummaryList,
-        beforeContent: components.beforeContent
+govukTemplate: templates.GovukLayoutWrapper,
+h1: components.h1,
+h3: components.h3,
+warningText: components.warning,
+govukBackLink: GovukBackLink,
+formHelper: FormWithCSRF,
+button: components.button,
+govukSummaryList: GovukSummaryList,
+beforeContent: components.beforeContent
 )
 
 @(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 
 @rows = @{
-    items.map { item =>
-        SummaryListRow(
-            key = Key(content = Text(Messages(s"quick_calc.you_have_told_us.${item.label}.label.new"))),
-            value = Value(content = Text(item.value)),
-            actions = Some(Actions(
-                items = Seq(
-                    ActionItem(
-                        href = item.url,
-                        content = Text(Messages("quick_calc.you_have_told_us.edit")),
-                        visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label.new")),
-                        attributes = Map("id" -> s"change-${item.label}-link")
-                    )
-                )
-            ))
-        )
-    }.toSeq
+items.map { item =>
+SummaryListRow(
+key = Key(content = Text(Messages(s"quick_calc.you_have_told_us.${item.label}.label.new"))),
+value = Value(content = Text(item.value)),
+actions = Some(Actions(
+items = Seq(
+ActionItem(
+href = item.url,
+content = Text(Messages("quick_calc.you_have_told_us.edit")),
+visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label.new")),
+attributes = Map("id" -> s"change-${item.label}-link")
+)
+)
+))
+)
+}.toSeq
 }
 
 @changeLinks(item: AdditionalQuestionItem) =@{
-    if(item.label == "about_tax_code" && !taxCodeExists) {
-        Seq(
-            ActionItem(
-            href = item.url,
-            content = Text(Messages("quick_calc.you_have_told_us.taxCode.add")),
-            visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
-            attributes = Map("id" -> s"change-${item.label}-link")
-        )
+if(item.label == "about_tax_code" && !taxCodeExists) {
+Seq(
+ActionItem(
+href = item.url,
+content = Text(Messages("quick_calc.you_have_told_us.taxCode.add")),
+visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
+attributes = Map("id" -> s"change-${item.label}-link")
 )
-    } else if(item.label == "about_tax_code" && taxCodeExists){
-            Seq(
-                ActionItem(
-                href = item.url,
-                content = Text(Messages("quick_calc.you_have_told_us.edit")),
-                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
-                attributes = Map("id" -> s"change-${item.label}-link")
-            ),
-                ActionItem(
-                href = controllers.routes.RemoveItemController.showRemoveItemForm("taxcode").url,
-                content = Text(Messages("quick_calc.you_have_told_us.taxCode.remove")),
-                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
-                attributes = Map("id" -> s"change-${item.label}-link")
-            ),
-    )
-    } else {
-            Seq(
-                ActionItem(
-                href = item.url,
-                content = Text(Messages("quick_calc.you_have_told_us.edit")),
-                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
-                attributes = Map("id" -> s"change-${item.label}-link")
-            ),
-        )
-    }
+)
+} else if(item.label == "about_tax_code" && taxCodeExists){
+Seq(
+ActionItem(
+href = item.url,
+content = Text(Messages("quick_calc.you_have_told_us.edit")),
+visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+attributes = Map("id" -> s"change-${item.label}-link")
+),
+ActionItem(
+href = controllers.routes.RemoveItemController.showRemoveItemForm("taxcode").url,
+content = Text(Messages("quick_calc.you_have_told_us.taxCode.remove")),
+visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+attributes = Map("id" -> s"change-${item.label}-link")
+),
+)
+} else {
+Seq(
+ActionItem(
+href = item.url,
+content = Text(Messages("quick_calc.you_have_told_us.edit")),
+visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+attributes = Map("id" -> s"change-${item.label}-link")
+),
+)
+}
 }
 
 @additionalQuestionRows = @{
-    additionalQuestionItem.map { item =>
-        SummaryListRow(
-            key = Key(content = Text(Messages(s"quick_calc.you_have_told_us.${item.label}.label.new"))),
-            value =Value(content = HtmlContent(
-s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warningMessages(item.label)) else Html("")}"""
+additionalQuestionItem.map { item =>
+SummaryListRow(
+key = Key(content = Text(Messages(s"quick_calc.you_have_told_us.${item.label}.label.new"))),
+value =Value(content = HtmlContent(
+s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(Html(warningMessages(item.label))) else Html("")}"""
 )),
-            actions = Some(Actions(
-                classes = "govuk-summary-list__actions govuk-!-width-one-third",
-                items = changeLinks(item)
-            ))
-        )
-    }.toSeq
+actions = Some(Actions(
+classes = "govuk-summary-list__actions govuk-!-width-one-third",
+items = changeLinks(item)
+))
+)
+}.toSeq
 }
 
 @backButtonUrl = @{
-    s"${getGoBackLink(items)}"
+s"${getGoBackLink(items)}"
 }
 
 @govukTemplate(Some(titleNoForm(Messages("quick_calc.you_have_told_us.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-    @h1("quick_calc.you_have_told_us.header")
-    <br><br>
-    @h3("quick_calc.you_have_told_us.subheading")
+@h1("quick_calc.you_have_told_us.header")
+<br><br>
+@h3("quick_calc.you_have_told_us.subheading")
 
-    @govukSummaryList(SummaryList(rows = rows))
+@govukSummaryList(SummaryList(rows = rows))
 
-    @h3("quick_calc.you_have_told_us.subheading.additional")
+@h3("quick_calc.you_have_told_us.subheading.additional")
 
-    <p class="govuk-body">@messages("quick_calc.you_have_told_us.body.additional")</p>
+<p class="govuk-body">@messages("quick_calc.you_have_told_us.body.additional")</p>
 
-    @govukSummaryList(SummaryList(rows = additionalQuestionRows))
+@govukSummaryList(SummaryList(rows = additionalQuestionRows))
 
-    @formHelper(action = routes.ShowResultsController.showResult) {
-        @button("calculate_take_home_pay", Some("button-get-results"))
-    }
+@formHelper(action = routes.ShowResultsController.showResult) {
+@button("calculate_take_home_pay", Some("button-get-results"))
+}
 }

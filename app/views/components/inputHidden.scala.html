@@ -17,32 +17,32 @@
 @this(govukInput: GovukInput)
 
 @(
-        form: Form[_],
-        id: String,
-        name: String,
-        label: String,
-        value: Option[String] = None,
-        isPageHeading: Boolean,
-        headingMessageArgs: Seq[String] = Seq(),
-        hint: Option[Hint] = None,
-        classes: Option[String] = None,
-        stripWhitespace: Boolean = false,
-        autoComplete: String = ""
+form: Form[_],
+id: String,
+name: String,
+label: String,
+value: Option[String] = None,
+isPageHeading: Boolean,
+headingMessageArgs: Seq[String] = Seq(),
+hint: Option[Hint] = None,
+classes: Option[String] = None,
+stripWhitespace: Boolean = false,
+autoComplete: String = ""
 )(implicit messages: Messages)
 
 @govukInput(Input(
-    id,
-    name,
-    inputType = "hidden",
-    classes = classes.fold("")(x => x),
-    label = Label(
-        content = Text(messages(label, headingMessageArgs: _*)),
-        isPageHeading = isPageHeading,
-        classes = if(isPageHeading) "govuk-label--xl" else ""
-    ),
-    hint = hint,
-    value = value.map(Some(_)).getOrElse(form(name).value),
-    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*)))),
-    autocomplete = Some(autoComplete)
+id,
+name,
+inputType = "hidden",
+classes = classes.fold("")(x => x),
+label = Label(
+content = Text(messages(label, headingMessageArgs: _*)),
+isPageHeading = isPageHeading,
+classes = if(isPageHeading) "govuk-label--xl" else ""
+),
+hint = hint,
+value = value.map(Some(_)).getOrElse(form(name).value),
+errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*)))),
+autocomplete = Some(autoComplete)
 ))
 

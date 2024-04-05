@@ -76,28 +76,28 @@ class DaysPerWeekControllerSpec
       val howManyAweek = cacheCompleteDaily.value.savedPeriod.value.howManyAWeek
 
       val formFilled =
-      running(application) {
+        running(application) {
 
-        val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(amount).url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
+          val request = FakeRequest(GET, routes.DaysPerWeekController.showDaysAWeek(amount).url)
+            .withHeaders(HeaderNames.xSessionId -> "test")
+            .withCSRFToken
 
-        val view = application.injector.instanceOf[DaysAWeekView]
+          val view = application.injector.instanceOf[DaysAWeekView]
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual OK
+          status(result) mustEqual OK
 
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(
-            form.fill(
-              Days(cacheCompleteHourly.value.savedPeriod.value.amount,
-                   BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))
-            ),
-            cacheCompleteHourly.value.savedPeriod.value.amount
-          )(request, messagesForApp(application)).toString
-        )
-      }
+          removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+            view(
+              form.fill(
+                Days(cacheCompleteHourly.value.savedPeriod.value.amount,
+                     BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))
+              ),
+              cacheCompleteHourly.value.savedPeriod.value.amount
+            )(request, messagesForApp(application)).toString
+          )
+        }
     }
 
     "return 303, redirect to start" in {

@@ -19,18 +19,18 @@
 @import views.html.components.beforeContent
 
 @this(
-        govuk_wrapper: templates.GovukLayoutWrapper,
-        formHelper: FormWithCSRF,
-        hmrcCurrencyInput: HmrcCurrencyInput,
-        h1: components.h1,
-        errorSummary: components.errorSummary,
-        inputNumber: components.inputNumber,
-        p: components.p,
-        inputRadio: components.inputRadio,
-        button: components.button,
-        beforeContent: components.beforeContent,
-        label: components.label,
-        features: config.features.Features
+govuk_wrapper: templates.GovukLayoutWrapper,
+formHelper: FormWithCSRF,
+hmrcCurrencyInput: HmrcCurrencyInput,
+h1: components.h1,
+errorSummary: components.errorSummary,
+inputNumber: components.inputNumber,
+p: components.p,
+inputRadio: components.inputRadio,
+button: components.button,
+beforeContent: components.beforeContent,
+label: components.label,
+features: config.features.Features
 )
 
 
@@ -41,72 +41,72 @@ if(features.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "we
 }
 
 @radioFieldAmount = @{
-    salaryForm("amount")
+salaryForm("amount")
 }
 @radioFieldPeriod = @{
-    salaryForm("period")
+salaryForm("period")
 }
 @periodRadioButtons = @{
-    periodLabels.map { label =>
-        RadioItem(
-            content = Text(Messages(s"quick_calc.salary.$label.text")),
-            label = Some(Label(content = Text(Messages(s"quick_calc.salary.$label.label")))),
-            value = Some(Messages(s"quick_calc.salary.$label.label")),
-            checked = radioFieldPeriod.value.contains(Messages(s"quick_calc.salary.$label.label"))
-        )
-    }
+periodLabels.map { label =>
+RadioItem(
+content = Text(Messages(s"quick_calc.salary.$label.text")),
+label = Some(Label(content = Text(Messages(s"quick_calc.salary.$label.label")))),
+value = Some(Messages(s"quick_calc.salary.$label.label")),
+checked = radioFieldPeriod.value.contains(Messages(s"quick_calc.salary.$label.label"))
+)
+}
 }
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = true) {
 
-    @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount) {
+@formHelper(action = controllers.routes.SalaryController.submitSalaryAmount) {
 
-        @errorSummary(salaryForm.errors)
+@errorSummary(salaryForm.errors)
 
-        @if(features.newScreenContentFeature()) {
-            @h1(messages("quick_calc.salary.header"))
-        } else {
-            @h1(messages("quick_calc.salary.oldHeader"))
-        }
+@if(features.newScreenContentFeature()) {
+@h1(messages("quick_calc.salary.header"))
+} else {
+@h1(messages("quick_calc.salary.oldHeader"))
+}
 
-        @if(features.newScreenContentFeature()) {
-            @label(messages("quick_calc.salary.grossAmount.label"))
-        }
+@if(features.newScreenContentFeature()) {
+@label(messages("quick_calc.salary.grossAmount.label"))
+}
 
-        @hmrcCurrencyInput(CurrencyInput(
-            id = "amount",
-            name = "amount",
-            label = Label(content = if(features.newScreenContentFeature()) Text("") else Text(Messages("quick_calc.salary.amount.label"))),
-            hint = Some(Hint(content = if(features.newScreenContentFeature()) Text(Messages("hint.salary")) else Text(Messages("hint.oldSalary"))
-            )),
-            value = salaryForm("amount").value,
-            classes = "govuk-input--width-10",
-            autocomplete = Some("off"),
-            errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
-        ))
-
-
-        @if(features.newScreenContentFeature()) {
-            @inputRadio(
-                legendAsHeading = true,
-                form = salaryForm,
-                classes = "govuk-fieldset__legend govuk-fieldset__legend--m",
-                legendKey = Messages("label.payperiod"),
-                name = "period",
-                items = periodRadioButtons
-                )
-        } else {
-            @inputRadio(
-                legendAsHeading = false,
-                form = salaryForm,
-                classes = "",
-                legendKey = Messages("label.old.payperiod"),
-                name = "period",
-                items = periodRadioButtons
-            )
-        }
+@hmrcCurrencyInput(CurrencyInput(
+id = "amount",
+name = "amount",
+label = Label(content = if(features.newScreenContentFeature()) Text("") else Text(Messages("quick_calc.salary.amount.label"))),
+hint = Some(Hint(content = if(features.newScreenContentFeature()) Text(Messages("hint.salary")) else Text(Messages("hint.oldSalary"))
+)),
+value = salaryForm("amount").value,
+classes = "govuk-input--width-10",
+autocomplete = Some("off"),
+errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+))
 
 
-        @button("continue", Some("button-continue"))
-    }
+@if(features.newScreenContentFeature()) {
+@inputRadio(
+legendAsHeading = true,
+form = salaryForm,
+classes = "govuk-fieldset__legend govuk-fieldset__legend--m",
+legendKey = Messages("label.payperiod"),
+name = "period",
+items = periodRadioButtons
+)
+} else {
+@inputRadio(
+legendAsHeading = false,
+form = salaryForm,
+classes = "",
+legendKey = Messages("label.old.payperiod"),
+name = "period",
+items = periodRadioButtons
+)
+}
+
+
+@button("continue", Some("button-continue"))
+}
 }

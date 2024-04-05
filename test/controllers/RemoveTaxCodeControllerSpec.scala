@@ -43,14 +43,14 @@ import views.html.pages.RemoveItemView
 import scala.concurrent.Future
 
 class RemoveTaxCodeControllerSpec
-  extends BaseSpec
+    extends BaseSpec
     with TryValues
     with ScalaFutures
     with IntegrationPatience
     with CSRFTestHelper {
 
   val taxCodeQueryParam = "taxcode"
-  val formProvider = new RemoveTaxCodeFormProvider()
+  val formProvider      = new RemoveTaxCodeFormProvider()
   val form: Form[Boolean] = formProvider(taxCodeQueryParam)
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
@@ -81,7 +81,7 @@ class RemoveTaxCodeControllerSpec
 
       status(result) mustEqual OK
 
-      }
+    }
 
     "return 303 See Other and redirect to the salary page with no aggregate data" in {
       SharedMetricRegistries.clear()
@@ -108,15 +108,13 @@ class RemoveTaxCodeControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).get mustEqual routes.SalaryController
-          .showSalaryForm
-          .url
+        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
 
     }
-    }
+  }
 
   "Submit Remove Tax Code Controller" should {
 
@@ -150,7 +148,7 @@ class RemoveTaxCodeControllerSpec
         val errorHeader =
           parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
         errorMessageLink.contains(expectedInvalidRemoveTaxCodeAnswer) mustEqual true
@@ -191,7 +189,7 @@ class RemoveTaxCodeControllerSpec
         val errorHeader =
           parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
         errorMessageLink.contains(expectedInvalidRemoveTaxCodeAnswer) mustEqual true

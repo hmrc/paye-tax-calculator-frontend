@@ -51,13 +51,14 @@ class ScottishRateControllerSpec
     with TryValues
     with ScalaFutures
     with IntegrationPatience
-      with GuiceOneAppPerSuite
-      with BeforeAndAfterEach
-      with CSRFTestHelper
-      with MockitoSugar with AnyWordSpecLike{
+    with GuiceOneAppPerSuite
+    with BeforeAndAfterEach
+    with CSRFTestHelper
+    with MockitoSugar
+    with AnyWordSpecLike {
 
   val formProvider = new ScottishRateFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
@@ -95,10 +96,12 @@ class ScottishRateControllerSpec
 
         status(result) mustEqual OK
 
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
-          formFilled,
-          cacheCompleteYearly.value.youHaveToldUsItems()(messagesImplicit, mockAppConfig)
-        )(request, messagesThing(application)).toString)
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(
+            formFilled,
+            cacheCompleteYearly.value.youHaveToldUsItems()(messagesImplicit, mockAppConfig)
+          )(request, messagesThing(application)).toString
+        )
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
@@ -130,9 +133,7 @@ class ScottishRateControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).get mustEqual routes.SalaryController
-          .showSalaryForm
-          .url
+        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
@@ -167,9 +168,9 @@ class ScottishRateControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
         errorMessageLink.contains(expectedInvalidScottishRateAnswer) mustEqual true
@@ -201,7 +202,6 @@ class ScottishRateControllerSpec
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-
         val result = route(application, request).get
 
         val view = application.injector.instanceOf[ScottishRateView]
@@ -219,7 +219,7 @@ class ScottishRateControllerSpec
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(gaveUsScottishRate = false, payScottishRate = false)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("1185L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("1185L")))
         )
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
@@ -265,7 +265,7 @@ class ScottishRateControllerSpec
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, payScottishRate = true)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1185L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("S1185L")))
         )
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
@@ -311,7 +311,7 @@ class ScottishRateControllerSpec
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(gaveUsScottishRate = false, payScottishRate = false)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("1250L")))
         )
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
@@ -342,7 +342,8 @@ class ScottishRateControllerSpec
           POST,
           routes.ScottishRateController.submitScottishRateForm.url
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
 
         val result = route(application, request).get
 
@@ -356,7 +357,7 @@ class ScottishRateControllerSpec
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, payScottishRate = true)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("S1250L")))
         )
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
@@ -402,7 +403,7 @@ class ScottishRateControllerSpec
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(gaveUsScottishRate = false, payScottishRate = false)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("1250L")))
         )
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
@@ -436,7 +437,6 @@ class ScottishRateControllerSpec
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-
         val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
@@ -447,7 +447,7 @@ class ScottishRateControllerSpec
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
           savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, payScottishRate = true)),
-          savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
+          savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("S1250L")))
         )
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
@@ -480,7 +480,6 @@ class ScottishRateControllerSpec
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
-
 
         val result = route(application, request).get
 

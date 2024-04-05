@@ -17,7 +17,7 @@
 package controllers
 
 import config.AppConfig
-import forms.SalaryInHoursFormProvider
+import forms.{SalaryInHoursFormProvider, TaxResult}
 
 import javax.inject.{Inject, Singleton}
 import models.{Hours, PayPeriodDetail, QuickCalcAggregateInput, Salary}
@@ -62,12 +62,20 @@ class HoursPerWeekController @Inject() (
       .fold(
         formWithErrors => Future(BadRequest(hoursAWeekView(formWithErrors, value))),
         hours => {
+          val currentYearlyAmount: BigDecimal =
+            TaxResult.convertWagesToYearly(value, Messages("quick_calc.salary.hourly.label"), Some(hours.howManyAWeek))
           val updatedAggregate = cache
             .fetchAndGetEntry()
             .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-            .map(
-              _.copy(
-                savedSalary = Some(Salary(value, Messages("quick_calc.salary.hourly.label"), Some(hours.howManyAWeek))),
+            .map(oldAggregate =>
+              oldAggregate.copy(
+                savedSalary = Some(
+                  Salary(value,
+                         Some(currentYearlyAmount),
+                         oldAggregate.savedSalary.flatMap(_.amountYearly),
+                         Messages("quick_calc.salary.hourly.label"),
+                         Some(hours.howManyAWeek))
+                ),
                 savedPeriod = Some(
                   PayPeriodDetail(value, hours.howManyAWeek, Messages("quick_calc.salary.hourly.label"), url)
                 )
@@ -89,10 +97,7 @@ class HoursPerWeekController @Inject() (
       )
   }
 
-  def showHoursAWeek(
-    valueInPence: Int
-  ): Action[AnyContent] ={
-
+  def showHoursAWeek(valueInPence: Int): Action[AnyContent] =
     salaryRequired(
       cache, { implicit request => agg =>
         val filledForm = agg.savedPeriod
@@ -103,13 +108,11 @@ class HoursPerWeekController @Inject() (
 
       }
     )
-  }
+
   private def salaryRequired[T](
     cache:         QuickCalcCache,
     furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
   ): Action[AnyContent] =
-
-
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 

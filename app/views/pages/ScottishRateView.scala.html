@@ -18,78 +18,81 @@
 @import play.api.i18n._
 
 @this(
-        govuk_wrapper: templates.GovukLayoutWrapper,
-        formHelper: FormWithCSRF,
-        errorSummary: components.errorSummary,
-        link: components.linkNewTab,
-        inputRadio: components.inputRadio,
-        button: components.button,
-        govukBackLink: GovukBackLink,
-        govukDetails: GovukDetails,
-        details: components.details,
-        appConfig: config.AppConfig,
-        features: config.features.Features,
-        beforeContent: components.beforeContent
+govuk_wrapper: templates.GovukLayoutWrapper,
+formHelper: FormWithCSRF,
+errorSummary: components.errorSummary,
+link: components.linkNewTab,
+inputRadio: components.inputRadio,
+button: components.button,
+govukBackLink: GovukBackLink,
+govukDetails: GovukDetails,
+details: components.details,
+appConfig: config.AppConfig,
+features: config.features.Features,
+beforeContent: components.beforeContent
 )
 
 @(scottishRateForm: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
 @radioFieldScottishRate = @{
-    scottishRateForm("payScottishRate")
+scottishRateForm("payScottishRate")
 }
 
 @scottishRateRadios = @{
-    Seq(
-        RadioItem(
-            content = Text(Messages("quick_calc.over_state_pension_age.yes")),
-            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
-            value = Some("true"),
-            checked = radioFieldScottishRate.value.contains("true")
-        ),
-        RadioItem(
-            content = Text(Messages("quick_calc.over_state_pension_age.no")),
-            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
-            value = Some("false"),
-            checked = radioFieldScottishRate.value.contains("false"))
-    )
+Seq(
+RadioItem(
+content = Text(Messages("quick_calc.over_state_pension_age.yes")),
+label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
+value = Some("true"),
+checked = radioFieldScottishRate.value.contains("true")
+),
+RadioItem(
+content = Text(Messages("quick_calc.over_state_pension_age.no")),
+label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
+value = Some("false"),
+checked = radioFieldScottishRate.value.contains("false"))
+)
 }
 
 @backButtonUrl = @{
-    if(features.newScreenContentFeature()){
-        controllers.routes.YouHaveToldUsNewController.summary.url
-    } else {
-        s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "").mkString}"
-    }
+if(features.newScreenContentFeature()){
+controllers.routes.YouHaveToldUsNewController.summary.url
+} else {
+s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "").mkString}"
+}
 }
 
 @govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-    @formHelper(action = controllers.routes.ScottishRateController.submitScottishRateForm) {
+@formHelper(action = controllers.routes.ScottishRateController.submitScottishRateForm) {
 
-        @errorSummary(scottishRateForm.errors)
+@errorSummary(scottishRateForm.errors)
 
-        @inputRadio(
-            form = scottishRateForm,
-            legendKey = if(features.newScreenContentFeature()) "quick_calc.salary.question.scottish_income.new" else "quick_calc.salary.question.scottish_income",
-            hintKey = if(!features.newScreenContentFeature()) Some(Messages("quick_calc.salary.question.scottish_income_info")) else None,
-            name = "payScottishRate",
-            items = scottishRateRadios,
-        )
+@inputRadio(
+form = scottishRateForm,
+legendKey = if(features.newScreenContentFeature()) "quick_calc.salary.question.scottish_income.new" else "quick_calc.salary.question.scottish_income",
+hintKey = if(!features.newScreenContentFeature()) Some(Messages("quick_calc.salary.question.scottish_income_info")) else None,
+name = "payScottishRate",
+items = scottishRateRadios,
+)
 
-        @details(
-            summaryText = Messages("label.scottish-rate-details")
-        ) {
-            @if(features.newScreenContentFeature()) {
-            <p>@Messages("quick_calc.salary.question.scottish_income_info.new") @Messages("quick_calc.salary.question.scottish_income_url_a") @link("https://www.gov.uk/scottish-income-tax",
-                "quick_calc.salary.question.scottish_income_url_b") @Messages("quick_calc.salary.question.scottish_income_url_c")</p>
+@details(
+summaryText = Messages("label.scottish-rate-details")
+) {
+@if(features.newScreenContentFeature()) {
+<p>@Messages("quick_calc.salary.question.scottish_income_info.new")
+    @Messages("quick_calc.salary.question.scottish_income_url_a") @link("https://www.gov.uk/scottish-income-tax",
+    "quick_calc.salary.question.scottish_income_url_b")
+    @Messages("quick_calc.salary.question.scottish_income_url_c")</p>
 
-        } else {
-            <p>@Messages("quick_calc.salary.question.scottish_income_url_a") @link("https://www.gov.uk/scottish-rate-income-tax",
-                "quick_calc.salary.question.scottish_income_url_b") @Messages("quick_calc.salary.question.scottish_income_url_c")</p>
-            }
-        }
+} else {
+<p>@Messages("quick_calc.salary.question.scottish_income_url_a") @link("https://www.gov.uk/scottish-rate-income-tax",
+    "quick_calc.salary.question.scottish_income_url_b")
+    @Messages("quick_calc.salary.question.scottish_income_url_c")</p>
+}
+}
 
-        @button("continue", Some("button-continue"))
+@button("continue", Some("button-continue"))
 
-    }
+}
 }

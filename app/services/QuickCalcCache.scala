@@ -40,18 +40,19 @@ trait QuickCalcCache {
 class QuickCalcKeyStoreCache @Inject() (
   httpClient:                HttpClient,
   appConfig:                 AppConfig,
-  quickCalcCacheMongo: QuickCalcCacheMongo
+  quickCalcCacheMongo:       QuickCalcCacheMongo
 )(implicit executionContext: ExecutionContext)
     extends QuickCalcCache {
 
   val id = "quick-calc-aggregate-input"
 
-  def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]] = {
-    quickCalcCacheMongo.findById(hc.sessionId.getOrElse(throw new  BadRequestException("No Session id found")).value).flatMap((test: Option[QuickCalcMongoCache]) =>
-      Future.successful(test.headOption.map(_.quickCalcAggregateInput)))
-  }
+  def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]] =
+    quickCalcCacheMongo
+      .findById(hc.sessionId.getOrElse(throw new BadRequestException("No Session id found")).value)
+      .flatMap((test: Option[QuickCalcMongoCache]) => Future.successful(test.headOption.map(_.quickCalcAggregateInput)))
+
   def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[Done] = {
     val cacheId = hc.sessionId.getOrElse(throw new BadRequestException("No Session id found"))
-    quickCalcCacheMongo.add(QuickCalcMongoCache(cacheId.value,quickCalcAggregateInput = o, createdAt = Instant.now()))
+    quickCalcCacheMongo.add(QuickCalcMongoCache(cacheId.value, quickCalcAggregateInput = o, createdAt = Instant.now()))
   }
 }

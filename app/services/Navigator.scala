@@ -31,7 +31,7 @@ class Navigator @Inject() (appConfig: AppConfig) {
   )(implicit request: Request[_]
   ): Call =
     if (aggregate.allQuestionsAnswered) {
-      if(appConfig.features.newScreenContentFeature()) {
+      if (appConfig.features.newScreenContentFeature()) {
         routes.YouHaveToldUsNewController.summary
       } else {
         routes.YouHaveToldUsController.summary

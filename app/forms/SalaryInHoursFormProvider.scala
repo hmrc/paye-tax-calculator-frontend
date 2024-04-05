@@ -23,11 +23,11 @@ import play.api.data.Form
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formats._
 
-class SalaryInHoursFormProvider @Inject()() {
+class SalaryInHoursFormProvider @Inject() () {
 
   def apply(): Form[Hours] = Form(
     mapping(
-      a1 = "amount"       -> of[BigDecimal],
+      a1 = "amount"          -> of[BigDecimal],
       a2 = "how-many-a-week" -> of(CustomFormatters.hoursValidation)
     )(Hours.apply)(Hours.unapply)
   )

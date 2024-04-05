@@ -18,11 +18,10 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class StatePension(
-  overStatePensionAge: Boolean)
+case class StatePension(overStatePensionAge: Boolean)
 
-  object StatePension {
+object StatePension {
 
-    implicit val format: OFormat[StatePension] = Json.format[StatePension]
+  implicit val format: OFormat[StatePension] = Json.format[StatePension]
 
 }

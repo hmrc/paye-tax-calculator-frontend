@@ -32,31 +32,29 @@ import views.html.pages.RemoveItemView
 
 import scala.concurrent.ExecutionContext
 
-
 @Singleton
-class RemoveItemController @Inject()(
-                                         override val messagesApi:      MessagesApi,
-                                         cache:                         QuickCalcCache,
-                                         val controllerComponents:      MessagesControllerComponents,
-                                         navigator:                     Navigator,
-                                         removeItemView:                RemoveItemView,
-                                         removeTaxCodeFormProvider:     RemoveTaxCodeFormProvider
-                                       )(implicit val app:              AppConfig,
-                                         implicit val executionContext: ExecutionContext)
-                                          extends FrontendBaseController
-                                          with I18nSupport
-                                          with ActionWithSessionId {
+class RemoveItemController @Inject() (
+  override val messagesApi:      MessagesApi,
+  cache:                         QuickCalcCache,
+  val controllerComponents:      MessagesControllerComponents,
+  navigator:                     Navigator,
+  removeItemView:                RemoveItemView,
+  removeTaxCodeFormProvider:     RemoveTaxCodeFormProvider
+)(implicit val app:              AppConfig,
+  implicit val executionContext: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport
+    with ActionWithSessionId {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: String => Form[Boolean] = option => removeTaxCodeFormProvider(option)
 
-  def showRemoveItemForm(option: String): Action[AnyContent]=
-    salaryRequired(cache,showRemoveTaxCodeFormTestable(option))
+  def showRemoveItemForm(option: String): Action[AnyContent] =
+    salaryRequired(cache, showRemoveTaxCodeFormTestable(option))
 
-  private[controllers] def showRemoveTaxCodeFormTestable(option: String): ShowForm = { implicit request =>
-    agg =>
-      Ok(removeItemView(form(option), agg.additionalQuestionItems,option))
+  private[controllers] def showRemoveTaxCodeFormTestable(option: String): ShowForm = { implicit request => agg =>
+    Ok(removeItemView(form(option), agg.additionalQuestionItems, option))
   }
 
   def submitRemoveItemForm(option: String): Action[AnyContent] =
@@ -75,11 +73,12 @@ class RemoveItemController @Inject()(
               case None =>
                 BadRequest(removeItemView(formWithErrors, Nil, option))
             },
-          removeItemBoolean => {
+          removeItemBoolean =>
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
-                val updatedAggregate= if (removeItemBoolean) {
-                  aggregate.copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
+                val updatedAggregate = if (removeItemBoolean) {
+                  aggregate
+                    .copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
                 } else {
                   aggregate
                 }
@@ -93,14 +92,13 @@ class RemoveItemController @Inject()(
                   )
                 }
             }
-          }
         )
     }
 
   private def salaryRequired(
-                                 cache: QuickCalcCache,
-                                 furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-                               ): Action[AnyContent] =
+    cache:         QuickCalcCache,
+    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
+  ): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 

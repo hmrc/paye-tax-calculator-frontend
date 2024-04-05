@@ -50,7 +50,7 @@ class TaxCodeControllerSpec
     with ScalaFutures
     with IntegrationPatience
     with MockitoSugar
-      with CSRFTestHelper {
+    with CSRFTestHelper {
   val formProvider = new UserTaxCodeFormProvider()
   val form         = formProvider()
   val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
@@ -115,14 +115,20 @@ class TaxCodeControllerSpec
 
         status(result) mustEqual OK
 
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(
-          form,
-          cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)).get.youHaveToldUsItems()(messages,mockAppConfig),
-          defaultTaxCodeProvider.defaultUkTaxCode, false
-        )(
-          request,
-          messagesThing(application)
-        ).toString)
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(
+            form,
+            cacheTaxCodeStatePensionSalary
+              .map(_.copy(savedTaxCode = None))
+              .get
+              .youHaveToldUsItems()(messages, mockAppConfig),
+            defaultTaxCodeProvider.defaultUkTaxCode,
+            false
+          )(
+            request,
+            messagesThing(application)
+          ).toString
+        )
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
@@ -141,7 +147,8 @@ class TaxCodeControllerSpec
       running(application) {
 
         val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
-          .withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
 
         val result = route(application, request).get
 
@@ -151,12 +158,15 @@ class TaxCodeControllerSpec
 
         status(result) mustEqual OK
 
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(formFilled,
-                                               cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems()(messages,mockAppConfig),
-                                               defaultTaxCodeProvider.defaultUkTaxCode, false)(
-          request,
-          messagesThing(application)
-        ).toString)
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(formFilled,
+               cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems()(messages, mockAppConfig),
+               defaultTaxCodeProvider.defaultUkTaxCode,
+               false)(
+            request,
+            messagesThing(application)
+          ).toString
+        )
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }

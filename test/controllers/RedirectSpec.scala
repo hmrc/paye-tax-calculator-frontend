@@ -30,12 +30,12 @@ class RedirectSpec extends BaseSpec with AnyWordSpecLike {
     "return 303" in {
       val controller = new QuickCalcController(messagesApi, cacheEmpty, stubControllerComponents(), navigator)
       val result: Future[Result] = controller.redirectToSalaryForm().apply(request)
-      val status: Int    = await(result.map(_.header.status))
+      val status: Int            = await(result.map(_.header.status))
 
       val actualRedirect   = redirectLocation(result).get
       val expectedRedirect = s"${baseURL}your-pay"
 
-      status      mustBe 303
+      status mustBe 303
       actualRedirect mustBe expectedRedirect
     }
   }

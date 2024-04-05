@@ -19,16 +19,16 @@
 @(errors: Seq[FormError], errorFieldName: Option[String] = None)(implicit messages: Messages)
 
 @if(errors.nonEmpty) {
-    @defining(errors.map { error =>
-        ErrorLink(
-            href = Some(s"#${errorFieldName.getOrElse(error.key)}"),
-            content = Text(messages(error.message, error.args:_*)),
-            attributes = Map("id" -> s"${errorFieldName.getOrElse(error.key)}-error-link")
-        )
-    }) { errorLinks =>
-        @govukErrorSummary(ErrorSummary(
-            errorList = errorLinks,
-            title = Text(messages("error.summary.title"))
-        ))
-    }
+@defining(errors.map { error =>
+ErrorLink(
+href = Some(s"#${errorFieldName.getOrElse(error.key)}"),
+content = Text(messages(error.message, error.args:_*)),
+attributes = Map("id" -> s"${errorFieldName.getOrElse(error.key)}-error-link")
+)
+}) { errorLinks =>
+@govukErrorSummary(ErrorSummary(
+errorList = errorLinks,
+title = Text(messages("error.summary.title"))
+))
+}
 }

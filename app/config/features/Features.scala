@@ -21,7 +21,7 @@ import play.api.Configuration
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class Features @Inject()(implicit config: Configuration) {
+class Features @Inject() (implicit config: Configuration) {
 
   val newScreenContentFeature = new Feature(FeatureConfigKey.enableNewScreenContent)
 

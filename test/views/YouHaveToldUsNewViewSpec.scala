@@ -21,29 +21,31 @@ import org.jsoup.nodes.Document
 import setup.BaseSpec
 import views.html.pages.YouHaveToldUsNewView
 
-class YouHaveToldUsNewViewSpec extends BaseSpec{
+class YouHaveToldUsNewViewSpec extends BaseSpec {
 
   val youHaveToldUsNewView: YouHaveToldUsNewView = appInjector.instanceOf[YouHaveToldUsNewView]
 
   "Rendering the you have told us page" should {
 
     object Selectors {
-      val pageHeading = "#main-content > div > div > h1"
+      val pageHeading            = "#main-content > div > div > h1"
       val firstSectionSubHeading = "#main-content > div > div > h3:nth-child(4)"
-      val grossIncome = "#main-content > div > div > dl:nth-child(5) > div:nth-child(1) > dt"
-      val salary = "#main-content > div > div > dl:nth-child(5) > div:nth-child(1) > dd.govuk-summary-list__value"
-      val overStatePensionAge = "#main-content > div > div > dl:nth-child(5) > div:nth-child(2) > dt"
-      val overStatePensionAgeValue = "#main-content > div > div > dl:nth-child(5) > div:nth-child(2) > dd.govuk-summary-list__value"
+      val grossIncome            = "#main-content > div > div > dl:nth-child(5) > div:nth-child(1) > dt"
+      val salary                 = "#main-content > div > div > dl:nth-child(5) > div:nth-child(1) > dd.govuk-summary-list__value"
+      val overStatePensionAge    = "#main-content > div > div > dl:nth-child(5) > div:nth-child(2) > dt"
+      val overStatePensionAgeValue =
+        "#main-content > div > div > dl:nth-child(5) > div:nth-child(2) > dd.govuk-summary-list__value"
       val additionalQuestionsSubHeading = "#main-content > div > div > h3:nth-child(6)"
-      val additionalQuestionsParagraph = "#main-content > div > div > p"
-      val taxCodeSubheading = "#main-content > div > div > dl:nth-child(8) > div:nth-child(1) > dt"
-      val taxCodeValue = "#main-content > div > div > dl:nth-child(8) > div:nth-child(1) > dd.govuk-summary-list__value"
-      val scottishIncomeTax = "#main-content > div > div > dl:nth-child(8) > div:nth-child(2) > dt"
-      val scottishIncomeTaxValue = "#main-content > div > div > dl:nth-child(8) > div:nth-child(2) > dd.govuk-summary-list__value"
+      val additionalQuestionsParagraph  = "#main-content > div > div > p"
+      val taxCodeSubheading             = "#main-content > div > div > dl:nth-child(8) > div:nth-child(1) > dt"
+      val taxCodeValue                  = "#main-content > div > div > dl:nth-child(8) > div:nth-child(1) > dd.govuk-summary-list__value"
+      val scottishIncomeTax             = "#main-content > div > div > dl:nth-child(8) > div:nth-child(2) > dt"
+      val scottishIncomeTaxValue =
+        "#main-content > div > div > dl:nth-child(8) > div:nth-child(2) > dd.govuk-summary-list__value"
       val calculateButton = "#button-get-results"
     }
 
-    lazy val view = youHaveToldUsNewView(youHaveToldUsItems,additionalQuestionItem,Map.empty,taxCodeExists = true)
+    lazy val view = youHaveToldUsNewView(youHaveToldUsItems, additionalQuestionItem, Map.empty, taxCodeExists = true)
     lazy implicit val document: Document = Jsoup.parse(view.body)
 
     "have thwe correct document title" in {

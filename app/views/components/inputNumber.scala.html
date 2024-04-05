@@ -17,29 +17,29 @@
 @this(govukInput: GovukInput)
 
 @(form: Form[_],
-        id: String,
-        name: String,
-        label: String,
-        isPageHeading: Boolean = true,
-        hint: Option[String] = None,
-        classes: Option[String] = None,
-        autoComplete: String = ""
+id: String,
+name: String,
+label: String,
+isPageHeading: Boolean = true,
+hint: Option[String] = None,
+classes: Option[String] = None,
+autoComplete: String = ""
 )(implicit messages: Messages)
 
 @govukInput(Input(
-    id,
-    name,
-    inputmode = Some("numeric"),
-    classes = classes.fold("")(x => x),
-    label = Label(
-        content = Text(messages(label)),
-        isPageHeading = isPageHeading,
-        classes = if(isPageHeading) "govuk-label--xl" else ""
-    ),
-    hint = hint.map(hintKey => Hint(
-        content = HtmlContent(messages(hintKey))
-    )),
-    value = form(name).value,
-    autocomplete = Some(autoComplete),
-    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+id,
+name,
+inputmode = Some("numeric"),
+classes = classes.fold("")(x => x),
+label = Label(
+content = Text(messages(label)),
+isPageHeading = isPageHeading,
+classes = if(isPageHeading) "govuk-label--xl" else ""
+),
+hint = hint.map(hintKey => Hint(
+content = HtmlContent(messages(hintKey))
+)),
+value = form(name).value,
+autocomplete = Some(autoComplete),
+errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
 ))

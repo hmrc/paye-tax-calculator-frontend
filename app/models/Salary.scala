@@ -19,9 +19,11 @@ package models
 import play.api.libs.json._
 
 case class Salary(
-  amount:       BigDecimal,
-  period:       String,
-  howManyAWeek: Option[BigDecimal])
+  amount:               BigDecimal,
+  amountYearly:         Option[BigDecimal],
+  previousAmountYearly: Option[BigDecimal],
+  period:               String,
+  howManyAWeek:         Option[BigDecimal])
 
 object Salary {
 
@@ -29,15 +31,19 @@ object Salary {
 
   implicit lazy val reads: Reads[Salary] = (
     (__ \ "amount").read[BigDecimal] and
+    (__ \ "amountYearly").readNullable[BigDecimal] and
+    (__ \ "previousAmountYearly").readNullable[BigDecimal] and
     (__ \ "period").read[String] and
     (__ \ "how-many-a-week").readNullable[BigDecimal]
-  )(Salary(_, _, _))
+  )(Salary(_, _, _, _, _))
 
   implicit lazy val writes: Writes[Salary] =
     (
       (__ \ "amount").write[BigDecimal] and
+      (__ \ "amountYearly").writeNullable[BigDecimal] and
+      (__ \ "previousAmountYearly").writeNullable[BigDecimal] and
       (__ \ "period").write[String] and
       (__ \ "how-many-a-week").writeNullable[BigDecimal]
-    )(a => (a.amount, a.period, a.howManyAWeek))
+    )(a => (a.amount, a.amountYearly, a.previousAmountYearly, a.period, a.howManyAWeek))
 
 }

@@ -23,13 +23,15 @@ import play.api.data.Form
 import play.api.data.Forms.{mapping, of, optional}
 import play.api.data.format.Formats._
 
-class SalaryFormProvider @Inject()() {
+class SalaryFormProvider @Inject() () {
 
   def apply(): Form[Salary] = Form(
     mapping(
-      "amount"       -> of(CustomFormatters.salaryValidation),
-      "period"       -> of(CustomFormatters.requiredSalaryPeriodFormatter),
-      "how-many-a-week" -> optional(of[BigDecimal])
+      "amount"               -> of(CustomFormatters.salaryValidation),
+      "amountYearly"         -> optional(of[BigDecimal]),
+      "previousAmountYearly" -> optional(of[BigDecimal]),
+      "period"               -> of(CustomFormatters.requiredSalaryPeriodFormatter),
+      "how-many-a-week"      -> optional(of[BigDecimal])
     )(Salary.apply)(Salary.unapply)
   )
 }

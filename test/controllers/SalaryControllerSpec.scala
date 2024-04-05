@@ -46,7 +46,7 @@ class SalaryControllerSpec
     with ScalaFutures
     with IntegrationPatience
     with MockitoSugar
-      with CSRFTestHelper {
+    with CSRFTestHelper {
 
   val formProvider = new SalaryFormProvider()
   val form         = formProvider()
@@ -541,7 +541,9 @@ class SalaryControllerSpec
 
         status(result) mustEqual OK
 
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(view(formFilled)(request, messagesThing(application)).toString)
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(formFilled)(request, messagesThing(application)).toString
+        )
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
@@ -572,7 +574,7 @@ class SalaryControllerSpec
         status(result) mustEqual OK
 
         removeCSRFTagValue(contentAsString(result)) mustEqual
-          removeCSRFTagValue(view(form)(request, messagesThing(application)).toString)
+        removeCSRFTagValue(view(form)(request, messagesThing(application)).toString)
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
