@@ -18,77 +18,77 @@
 @import play.api.i18n._
 
 @this(
-govuk_wrapper: templates.GovukLayoutWrapper,
-formHelper: FormWithCSRF,
-errorSummary: components.errorSummary,
-link: components.linkNewTab,
-inputRadio: components.inputRadio,
-button: components.button,
-beforeContent: components.beforeContent,
-appConfig: config.AppConfig,
-details: components.details,
-features: config.features.Features
+        govuk_wrapper: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        link: components.linkNewTab,
+        inputRadio: components.inputRadio,
+        button: components.button,
+        beforeContent: components.beforeContent,
+        appConfig: config.AppConfig,
+        details: components.details,
+        features: config.features.Features
 )
 
 @(overStatePensionAgeForm: Form[StatePension], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
 @labels = @{
-List(Messages("quick_calc.salary.yearly.sub_label"),
-Messages("quick_calc.salary.monthly.sub_label"),
-Messages("quick_calc.salary.weekly.sub_label"),
-Messages("quick_calc.salary.daily.sub_label"),
-Messages("quick_calc.salary.hourly.sub_label"),
-Messages("quick_calc.salary.fourWeeks.sub_label"))
+    List(Messages("quick_calc.salary.yearly.sub_label"),
+        Messages("quick_calc.salary.monthly.sub_label"),
+        Messages("quick_calc.salary.weekly.sub_label"),
+        Messages("quick_calc.salary.daily.sub_label"),
+        Messages("quick_calc.salary.hourly.sub_label"),
+        Messages("quick_calc.salary.fourWeeks.sub_label"))
 }
 
 @radioFieldStatePension = @{
-overStatePensionAgeForm("overStatePensionAge")
+    overStatePensionAgeForm("overStatePensionAge")
 }
 
 @pensionAgeRadios = @{
-Seq(
-RadioItem(
-content = Text(Messages("quick_calc.over_state_pension_age.yes")),
-label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
-value = Some("true"),
-checked = radioFieldStatePension.value.contains("true")
-),
-RadioItem(
-content = Text(Messages("quick_calc.over_state_pension_age.no")),
-label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
-value = Some("false"),
-checked = radioFieldStatePension.value.contains("false"))
-)
+    Seq(
+        RadioItem(
+            content = Text(Messages("quick_calc.over_state_pension_age.yes")),
+            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
+            value = Some("true"),
+            checked = radioFieldStatePension.value.contains("true")
+        ),
+        RadioItem(
+            content = Text(Messages("quick_calc.over_state_pension_age.no")),
+            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
+            value = Some("false"),
+            checked = radioFieldStatePension.value.contains("false"))
+    )
 }
 
 @backButtonUrl = @{
-s"${youHaveToldUsItems.flatMap((y: YouHaveToldUsItem) => if(labels.contains(y.label)) y.url else "").mkString}"
+    s"${youHaveToldUsItems.flatMap((y: YouHaveToldUsItem) => if(labels.contains(y.label)) y.url else "").mkString}"
 }
 
 @govuk_wrapper(Some(title(overStatePensionAgeForm, Messages("quick_calc.over_state_pension_age.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-@formHelper(action = controllers.routes.StatePensionController.submitStatePensionForm) {
+    @formHelper(action = controllers.routes.StatePensionController.submitStatePensionForm) {
 
-@errorSummary(overStatePensionAgeForm.errors)
+        @errorSummary(overStatePensionAgeForm.errors)
 
-@inputRadio(
-form = overStatePensionAgeForm,
-legendKey = "quick_calc.over_state_pension_age.header",
-name = "overStatePensionAge",
-items = pensionAgeRadios
-)
+        @inputRadio(
+            form = overStatePensionAgeForm,
+            legendKey = "quick_calc.over_state_pension_age.header",
+            name = "overStatePensionAge",
+            items = pensionAgeRadios
+        )
 
-@details(
-summaryText = if(features.newScreenContentFeature()) Messages("label.state-pension-details") else Messages("label.state-pension-details.old")
-) {
-@if(features.newScreenContentFeature()) {
-<p>@Messages("quick_calc.salary.question.state_pension_info")</p>
-}
-<p>@Messages("quick_calc.salary.question.state_pension_url_a") @link(appConfig.checkStatePensionAge,
-    "quick_calc.salary.question.state_pension_url_b") @Messages("quick_calc.salary.question.state_pension_url_c")
-</p>
-}
+        @details(
+            summaryText = if(features.newScreenContentFeature()) Messages("label.state-pension-details") else Messages("label.state-pension-details.old")
+        ) {
+            @if(features.newScreenContentFeature()) {
+                <p>@Messages("quick_calc.salary.question.state_pension_info")</p>
+            }
+            <p>@Messages("quick_calc.salary.question.state_pension_url_a") @link(appConfig.checkStatePensionAge,
+            "quick_calc.salary.question.state_pension_url_b") @Messages("quick_calc.salary.question.state_pension_url_c")
+            </p>
+        }
 
-@button("continue", Some("button-continue"))
-}
+        @button("continue", Some("button-continue"))
+    }
 }

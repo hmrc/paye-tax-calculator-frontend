@@ -18,4 +18,4 @@
 
 @(link: String, messageKey: String, id: Option[String] = None, endWithFullStop: Boolean = false)(implicit messages: Messages)
 
-<a href="@link" class="govuk-link" @id.map(x=> s"id=$x")>@messages(messageKey)</a>@if(endWithFullStop) {.}
+<a href="@link" class="govuk-link" @id.map(x => s"id=$x")>@messages(messageKey)</a>@if(endWithFullStop) {.}

@@ -17,40 +17,40 @@
 @import play.api.i18n._
 
 @this(govuk_wrapper: templates.GovukLayoutWrapper,
-formHelper: FormWithCSRF,
-errorSummary: components.errorSummary,
-h1: components.h1,
-p: components.p,
-inputNumber: components.inputNumber,
-inputHidden: components.inputHidden,
-button: components.button,
-beforeContent: components.beforeContent
+        formHelper: FormWithCSRF,
+        errorSummary: components.errorSummary,
+        h1: components.h1,
+        p: components.p,
+        inputNumber: components.inputNumber,
+        inputHidden: components.inputHidden,
+        button: components.button,
+        beforeContent: components.beforeContent
 )
 
 @(hoursForm: Form[Hours], value: BigDecimal)(implicit request: Request[_], messages: Messages)
 
 @govuk_wrapper(Some(title(hoursForm, Messages("quick_calc.salary.question.hours_a_week"))), beforeContentBlock = beforeContent("/estimate-paye-take-home-pay/your-pay")) {
 
-@formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek((value * 100.0).toInt)) {
-@errorSummary(hoursForm.errors)
+    @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek((value * 100.0).toInt)) {
+        @errorSummary(hoursForm.errors)
 
-@inputNumber(hoursForm,
-id = "how-many-a-week",
-name = "how-many-a-week",
-label = "quick_calc.salary.question.hours_a_week",
-hint = Some("quick_calc.salary.question.approximate"),
-classes = Some("govuk-input--width-10")
-)
+        @inputNumber(hoursForm,
+            id = "how-many-a-week",
+            name = "how-many-a-week",
+            label = "quick_calc.salary.question.hours_a_week",
+            hint = Some("quick_calc.salary.question.approximate"),
+            classes = Some("govuk-input--width-10")
+        )
 
-@inputHidden(hoursForm,
-id = "num-hours",
-name = "amount",
-label = "",
-isPageHeading = false,
-value = Some(value.toString()),
-classes = Some("govuk-input--width-10")
-)
+        @inputHidden(hoursForm,
+            id = "num-hours",
+            name = "amount",
+            label = "",
+            isPageHeading = false,
+            value = Some(value.toString()),
+            classes = Some("govuk-input--width-10")
+        )
 
-@button("continue", Some("button-continue"))
-}
+        @button("continue", Some("button-continue"))
+    }
 }

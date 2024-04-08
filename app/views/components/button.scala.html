@@ -18,6 +18,6 @@
 
 @(msg: String, id: Option[String])(implicit messages: Messages)
 
-@govukButton(Button(content = Text(messages(msg)),
-attributes = id.map(id => Map("id" -> id)).getOrElse(Map.empty)
-))
+    @govukButton(Button(content = Text(messages(msg)),
+        attributes = id.map(id => Map("id" -> id)).getOrElse(Map.empty)
+    ))
