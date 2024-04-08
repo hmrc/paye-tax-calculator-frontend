@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import play.api.libs.json.{Format, Json}
 
-case class PensionContributions(
-                                 pensionContributionsPercentage: Double
-                               )
+import mappings.CustomFormatters
 
-object PensionContributions {
+import javax.inject.Inject
+import models.{PensionContributions, Salary}
+import models.PensionContributions.pensionPercentage
+import play.api.data.Form
+import play.api.data.Forms.{mapping, of, optional}
+import play.api.data.format.Formats._
 
-  implicit val format:Format[PensionContributions] = Json.format[PensionContributions]
-  val pensionPercentage = "pensionPercentage"
+class PensionContributionFormProvider @Inject() () {
+
+  def apply(): Form[PensionContributions] = Form(
+    mapping(
+      pensionPercentage -> of(CustomFormatters.pensionPercentageFormatter)
+    )(PensionContributions.apply)(PensionContributions.unapply)
+  )
 
 }

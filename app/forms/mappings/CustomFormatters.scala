@@ -375,11 +375,11 @@ object CustomFormatters {
         Map(key -> value.getOrElse(""))
     }
 
-  def pensionPercentageFormatter: Formatter[Option[String]] =
-    new Formatter[Option[String]] {
+  def pensionPercentageFormatter: Formatter[Double] =
+    new Formatter[Double] {
       override def bind(
                          key: String,
-                         data: Map[String, String]): Either[Seq[FormError], Option[String]] =
+                         data: Map[String, String]): Either[Seq[FormError], Double] =
         data.get(pensionPercentage)
           .filter(_.nonEmpty)
           .map(_.replaceAll("/%","")) match {
@@ -396,14 +396,14 @@ object CustomFormatters {
                   )
                 )
               } else {
-                Right(Some(strippedValue))
+                Right(strippedValue.toDouble)
               }
 
             }
 
         }
 
-      override def unbind(key: String, value: Option[String]): Map[String, String] = ???
+      override def unbind(key: String, value: Double): Map[String, String] = Map(key -> value.toString)
     }
 
 }

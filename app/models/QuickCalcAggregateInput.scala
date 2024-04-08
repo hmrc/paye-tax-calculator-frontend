@@ -80,6 +80,6 @@ case class QuickCalcAggregateInput(
 }
 
 object QuickCalcAggregateInput {
-  def newInstance:     QuickCalcAggregateInput          = QuickCalcAggregateInput(None, None, None, None, None)
+  def newInstance:     QuickCalcAggregateInput          = QuickCalcAggregateInput(None, None, None, None, None, None)
   implicit val format: OFormat[QuickCalcAggregateInput] = Json.format[QuickCalcAggregateInput]
 }
