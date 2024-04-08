@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-sbt -Dplay.http.router=testOnly.Routes run
+sbt -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes run
