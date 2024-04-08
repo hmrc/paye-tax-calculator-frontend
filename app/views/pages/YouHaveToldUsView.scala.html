@@ -22,47 +22,47 @@
 @import config.AppConfig
 
 @this(
-govukTemplate: templates.GovukLayoutWrapper,
-h1: components.h1,
-govukBackLink: GovukBackLink,
-formHelper: FormWithCSRF,
-button: components.button,
-govukSummaryList: GovukSummaryList,
-beforeContent: components.beforeContent
+        govukTemplate: templates.GovukLayoutWrapper,
+        h1: components.h1,
+        govukBackLink: GovukBackLink,
+        formHelper: FormWithCSRF,
+        button: components.button,
+        govukSummaryList: GovukSummaryList,
+        beforeContent: components.beforeContent
 )
 
 @(items: List[YouHaveToldUsItem])(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 
 @rows = @{
-items.map { item =>
-SummaryListRow(
-key = Key(content = Text(Messages(s"quick_calc.you_have_told_us.${item.label}.label"))),
-value = Value(content = Text(item.value)),
-actions = Some(Actions(
-items = Seq(
-ActionItem(
-href = item.url,
-content = Text(Messages("quick_calc.you_have_told_us.edit")),
-visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
-attributes = Map("id" -> s"change-${item.label}-link")
-)
-)
-))
-)
-}.toSeq
+    items.map { item =>
+        SummaryListRow(
+            key = Key(content = Text(Messages(s"quick_calc.you_have_told_us.${item.label}.label"))),
+            value = Value(content = Text(item.value)),
+            actions = Some(Actions(
+                items = Seq(
+                    ActionItem(
+                        href = item.url,
+                        content = Text(Messages("quick_calc.you_have_told_us.edit")),
+                        visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+                        attributes = Map("id" -> s"change-${item.label}-link")
+                    )
+                )
+            ))
+        )
+    }.toSeq
 }
 
 @backButtonUrl = @{
-s"${getGoBackLink(items)}"
+    s"${getGoBackLink(items)}"
 }
 
 @govukTemplate(Some(titleNoForm(Messages("quick_calc.you_have_told_us.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-@h1("quick_calc.you_have_told_us.header")
+    @h1("quick_calc.you_have_told_us.header")
 
-@govukSummaryList(SummaryList(rows = rows))
+    @govukSummaryList(SummaryList(rows = rows))
 
-@formHelper(action = routes.ShowResultsController.showResult) {
-@button("get_results", Some("button-get-results"))
-}
+    @formHelper(action = routes.ShowResultsController.showResult) {
+        @button("get_results", Some("button-get-results"))
+    }
 }

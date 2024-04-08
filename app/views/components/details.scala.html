@@ -22,15 +22,15 @@ classes: Option[String] = None
 )(content: Html)
 
 <div class="form-group">
-    <details
-            class="govuk-details @if(classes){@classes}">
-        <summary class="govuk-details__summary">
+  <details
+          class="govuk-details @if(classes){@classes}">
+    <summary class="govuk-details__summary">
       <span class="govuk-details__summary-text">
         @summaryText
       </span>
-        </summary>
-        <div class="govuk-details__text">
-            @content
-        </div>
-    </details>
+    </summary>
+    <div class="govuk-details__text">
+      @content
+    </div>
+  </details>
 </div>

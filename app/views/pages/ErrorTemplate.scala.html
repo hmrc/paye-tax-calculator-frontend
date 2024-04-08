@@ -15,16 +15,16 @@
  *@
 
 @this(
-govuk_wrapper: templates.GovukLayoutWrapper,
-h1: components.h1
+        govuk_wrapper: templates.GovukLayoutWrapper,
+        h1: components.h1
 )
 
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
 
 @govuk_wrapper(Some(titleNoForm(pageTitle))) {
 
-@h1(messages(heading))
+    @h1(messages(heading))
 
-<p class="govuk-body">@messages(message)</p>
+    <p class="govuk-body">@messages(message)</p>
 
 }

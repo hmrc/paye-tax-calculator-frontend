@@ -19,23 +19,23 @@
 @import views.html.components.beforeContent
 
 @this(
-govuk_wrapper: templates.GovukLayoutWrapper,
-formHelper: FormWithCSRF,
-h1: components.h1,
-button: components.button,
-beforeContent: components.beforeContent
+        govuk_wrapper: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        h1: components.h1,
+        button: components.button,
+        beforeContent: components.beforeContent
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @govuk_wrapper(Some(titleNoForm(Messages("reset.h1"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = false, timeout = false) {
 
-@h1("reset.h1")
+    @h1("reset.h1")
 
-<div>
+    <div>
 
     @formHelper(action = controllers.routes.QuickCalcController.restartQuickCalc) {
-    @button("restart", Some("restart-button")
-    )
+        @button("restart", Some("restart-button")
+        )
     }
-    }
+}
