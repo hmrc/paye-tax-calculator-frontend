@@ -64,17 +64,21 @@ class DaysPerWeekController @Inject() (
         days => {
           val currentYearlyAmount: BigDecimal =
             TaxResult.convertWagesToYearly(value, Messages("quick_calc.salary.daily.label"), Some(days.howManyAWeek))
+          val monthlyAmount: BigDecimal = TaxResult.convertWagesToMonthly(currentYearlyAmount)
           val updatedAggregate = cache
             .fetchAndGetEntry()
             .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
             .map(oldAggregate =>
               oldAggregate.copy(
                 savedSalary = Some(
-                  Salary(value,
-                         Some(currentYearlyAmount),
-                         oldAggregate.savedSalary.flatMap(_.amountYearly),
-                         Messages("quick_calc.salary.daily.label"),
-                         Some(days.howManyAWeek))
+                  Salary(
+                    value,
+                    Some(currentYearlyAmount),
+                    oldAggregate.savedSalary.flatMap(_.amountYearly),
+                    Messages("quick_calc.salary.daily.label"),
+                    Some(days.howManyAWeek),
+                    Some(monthlyAmount)
+                  )
                 ),
                 savedPeriod =
                   Some(PayPeriodDetail(value, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))

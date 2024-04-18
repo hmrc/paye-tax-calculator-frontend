@@ -34,7 +34,7 @@
         beforeContent: components.beforeContent
 )
 
-@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
+@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 
 @rows = @{
     items.map { item =>
@@ -80,8 +80,47 @@
                 attributes = Map("id" -> s"change-${item.label}-link")
             ),
     )
-    } else {
+    } else if(item.label == "about_pensions_contributions" && !pensionContributionsExists){
             Seq(
+                ActionItem(
+                href = item.url,
+                content = Text(Messages("quick_calc.you_have_told_us.taxCode.add")),
+                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
+                attributes = Map("id" -> s"change-${item.label}-link")
+            )
+    )
+            } else if(givenPensionPercentage && item.label == "about_pensions_contributions") {
+            Seq(
+                ActionItem(
+                href = item.url,
+                content = Text(Messages("quick_calc.you_have_told_us.edit")),
+                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+                attributes = Map("id" -> s"change-${item.label}-link")
+            ),
+            ActionItem(
+                href = controllers.routes.RemoveItemController.showRemoveItemForm("pension-contributions").url,
+                content = Text(Messages("quick_calc.you_have_told_us.taxCode.remove")),
+                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+                attributes = Map("id" -> s"change-${item.label}-link")
+            ),
+            )
+            } else if(!givenPensionPercentage && item.label == "about_pensions_contributions"){
+            Seq(
+                ActionItem(
+                href = controllers.routes.PensionContributionsFixedController.showPensionContributionForm.url,
+                content = Text(Messages("quick_calc.you_have_told_us.edit")),
+                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+                attributes = Map("id" -> s"change-${item.label}-link")
+            ),
+                ActionItem(
+                href = controllers.routes.RemoveItemController.showRemoveItemForm("pension-contributions").url,
+                content = Text(Messages("quick_calc.you_have_told_us.taxCode.remove")),
+                visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+                attributes = Map("id" -> s"change-${item.label}-link")
+            ),
+        )
+            } else {
+                Seq(
                 ActionItem(
                 href = item.url,
                 content = Text(Messages("quick_calc.you_have_told_us.edit")),

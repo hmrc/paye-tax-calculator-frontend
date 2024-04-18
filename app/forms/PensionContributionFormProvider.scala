@@ -20,8 +20,8 @@ package forms
 import mappings.CustomFormatters
 
 import javax.inject.Inject
-import models.{PensionContributions, Salary}
-import models.PensionContributions.pensionPercentage
+import models.{PensionContributions, QuickCalcAggregateInput, Salary}
+import models.PensionContributions._
 import play.api.data.Form
 import play.api.data.Forms.{mapping, of, optional}
 import play.api.data.format.Formats._
@@ -30,7 +30,9 @@ class PensionContributionFormProvider @Inject() () {
 
   def apply(): Form[PensionContributions] = Form(
     mapping(
-      pensionPercentage -> of(CustomFormatters.pensionPercentageFormatter)
+      gaveUsPensionPercentage -> of[Boolean],
+      monthlyPensionContribution -> of(CustomFormatters.pensionContributionFormatter()),
+      yearlyContributionAmount -> optional(of[BigDecimal])
     )(PensionContributions.apply)(PensionContributions.unapply)
   )
 

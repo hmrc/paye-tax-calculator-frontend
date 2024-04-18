@@ -16,6 +16,7 @@
 
 package models
 
+import org.scalatest.Assertion
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.libs.json.{Json, Writes}
@@ -24,9 +25,9 @@ class SalarySerializationSpec extends AnyWordSpecLike with Matchers {
 
   "Salary marshalling" should {
     "work for all salary types" in {
-      jsonOf(Salary(1, None, None, "yearly", None))  shouldBe yearlyJson
-      jsonOf(Salary(1, None, None, "monthly", None)) shouldBe monthlyJson
-      jsonOf(Salary(1, None, None, "weekly", None))  shouldBe weeklyJson
+      jsonOf(Salary(1, None, None, "yearly", None, None))  shouldBe yearlyJson
+      jsonOf(Salary(1, None, None, "monthly", None, None)) shouldBe monthlyJson
+      jsonOf(Salary(1, None, None, "weekly", None, None))  shouldBe weeklyJson
       jsonOf(Days(1, 2))                             shouldBe dailyJson
       jsonOf(Hours(1, 2))                            shouldBe hourlyJson
     }
@@ -50,10 +51,10 @@ class SalarySerializationSpec extends AnyWordSpecLike with Matchers {
 
   def jsonOf[T: Writes](t: T): String = Json.stringify(Json.toJson(t))
 
-  def unmarshalAndVerifyType[T](s:     String)(implicit m: Manifest[T]) = Json.parse(s).as[Salary] shouldBe a[T]
-  def unmarshalAndVerifyTypeDay[T](s:  String)(implicit m: Manifest[T]) = Json.parse(s).as[Days]   shouldBe a[T]
-  def unmarshalAndVerifyTypeHour[T](s: String)(implicit m: Manifest[T]) = Json.parse(s).as[Hours]  shouldBe a[T]
+  def unmarshalAndVerifyType[T](s:     String)(implicit m: Manifest[T]): Assertion = Json.parse(s).as[Salary] shouldBe a[T]
+  def unmarshalAndVerifyTypeDay[T](s:  String)(implicit m: Manifest[T]): Assertion = Json.parse(s).as[Days]   shouldBe a[T]
+  def unmarshalAndVerifyTypeHour[T](s: String)(implicit m: Manifest[T]): Assertion = Json.parse(s).as[Hours]  shouldBe a[T]
 
-  def unmarshal(s: String) = Json.parse(s).as[Salary]
+  def unmarshal(s: String): Salary = Json.parse(s).as[Salary]
 
 }

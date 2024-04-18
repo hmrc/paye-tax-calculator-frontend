@@ -18,13 +18,13 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class PensionContributions(
-                                 pensionContributionsPercentage: Double
-                               )
+  case class  PensionContributions(gaveUsPercentageAmount: Boolean = false, monthlyContributionAmount: Option[BigDecimal], yearlyContributionAmount: Option[BigDecimal])
 
 object PensionContributions {
 
-  implicit val format:Format[PensionContributions] = Json.format[PensionContributions]
-  val pensionPercentage = "pensionPercentage"
+  implicit val format: Format[PensionContributions] = Json.format[PensionContributions]
+  val yearlyContributionAmount = "contributionAmount"
+  val gaveUsPensionPercentage = "gaveUsPensionPercentage"
+  val monthlyPensionContribution = "monthlyPensionContributions"
 
 }

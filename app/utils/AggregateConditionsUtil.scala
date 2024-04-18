@@ -26,8 +26,17 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class AggregateConditionsUtil @Inject() (defaultTaxCodeProvider: DefaultTaxCodeProvider) {
 
+  def isPensionsDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
+    aggregateInput.savedPensionContributions.isDefined
+
   def isTaxCodeDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedTaxCode.flatMap(_.taxCode).isDefined
+
+  def isPensionContributionsDefined(aggregateInput: QuickCalcAggregateInput) : Boolean =
+    aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).isDefined
+
+  def givenPensionContributionPercentage(aggregateInput: QuickCalcAggregateInput) : Boolean =
+    aggregateInput.savedPensionContributions.exists(_.gaveUsPercentageAmount)
 
   def taxCodeContainsS(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedTaxCode.flatMap(_.taxCode.map(_.contains("S"))).getOrElse(false)

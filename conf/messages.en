@@ -51,6 +51,8 @@ quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=What is your tax code? (Optional)
 quick_calc.you_have_told_us.about_tax_code.label.newTitle=What is your tax code?
+quick_calc.you_have_told_us.about_pension_contributions.label=How much are your monthly pension contributions?
+quick_calc.you_have_told_us.about_pensions_contributions.label.new= Pension contributions
 quick_calc.you_have_told_us.about_tax_code.label.new=Tax Code
 quick_calc.you_have_told_us.about_tax_code.no=No
 quick_calc.you_have_told_us.about_tax_code.yes=Yes
@@ -60,7 +62,7 @@ quick_calc.you_have_told_us.about_tax_code.default.not.provided=Not provided
 quick_calc.you_have_told_us.taxCode.add=Add
 quick_calc.you_have_told_us.taxCode.remove=Remove
 
-quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
+quick_calc.you_have_told_us.scottish_rate.label=Do you pay the   Scottish Income Tax rate?
 quick_calc.you_have_told_us.scottish_rate.label.new=Scottish Income Tax
 quick_calc.you_have_told_us.scottish_rate.yes=Yes
 quick_calc.you_have_told_us.scottish_rate.no=No
@@ -121,6 +123,7 @@ quick_calc.result.adjusted.head=What is adjusted Income Tax?
 quick_calc.result.adjusted.info=HMRC can’t take more than 50% of your total pay to cover Income Tax. Your estimated Income Tax is more than 50% in this case, so we’ve adjusted it to reflect this limit.
 quick_calc.result.gross.income= Gross income
 quick_calc.result.personal_allowance= Personal Allowance
+quick_calc.result.pension_contributions= Pension Contributions
 quick_calc.result.taxable_income= Taxable Income
 quick_calc.result.take_home_pay= Take-home pay
 quick_calc.result.incomeTaxPercentage= Income Tax at
@@ -184,6 +187,7 @@ quick_calc.salary.amount.label=Amount paid
 quick_calc.salary.grossAmount.label=Gross amount, in pounds
 
 quick_calc.remove_tax_code_error=Select yes if you want to remove your tax code
+quick_calc.remove_pensions_contributions_error= Select yes if you want to remove your pension contributions
 
 quick_calc.salary.yearly.sub_label=a_year
 quick_calc.salary.monthly.sub_label=a_month
@@ -286,12 +290,22 @@ quick_calc.tax_code.over_hundred_thousand.warning = This tax code is not usually
 quick_calc.tax_code.scottish_rate.warning = You've used a Scottish tax code so we will apply Scottish Income Tax rates.
 quick_calc.scottish_rate.payScottishRate.warning = You said you pay Scottish Income Tax so we will apply Scottish Income Tax rates.
 
-quick_calc.remove.taxcode = Are you sure you want to remove your tax code
+quick_calc.remove.taxcode = Are you sure you want to remove your tax code?
+quick_calc.remove.pension-contributions = Are you sure you want to remove your pension contributions?
 
 quick_calc.results.disclaimer = We have not reduced your Personal Allowance. If you earn over £100,000, you must enter your tax code for that job to get the most accurate results.
 
 quick_calc.results.opening = Your take-home pay will be lower than the estimate shown. This is because of changes to National Insurance in January 2024.
 
+quick_calc.pensionContributionsPercentage.subheading = Enter this as a percentage of your income. Do not include any contributions from your employer.
+quick_calc.pensionContributionsPercentage.hint = For example, 5% or 6.23%
+quick_calc.pensionContributionsPercentage.input.heading = Percentage amount
+quick_calc.pensionContributionsPercentage.link = You can tell us the amount in pounds if you prefer.
+quick_calc.pensionContributionsFixed.subheading = Do not include any contributions from your employer.
+quick_calc.pensionContributionsFixed.hint = For example, £100 or £200.50
+quick_calc.pensionContributionsFixed.input.heading = Amount in pounds
+quick_calc.pensionContributionsFixed.link = You can tell us this as a percentage of your income if you prefer.
+quick_calc.pensionContributionsFixed.warning = Your monthly pension contributions must be less than £{0} (your monthly gross income)
 
 #######################################################
 ## Beta Banner

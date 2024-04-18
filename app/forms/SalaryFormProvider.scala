@@ -31,7 +31,8 @@ class SalaryFormProvider @Inject() () {
       "amountYearly"         -> optional(of[BigDecimal]),
       "previousAmountYearly" -> optional(of[BigDecimal]),
       "period"               -> of(CustomFormatters.requiredSalaryPeriodFormatter),
-      "how-many-a-week"      -> optional(of[BigDecimal])
+      "how-many-a-week"      -> optional(of[BigDecimal]),
+      "monthlyAmount"        -> optional(of[BigDecimal])
     )(Salary.apply)(Salary.unapply)
   )
 }

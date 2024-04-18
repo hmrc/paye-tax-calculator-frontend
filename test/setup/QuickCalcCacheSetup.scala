@@ -18,7 +18,7 @@ package setup
 
 import akka.Done
 import forms.YouHaveToldUsItem
-import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary, ScottishRate, StatePension, UserTaxCode}
+import models.{PayPeriodDetail, PensionContributions, QuickCalcAggregateInput, Salary, ScottishRate, StatePension, UserTaxCode}
 import play.api.i18n.Messages
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
@@ -94,11 +94,13 @@ object QuickCalcCacheSetup {
   val cacheTestScottishYES                     = Some(ScottishRate(true, true))
   val cacheTestStatePensionYES                 = Some(StatePension(true))
   val cacheTestStatusPensionNO                 = Some(StatePension(false))
-  val cacheTestYearlySalary                    = Some(Salary(20000, None, None, "a year", None))
-  val cacheTestYearlyOverHundredThoudandSalary = Some(Salary(100003, None, None, "a year", None))
-  val cacheTestDailySalary                     = Some(Salary(40, None, None, "a day", None))
-  val cacheTestHourlySalary                    = Some(Salary(8.5, None, None, "an hour", None))
+  val cacheTestYearlySalary                    = Some(Salary(20000, None, None, "a year", None, None))
+  val cacheTestYearlyOverHundredThoudandSalary = Some(Salary(100003, None, None, "a year", None, None))
+  val cacheTestDailySalary                     = Some(Salary(40, None, None, "a day", None, None))
+  val cacheTestHourlySalary                    = Some(Salary(8.5, None, None, "an hour", None, None))
   val cacheTestSalaryPeriodDaily               = Some(PayPeriodDetail(1, 5, "a day", ""))
+  val cacheTestPensionFixedContributions       = Some(PensionContributions(false, Some(50), Some(600)))
+  val cacheTestPensionPecentageContributions   = Some(PensionContributions(true, Some(50), None))
 
   val cacheTestSalaryPeriodHourly = Some(
     PayPeriodDetail(8.5, 40, "an hour", "")
@@ -120,6 +122,26 @@ object QuickCalcCacheSetup {
       savedSalary                = cacheTestYearlySalary,
       savedIsOverStatePensionAge = cacheTestStatePensionYES,
       savedTaxCode               = cacheTestTaxCode
+    )
+  )
+
+  val cacheSalaryTaxCodeSavedPensionContributionsFixed = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlySalary,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedTaxCode               = cacheTestTaxCode,
+      savedScottishRate          = cacheTestScottishNO,
+      savedPensionContributions  = cacheTestPensionFixedContributions
+    )
+  )
+
+  val cacheSalaryTaxCodeSavedPensionContributionsPercentage = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlySalary,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedTaxCode               = cacheTestTaxCode,
+      savedScottishRate          = cacheTestScottishNO,
+      savedPensionContributions  = cacheTestPensionPecentageContributions
     )
   )
 
@@ -254,8 +276,15 @@ object QuickCalcCacheSetup {
   val expectedInvalidTaxCodeErrorMessage =
     "Enter a tax code in the correct format, for example 1117L, K497, S1117L or SK497"
 
+  val expectedInvalidPensionsErrorMessage =
+    "Enter your monthly pension contributions amount in the correct format"
+
+  val expectedInvalidPensionTwoDecimalPlaces =
+    "Your monthly pension contributions can only include pounds and pence"
+
   val expectedPrefixTaxCodeErrorMessage =
     "Enter a tax code that starts with the letters S, K, SK, C or CK followed by numbers"
+
 
   val expectedEmptyTaxCodeErrorMessage =
     "Enter your current tax code or change your answer to ‘No’"

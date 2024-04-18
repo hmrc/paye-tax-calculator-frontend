@@ -25,6 +25,12 @@ POST        /tax-code              controllers.TaxCodeController.submitTaxCodeFo
 GET         /remove                controllers.RemoveItemController.showRemoveItemForm(option: String)
 POST        /remove                controllers.RemoveItemController.submitRemoveItemForm(option: String)
 
+GET         /amount-contributions-percentage  controllers.PensionContributionsPercentageController.showPensionContributionForm
+POST        /amount-contributions-percentage controllers.PensionContributionsPercentageController.submitPensionContribution
+
+GET         /amount-contributions-fixed  controllers.PensionContributionsFixedController.showPensionContributionForm
+POST        /amount-contributions-fixed  controllers.PensionContributionsFixedController.submitPensionContribution
+
 GET         /your-answers          controllers.YouHaveToldUsController.summary
 
 GET         /check-your-answers    controllers.YouHaveToldUsNewController.summary

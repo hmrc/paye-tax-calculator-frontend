@@ -17,7 +17,7 @@
 package models
 
 import config.AppConfig
-import forms.AdditionalQuestionItem.{scottishIncomeFormat, taxCodeFormat}
+import forms.AdditionalQuestionItem.{pensionContributionsFormat, scottishIncomeFormat, taxCodeFormat}
 import forms.{AdditionalQuestion, AdditionalQuestionItem, YouHaveToldUs, YouHaveToldUsItem}
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
@@ -64,7 +64,8 @@ case class QuickCalcAggregateInput(
     if (appConfig.features.newScreenContentFeature()) {
       List(
         AdditionalQuestionItem(savedTaxCode),
-        AdditionalQuestionItem(savedScottishRate)
+        AdditionalQuestionItem(savedScottishRate),
+        AdditionalQuestionItem(savedPensionContributions)
       )
     } else {
       List.empty

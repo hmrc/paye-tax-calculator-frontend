@@ -42,10 +42,12 @@ class YouHaveToldUsNewViewSpec extends BaseSpec {
       val scottishIncomeTax             = "#main-content > div > div > dl:nth-child(8) > div:nth-child(2) > dt"
       val scottishIncomeTaxValue =
         "#main-content > div > div > dl:nth-child(8) > div:nth-child(2) > dd.govuk-summary-list__value"
+      val pensionContributions = "#main-content > div > div > dl:nth-child(8) > div:nth-child(3) > dt"
+      val pensionContributionsValue = "#main-content > div > div > dl:nth-child(8) > div:nth-child(3) > dd.govuk-summary-list__value"
       val calculateButton = "#button-get-results"
     }
 
-    lazy val view = youHaveToldUsNewView(youHaveToldUsItems, additionalQuestionItem, Map.empty, taxCodeExists = true)
+    lazy val view = youHaveToldUsNewView(youHaveToldUsItems, additionalQuestionItem, Map.empty, taxCodeExists = true, pensionContributionsExists = true, givenPensionPercentage = true )
     lazy implicit val document: Document = Jsoup.parse(view.body)
 
     "have thwe correct document title" in {
@@ -98,6 +100,14 @@ class YouHaveToldUsNewViewSpec extends BaseSpec {
 
     "have a value of Scottish Income Tax set to No" in {
       elementText(Selectors.scottishIncomeTaxValue) mustBe "No"
+    }
+
+    "have a subheading that says Pension Contributions" in {
+      elementText(Selectors.pensionContributions) mustBe "Pension contributions"
+    }
+
+    "have a value of Pension contributions set to 43% a month" in {
+      elementText(Selectors.pensionContributionsValue) mustBe "43% a month"
     }
 
     "have a calculate take home pay button" in {

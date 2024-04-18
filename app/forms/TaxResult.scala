@@ -18,10 +18,12 @@ package forms
 
 import models.{QuickCalcAggregateInput, UserTaxCode}
 import uk.gov.hmrc.calculator.Calculator
-import uk.gov.hmrc.calculator.model.{BandBreakdown, CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod}
+import uk.gov.hmrc.calculator.model.pension.AnnualPensionMethod
+import uk.gov.hmrc.calculator.model.{BandBreakdown, CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod, TaxYear}
 import uk.gov.hmrc.calculator.utils.PayPeriodExtensionsKt
 import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
+import utils.GetCurrentTaxYear.getTaxYear
 
 import scala.jdk.CollectionConverters._
 import scala.math.BigDecimal.RoundingMode
@@ -36,8 +38,8 @@ object TaxResult {
   def extractIncomeTax(response: CalculatorResponsePayPeriod): BigDecimal =
     response.getTaxToPay
 
-  def extractTaperingDeductions(response: CalculatorResponsePayPeriod): BigDecimal =
-    response.getTaperingAmountDeduction
+  def extractPensionContributions(response: CalculatorResponsePayPeriod): Double =
+    response.getPensionContribution
 
   def incomeTaxBands(response: CalculatorResponsePayPeriod): Map[Double, Double] =
     Option(response.getTaxBreakdown) match {
@@ -65,6 +67,19 @@ object TaxResult {
       extractHours(quickCalcAggregateInput) match {
         case Some(number) => number.toDouble
         case None         => null
+      },
+      extractTaxYear(getTaxYear),
+      extractPensionMethod(quickCalcAggregateInput) match {
+        case Some(pensionMethod) => pensionMethod
+        case None                => null
+      },
+      extractPensionYearlyAmount(quickCalcAggregateInput) match {
+        case Some(pensionYearlyAmount) => pensionYearlyAmount
+        case None                      => null
+      },
+      extractPensionPercentage(quickCalcAggregateInput) match {
+        case Some(pensionPercentageAmount) => pensionPercentageAmount
+        case None                          => null
       }
     ).run()
 
@@ -88,6 +103,55 @@ object TaxResult {
 
     BigDecimal(result)
   }
+
+
+
+  def convertWagesToMonthly(wages: BigDecimal): BigDecimal = {
+
+    val result = PayPeriodExtensionsKt
+      .convertAmountFromYearlyToPayPeriod(wages.toDouble, PayPeriod.MONTHLY)
+
+    BigDecimal(result)
+  }
+
+  private def extractTaxYear(currentTaxYear: Int): TaxYear =
+    currentTaxYear match {
+      case 2020 => TaxYear.TWENTY_TWENTY
+      case 2021 => TaxYear.TWENTY_TWENTY_ONE
+      case 2023 => TaxYear.TWENTY_TWENTY_THREE
+      case 2024 => TaxYear.TWENTY_TWENTY_FOUR
+    }
+
+  private def extractPensionMethod(quickCalcAggregateInput: QuickCalcAggregateInput): Option[AnnualPensionMethod] =
+    quickCalcAggregateInput.savedPensionContributions match {
+      case Some(s) =>
+        s.gaveUsPercentageAmount match {
+          case true  => Some(AnnualPensionMethod.PERCENTAGE)
+          case false => Some(AnnualPensionMethod.AMOUNT_IN_POUNDS)
+          case _           => None
+        }
+      case _ => None
+    }
+
+  private def extractPensionPercentage(quickCalcAggregateInput: QuickCalcAggregateInput): Option[Double] =
+    quickCalcAggregateInput.savedPensionContributions match {
+      case Some(s) =>
+        (s.gaveUsPercentageAmount, s.monthlyContributionAmount) match {
+          case (true, Some(contributionAmount)) => Some(contributionAmount.toDouble)
+          case _                                      => None
+        }
+      case _ => None
+    }
+
+  private def extractPensionYearlyAmount(quickCalcAggregateInput: QuickCalcAggregateInput): Option[Double] =
+    quickCalcAggregateInput.savedPensionContributions match {
+      case Some(s) =>
+        (s.gaveUsPercentageAmount, s.yearlyContributionAmount) match {
+          case (false, Some(contributionAmount)) => Some(contributionAmount.toDouble)
+          case _                                       => None
+        }
+      case _ => None
+    }
 
   def extractTaxCode(
     quickCalcAggregateInput: QuickCalcAggregateInput,

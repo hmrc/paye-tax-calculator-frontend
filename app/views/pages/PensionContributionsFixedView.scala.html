@@ -15,7 +15,6 @@
  *@
 
 @import forms.AdditionalQuestionItem
-@import controllers.{routes => prodRoutes}
 
 @this(
         govUkWrapper: templates.GovukLayoutWrapper,
@@ -36,6 +35,7 @@
         beforeContent: components.beforeContent,
         percentageInput: components.percentageInput,
         inputHidden: components.inputHidden
+
 )
 
 @(pensionContributionsForm: Form[PensionContributions],additionalQuestionItems: List[AdditionalQuestionItem])(implicit request: Request[_], messages: Messages)
@@ -43,7 +43,6 @@
 @backButtonUrl = @{
     controllers.routes.YouHaveToldUsNewController.summary.url
 }
-
 @headerText = @{
     if(features.newScreenContentFeature()) {
         Messages("quick_calc.about_tax_code.header.new")
@@ -54,20 +53,21 @@
 
 @govUkWrapper(Some(title(pensionContributionsForm, headerText)), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-    @formHelper(action = controllers.routes.PensionContributionsPercentageController.submitPensionContribution) {
+    @formHelper(action = controllers.routes.PensionContributionsFixedController.submitPensionContribution) {
         @errorSummary(pensionContributionsForm.errors)
 
         @h1(messages("quick_calc.you_have_told_us.about_pension_contributions.label"))
 
-        @p(Html(messages("quick_calc.pensionContributionsPercentage.subheading")))
+        @p(Html(messages("quick_calc.pensionContributionsFixed.subheading")))
 
-        @percentageInput(pensionContributionsForm, "monthlyPensionContributions","monthlyPensionContributions", messages("quick_calc.pensionContributionsPercentage.hint") , messages("quick_calc.pensionContributionsPercentage.input.heading"),"%")
+        @percentageInput(pensionContributionsForm, "monthlyPensionContributions","monthlyPensionContributions", messages("quick_calc.pensionContributionsFixed.hint"), messages("quick_calc.pensionContributionsFixed.input.heading"),"£")
 
         @p{
-            @link(controllers.routes.PensionContributionsFixedController.showPensionContributionForm.url, messages("quick_calc.pensionContributionsPercentage.link"))
+            @link(controllers.routes.PensionContributionsPercentageController.showPensionContributionForm.url, messages("quick_calc.pensionContributionsFixed.link"))
         }
 
-        @inputHidden(pensionContributionsForm, "gaveUsPensionPercentage","gaveUsPensionPercentage","",Some("true"),false)
+        @inputHidden(pensionContributionsForm, "gaveUsPensionPercentage","gaveUsPensionPercentage","",Some("false"),false)
+
 
         @button("continue", Some("button-continue"))
     }

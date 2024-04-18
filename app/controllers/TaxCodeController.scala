@@ -75,7 +75,6 @@ class TaxCodeController @Inject() (
   def submitTaxCodeForm(): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
       form
         .bindFromRequest()
         .fold(
