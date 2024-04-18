@@ -17,7 +17,7 @@
 package controllers
 
 import com.codahale.metrics.SharedMetricRegistries
-import forms.forms.RemoveTaxCodeFormProvider
+import forms.forms.RemoveItemFormProvider
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
@@ -50,7 +50,7 @@ class RemoveTaxCodeControllerSpec
     with CSRFTestHelper {
 
   val taxCodeQueryParam = "taxcode"
-  val formProvider      = new RemoveTaxCodeFormProvider()
+  val formProvider      = new RemoveItemFormProvider()
   val form: Form[Boolean] = formProvider(taxCodeQueryParam)
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =

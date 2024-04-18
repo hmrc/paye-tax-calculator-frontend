@@ -26,17 +26,20 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{Navigator, QuickCalcCache}
+import uk.gov.hmrc.calculator.exception.InvalidPensionException
 import uk.gov.hmrc.calculator.model.CalculatorResponse
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import uk.gov.hmrc.time.TaxYear
+import utils.GetCurrentTaxYear.getCurrentTaxYear
 import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider}
 import views.html.components.linkNewTab
 import views.html.pages.ResultView
 
 import java.time.{LocalDate, ZoneId}
 import scala.concurrent.ExecutionContext
+import scala.util.Try
 
 @Singleton
 class ShowResultsController @Inject() (
@@ -65,17 +68,6 @@ class ShowResultsController @Inject() (
     } else {
       false
     }
-
-  private def getCurrentTaxYear: String = {
-    val currentDate = LocalDate.now(ZoneId.of("Europe/London"))
-    val taxYear     = TaxYear(currentDate.getYear)
-    if (currentDate isBefore taxYear.starts) {
-      val previousTaxYear = taxYear.previous
-      s"${previousTaxYear.startYear}/${taxYear.startYear.toString.takeRight(2)}"
-    } else {
-      s"${taxYear.startYear}/${(taxYear.startYear + 1).toString.takeRight(2)}"
-    }
-  }
 
   def getTaxCalculation(
     aggregateInput:         QuickCalcAggregateInput,
@@ -138,16 +130,22 @@ class ShowResultsController @Inject() (
             } else {
               false
             }
-            Ok(
-              resultView(
-                TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider),
-                defaultTaxCodeProvider.startOfCurrentTaxYear,
-                isScottish,
-                salaryCheck(aggregate),
-                getCurrentTaxYear,
-                sideBarBullets(aggregate)
+            try {
+              Ok(
+                resultView(
+                  TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider),
+                  defaultTaxCodeProvider.startOfCurrentTaxYear,
+                  isScottish,
+                  salaryCheck(aggregate),
+                  getCurrentTaxYear,
+                  sideBarBullets(aggregate),
+                  aggregateConditions.isPensionContributionsDefined(aggregate)
+                )
               )
-            )
+            } catch {
+              case _: InvalidPensionException =>
+                Redirect(controllers.routes.YouHaveToldUsNewController.summary)
+            }
           } else Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 

@@ -16,12 +16,18 @@
 
 package forms.mappings
 
+import models.PensionContributions.{gaveUsPensionPercentage, monthlyPensionContribution, yearlyContributionAmount}
+import models.QuickCalcAggregateInput
 import models.UserTaxCode._
 import play.api.data.FormError
 import play.api.data.format.Formatter
+import uk.gov.hmrc.calculator.model.TaxYear
 import uk.gov.hmrc.calculator.utils.validation.{HoursDaysValidator, TaxCodeValidator, WageValidator}
 import utils.BigDecimalFormatter
-import utils.StripCharUtil.stripAll
+import utils.GetCurrentTaxYear.getTaxYear
+import utils.StripCharUtil.{stripAll, stripPercentage, stripPound}
+
+import scala.util.{Failure, Success, Try}
 
 object CustomFormatters {
 
@@ -82,6 +88,25 @@ object CustomFormatters {
       key:   String,
       value: Boolean
     ) = Map(key -> value.toString)
+  }
+
+  def removePensionContributionsValidation: Formatter[Boolean] = new Formatter[Boolean] {
+    override def bind(
+                       key:  String,
+                       data: Map[String, String]
+                     ) =
+      Right(data.getOrElse(key, "")).right.flatMap {
+        case "true"  => Right(true)
+        case "false" => Right(false)
+        case _ =>
+          Left(
+            Seq(
+              FormError(key, "quick_calc.remove_pensions_contributions_error")
+            )
+          )
+      }
+
+    override def unbind(key: String, value: Boolean): Map[String, String] = ???
   }
 
   def statePensionAgeValidation: Formatter[Boolean] = new Formatter[Boolean] {
@@ -371,5 +396,99 @@ object CustomFormatters {
       ): Map[String, String] =
         Map(key -> value.getOrElse(""))
     }
+
+  def pensionContributionFormatter(): Formatter[Option[BigDecimal]] =
+    new Formatter[Option[BigDecimal]] {
+      override def bind(
+                         key: String,
+                         data: Map[String, String]): Either[Seq[FormError], Option[BigDecimal]] = {
+        val gaveUsPensionPercentageData: String = data.getOrElse(gaveUsPensionPercentage, "")
+        val gaveUsPercentage = Try(gaveUsPensionPercentageData.toBoolean).getOrElse(false)
+        data.get(monthlyPensionContribution)
+          .filter(_.nonEmpty)
+          .map(_.replaceAll("/%", "")) match {
+          case Some(p) =>
+            val strippedValue = if (gaveUsPercentage) {
+              stripPercentage(p)
+            } else {
+              stripPound(p)
+            }
+            val value = Try(BigDecimal(strippedValue))
+            value match {
+              case Success(amount) =>
+                if (gaveUsPercentage) {
+                  if (amount < 0) {
+                    Left(
+                      Seq(
+                        FormError(
+                          key,
+                          "Enter your monthly pension contributions amount in the correct format"
+                        )
+                      )
+                    )
+                  } else if (amount > 100) {
+                    Left(
+                      Seq(
+                        FormError(
+                          key,
+                          "Your monthly pension contributions must be less than 100% of your income"
+                        )
+                      )
+                    )
+                  } else if (strippedValue.split("\\.").lastOption.getOrElse("").length > 2) {
+                  Left(
+                    Seq(
+                      FormError(
+                        key,
+                        "Enter your monthly pension contributions amount in the correct format"
+                      )
+                    )
+                  )
+                } else {
+                    Right(Some(amount))
+                  }
+                } else {
+                  if (amount < 0) {
+                    Left(
+                      Seq(
+                        FormError(
+                          key,
+                          "Enter your monthly pension contributions amount in the correct format"
+                        )
+                      )
+                    )
+                  } else if (amount > 100) {
+                    Right(Some(amount)) // Allow values more than £100
+                  } else if (strippedValue.split("\\.").lastOption.getOrElse("").length > 2) {
+                    Left(
+                      Seq(
+                        FormError(
+                          key,
+                          "Your monthly pension contributions can only include pounds and pence"
+                        )
+                      )
+                    )
+                  } else {
+                    Right(Some(amount))
+                  }
+                }
+              case Failure(_) =>
+                Left(
+                  Seq(
+                    FormError(
+                      key,
+                      "Enter your monthly pension contributions amount in the correct format"
+                    )
+                  )
+                )
+            }
+          case None => Right(None)
+        }
+      }
+
+      override def unbind(key: String, value: Option[BigDecimal]): Map[String, String] =
+        value.map(v => Map(key -> v.toString)).getOrElse(Map.empty)
+    }
+
 
 }

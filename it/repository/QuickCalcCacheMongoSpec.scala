@@ -30,8 +30,9 @@ class QuickCalcCacheMongoSpec
   private val quickCalcMongoCache = QuickCalcMongoCache(
     "id",
     Instant.ofEpochSecond(1),
-    quickCalcAggregateInput = QuickCalcAggregateInput(Some(Salary(12.00, None, None, "5", Some(12.00))),
+    quickCalcAggregateInput = QuickCalcAggregateInput(Some(Salary(12.00, None, None, "5", Some(12.00), None)),
                                                       Some(PayPeriodDetail(12.00, 5.00, "period", "url")),
+                                                      None,
                                                       None,
                                                       None,
                                                       None)

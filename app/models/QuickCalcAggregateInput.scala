@@ -17,7 +17,7 @@
 package models
 
 import config.AppConfig
-import forms.AdditionalQuestionItem.{scottishIncomeFormat, taxCodeFormat}
+import forms.AdditionalQuestionItem.{pensionContributionsFormat, scottishIncomeFormat, taxCodeFormat}
 import forms.{AdditionalQuestion, AdditionalQuestionItem, YouHaveToldUs, YouHaveToldUsItem}
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
@@ -27,7 +27,8 @@ case class QuickCalcAggregateInput(
   savedPeriod:                Option[PayPeriodDetail],
   savedIsOverStatePensionAge: Option[StatePension],
   savedTaxCode:               Option[UserTaxCode],
-  savedScottishRate:          Option[ScottishRate]) {
+  savedScottishRate:          Option[ScottishRate],
+  savedPensionContributions:  Option[PensionContributions]) {
 
   def allQuestionsAnswered: Boolean =
     List(
@@ -63,7 +64,8 @@ case class QuickCalcAggregateInput(
     if (appConfig.features.newScreenContentFeature()) {
       List(
         AdditionalQuestionItem(savedTaxCode),
-        AdditionalQuestionItem(savedScottishRate)
+        AdditionalQuestionItem(savedScottishRate),
+        AdditionalQuestionItem(savedPensionContributions)
       )
     } else {
       List.empty
@@ -79,6 +81,6 @@ case class QuickCalcAggregateInput(
 }
 
 object QuickCalcAggregateInput {
-  def newInstance:     QuickCalcAggregateInput          = QuickCalcAggregateInput(None, None, None, None, None)
+  def newInstance:     QuickCalcAggregateInput          = QuickCalcAggregateInput(None, None, None, None, None, None)
   implicit val format: OFormat[QuickCalcAggregateInput] = Json.format[QuickCalcAggregateInput]
 }

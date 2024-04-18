@@ -20,7 +20,7 @@ import config.AppConfig
 import forms.StatePensionFormProvider
 
 import javax.inject.{Inject, Singleton}
-import models.{QuickCalcAggregateInput, ScottishRate, StatePension, UserTaxCode}
+import models.{PensionContributions, QuickCalcAggregateInput, ScottishRate, StatePension, UserTaxCode}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
@@ -88,8 +88,7 @@ class StatePensionController @Inject() (
                   if (appConfig.features.newScreenContentFeature()) {
                     aggregate.copy(
                       savedIsOverStatePensionAge = Some(userAge),
-                      savedTaxCode               = Some(UserTaxCode(gaveUsTaxCode = false, None)),
-                      savedScottishRate          = Some(ScottishRate(payScottishRate = false, gaveUsScottishRate = false))
+                      savedTaxCode               = Some(UserTaxCode(gaveUsTaxCode = false, None))
                     )
                   } else {
                     aggregate.copy(savedIsOverStatePensionAge = Some(userAge))

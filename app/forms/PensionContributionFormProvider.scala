@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,24 @@
 
 package forms
 
+
 import mappings.CustomFormatters
+
 import javax.inject.Inject
-import models.Salary
+import models.{PensionContributions, QuickCalcAggregateInput, Salary}
+import models.PensionContributions._
 import play.api.data.Form
 import play.api.data.Forms.{mapping, of, optional}
 import play.api.data.format.Formats._
 
-class SalaryFormProvider @Inject() () {
+class PensionContributionFormProvider @Inject() () {
 
-  def apply(): Form[Salary] = Form(
+  def apply(): Form[PensionContributions] = Form(
     mapping(
-      "amount"               -> of(CustomFormatters.salaryValidation),
-      "amountYearly"         -> optional(of[BigDecimal]),
-      "previousAmountYearly" -> optional(of[BigDecimal]),
-      "period"               -> of(CustomFormatters.requiredSalaryPeriodFormatter),
-      "how-many-a-week"      -> optional(of[BigDecimal]),
-      "monthlyAmount"        -> optional(of[BigDecimal])
-    )(Salary.apply)(Salary.unapply)
+      gaveUsPensionPercentage -> of[Boolean],
+      monthlyPensionContribution -> of(CustomFormatters.pensionContributionFormatter()),
+      yearlyContributionAmount -> optional(of[BigDecimal])
+    )(PensionContributions.apply)(PensionContributions.unapply)
   )
+
 }

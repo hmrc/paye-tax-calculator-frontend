@@ -96,7 +96,11 @@ class BaseSpec
       AdditionalQuestionItem("No",
                              "scottish_rate",
                              controllers.routes.ScottishRateController.showScottishRateForm.url,
-                             "scottish_rate")
+                             "scottish_rate"),
+      AdditionalQuestionItem("43% a month",
+        "about_pensions_contributions",
+        controllers.routes.PensionContributionsPercentageController.showPensionContributionForm.url,
+        "pension-contributions")
     )
 }
 

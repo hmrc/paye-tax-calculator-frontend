@@ -1,0 +1,74 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import forms.AdditionalQuestionItem
+@import controllers.{routes => prodRoutes}
+
+@this(
+        govUkWrapper: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        govukBackLink: GovukBackLink,
+        errorSummary: components.errorSummary,
+        govukInput: GovukInput,
+        inputRadio: components.inputRadio,
+        button: components.button,
+        link: components.link,
+        label: components.label,
+        govukDetails: GovukDetails,
+        h1: components.h1,
+        p: components.p,
+        details: components.details,
+        bullets: components.bullets,
+        features: config.features.Features,
+        beforeContent: components.beforeContent,
+        percentageInput: components.percentageInput,
+        inputHidden: components.inputHidden
+)
+
+@(pensionContributionsForm: Form[PensionContributions],additionalQuestionItems: List[AdditionalQuestionItem])(implicit request: Request[_], messages: Messages)
+
+@backButtonUrl = @{
+    controllers.routes.YouHaveToldUsNewController.summary.url
+}
+
+@headerText = @{
+    if(features.newScreenContentFeature()) {
+        Messages("quick_calc.about_tax_code.header.new")
+    } else {
+        Messages("quick_calc.about_tax_code.header")
+    }
+}
+
+@govUkWrapper(Some(title(pensionContributionsForm, headerText)), beforeContentBlock = beforeContent(backButtonUrl)) {
+
+    @formHelper(action = controllers.routes.PensionContributionsPercentageController.submitPensionContribution) {
+        @errorSummary(pensionContributionsForm.errors)
+
+        @h1(messages("quick_calc.you_have_told_us.about_pension_contributions.label"))
+
+        @p(Html(messages("quick_calc.pensionContributionsPercentage.subheading")))
+
+        @percentageInput(pensionContributionsForm, "monthlyPensionContributions","monthlyPensionContributions", messages("quick_calc.pensionContributionsPercentage.hint") , messages("quick_calc.pensionContributionsPercentage.input.heading"),"%")
+
+        @p{
+            @link(controllers.routes.PensionContributionsFixedController.showPensionContributionForm.url, messages("quick_calc.pensionContributionsPercentage.link"))
+        }
+
+        @inputHidden(pensionContributionsForm, "gaveUsPensionPercentage","gaveUsPensionPercentage","",Some("true"),false)
+
+        @button("continue", Some("button-continue"))
+    }
+}

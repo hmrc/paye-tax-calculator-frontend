@@ -17,7 +17,7 @@
 package forms
 
 import controllers.routes
-import models.{ScottishRate, UserTaxCode}
+import models.{PensionContributions, ScottishRate, UserTaxCode}
 import play.api.i18n.Messages
 
 case class AdditionalQuestionItem(
@@ -78,4 +78,34 @@ object AdditionalQuestionItem {
         )
       }
     }
+
+  implicit def pensionContributionsFormat(implicit messages: Messages): AdditionalQuestion[PensionContributions] =
+    new AdditionalQuestion[PensionContributions] {
+
+      def toAdditionalQuestionItem(pensions: Option[PensionContributions]): AdditionalQuestionItem = {
+        val label    = "about_pensions_contributions"
+        val idSuffix = "pension-contributions"
+        val url      = routes.PensionContributionsPercentageController.showPensionContributionForm.url
+        val formattedContribution = pensions.flatMap(_.monthlyContributionAmount).map { contribution =>
+          if (contribution.isWhole) {
+            contribution.setScale(0).toString()
+          } else {
+            contribution.setScale(2, BigDecimal.RoundingMode.HALF_UP).toString().stripSuffix("0").stripSuffix(".")
+          }
+        }.getOrElse("None")
+
+        val displayText = if (formattedContribution == "None") {
+          "None"
+        } else {
+          if (pensions.exists(_.gaveUsPercentageAmount)) {
+            s"$formattedContribution% a month"
+          } else {
+            s"£$formattedContribution a month"
+          }
+        }
+
+        AdditionalQuestionItem(displayText, label, url, idSuffix)
+      }
+    }
+
 }

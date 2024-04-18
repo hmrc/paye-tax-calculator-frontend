@@ -48,8 +48,9 @@ class YouHaveToldUsNewController @Inject() (
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  val taxCodeLabel:      String = "about_tax_code"
-  val scottishRateLabel: String = "scottish_rate"
+  private val taxCodeLabel:      String = "about_tax_code"
+  private val scottishRateLabel: String = "scottish_rate"
+  private val aboutPensionContributionsLabel: String = "about_pensions_contributions"
 
   def summary(): Action[AnyContent] =
     salaryRequired(
@@ -58,10 +59,14 @@ class YouHaveToldUsNewController @Inject() (
         aggregate =>
           if (aggregate.allQuestionsAnswered) {
             Ok(
-              yourHaveToldUsView(aggregate.youHaveToldUsItems,
-                                 aggregate.additionalQuestionItems,
-                                 taxCodeCheck(aggregate),
-                                 aggregateConditionsUtil.isTaxCodeDefined(aggregate))
+              yourHaveToldUsView(
+                aggregate.youHaveToldUsItems,
+                aggregate.additionalQuestionItems,
+                taxCodeCheck(aggregate),
+                aggregateConditionsUtil.isTaxCodeDefined(aggregate),
+                aggregateConditionsUtil.isPensionContributionsDefined(aggregate),
+                aggregateConditionsUtil.givenPensionContributionPercentage(aggregate)
+              )
             )
           } else
             Redirect(navigator.redirectToNotYetDonePage(aggregate))
@@ -79,6 +84,22 @@ class YouHaveToldUsNewController @Inject() (
       List.empty
     }
 
+  private def pensionContributionsWarning(
+                                           aggregateInput: QuickCalcAggregateInput
+                                         )(implicit messages: Messages): List[(String, String)] = {
+    val monthlyContributions: BigDecimal = aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).getOrElse(BigDecimal(0))
+    val monthlySalary: BigDecimal = aggregateInput.savedSalary.flatMap(_.monthlyAmount).getOrElse(BigDecimal(0))
+
+    val roundedMonthlySalary = monthlySalary.setScale(2, BigDecimal.RoundingMode.HALF_UP)
+
+    if (monthlyContributions > roundedMonthlySalary) {
+      List(aboutPensionContributionsLabel -> Messages("quick_calc.pensionContributionsFixed.warning",roundedMonthlySalary))
+    } else {
+      List.empty
+    }
+  }
+
+
   private def scottishRateWarnings(
     aggregateInput:    QuickCalcAggregateInput
   )(implicit messages: Messages
@@ -93,7 +114,7 @@ class YouHaveToldUsNewController @Inject() (
     aggregateInput:    QuickCalcAggregateInput
   )(implicit messages: Messages
   ): Map[String, String] = {
-    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput)
+    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput) ++ pensionContributionsWarning(aggregateInput)
     finalList.toMap
   }
 
@@ -114,5 +135,4 @@ class YouHaveToldUsNewController @Inject() (
           Redirect(routes.SalaryController.showSalaryForm)
       }
     }
-
 }

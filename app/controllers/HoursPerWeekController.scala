@@ -62,8 +62,8 @@ class HoursPerWeekController @Inject() (
       .fold(
         formWithErrors => Future(BadRequest(hoursAWeekView(formWithErrors, value))),
         hours => {
-          val currentYearlyAmount: BigDecimal =
-            TaxResult.convertWagesToYearly(value, Messages("quick_calc.salary.hourly.label"), Some(hours.howManyAWeek))
+          val currentYearlyAmount: BigDecimal = TaxResult.convertWagesToYearly(value, Messages("quick_calc.salary.hourly.label"), Some(hours.howManyAWeek))
+          val currentMonthlyAmount: BigDecimal = TaxResult.convertWagesToMonthly(currentYearlyAmount)
           val updatedAggregate = cache
             .fetchAndGetEntry()
             .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
@@ -74,14 +74,14 @@ class HoursPerWeekController @Inject() (
                          Some(currentYearlyAmount),
                          oldAggregate.savedSalary.flatMap(_.amountYearly),
                          Messages("quick_calc.salary.hourly.label"),
-                         Some(hours.howManyAWeek))
+                         Some(hours.howManyAWeek),
+                         Some(currentMonthlyAmount))
                 ),
                 savedPeriod = Some(
                   PayPeriodDetail(value, hours.howManyAWeek, Messages("quick_calc.salary.hourly.label"), url)
                 )
               )
             )
-
           updatedAggregate.flatMap { agg =>
             cache
               .save(agg)

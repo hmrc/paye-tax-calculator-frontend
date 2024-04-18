@@ -77,7 +77,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         val parseHtml    = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty, pensionCheck = false)(
             request,
             messagesThing(application)
           ).toString
@@ -120,7 +120,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         val parseHtml    = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true, "2023/24", Seq.empty)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true, "2023/24", Seq.empty, pensionCheck = false)(
             request,
             messagesThing(application)
           ).toString

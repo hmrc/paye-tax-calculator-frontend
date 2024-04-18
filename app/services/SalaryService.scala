@@ -45,22 +45,30 @@ class SalaryService @Inject() (
         val newAggregate = salaryAmount.period match {
           case "an hour" | "a day" => {
             oldAggregate.copy(savedSalary = Some(
-              salaryAmount.copy(amountYearly         = oldAggregate.savedSalary.flatMap(_.amountYearly),
-                                previousAmountYearly = oldAggregate.savedSalary.flatMap(_.previousAmountYearly))
+              salaryAmount.copy(
+                amountYearly         = oldAggregate.savedSalary.flatMap(_.amountYearly),
+                previousAmountYearly = oldAggregate.savedSalary.flatMap(_.previousAmountYearly),
+                monthlyAmount        = oldAggregate.savedSalary.flatMap(_.monthlyAmount)
+              )
             )
             )
           }
           case _ => {
-            val currentYearlyAmount: BigDecimal =
+            val currentYearlyAmount: BigDecimal = {
               TaxResult.convertWagesToYearly(salaryAmount.amount, salaryAmount.period)
+            }
+            val monthlyAmount: BigDecimal = {
+              TaxResult.convertWagesToMonthly(currentYearlyAmount)
+            }
             if (oldAggregate.savedSalary.isDefined) {
               oldAggregate.copy(savedSalary = Some(
                 salaryAmount.copy(amountYearly         = Some(currentYearlyAmount),
-                                  previousAmountYearly = oldAggregate.savedSalary.flatMap(_.amountYearly))
+                                  previousAmountYearly = oldAggregate.savedSalary.flatMap(_.amountYearly),
+                                  monthlyAmount = Some(monthlyAmount))
               )
               )
             } else {
-              oldAggregate.copy(savedSalary = Some(salaryAmount.copy(amountYearly = Some(currentYearlyAmount))))
+              oldAggregate.copy(savedSalary = Some(salaryAmount.copy(amountYearly = Some(currentYearlyAmount), monthlyAmount = Some(monthlyAmount))))
             }
           }
         }
@@ -74,7 +82,8 @@ class SalaryService @Inject() (
                     newAggregate.savedSalary.flatMap(_.amountYearly),
                     newAggregate.savedSalary.flatMap(_.previousAmountYearly),
                     salary.period,
-                    oldAggregate.savedSalary.get.howManyAWeek
+                    oldAggregate.savedSalary.get.howManyAWeek,
+                    newAggregate.savedSalary.flatMap(_.monthlyAmount)
                   )
                 ),
                 savedPeriod = Some(PayPeriodDetail(salaryAmount.amount, detail.howManyAWeek, detail.period, url))

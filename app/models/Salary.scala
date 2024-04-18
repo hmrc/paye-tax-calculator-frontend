@@ -23,7 +23,8 @@ case class Salary(
   amountYearly:         Option[BigDecimal],
   previousAmountYearly: Option[BigDecimal],
   period:               String,
-  howManyAWeek:         Option[BigDecimal])
+  howManyAWeek:         Option[BigDecimal],
+  monthlyAmount:        Option[BigDecimal])
 
 object Salary {
 
@@ -34,8 +35,9 @@ object Salary {
     (__ \ "amountYearly").readNullable[BigDecimal] and
     (__ \ "previousAmountYearly").readNullable[BigDecimal] and
     (__ \ "period").read[String] and
-    (__ \ "how-many-a-week").readNullable[BigDecimal]
-  )(Salary(_, _, _, _, _))
+    (__ \ "how-many-a-week").readNullable[BigDecimal] and
+    (__ \ "monthlyAmount").readNullable[BigDecimal]
+  )(Salary(_, _, _, _, _, _))
 
   implicit lazy val writes: Writes[Salary] =
     (
@@ -43,7 +45,8 @@ object Salary {
       (__ \ "amountYearly").writeNullable[BigDecimal] and
       (__ \ "previousAmountYearly").writeNullable[BigDecimal] and
       (__ \ "period").write[String] and
-      (__ \ "how-many-a-week").writeNullable[BigDecimal]
-    )(a => (a.amount, a.amountYearly, a.previousAmountYearly, a.period, a.howManyAWeek))
+      (__ \ "how-many-a-week").writeNullable[BigDecimal] and
+      (__ \ "monthlyAmount").writeNullable[BigDecimal]
+    )(a => (a.amount, a.amountYearly, a.previousAmountYearly, a.period, a.howManyAWeek, a.monthlyAmount))
 
 }

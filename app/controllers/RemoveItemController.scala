@@ -17,7 +17,7 @@
 package controllers
 
 import config.AppConfig
-import forms.forms.RemoveTaxCodeFormProvider
+import forms.forms.RemoveItemFormProvider
 import models.QuickCalcAggregateInput
 import play.api.data.Form
 import javax.inject.{Inject, Singleton}
@@ -39,7 +39,7 @@ class RemoveItemController @Inject() (
   val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
   removeItemView:                RemoveItemView,
-  removeTaxCodeFormProvider:     RemoveTaxCodeFormProvider
+  removeTaxCodeFormProvider:     RemoveItemFormProvider
 )(implicit val app:              AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -60,7 +60,6 @@ class RemoveItemController @Inject() (
   def submitRemoveItemForm(option: String): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
       form(option)
         .bindFromRequest()
         .fold(
@@ -77,8 +76,13 @@ class RemoveItemController @Inject() (
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
                 val updatedAggregate = if (removeItemBoolean) {
-                  aggregate
-                    .copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
+                  if(option == "taxcode"){
+                    aggregate
+                      .copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
+                  } else {
+                    aggregate
+                      .copy(savedPensionContributions = None)
+                  }
                 } else {
                   aggregate
                 }
