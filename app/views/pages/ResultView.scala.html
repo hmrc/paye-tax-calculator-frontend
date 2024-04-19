@@ -49,7 +49,8 @@
         hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
         features: config.features.Features,
         warningText: components.warning,
-        bullets: components.bullets
+        bullets: components.bullets,
+        disclaimerWarningText: components.disclaimerWarningText
 )
 
 @(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean, salaryCheck: Boolean, currentTaxYear: String, sideBarBullets: Seq[Option[Html]], pensionCheck: Boolean)(implicit request: Request[_], messages: Messages)
@@ -94,12 +95,17 @@
     }
 }
 
-@disclaimer = @{
-    if(salaryCheck) {
-        warningText(Messages("quick_calc.results.disclaimer"))
+@disclaimer = {
+    @if(salaryCheck) {
+        @if(features.newScreenContentFeature()) {
+            @disclaimerWarningText() {
+                @Messages("quick_calc.result.disclaimer.reducedPersonal_allowance_a.new") @linkNewTab("https://www.gov.uk/income-tax-rates/income-over-100000", "quick_calc.result.disclaimer.reducedPersonal_allowance_b.new")
+            }
+        } else {
+             @warningText(Messages("quick_calc.results.disclaimer"))
+        }
     }
 }
-
 
 @govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), showDeskproLink = false, beforeContentBlock = beforeContent(s"${backButton}"), bodyClassess = Some("govuk-grid-row govuk-!-padding-left-2 govuk-!-padding-right-2"), showAppBanner = true) {
 
