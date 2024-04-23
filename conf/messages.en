@@ -287,7 +287,7 @@ quick_calc.about_k_code_b_sk = the SK in your tax code (opens in a new tab)
 quick_calc.about_k_code_c = The K code is used across the UK and usually indicates you owe tax from a previous year.
 
 quick_calc.tax_code.over_hundred_thousand.warning = This tax code is not usually for those on more than £100,000 a year.
-quick_calc.tax_code.scottish_rate.warning = You've used a Scottish tax code so we will apply Scottish Income Tax rates.
+quick_calc.tax_code.scottish_rate.warning = You’ve used a Scottish tax code so we will apply Scottish Income Tax rates.
 quick_calc.scottish_rate.payScottishRate.warning = You said you pay Scottish Income Tax so we will apply Scottish Income Tax rates.
 
 quick_calc.remove.taxcode = Are you sure you want to remove your tax code?
