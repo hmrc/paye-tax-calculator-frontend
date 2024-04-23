@@ -34,47 +34,47 @@ object CustomFormatters {
   def scottishRateValidation: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ) =
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
-        case "true" => Right(true)
+        case "true"  => Right(true)
         case "false" => Right(false)
-        case _ => Left(Seq(FormError(key, "quick_calc.scottish_rate_error")))
+        case _       => Left(Seq(FormError(key, "quick_calc.scottish_rate_error")))
       }
 
     override def unbind(
-                         key: String,
-                         value: Boolean
-                       ) = Map(key -> value.toString)
+      key:   String,
+      value: Boolean
+    ) = Map(key -> value.toString)
   }
 
   def hasScottishRateBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ) =
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
         case "" => Right(false)
-        case _ => Right(true)
+        case _  => Right(true)
       }
 
     override def unbind(
-                         key: String,
-                         value: Boolean
-                       ) =
+      key:   String,
+      value: Boolean
+    ) =
       Map(key -> value.toString)
   }
 
   def removeTaxCodeValidation: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ) =
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
-        case "true" => Right(true)
+        case "true"  => Right(true)
         case "false" => Right(false)
         case _ =>
           Left(
@@ -85,18 +85,19 @@ object CustomFormatters {
       }
 
     override def unbind(
-                         key: String,
-                         value: Boolean
-                       ) = Map(key -> value.toString)
+      key:   String,
+      value: Boolean
+    ) = Map(key -> value.toString)
   }
 
   def removePensionContributionsValidation: Formatter[Boolean] = new Formatter[Boolean] {
+
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ) =
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
-        case "true" => Right(true)
+        case "true"  => Right(true)
         case "false" => Right(false)
         case _ =>
           Left(
@@ -106,17 +107,20 @@ object CustomFormatters {
           )
       }
 
-    override def unbind(key: String, value: Boolean): Map[String, String] = ???
+    override def unbind(
+      key:   String,
+      value: Boolean
+    ): Map[String, String] = ???
   }
 
   def statePensionAgeValidation: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ) =
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
-        case "true" => Right(true)
+        case "true"  => Right(true)
         case "false" => Right(false)
         case _ =>
           Left(
@@ -127,52 +131,52 @@ object CustomFormatters {
       }
 
     override def unbind(
-                         key: String,
-                         value: Boolean
-                       ) = Map(key -> value.toString)
+      key:   String,
+      value: Boolean
+    ) = Map(key -> value.toString)
   }
 
   def hasTaxCodeBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ) =
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
         case "" => Right(false)
-        case _ => Right(true)
+        case _  => Right(true)
       }
 
     override def unbind(
-                         key: String,
-                         value: Boolean
-                       ) =
+      key:   String,
+      value: Boolean
+    ) =
       Map(key -> value.toString)
   }
 
   def requiredSalaryPeriodFormatter: Formatter[String] = new Formatter[String] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ) =
+      key:  String,
+      data: Map[String, String]
+    ) =
       Right(data.getOrElse(key, "")).right.flatMap {
         case "" => Left(Seq(FormError(key, "quick_calc.salary.option_error")))
-        case p => Right(p)
+        case p  => Right(p)
       }
 
     override def unbind(
-                         key: String,
-                         value: String
-                       ) = Map(key -> value)
+      key:   String,
+      value: String
+    ) = Map(key -> value)
   }
 
   def dayValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ): Either[Seq[FormError], BigDecimal] =
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], BigDecimal] =
       Right(data.getOrElse(key, "")).right.flatMap {
         case s if s.nonEmpty =>
           try {
@@ -221,24 +225,24 @@ object CustomFormatters {
       }
 
     override def unbind(
-                         key: String,
-                         value: BigDecimal
-                       ): Map[String, String] =
+      key:   String,
+      value: BigDecimal
+    ): Map[String, String] =
       Map(key -> value.toString)
   }
 
   def hoursValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ): Either[Seq[FormError], BigDecimal] =
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], BigDecimal] =
       Right(data.getOrElse(key, "")).right.flatMap {
         case s if s.nonEmpty =>
           try {
             val hours = BigDecimal(s).setScale(2).toDouble
             if (!HoursDaysValidator.INSTANCE
-              .isAboveMinimumHoursPerWeek(hours)) {
+                  .isAboveMinimumHoursPerWeek(hours)) {
               Left(
                 Seq(
                   FormError(
@@ -248,7 +252,7 @@ object CustomFormatters {
                 )
               )
             } else if (!HoursDaysValidator.INSTANCE
-              .isBelowMaximumHoursPerWeek(hours)) {
+                         .isBelowMaximumHoursPerWeek(hours)) {
               Left(
                 Seq(
                   FormError(
@@ -283,9 +287,9 @@ object CustomFormatters {
       }
 
     override def unbind(
-                         key: String,
-                         value: BigDecimal
-                       ): Map[String, String] =
+      key:   String,
+      value: BigDecimal
+    ): Map[String, String] =
       Map(key -> value.toString)
 
   }
@@ -293,9 +297,9 @@ object CustomFormatters {
   def salaryValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
 
     override def bind(
-                       key: String,
-                       data: Map[String, String]
-                     ): Either[Seq[FormError], BigDecimal] =
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], BigDecimal] =
       (data.get(key).filter(_.nonEmpty) match {
         case Some(s) =>
           val strippedValue = stripAll(s)
@@ -311,7 +315,7 @@ object CustomFormatters {
                 )
               )
             } else if (!WageValidator.INSTANCE
-              .isBelowMaximumWages(salary.toDouble)) {
+                         .isBelowMaximumWages(salary.toDouble)) {
               Left(
                 Seq(
                   FormError(
@@ -364,9 +368,9 @@ object CustomFormatters {
       })
 
     override def unbind(
-                         key: String,
-                         value: BigDecimal
-                       ): Map[String, String] =
+      key:   String,
+      value: BigDecimal
+    ): Map[String, String] =
       Map(key -> value.toString)
   }
 
@@ -374,9 +378,9 @@ object CustomFormatters {
     new Formatter[Option[String]] {
 
       override def bind(
-                         key: String,
-                         data: Map[String, String]
-                       ): Either[Seq[FormError], Option[String]] =
+        key:  String,
+        data: Map[String, String]
+      ): Either[Seq[FormError], Option[String]] =
         data
           .get(TaxCode)
           .filter(_.nonEmpty)
@@ -391,19 +395,25 @@ object CustomFormatters {
         }
 
       override def unbind(
-                           key: String,
-                           value: Option[String]
-                         ): Map[String, String] =
+        key:   String,
+        value: Option[String]
+      ): Map[String, String] =
         Map(key -> value.getOrElse(""))
     }
 
   def pensionContributionFormatter(): Formatter[Option[BigDecimal]] =
     new Formatter[Option[BigDecimal]] {
-      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[BigDecimal]] = {
+
+      override def bind(
+        key:  String,
+        data: Map[String, String]
+      ): Either[Seq[FormError], Option[BigDecimal]] = {
+
         val gaveUsPensionPercentageData: String = data.getOrElse(gaveUsPensionPercentage, "")
         val gaveUsPercentage = Try(gaveUsPensionPercentageData.toBoolean).getOrElse(false)
 
-        data.get(monthlyPensionContribution)
+        data
+          .get(monthlyPensionContribution)
           .filter(_.nonEmpty)
           .map(_.replaceAll("/%", "")) match {
           case Some(p) =>
@@ -416,7 +426,15 @@ object CustomFormatters {
                 } else if (gaveUsPercentage && amount > 100) {
                   Left(Seq(FormError(key, "Your monthly pension contributions must be less than 100% of your income")))
                 } else if (strippedValue.split("\\.").lastOption.getOrElse("").length > 2) {
-                  Left(Seq(FormError(key, if (gaveUsPercentage) "Enter your monthly pension contributions amount in the correct format" else "Your monthly pension contributions can only include pounds and pence")))
+                  Left(
+                    Seq(
+                      FormError(
+                        key,
+                        if (gaveUsPercentage) "Enter your monthly pension contributions amount in the correct format"
+                        else "Your monthly pension contributions can only include pounds and pence"
+                      )
+                    )
+                  )
                 } else if (!gaveUsPercentage && amount > 100) {
                   Right(Some(amount)) // Allow values more than £100
                 } else {
@@ -429,11 +447,11 @@ object CustomFormatters {
         }
       }
 
-      override def unbind(key: String, value: Option[BigDecimal]): Map[String, String] =
+      override def unbind(
+        key:   String,
+        value: Option[BigDecimal]
+      ): Map[String, String] =
         value.map(v => Map(key -> v.toString)).getOrElse(Map.empty)
     }
-
-
-
 
 }
