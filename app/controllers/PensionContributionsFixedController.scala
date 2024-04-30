@@ -48,20 +48,25 @@ class PensionContributionsFixedController @Inject()(
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[PensionContributions] = pensionsContributionFormProvider()
-
-  def showPensionContributionForm(): Action[AnyContent] =
-    salaryRequired(
-      cache, {implicit fromRequestAndSession => agg =>
-        val filledForm = agg.savedPensionContributions
-          .map { s =>
-            form.fill(s)
-          }.getOrElse(form)
-        Ok(
-          pensionContributionsFixedView(filledForm,
-            agg.additionalQuestionItems())
-        )
-      }
-    )
+    def showPensionContributionForm(): Action[AnyContent] = {
+      salaryRequired(
+        cache, { implicit fromRequestAndSession => agg =>
+          val filledForm = agg.savedPensionContributions.map(_.gaveUsPercentageAmount) match {
+            case Some(true) => form
+            case _ => {
+              agg.savedPensionContributions
+                .map { s =>
+                  form.fill(s)
+                }.getOrElse(form)
+            }
+          }
+          Ok(
+            pensionContributionsFixedView(filledForm,
+              agg.additionalQuestionItems())
+          )
+        }
+      )
+    }
 
   def submitPensionContribution(): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
