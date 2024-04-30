@@ -50,20 +50,25 @@ class PensionContributionsPercentageController @Inject()(
 
   val form: Form[PensionContributions] = pensionsContributionFormProvider()
 
-  def showPensionContributionForm(): Action[AnyContent] =
+  def showPensionContributionForm(): Action[AnyContent] = {
     salaryRequired(
-      cache, {implicit fromRequestAndSession => agg =>
-        val filledForm = agg.savedPensionContributions
-          .map { s =>
-            form.fill(s)
-
-          }.getOrElse(form)
+      cache, { implicit fromRequestAndSession => agg =>
+        val filledForm = agg.savedPensionContributions.map(_.gaveUsPercentageAmount) match {
+          case Some(false) => form
+          case _ => {
+            agg.savedPensionContributions
+              .map { s =>
+                form.fill(s)
+              }.getOrElse(form)
+          }
+        }
         Ok(
           pensionContributionsPercentageView(filledForm,
             agg.additionalQuestionItems())
         )
       }
     )
+  }
 
   def submitPensionContribution(): Action[AnyContent] =
     validateAcceptWithSessionId.async { implicit request =>
