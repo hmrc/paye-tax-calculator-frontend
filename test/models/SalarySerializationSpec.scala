@@ -41,6 +41,8 @@ class SalarySerializationSpec extends AnyWordSpecLike with Matchers {
       unmarshalAndVerifyTypeDay[Days](dailyJson)
       unmarshalAndVerifyTypeHour[Hours](hourlyJson)
     }
+  }
+
   def yearlyJson  = s"""{"amount":1,"period":"yearly"}"""
   def monthlyJson = s"""{"amount":1,"period":"monthly"}"""
   def weeklyJson  = s"""{"amount":1,"period":"weekly"}"""
