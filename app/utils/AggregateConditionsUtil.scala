@@ -41,6 +41,14 @@ class AggregateConditionsUtil @Inject() (defaultTaxCodeProvider: DefaultTaxCodeP
   def taxCodeContainsS(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedTaxCode.flatMap(_.taxCode.map(_.contains("S"))).getOrElse(false)
 
+  def taxCodeContainsK(aggregateInput: QuickCalcAggregateInput): Boolean = {
+    val taxCodeOpt = aggregateInput.savedTaxCode.flatMap(_.taxCode)
+    taxCodeOpt.exists { taxCode =>
+      taxCode.contains("K") || taxCode.contains("CK") || taxCode.contains("SK")
+    }
+  }
+
+
   def payScottishRate(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedScottishRate.exists(_.payScottishRate)
 
