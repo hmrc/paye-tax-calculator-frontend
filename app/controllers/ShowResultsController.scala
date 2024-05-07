@@ -78,6 +78,17 @@ class ShowResultsController @Inject() (
   def sideBarBullets(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Seq[Option[Html]] =
     Seq(
       Some(Html(Messages("quick_calc.result.sidebar.one_job"))),
+      if(aggregateConditions.taxCodeContainsK(aggregateInput))
+        Some(
+          Html(
+            Messages("quick_calc.result.sidebar.kcode_a")
+              + linkInNewTab("https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
+              Messages("quick_calc.result.sidebar.kcode_b")) + Messages(
+              "quick_calc.result.sidebar.kcode_c") + linkInNewTab("https://www.gov.uk/tax-company-benefits",
+              Messages("quick_calc.result.sidebar.kcode_d"))
+          )
+        )
+      else None,
       if (getTaxCalculation(aggregateInput, defaultTaxCodeProvider).getYearly.getTaperingAmountDeduction > 0 && !aggregateConditions
             .isUkOrScottishTaxCode(aggregateInput))
         Some(
