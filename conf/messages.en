@@ -34,6 +34,7 @@ update_answers=Update answers
 calculate_take_home_pay=Calculate take-home pay
 a=a
 clear_results=Clear and start again
+fullStop=.
 
 feedback=Tell us what you think of this calculator (opens in a new tab)
 #TODO Allow formatting for quote marks
@@ -145,7 +146,7 @@ quick_calc.result.sidebar.youHaveReducedPersonal_allowance_c=because your adjust
 quick_calc.result.sidebar.kcode_a=For most people, tax codes starting with ‘K’ mean you are paying tax you owe from a previous year through your wages or pension, or that you are getting benefits you need to pay tax on, such as
 quick_calc.result.sidebar.kcode_b=state benefits (opens in new tab)
 quick_calc.result.sidebar.kcode_c=or
-quick_calc.result.sidebar.kcode_d=company benefits (opens in new tab).
+quick_calc.result.sidebar.kcode_d=company benefits (opens in new tab)
 
 quick_calc.result.disclaimer.reducedPersonal_allowance_a.new=You used a tax code which is not usually for those on more than £100,000 a year. If you do not know your tax code, you can leave it blank and we will  calculate your
 quick_calc.result.disclaimer.reducedPersonal_allowance_b.new=reduced Personal Allowance (opens in a new tab).
