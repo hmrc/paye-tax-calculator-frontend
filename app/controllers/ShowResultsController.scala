@@ -85,7 +85,7 @@ class ShowResultsController @Inject() (
               + linkInNewTab("https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
               Messages("quick_calc.result.sidebar.kcode_b")) + Messages(
               "quick_calc.result.sidebar.kcode_c") + linkInNewTab("https://www.gov.uk/tax-company-benefits",
-              Messages("quick_calc.result.sidebar.kcode_d"))
+              Messages("quick_calc.result.sidebar.kcode_d")) + Messages("fullStop")
           )
         )
       else None,
