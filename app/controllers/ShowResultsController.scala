@@ -17,8 +17,10 @@
 package controllers
 
 import akka.http.javadsl.model.ws.Message
+import com.fasterxml.jackson.module.scala.deser.overrides.MutableList
 import config.AppConfig
 import forms.TaxResult
+import forms.TaxResult.moneyFormatter
 
 import javax.inject.{Inject, Singleton}
 import models.QuickCalcAggregateInput
@@ -28,6 +30,7 @@ import play.twirl.api.Html
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.calculator.exception.InvalidPensionException
 import uk.gov.hmrc.calculator.model.CalculatorResponse
+import uk.gov.hmrc.calculator.utils.clarification.Clarification
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
@@ -37,9 +40,9 @@ import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvid
 import views.html.components.linkNewTab
 import views.html.pages.ResultView
 
-import java.time.{LocalDate, ZoneId}
+import scala.collection.mutable.ListBuffer
+import scala.jdk.CollectionConverters._
 import scala.concurrent.ExecutionContext
-import scala.util.Try
 
 @Singleton
 class ShowResultsController @Inject() (
@@ -59,74 +62,81 @@ class ShowResultsController @Inject() (
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean =
-    aggregateInput.savedSalary.exists(_.amount >= 100002)
+  private def over100KDisclaimerCheck(aggregateInput: QuickCalcAggregateInput): Boolean = {
+    val listOfClarifications = getClarifications(aggregateInput, defaultTaxCodeProvider)
+    listOfClarifications.contains(Clarification.INCOME_OVER_100K)
+  }
 
-  def salaryCheck(aggregateInput: QuickCalcAggregateInput): Boolean =
-    if (salaryOverHundredThousand(aggregateInput) && aggregateConditions.isUkOrScottishTaxCode(aggregateInput)) {
-      true
-    } else {
-      false
-    }
-
-  def getTaxCalculation(
+  private def getTaxCalculation(
     aggregateInput:         QuickCalcAggregateInput,
     defaultTaxCodeProvider: DefaultTaxCodeProvider
   ): CalculatorResponse =
     TaxResult.taxCalculation(aggregateInput, defaultTaxCodeProvider)
 
-  def sideBarBullets(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Seq[Option[Html]] =
-    Seq(
-      Some(Html(Messages("quick_calc.result.sidebar.one_job"))),
-      if(aggregateConditions.taxCodeContainsK(aggregateInput))
-        Some(
-          Html(
-            Messages("quick_calc.result.sidebar.kcode_a")
-              + linkInNewTab("https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
-              Messages("quick_calc.result.sidebar.kcode_b")) + Messages(
-              "quick_calc.result.sidebar.kcode_c") + linkInNewTab("https://www.gov.uk/tax-company-benefits",
-              Messages("quick_calc.result.sidebar.kcode_d"))
+  private def getClarifications(
+    aggregateInput:         QuickCalcAggregateInput,
+    defaultTaxCodeProvider: DefaultTaxCodeProvider
+  ): List[Clarification] =
+    getTaxCalculation(aggregateInput, defaultTaxCodeProvider).getListOfClarification.asScala.toList
+
+  def sideBarBullets(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Seq[Option[Html]] = {
+    val listOfClarifications = getClarifications(aggregateInput, defaultTaxCodeProvider)
+
+    val keyValuePair: Map[Clarification, Option[Html]] = Map(
+      Clarification.NO_TAX_CODE_SUPPLIED -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.personal_allowance",
+                   moneyFormatter(getTaxCalculation(aggregateInput, defaultTaxCodeProvider).getYearly.getTaxFree))
+        )
+      ),
+      Clarification.HAVE_STATE_PENSION -> Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age"))),
+      //TODO Waiting on clarification from tax kalc
+      //HAVE_NO_STATE_PENSION -> Some(
+      //          Html(
+      //            Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
+      //            + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
+      //                           Messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
+      //          )
+      //        )
+      Clarification.SCOTTISH_INCOME_APPLIED -> Some(
+        Html(Messages("quick_calc.result.sidebar.appliedScottishIncomeTaxRates"))
+      ),
+      Clarification.SCOTTISH_CODE_BUT_OTHER_RATE -> Some(Html(Messages("quick_calc.result.sidebar.scottish_tax_code"))),
+      Clarification.NON_SCOTTISH_CODE_BUT_SCOTTISH_RATE -> Some(
+        Html(Messages("quick_calc.result.sidebar.pay_scottish_income_tax"))
+      ),
+      Clarification.INCOME_OVER_100K_WITH_TAPERING -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_a")
+          + linkInNewTab("https://www.gov.uk/income-tax-rates/income-over-100000",
+                         Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_b")) + Messages(
+            "quick_calc.result.sidebar.youHaveReducedPersonal_allowance_c"
           )
         )
-      else None,
-      if (getTaxCalculation(aggregateInput, defaultTaxCodeProvider).getYearly.getTaperingAmountDeduction > 0 && !aggregateConditions
-            .isUkOrScottishTaxCode(aggregateInput))
-        Some(
-          Html(
-            Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_a")
-            + linkInNewTab("https://www.gov.uk/income-tax-rates/income-over-100000",
-                           Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_b")) + Messages(
-              "quick_calc.result.sidebar.youHaveReducedPersonal_allowance_c"
-            )
+      ),
+      Clarification.K_CODE -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.kcode_a")
+          + linkInNewTab(
+            "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
+            Messages("quick_calc.result.sidebar.kcode_b")
+          ) + Messages("quick_calc.result.sidebar.kcode_c") + linkInNewTab(
+            "https://www.gov.uk/tax-company-benefits",
+            Messages("quick_calc.result.sidebar.kcode_d")
           )
         )
-      else None,
-      if (aggregateConditions.payScottishRate(aggregateInput) && aggregateConditions.taxCodeContainsS(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.appliedScottishIncomeTaxRates")))
-      else None,
-      if (!aggregateConditions.payScottishRate(aggregateInput) &&
-          aggregateConditions.taxCodeContainsS(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.scottish_tax_code")))
-      else None,
-      if (!aggregateConditions.taxCodeContainsS(aggregateInput) && aggregateConditions.payScottishRate(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.pay_scottish_income_tax")))
-      else None,
-      if (!aggregateConditions.isTaxCodeDefined(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.personal_allowance")))
-      else None,
-      if (!aggregateConditions.isOverStatePensionAge(aggregateInput))
-        Some(
-          Html(
-            Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
-            + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
-                           Messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
-          )
-        )
-      else None,
-      if (aggregateConditions.isOverStatePensionAge(aggregateInput))
-        Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age")))
-      else None
+      )
     )
+
+    val seqOfBullet: ListBuffer[Option[Html]] = ListBuffer(Some(Html(Messages("quick_calc.result.sidebar.one_job"))))
+
+    listOfClarifications.foreach { clarification =>
+      val text = keyValuePair.getOrElse(clarification, default = None)
+      seqOfBullet += text
+    }
+
+    seqOfBullet.toSeq
+  }
 
   def showResult(): Action[AnyContent] =
     salaryRequired(
@@ -147,7 +157,7 @@ class ShowResultsController @Inject() (
                   TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider),
                   defaultTaxCodeProvider.startOfCurrentTaxYear,
                   isScottish,
-                  salaryCheck(aggregate),
+                  over100KDisclaimerCheck(aggregate),
                   getCurrentTaxYear,
                   sideBarBullets(aggregate),
                   aggregateConditions.isPensionContributionsDefined(aggregate)
