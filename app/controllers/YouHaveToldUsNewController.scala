@@ -24,12 +24,19 @@ import models.QuickCalcAggregateInput
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
+import uk.gov.hmrc.calculator.model
+import uk.gov.hmrc.calculator.model.TaxYear
+import uk.gov.hmrc.calculator.utils.validation.PensionValidator
+import uk.gov.hmrc.calculator.utils.validation.PensionValidator.PensionError
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider}
+import utils.GetCurrentTaxYear.getTaxYear
+import utils.{ActionWithSessionId, AggregateConditionsUtil}
 import views.html.pages.YouHaveToldUsNewView
 
+import scala.jdk.CollectionConverters._
+import java.util
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -48,8 +55,8 @@ class YouHaveToldUsNewController @Inject() (
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  private val taxCodeLabel:      String = "about_tax_code"
-  private val scottishRateLabel: String = "scottish_rate"
+  private val taxCodeLabel:                   String = "about_tax_code"
+  private val scottishRateLabel:              String = "scottish_rate"
   private val aboutPensionContributionsLabel: String = "about_pensions_contributions"
 
   def summary(): Action[AnyContent] =
@@ -85,20 +92,28 @@ class YouHaveToldUsNewController @Inject() (
     }
 
   private def pensionContributionsWarning(
-                                           aggregateInput: QuickCalcAggregateInput
-                                         )(implicit messages: Messages): List[(String, String)] = {
-    val monthlyContributions: BigDecimal = aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).getOrElse(BigDecimal(0))
+    aggregateInput:    QuickCalcAggregateInput
+  )(implicit messages: Messages
+  ): List[(String, String)] = {
+    val monthlyContributions: BigDecimal =
+      aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).getOrElse(BigDecimal(0))
     val monthlySalary: BigDecimal = aggregateInput.savedSalary.flatMap(_.monthlyAmount).getOrElse(BigDecimal(0))
-
     val roundedMonthlySalary = monthlySalary.setScale(2, BigDecimal.RoundingMode.HALF_UP)
-
-    if (monthlyContributions > roundedMonthlySalary) {
-      List(aboutPensionContributionsLabel -> Messages("quick_calc.pensionContributionsFixed.warning",roundedMonthlySalary))
+    val listOfPensionError = PensionValidator.INSTANCE
+      .isValidMonthlyPension(monthlyContributions.toDouble,
+                             monthlySalary.toDouble,
+                             TaxResult.extractTaxYear(getTaxYear))
+      .asScala
+      .toList
+    if (listOfPensionError.contains(PensionError.ABOVE_HUNDRED_PERCENT)) {
+      List(
+        aboutPensionContributionsLabel -> Messages("quick_calc.pensionContributionsFixed.warning", roundedMonthlySalary)
+      )
     } else {
       List.empty
     }
-  }
 
+  }
 
   private def scottishRateWarnings(
     aggregateInput:    QuickCalcAggregateInput
@@ -114,7 +129,9 @@ class YouHaveToldUsNewController @Inject() (
     aggregateInput:    QuickCalcAggregateInput
   )(implicit messages: Messages
   ): Map[String, String] = {
-    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput) ++ pensionContributionsWarning(aggregateInput)
+    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput) ++ pensionContributionsWarning(
+        aggregateInput
+      )
     finalList.toMap
   }
 

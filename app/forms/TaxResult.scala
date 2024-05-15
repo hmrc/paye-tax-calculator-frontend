@@ -113,7 +113,7 @@ object TaxResult {
 
   def convertWagesToMonthly(wages: BigDecimal): BigDecimal = BigDecimal(WageConverterUtils.INSTANCE.convertYearlyWageToMonthly(wages.toDouble))
 
-  private def extractTaxYear(currentTaxYear: Int): TaxYear =
+  def extractTaxYear(currentTaxYear: Int): TaxYear =
     currentTaxYear match {
       case 2020 => TaxYear.TWENTY_TWENTY
       case 2021 => TaxYear.TWENTY_TWENTY_ONE
