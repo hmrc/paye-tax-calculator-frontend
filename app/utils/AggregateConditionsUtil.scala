@@ -16,11 +16,7 @@
 
 package utils
 
-import config.AppConfig
 import models.QuickCalcAggregateInput
-import uk.gov.hmrc.calculator.CalculatorUtils
-
-import java.time.{LocalDate, MonthDay}
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -34,12 +30,5 @@ class AggregateConditionsUtil @Inject() {
 
   def givenPensionContributionPercentage(aggregateInput: QuickCalcAggregateInput) : Boolean =
     aggregateInput.savedPensionContributions.exists(_.gaveUsPercentageAmount)
-
-  def taxCodeContainsS(aggregateInput: QuickCalcAggregateInput): Boolean =
-    aggregateInput.savedTaxCode.flatMap(_.taxCode.map(_.contains("S"))).getOrElse(false)
-
-
-  def payScottishRate(aggregateInput: QuickCalcAggregateInput): Boolean =
-    aggregateInput.savedScottishRate.exists(_.payScottishRate)
 
 }

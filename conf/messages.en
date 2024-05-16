@@ -62,6 +62,10 @@ quick_calc.you_have_told_us.about_tax_code.default.not.provided=Not provided
 quick_calc.you_have_told_us.taxCode.add=Add
 quick_calc.you_have_told_us.taxCode.remove=Remove
 
+quick_calc.pensionContributionError.invalidFormat=Enter your monthly pension contributions amount in the correct format
+quick_calc.pensionContributionError.poundAndPence=Your monthly pension contributions can only include pounds and pence
+quick_calc.pensionContributionError.lessThanHundredPercent=Your monthly pension contributions must be less than 100% of your income
+
 quick_calc.you_have_told_us.scottish_rate.label=Do you pay the   Scottish Income Tax rate?
 quick_calc.you_have_told_us.scottish_rate.label.new=Scottish Income Tax
 quick_calc.you_have_told_us.scottish_rate.yes=Yes

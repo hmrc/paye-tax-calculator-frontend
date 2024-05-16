@@ -25,14 +25,14 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.calculator.model
-import uk.gov.hmrc.calculator.model.TaxYear
-import uk.gov.hmrc.calculator.utils.validation.PensionValidator
+import uk.gov.hmrc.calculator.model.{TaxCodeValidationResponse, TaxYear, ValidationError}
+import uk.gov.hmrc.calculator.utils.validation.{PensionValidator, TaxCodeValidator}
 import uk.gov.hmrc.calculator.utils.validation.PensionValidator.PensionError
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.GetCurrentTaxYear.getTaxYear
-import utils.{ActionWithSessionId, AggregateConditionsUtil}
+import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider}
 import views.html.pages.YouHaveToldUsNewView
 
 import scala.jdk.CollectionConverters._
@@ -46,7 +46,8 @@ class YouHaveToldUsNewController @Inject() (
   val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
   yourHaveToldUsView:            YouHaveToldUsNewView,
-  aggregateConditionsUtil:       AggregateConditionsUtil
+  aggregateConditionsUtil:       AggregateConditionsUtil,
+  defaultTaxCodeProvider: DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
@@ -56,7 +57,6 @@ class YouHaveToldUsNewController @Inject() (
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   private val taxCodeLabel:                   String = "about_tax_code"
-  private val scottishRateLabel:              String = "scottish_rate"
   private val aboutPensionContributionsLabel: String = "about_pensions_contributions"
 
   def summary(): Action[AnyContent] =
@@ -79,18 +79,6 @@ class YouHaveToldUsNewController @Inject() (
             Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
 
-  private def taxCodeWarnings(
-    aggregateInput:    QuickCalcAggregateInput
-  )(implicit messages: Messages
-  ): List[(String, String)] =
-    if (aggregateConditionsUtil.taxCodeContainsS(aggregateInput) && !aggregateConditionsUtil.payScottishRate(
-          aggregateInput
-        )) {
-      List(taxCodeLabel -> Messages("quick_calc.tax_code.scottish_rate.warning"))
-    } else {
-      List.empty
-    }
-
   private def pensionContributionsWarning(
     aggregateInput:    QuickCalcAggregateInput
   )(implicit messages: Messages
@@ -105,33 +93,36 @@ class YouHaveToldUsNewController @Inject() (
                              TaxResult.extractTaxYear(getTaxYear))
       .asScala
       .toList
-    if (listOfPensionError.contains(PensionError.ABOVE_HUNDRED_PERCENT)) {
+    if (listOfPensionError.contains(PensionError.ABOVE_WAGE)) {
       List(
         aboutPensionContributionsLabel -> Messages("quick_calc.pensionContributionsFixed.warning", roundedMonthlySalary)
       )
     } else {
       List.empty
     }
-
   }
 
-  private def scottishRateWarnings(
+  private def taxCodeWarnings(
     aggregateInput:    QuickCalcAggregateInput
   )(implicit messages: Messages
-  ): List[(String, String)] =
-    if (aggregateConditionsUtil.payScottishRate(aggregateInput) && !aggregateConditionsUtil.taxCodeContainsS(
-          aggregateInput
-        ))
-      List(scottishRateLabel -> Messages("quick_calc.scottish_rate.payScottishRate.warning"))
-    else List.empty
+  ): List[(String, String)] = {
+    val payScottishRate = aggregateInput.savedScottishRate.exists(_.payScottishRate)
+    val taxCode         = aggregateInput.savedTaxCode.flatMap(_.taxCode).getOrElse(defaultTaxCodeProvider.defaultUkTaxCode)
+    val result = Option(TaxCodeValidator.INSTANCE.validateTaxCodeMatchingRate(taxCode, payScottishRate))
+    result.map(_.getErrorType) match {
+      case Some(ValidationError.ScottishCodeButOtherRate) =>
+        List(taxCodeLabel -> Messages("quick_calc.tax_code.scottish_rate.warning"))
+      case Some(ValidationError.NonScottishCodeButScottishRate) =>
+        List(taxCodeLabel -> Messages("quick_calc.scottish_rate.payScottishRate.warning"))
+      case _ => List.empty
+    }
+  }
 
   private def taxCodeCheck(
     aggregateInput:    QuickCalcAggregateInput
   )(implicit messages: Messages
   ): Map[String, String] = {
-    val finalList = taxCodeWarnings(aggregateInput) ++ scottishRateWarnings(aggregateInput) ++ pensionContributionsWarning(
-        aggregateInput
-      )
+    val finalList = taxCodeWarnings(aggregateInput) ++ pensionContributionsWarning(aggregateInput)
     finalList.toMap
   }
 

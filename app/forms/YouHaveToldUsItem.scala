@@ -140,12 +140,6 @@ object YouHaveToldUs {
       }
     }
 
-  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
-
-    def toYouHaveToldUsItem(salary: T): YouHaveToldUsItem =
-      salaryFormat.toYouHaveToldUsItem(salary)
-  }
-
   def getGoBackLink(items: List[YouHaveToldUsItem]): String =
     items.flatMap(y => if (y.label == SCOTTISH_RATE) y.url else "") match {
       case url if url.nonEmpty => url.mkString

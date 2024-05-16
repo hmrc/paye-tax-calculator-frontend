@@ -90,14 +90,13 @@ class ShowResultsController @Inject() (
         )
       ),
       Clarification.HAVE_STATE_PENSION -> Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age"))),
-      //TODO Waiting on clarification from tax kalc
-      //HAVE_NO_STATE_PENSION -> Some(
-      //          Html(
-      //            Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
-      //            + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
-      //                           Messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
-      //          )
-      //        )
+      Clarification.HAVE_NO_STATE_PENSION -> Some(
+                Html(
+                  Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
+                  + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
+                                 Messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
+                )
+              ),
       Clarification.SCOTTISH_INCOME_APPLIED -> Some(
         Html(Messages("quick_calc.result.sidebar.appliedScottishIncomeTaxRates"))
       ),
