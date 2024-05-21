@@ -24,19 +24,15 @@ import models.QuickCalcAggregateInput
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
-import uk.gov.hmrc.calculator.model
-import uk.gov.hmrc.calculator.model.{TaxCodeValidationResponse, TaxYear, ValidationError}
+import uk.gov.hmrc.calculator.model.ValidationError
 import uk.gov.hmrc.calculator.utils.validation.{PensionValidator, TaxCodeValidator}
 import uk.gov.hmrc.calculator.utils.validation.PensionValidator.PensionError
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.GetCurrentTaxYear.getTaxYear
-import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider}
+import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider, SalaryRequired}
 import views.html.pages.YouHaveToldUsNewView
 
 import scala.jdk.CollectionConverters._
-import java.util
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -52,7 +48,8 @@ class YouHaveToldUsNewController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId
+    with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -67,8 +64,8 @@ class YouHaveToldUsNewController @Inject() (
           if (aggregate.allQuestionsAnswered) {
             Ok(
               yourHaveToldUsView(
-                aggregate.youHaveToldUsItems,
-                aggregate.additionalQuestionItems,
+                aggregate.youHaveToldUsItems(),
+                aggregate.additionalQuestionItems(),
                 taxCodeCheck(aggregate),
                 aggregateConditionsUtil.isTaxCodeDefined(aggregate),
                 aggregateConditionsUtil.isPensionContributionsDefined(aggregate),
@@ -125,22 +122,4 @@ class YouHaveToldUsNewController @Inject() (
     val finalList = taxCodeWarnings(aggregateInput) ++ pensionContributionsWarning(aggregateInput)
     finalList.toMap
   }
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
-    }
 }

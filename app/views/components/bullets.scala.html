@@ -16,7 +16,7 @@
 
 @this()
 
-@(content: Seq[Option[Html]], classes: String = "govuk-list")(implicit messages: Messages)
+@(content: Seq[Option[Html]], classes: String = "govuk-list")
 
 <ul class="@classes govuk-list--bullet">
     @content.map { bullet =>

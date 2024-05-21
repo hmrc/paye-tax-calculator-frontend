@@ -20,7 +20,7 @@ import models.QuickCalcAggregateInput
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AggregateConditionsUtil @Inject() {
+class AggregateConditionsUtil @Inject()(defaultTaxCodeProvider: DefaultTaxCodeProvider) {
 
   def isTaxCodeDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedTaxCode.flatMap(_.taxCode).isDefined

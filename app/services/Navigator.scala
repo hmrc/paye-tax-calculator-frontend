@@ -40,7 +40,7 @@ class Navigator @Inject() (appConfig: AppConfig) {
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(): Call =
     nextPageOrSummaryIfAllQuestionsAnswered(agg) {
       routes.StatePensionController.showStatePensionForm
-    }
+    }()
 
   def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Call =
     if (aggregate.savedSalary.isEmpty)

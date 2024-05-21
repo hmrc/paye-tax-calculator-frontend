@@ -38,7 +38,7 @@ class SessionIdFilter(
     mat:                Materializer,
     ec:                 ExecutionContext,
     sessionCookieBaker: SessionCookieBaker
-  ) {
+  ) = {
     this(mat, UUID.randomUUID(), sessionCookieBaker, ec)
   }
 

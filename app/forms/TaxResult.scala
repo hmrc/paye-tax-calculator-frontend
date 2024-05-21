@@ -16,13 +16,12 @@
 
 package forms
 
-import models.{QuickCalcAggregateInput, UserTaxCode}
+import models.QuickCalcAggregateInput
 import uk.gov.hmrc.calculator.Calculator
 import uk.gov.hmrc.calculator.Calculator.PensionContribution
 import uk.gov.hmrc.calculator.model.pension.PensionMethod
-import uk.gov.hmrc.calculator.model.{BandBreakdown, CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod, TaxYear}
-import uk.gov.hmrc.calculator.utils.clarification.Clarification
-import uk.gov.hmrc.calculator.utils.{PayPeriodExtensionsKt, WageConverterUtils}
+import uk.gov.hmrc.calculator.model.{CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod, TaxYear}
+import uk.gov.hmrc.calculator.utils.WageConverterUtils
 import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
 import utils.GetCurrentTaxYear.getTaxYear
@@ -32,16 +31,8 @@ import scala.math.BigDecimal.RoundingMode
 
 object TaxResult {
 
-  val SCOTTISH_TAX_CODE_PREFIX = "SK"
-
-  def incomeTax(response: CalculatorResponsePayPeriod): BigDecimal =
-    response.getTaxToPay
-
   def extractIncomeTax(response: CalculatorResponsePayPeriod): BigDecimal =
     response.getTaxToPay
-
-  def extractPensionContributions(response: CalculatorResponsePayPeriod): Double =
-    response.getPensionContribution
 
   def incomeTaxBands(response: CalculatorResponsePayPeriod): Map[Double, Double] =
     Option(response.getTaxBreakdown) match {
@@ -52,9 +43,6 @@ object TaxResult {
       case _ =>
         Map.empty
     }
-
-  def isOverMaxRate(response: CalculatorResponsePayPeriod): Boolean =
-    response.getMaxTaxAmountExceeded
 
   private def extractUserPaysScottishTax(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedScottishRate match {
@@ -93,8 +81,8 @@ object TaxResult {
     val result = period match {
       case "a year"        => wages.toDouble
       case "a month"       => WageConverterUtils.INSTANCE.convertMonthlyWageToYearly(wages.toDouble)
-      case "a day"         => WageConverterUtils.INSTANCE.convertDailyWageToYearly(wages.toDouble, hoursOrDaysWorked.map(_.toDouble).get)
-      case "an hour"       => WageConverterUtils.INSTANCE.convertHourlyWageToYearly(wages.toDouble,  hoursOrDaysWorked.map(_.toDouble).get)
+      case "a day"         => WageConverterUtils.INSTANCE.convertDailyWageToYearly(wages.toDouble, hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied days")))
+      case "an hour"       => WageConverterUtils.INSTANCE.convertHourlyWageToYearly(wages.toDouble,  hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied hours")))
       case "a week"        => WageConverterUtils.INSTANCE.convertWeeklyWageToYearly(wages.toDouble)
       case "every 4 weeks" => WageConverterUtils.INSTANCE.convertFourWeeklyWageToYearly(wages.toDouble)
     }
@@ -193,7 +181,7 @@ object TaxResult {
     val outValue  = formatter.format(value)
 
     outValue match {
-      case money(pounds, pins) => {
+      case money(_, _) => {
         formatter.format(value) + "0"
       }
       case _ => formatter.format(value)

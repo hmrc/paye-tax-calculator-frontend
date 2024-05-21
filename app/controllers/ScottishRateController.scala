@@ -28,7 +28,7 @@ import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.{ActionWithSessionId, DefaultTaxCodeProvider}
+import utils.{ActionWithSessionId, DefaultTaxCodeProvider, SalaryRequired}
 import views.html.pages.ScottishRateView
 
 import scala.concurrent.ExecutionContext
@@ -45,7 +45,7 @@ class ScottishRateController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -61,12 +61,12 @@ class ScottishRateController @Inject() (
               form.fill(s)
             }
             .getOrElse(form)
-          Ok(scottishRateView(filledForm, agg.youHaveToldUsItems))
+          Ok(scottishRateView(filledForm, agg.youHaveToldUsItems()))
         }
     )
 
   def submitScottishRateForm(): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
+    validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       form
@@ -76,7 +76,7 @@ class ScottishRateController @Inject() (
             cache
               .fetchAndGetEntry()
               .map {
-                case Some(aggregate) => aggregate.youHaveToldUsItems
+                case Some(aggregate) => aggregate.youHaveToldUsItems()
                 case None            => Nil
               }
               .map(itemList => BadRequest(scottishRateView(formWithErrors, itemList))),
@@ -118,24 +118,6 @@ class ScottishRateController @Inject() (
               )
           }
         )
-    }
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
     }
 
 }

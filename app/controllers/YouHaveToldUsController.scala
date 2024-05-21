@@ -19,14 +19,11 @@ package controllers
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
-import models.QuickCalcAggregateInput
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import services.{Navigator, QuickCalcCache}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, SalaryRequired}
 import views.html.pages.YouHaveToldUsView
 
 import scala.concurrent.ExecutionContext
@@ -42,7 +39,7 @@ class YouHaveToldUsController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -52,27 +49,9 @@ class YouHaveToldUsController @Inject() (
       implicit request =>
         aggregate =>
           if (aggregate.allQuestionsAnswered)
-            Ok(yourHaveToldUsView(aggregate.youHaveToldUsItems))
+            Ok(yourHaveToldUsView(aggregate.youHaveToldUsItems()))
           else
             Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
-    }
 
 }

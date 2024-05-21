@@ -16,8 +16,6 @@
 
 package controllers
 
-import akka.http.javadsl.model.ws.Message
-import com.fasterxml.jackson.module.scala.deser.overrides.MutableList
 import config.AppConfig
 import forms.TaxResult
 import forms.TaxResult.moneyFormatter
@@ -31,12 +29,9 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.calculator.exception.InvalidPensionException
 import uk.gov.hmrc.calculator.model.CalculatorResponse
 import uk.gov.hmrc.calculator.utils.clarification.Clarification
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import uk.gov.hmrc.time.TaxYear
 import utils.GetCurrentTaxYear.getCurrentTaxYear
-import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider}
+import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvider, SalaryRequired}
 import views.html.components.linkNewTab
 import views.html.pages.ResultView
 
@@ -58,13 +53,13 @@ class ShowResultsController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   private def over100KDisclaimerCheck(aggregateInput: QuickCalcAggregateInput): Boolean = {
     val listOfClarifications = getClarifications(aggregateInput, defaultTaxCodeProvider)
-    listOfClarifications.contains(Clarification.INCOME_OVER_100K)
+      listOfClarifications.contains(Clarification.INCOME_OVER_100K)
   }
 
   private def getTaxCalculation(
@@ -168,23 +163,5 @@ class ShowResultsController @Inject() (
             }
           } else Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
-    }
 
 }

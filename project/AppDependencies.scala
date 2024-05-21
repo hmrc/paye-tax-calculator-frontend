@@ -4,7 +4,7 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay28Version            = "8.2.0"
+  private val bootstrapPlay30Version            = "8.6.0"
   private val playPartialsVersion               = "8.3.0-play-28"
   private val playConditionalFormMappingVersion = "1.13.0-play-28"
   private val urlBuilderVersion                 = "3.6.0-play-28"
@@ -17,8 +17,8 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"          %% "bootstrap-frontend-play-28"    % bootstrapPlay28Version,
-    "uk.gov.hmrc"          %% "bootstrap-backend-play-28"     % bootstrapPlay28Version,
+    "uk.gov.hmrc"          %% "bootstrap-frontend-play-30"    % bootstrapPlay30Version,
+    "uk.gov.hmrc"          %% "bootstrap-backend-play-2"      % bootstrapPlay30Version,
     "uk.gov.hmrc"          %% "play-partials"                 % playPartialsVersion,
     "uk.gov.hmrc"          %% "play-frontend-hmrc-play-28"    % hmrcFrontend,
     "uk.gov.hmrc"          %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
@@ -37,7 +37,7 @@ object AppDependencies {
   private val flexmarkVersion                   = "0.62.2"
 
   def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"          %% "bootstrap-test-play-28"      % bootstrapPlay28Version           % scope,
+    "uk.gov.hmrc"          %% "bootstrap-test-play-28"      % bootstrapPlay30Version           % scope,
     "org.pegdown"          % "pegdown"                      % pegdownVersion                   % scope,
     "org.jsoup"            % "jsoup"                        % jsoupVersion                     % scope,
     "org.scalatestplus"    %% "mockito-3-12"                % scalaTestPlusMockitoVersion      % scope,

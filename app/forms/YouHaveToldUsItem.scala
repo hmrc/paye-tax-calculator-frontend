@@ -57,7 +57,7 @@ object YouHaveToldUs {
     }
   }
 
-  implicit def overStatePensionAgeFormat(implicit messages: Messages) =
+  implicit def overStatePensionAgeFormat(implicit messages: Messages): YouHaveToldUs[StatePension] =
     new YouHaveToldUs[StatePension] {
 
       def toYouHaveToldUsItem(overStatePensionAge: StatePension): YouHaveToldUsItem = {

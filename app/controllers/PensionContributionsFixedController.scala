@@ -26,11 +26,11 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.ActionWithSessionId
-import views.html.pages.{PensionContributionsFixedView, PensionContributionsPercentageView}
+import utils.{ActionWithSessionId, SalaryRequired}
+import views.html.pages.PensionContributionsFixedView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class PensionContributionsFixedController @Inject()(
   override val messagesApi:           MessagesApi,
@@ -43,7 +43,7 @@ class PensionContributionsFixedController @Inject()(
   implicit val executionContext:      ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -69,7 +69,7 @@ class PensionContributionsFixedController @Inject()(
     }
 
   def submitPensionContribution(): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
+    validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
       form
         .bindFromRequest()
@@ -102,30 +102,11 @@ class PensionContributionsFixedController @Inject()(
               cache.save(updatedAgg).map(_ =>
                 Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
                   routes.YouHaveToldUsNewController.summary
-                })
+                }())
               )
             }
           }
         )
-
-    }
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
 
     }
 }

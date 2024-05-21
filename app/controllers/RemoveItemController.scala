@@ -18,16 +18,15 @@ package controllers
 
 import config.AppConfig
 import forms.forms.RemoveItemFormProvider
-import models.QuickCalcAggregateInput
 import play.api.data.Form
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, SalaryRequired}
 import views.html.pages.RemoveItemView
 
 import scala.concurrent.ExecutionContext
@@ -44,7 +43,7 @@ class RemoveItemController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -54,11 +53,11 @@ class RemoveItemController @Inject() (
     salaryRequired(cache, showRemoveTaxCodeFormTestable(option))
 
   private[controllers] def showRemoveTaxCodeFormTestable(option: String): ShowForm = { implicit request => agg =>
-    Ok(removeItemView(form(option), agg.additionalQuestionItems, option))
+    Ok(removeItemView(form(option), agg.additionalQuestionItems(), option))
   }
 
   def submitRemoveItemForm(option: String): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
+    validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
       form(option)
         .bindFromRequest()
@@ -67,7 +66,7 @@ class RemoveItemController @Inject() (
             cache.fetchAndGetEntry().map {
               case Some(aggregate) =>
                 BadRequest(
-                  removeItemView(formWithErrors, aggregate.additionalQuestionItems, option)
+                  removeItemView(formWithErrors, aggregate.additionalQuestionItems(), option)
                 )
               case None =>
                 BadRequest(removeItemView(formWithErrors, Nil, option))
@@ -92,29 +91,11 @@ class RemoveItemController @Inject() (
                       updatedAggregate
                     ) {
                       routes.YouHaveToldUsNewController.summary
-                    }
+                    }()
                   )
                 }
             }
         )
-    }
-
-  private def salaryRequired(
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
     }
 
 }

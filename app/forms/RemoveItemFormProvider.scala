@@ -40,10 +40,10 @@ import mappings.CustomFormatters._
 
 import javax.inject.Inject
 
-class RemoveItemFormProvider @Inject()() {
+class RemoveItemFormProvider @Inject() {
 
-  private val taxCodeValidation: Form[Boolean] = Form(single("removeItem" -> of(removeTaxCodeValidation)))
-  private val pensionContributionsValidations: Form[Boolean] = Form(single("removeItem" -> of(removePensionContributionsValidation)))
+  private val taxCodeValidation: Form[Boolean] = Form(single("removeItem" -> of(removeTaxCodeValidation())))
+  private val pensionContributionsValidations: Form[Boolean] = Form(single("removeItem" -> of(removePensionContributionsValidation())))
 
   def apply(queryParam: String): Form[Boolean] =
     queryParam match {

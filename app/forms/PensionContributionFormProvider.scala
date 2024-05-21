@@ -20,8 +20,8 @@ package forms
 import mappings.CustomFormatters
 
 import javax.inject.Inject
-import models.{PensionContributions, QuickCalcAggregateInput, Salary}
-import models.PensionContributions._
+import models.PensionContributions
+import models.PensionContributions.{gaveUsPensionPercentage, monthlyPensionContribution, yearlyContributionAmount}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, of, optional}
 import play.api.data.format.Formats._
