@@ -28,7 +28,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.{ActionWithSessionId, BigDecimalFormatter}
+import utils.{ActionWithSessionId, BigDecimalFormatter, SalaryRequired}
 import views.html.pages.DaysAWeekView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,13 +45,13 @@ class DaysPerWeekController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[Days] = salaryInDaysFormProvider()
 
-  def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
+  def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId().async { implicit request =>
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     val url   = routes.SalaryController.showSalaryForm.url
@@ -92,13 +92,13 @@ class DaysPerWeekController @Inject() (
                 Redirect(
                   navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
                     routes.StatePensionController.showStatePensionForm
-                  )
+                  )()
                 )
               )
           }
         }
       )
-  }
+  }()
 
   def showDaysAWeek(valueInPence: Int): Action[AnyContent] =
     salaryRequired(
@@ -111,26 +111,5 @@ class DaysPerWeekController @Inject() (
         Ok(daysPerWeekView(filledForm, BigDecimal(valueInPence / 100.0)))
       }
     )
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(
-        request,
-        request.session
-      )
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
-    }
 
 }

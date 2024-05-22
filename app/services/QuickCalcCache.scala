@@ -16,17 +16,15 @@
 
 package services
 
-import akka.Done
 import com.google.inject.{ImplementedBy, Singleton}
 
 import javax.inject.Inject
 import uk.gov.hmrc.http._
-import config.AppConfig
 import models.{QuickCalcAggregateInput, QuickCalcMongoCache}
+import org.apache.pekko.Done
 import respository.QuickCalcCacheMongo
-import uk.gov.hmrc.http.HttpClient
 
-import java.time.{Clock, Instant}
+import java.time.Instant
 import scala.concurrent._
 
 @ImplementedBy(classOf[QuickCalcKeyStoreCache])
@@ -38,8 +36,6 @@ trait QuickCalcCache {
 
 @Singleton
 class QuickCalcKeyStoreCache @Inject() (
-  httpClient:                HttpClient,
-  appConfig:                 AppConfig,
   quickCalcCacheMongo:       QuickCalcCacheMongo
 )(implicit executionContext: ExecutionContext)
     extends QuickCalcCache {
@@ -49,7 +45,7 @@ class QuickCalcKeyStoreCache @Inject() (
   def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]] =
     quickCalcCacheMongo
       .findById(hc.sessionId.getOrElse(throw new BadRequestException("No Session id found")).value)
-      .flatMap((test: Option[QuickCalcMongoCache]) => Future.successful(test.headOption.map(_.quickCalcAggregateInput)))
+      .flatMap((test: Option[QuickCalcMongoCache]) => Future.successful(test.map(_.quickCalcAggregateInput)))
 
   def save(o: QuickCalcAggregateInput)(implicit hc: HeaderCarrier): Future[Done] = {
     val cacheId = hc.sessionId.getOrElse(throw new BadRequestException("No Session id found"))

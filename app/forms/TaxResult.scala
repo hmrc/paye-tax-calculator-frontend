@@ -16,11 +16,12 @@
 
 package forms
 
-import models.{QuickCalcAggregateInput, UserTaxCode}
+import models.QuickCalcAggregateInput
 import uk.gov.hmrc.calculator.Calculator
-import uk.gov.hmrc.calculator.model.pension.AnnualPensionMethod
-import uk.gov.hmrc.calculator.model.{BandBreakdown, CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod, TaxYear}
-import uk.gov.hmrc.calculator.utils.PayPeriodExtensionsKt
+import uk.gov.hmrc.calculator.Calculator.PensionContribution
+import uk.gov.hmrc.calculator.model.pension.PensionMethod
+import uk.gov.hmrc.calculator.model.{CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod, TaxYear}
+import uk.gov.hmrc.calculator.utils.WageConverterUtils
 import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
 import utils.GetCurrentTaxYear.getTaxYear
@@ -30,16 +31,8 @@ import scala.math.BigDecimal.RoundingMode
 
 object TaxResult {
 
-  val SCOTTISH_TAX_CODE_PREFIX = "SK"
-
-  def incomeTax(response: CalculatorResponsePayPeriod): BigDecimal =
-    response.getTaxToPay
-
   def extractIncomeTax(response: CalculatorResponsePayPeriod): BigDecimal =
     response.getTaxToPay
-
-  def extractPensionContributions(response: CalculatorResponsePayPeriod): Double =
-    response.getPensionContribution
 
   def incomeTaxBands(response: CalculatorResponsePayPeriod): Map[Double, Double] =
     Option(response.getTaxBreakdown) match {
@@ -51,8 +44,11 @@ object TaxResult {
         Map.empty
     }
 
-  def isOverMaxRate(response: CalculatorResponsePayPeriod): Boolean =
-    response.getMaxTaxAmountExceeded
+  private def extractUserPaysScottishTax(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
+    quickCalcAggregateInput.savedScottishRate match {
+      case Some(s) => s.payScottishRate
+      case None    => false
+    }
 
   def taxCalculation(
     quickCalcAggregateInput: QuickCalcAggregateInput,
@@ -60,6 +56,7 @@ object TaxResult {
   ): CalculatorResponse =
     new Calculator(
       extractTaxCode(quickCalcAggregateInput, defaultTaxCodeProvider),
+      extractUserPaysScottishTax(quickCalcAggregateInput),
       quickCalcAggregateInput.savedTaxCode.exists(_.gaveUsTaxCode),
       extractSalary(quickCalcAggregateInput).toDouble,
       extractPayPeriod(quickCalcAggregateInput),
@@ -69,17 +66,9 @@ object TaxResult {
         case None         => null
       },
       extractTaxYear(getTaxYear),
-      extractPensionMethod(quickCalcAggregateInput) match {
-        case Some(pensionMethod) => pensionMethod
-        case None                => null
-      },
-      extractPensionYearlyAmount(quickCalcAggregateInput) match {
-        case Some(pensionYearlyAmount) => pensionYearlyAmount
+      extractPensionContributions(quickCalcAggregateInput) match {
+        case Some(pensionContribution) =>  pensionContribution
         case None                      => null
-      },
-      extractPensionPercentage(quickCalcAggregateInput) match {
-        case Some(pensionPercentageAmount) => pensionPercentageAmount
-        case None                          => null
       }
     ).run()
 
@@ -89,68 +78,35 @@ object TaxResult {
     hoursOrDaysWorked: Option[BigDecimal] = None
   ): BigDecimal = {
 
-    val kotlinPeriod = period match {
-      case "a year"        => PayPeriod.YEARLY
-      case "a month"       => PayPeriod.MONTHLY
-      case "a day"         => PayPeriod.DAILY
-      case "an hour"       => PayPeriod.HOURLY
-      case "a week"        => PayPeriod.WEEKLY
-      case "every 4 weeks" => PayPeriod.FOUR_WEEKLY
-      case _               => throw new IllegalArgumentException("Unknown period")
+    val result = period match {
+      case "a year"        => wages.toDouble
+      case "a month"       => WageConverterUtils.INSTANCE.convertMonthlyWageToYearly(wages.toDouble)
+      case "a day"         => WageConverterUtils.INSTANCE.convertDailyWageToYearly(wages.toDouble, hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied days")))
+      case "an hour"       => WageConverterUtils.INSTANCE.convertHourlyWageToYearly(wages.toDouble,  hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied hours")))
+      case "a week"        => WageConverterUtils.INSTANCE.convertWeeklyWageToYearly(wages.toDouble)
+      case "every 4 weeks" => WageConverterUtils.INSTANCE.convertFourWeeklyWageToYearly(wages.toDouble)
     }
-    val result = PayPeriodExtensionsKt
-      .convertWageToYearly(wages.toDouble, kotlinPeriod, hoursOrDaysWorked.getOrElse(BigDecimal(0)).toDouble)
 
-    BigDecimal(result)
+   BigDecimal(result)
   }
 
 
-
-  def convertWagesToMonthly(wages: BigDecimal): BigDecimal = {
-
-    val result = PayPeriodExtensionsKt
-      .convertAmountFromYearlyToPayPeriod(wages.toDouble, PayPeriod.MONTHLY)
-
-    BigDecimal(result)
+  private def extractPensionContributions(quickCalcAggregateInput: QuickCalcAggregateInput): Option[PensionContribution] = {
+    (quickCalcAggregateInput.savedPensionContributions.map(_.gaveUsPercentageAmount), quickCalcAggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).getOrElse(BigDecimal(0))) match {
+      case (Some(true), amount) =>  Some(new PensionContribution(PensionMethod.PERCENTAGE, amount.toDouble))
+      case (Some(false), amount) => Some(new PensionContribution(PensionMethod.MONTHLY_AMOUNT_IN_POUNDS, amount.toDouble))
+      case _ => None
+    }
   }
 
-  private def extractTaxYear(currentTaxYear: Int): TaxYear =
+  def convertWagesToMonthly(wages: BigDecimal): BigDecimal = BigDecimal(WageConverterUtils.INSTANCE.convertYearlyWageToMonthly(wages.toDouble))
+
+  def extractTaxYear(currentTaxYear: Int): TaxYear =
     currentTaxYear match {
       case 2020 => TaxYear.TWENTY_TWENTY
       case 2021 => TaxYear.TWENTY_TWENTY_ONE
       case 2023 => TaxYear.TWENTY_TWENTY_THREE
       case 2024 => TaxYear.TWENTY_TWENTY_FOUR
-    }
-
-  private def extractPensionMethod(quickCalcAggregateInput: QuickCalcAggregateInput): Option[AnnualPensionMethod] =
-    quickCalcAggregateInput.savedPensionContributions match {
-      case Some(s) =>
-        s.gaveUsPercentageAmount match {
-          case true  => Some(AnnualPensionMethod.PERCENTAGE)
-          case false => Some(AnnualPensionMethod.AMOUNT_IN_POUNDS)
-          case _           => None
-        }
-      case _ => None
-    }
-
-  private def extractPensionPercentage(quickCalcAggregateInput: QuickCalcAggregateInput): Option[Double] =
-    quickCalcAggregateInput.savedPensionContributions match {
-      case Some(s) =>
-        (s.gaveUsPercentageAmount, s.monthlyContributionAmount) match {
-          case (true, Some(contributionAmount)) => Some(contributionAmount.toDouble)
-          case _                                      => None
-        }
-      case _ => None
-    }
-
-  private def extractPensionYearlyAmount(quickCalcAggregateInput: QuickCalcAggregateInput): Option[Double] =
-    quickCalcAggregateInput.savedPensionContributions match {
-      case Some(s) =>
-        (s.gaveUsPercentageAmount, s.yearlyContributionAmount) match {
-          case (false, Some(contributionAmount)) => Some(contributionAmount.toDouble)
-          case _                                       => None
-        }
-      case _ => None
     }
 
   def extractTaxCode(
@@ -225,7 +181,7 @@ object TaxResult {
     val outValue  = formatter.format(value)
 
     outValue match {
-      case money(pounds, pins) => {
+      case money(_, _) => {
         formatter.format(value) + "0"
       }
       case _ => formatter.format(value)

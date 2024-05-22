@@ -28,7 +28,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.{ActionWithSessionId, BigDecimalFormatter}
+import utils.{ActionWithSessionId, BigDecimalFormatter, SalaryRequired}
 import views.html.pages.HoursAWeekView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,13 +45,13 @@ class HoursPerWeekController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[Hours] = salaryInHoursFormProvider()
 
-  def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
+  def submitHoursAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId().async { implicit request =>
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     val url   = routes.SalaryController.showSalaryForm.url
@@ -89,7 +89,7 @@ class HoursPerWeekController @Inject() (
                 Redirect(
                   navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
                     routes.StatePensionController.showStatePensionForm
-                  )
+                  )()
                 )
               )
           }
@@ -108,23 +108,5 @@ class HoursPerWeekController @Inject() (
 
       }
     )
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
-    }
 
 }

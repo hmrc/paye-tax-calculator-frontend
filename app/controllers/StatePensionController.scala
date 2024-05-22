@@ -20,7 +20,7 @@ import config.AppConfig
 import forms.StatePensionFormProvider
 
 import javax.inject.{Inject, Singleton}
-import models.{PensionContributions, QuickCalcAggregateInput, ScottishRate, StatePension, UserTaxCode}
+import models.{QuickCalcAggregateInput, StatePension, UserTaxCode}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
@@ -28,7 +28,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.{ActionWithSessionId, DefaultTaxCodeProvider}
+import utils.{ActionWithSessionId, SalaryRequired}
 import views.html.pages.StatePensionView
 
 import scala.concurrent.ExecutionContext
@@ -41,12 +41,11 @@ class StatePensionController @Inject() (
   navigator:                     Navigator,
   statePensionView:              StatePensionView,
   statePensionFormProvider:      StatePensionFormProvider,
-  defaultTaxCodeProvider:        DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -62,11 +61,11 @@ class StatePensionController @Inject() (
       }
       .getOrElse(form)
 
-    Ok(statePensionView(filledForm, agg.youHaveToldUsItems))
+    Ok(statePensionView(filledForm, agg.youHaveToldUsItems()))
   }
 
   def submitStatePensionForm(): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
+    validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
       form
@@ -76,7 +75,7 @@ class StatePensionController @Inject() (
             cache.fetchAndGetEntry().map {
               case Some(aggregate) =>
                 BadRequest(
-                  statePensionView(formWithErrors, aggregate.youHaveToldUsItems)
+                  statePensionView(formWithErrors, aggregate.youHaveToldUsItems())
                 )
               case None =>
                 BadRequest(statePensionView(formWithErrors, Nil))
@@ -104,7 +103,7 @@ class StatePensionController @Inject() (
                       } else {
                         routes.TaxCodeController.showTaxCodeForm
                       }
-                    }
+                    }()
                   )
                 }
               case None =>
@@ -122,24 +121,6 @@ class StatePensionController @Inject() (
                   }
             }
         )
-    }
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
     }
 
 }

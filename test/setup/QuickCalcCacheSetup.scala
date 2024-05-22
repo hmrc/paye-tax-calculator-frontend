@@ -16,10 +16,9 @@
 
 package setup
 
-import akka.Done
 import forms.YouHaveToldUsItem
 import models.{PayPeriodDetail, PensionContributions, QuickCalcAggregateInput, Salary, ScottishRate, StatePension, UserTaxCode}
-import play.api.i18n.Messages
+import org.apache.pekko.Done
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -27,7 +26,7 @@ import scala.concurrent.Future
 
 object QuickCalcCacheSetup {
 
-  def cache(mockedResultOfFetching: Option[QuickCalcAggregateInput]) =
+  def cache(mockedResultOfFetching: Option[QuickCalcAggregateInput]): QuickCalcCache =
     new QuickCalcCache {
 
       def fetchAndGetEntry()(implicit hc: HeaderCarrier): Future[Option[QuickCalcAggregateInput]] =
@@ -42,36 +41,36 @@ object QuickCalcCacheSetup {
 
   val baseURL = "/estimate-paye-take-home-pay/"
 
-  val taxCodeTest = YouHaveToldUsItem("1150L", "Tax Code", "/foo", "tax-code")
+  val taxCodeTest: YouHaveToldUsItem = YouHaveToldUsItem("1150L", "Tax Code", "/foo", "tax-code")
 
-  val overStatePensionTest =
+  val overStatePensionTest: YouHaveToldUsItem =
     YouHaveToldUsItem("YES", "Over 65", "/foo", "StatePensionView")
 
-  val salaryYearlyTest = YouHaveToldUsItem(
+  val salaryYearlyTest: YouHaveToldUsItem = YouHaveToldUsItem(
     "20000",
     "a_year",
     "/estimate-paye-take-home-pay/your-pay",
     "salary"
   )
-  val salaryDailyTest        = YouHaveToldUsItem("40", "a_day", "/foo", "salary")
-  val salaryDailyPeriodTest  = YouHaveToldUsItem("5", "Days", "/foo", "time")
-  val salaryHourlyPeriodTest = YouHaveToldUsItem("5", "Hours", "/foo", "time")
+  val salaryDailyTest:        YouHaveToldUsItem = YouHaveToldUsItem("40", "a_day", "/foo", "salary")
+  val salaryDailyPeriodTest:  YouHaveToldUsItem = YouHaveToldUsItem("5", "Days", "/foo", "time")
+  val salaryHourlyPeriodTest: YouHaveToldUsItem = YouHaveToldUsItem("5", "Hours", "/foo", "time")
 
-  val scottishRateTest =
+  val scottishRateTest: YouHaveToldUsItem =
     YouHaveToldUsItem("No", "Scottish", "/foo", "scottish_rate")
 
-  val aggregateListOnlyTaxCode = List(taxCodeTest)
+  val aggregateListOnlyTaxCode: List[YouHaveToldUsItem] = List(taxCodeTest)
 
-  val aggregateListOnlyTaxCodeAndStatePension =
+  val aggregateListOnlyTaxCodeAndStatePension: List[YouHaveToldUsItem] =
     List(taxCodeTest, overStatePensionTest)
 
-  val aggregateListTaxCodeStatePensionAndSalary =
+  val aggregateListTaxCodeStatePensionAndSalary: List[YouHaveToldUsItem] =
     List(taxCodeTest, overStatePensionTest, salaryYearlyTest)
 
-  val aggregateCompleteListYearly =
+  val aggregateCompleteListYearly: List[YouHaveToldUsItem] =
     List(taxCodeTest, overStatePensionTest, salaryYearlyTest, scottishRateTest)
 
-  val aggregateCompleteListDaily = List(
+  val aggregateCompleteListDaily: Seq[YouHaveToldUsItem] = List(
     taxCodeTest,
     overStatePensionTest,
     salaryDailyTest,
@@ -79,7 +78,7 @@ object QuickCalcCacheSetup {
     salaryDailyPeriodTest
   )
 
-  val aggregateCompleteListHourly = List(
+  val aggregateCompleteListHourly: Seq[YouHaveToldUsItem] = List(
     taxCodeTest,
     overStatePensionTest,
     salaryDailyTest,
@@ -87,37 +86,43 @@ object QuickCalcCacheSetup {
     salaryHourlyPeriodTest
   )
 
-  val cacheTestTaxCode                         = Some(UserTaxCode(false, Some("1250L")))
-  val cacheDefaultTestTaxCode                  = Some(UserTaxCode(false, Some("1257L")))
-  val cacheTestTaxCodeScottish                 = Some(UserTaxCode(false, Some("S1250L")))
-  val cacheTestScottishNO                      = Some(ScottishRate(false, false))
-  val cacheTestScottishYES                     = Some(ScottishRate(true, true))
-  val cacheTestStatePensionYES                 = Some(StatePension(true))
-  val cacheTestStatusPensionNO                 = Some(StatePension(false))
-  val cacheTestYearlySalary                    = Some(Salary(20000, None, None, "a year", None, None))
-  val cacheTestYearlyOverHundredThoudandSalary = Some(Salary(100003, None, None, "a year", None, None))
-  val cacheTestDailySalary                     = Some(Salary(40, None, None, "a day", None, None))
-  val cacheTestHourlySalary                    = Some(Salary(8.5, None, None, "an hour", None, None))
-  val cacheTestSalaryPeriodDaily               = Some(PayPeriodDetail(1, 5, "a day", ""))
-  val cacheTestPensionFixedContributions       = Some(PensionContributions(false, Some(50), Some(600)))
-  val cacheTestPensionPecentageContributions   = Some(PensionContributions(true, Some(50), None))
+  val cacheTestTaxCode:                         Option[UserTaxCode]     = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
+  val cacheDefaultTestTaxCode:                  Option[UserTaxCode]     = Some(UserTaxCode(gaveUsTaxCode = true, Some("1257L")))
+  val cacheTestTaxCodeScottish:                 Option[UserTaxCode]     = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
+  val cacheTestScottishNO:                      Option[ScottishRate]    = Some(ScottishRate(gaveUsScottishRate = false, payScottishRate = false))
+  val cacheTestScottishYES:                     Option[ScottishRate]    = Some(ScottishRate(gaveUsScottishRate = true, payScottishRate = true))
+  val cacheTestStatePensionYES:                 Option[StatePension]    = Some(StatePension(true))
+  val cacheTestStatusPensionNO:                 Option[StatePension]    = Some(StatePension(false))
+  val cacheTestYearlySalary:                    Option[Salary]          = Some(Salary(20000, None, None, "a year", None, None))
+  val cacheTestYearlyOverHundredThoudandSalary: Option[Salary]          = Some(Salary(100003, None, None, "a year", None, None))
+  val cacheTestDailySalary:                     Option[Salary]          = Some(Salary(40, None, None, "a day", None, None))
+  val cacheTestHourlySalary:                    Option[Salary]          = Some(Salary(8.5, None, None, "an hour", None, None))
+  val cacheTestSalaryPeriodDaily:               Option[PayPeriodDetail] = Some(PayPeriodDetail(1, 5, "a day", ""))
 
-  val cacheTestSalaryPeriodHourly = Some(
+  val cacheTestPensionFixedContributions: Option[PensionContributions] = Some(
+    PensionContributions(gaveUsPercentageAmount = false, Some(50), Some(600))
+  )
+
+  val cacheTestPensionPecentageContributions: Option[PensionContributions] = Some(
+    PensionContributions(gaveUsPercentageAmount = true, Some(50), None)
+  )
+
+  val cacheTestSalaryPeriodHourly: Option[PayPeriodDetail] = Some(
     PayPeriodDetail(8.5, 40, "an hour", "")
   )
 
-  val cacheTaxCode = Some(
+  val cacheTaxCode: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(savedTaxCode = cacheTestTaxCode)
   )
 
-  val cacheTaxCodeStatePension = Some(
+  val cacheTaxCodeStatePension: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedTaxCode               = cacheTestTaxCode,
       savedIsOverStatePensionAge = cacheTestStatePensionYES
     )
   )
 
-  val cacheSalaryStatePensionTaxCode = Some(
+  val cacheSalaryStatePensionTaxCode: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlySalary,
       savedIsOverStatePensionAge = cacheTestStatePensionYES,
@@ -125,7 +130,7 @@ object QuickCalcCacheSetup {
     )
   )
 
-  val cacheSalaryTaxCodeSavedPensionContributionsFixed = Some(
+  val cacheSalaryTaxCodeSavedPensionContributionsFixed: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlySalary,
       savedIsOverStatePensionAge = cacheTestStatePensionYES,
@@ -135,7 +140,7 @@ object QuickCalcCacheSetup {
     )
   )
 
-  val cacheSalaryTaxCodeSavedPensionContributionsPercentage = Some(
+  val cacheSalaryTaxCodeSavedPensionContributionsPercentage: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlySalary,
       savedIsOverStatePensionAge = cacheTestStatePensionYES,
@@ -145,7 +150,7 @@ object QuickCalcCacheSetup {
     )
   )
 
-  val cacheTaxCodeStatePensionSalary = Some(
+  val cacheTaxCodeStatePensionSalary: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlySalary,
       savedTaxCode               = cacheTestTaxCode,
@@ -154,7 +159,7 @@ object QuickCalcCacheSetup {
     )
   )
 
-  val cacheTaxCodeStatePensionSalaryDaily = Some(
+  val cacheTaxCodeStatePensionSalaryDaily: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestDailySalary,
       savedTaxCode               = cacheTestTaxCode,
@@ -163,7 +168,7 @@ object QuickCalcCacheSetup {
     )
   )
 
-  val cacheCompleteYearly = Some(
+  val cacheCompleteYearly: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlySalary,
       savedTaxCode               = cacheTestTaxCode,
@@ -172,7 +177,7 @@ object QuickCalcCacheSetup {
     )
   )
 
-  val cacheCompleteYearlyScottish = Some(
+  val cacheCompleteYearlyScottish: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlySalary,
       savedTaxCode               = cacheTestTaxCodeScottish,
@@ -181,21 +186,21 @@ object QuickCalcCacheSetup {
     )
   )
 
-  val cacheStatePensionSalary = Some(
+  val cacheStatePensionSalary: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlySalary,
       savedIsOverStatePensionAge = cacheTestStatePensionYES
     )
   )
 
-  val cacheTaxCodeSalary = Some(
+  val cacheTaxCodeSalary: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary  = cacheTestYearlySalary,
       savedTaxCode = cacheTestTaxCode
     )
   )
 
-  val cacheCompleteDaily = Some(
+  val cacheCompleteDaily: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestDailySalary,
       savedTaxCode               = cacheTestTaxCode,
@@ -205,7 +210,7 @@ object QuickCalcCacheSetup {
     )
   )
 
-  val cacheCompleteHourly = Some(
+  val cacheCompleteHourly: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestHourlySalary,
       savedTaxCode               = cacheTestTaxCode,
@@ -215,7 +220,7 @@ object QuickCalcCacheSetup {
     )
   )
 
-  val cacheShowDisclaimer = Some(
+  val cacheShowDisclaimer: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlyOverHundredThoudandSalary,
       savedTaxCode               = cacheDefaultTestTaxCode,
@@ -284,7 +289,6 @@ object QuickCalcCacheSetup {
 
   val expectedPrefixTaxCodeErrorMessage =
     "Enter a tax code that starts with the letters S, K, SK, C or CK followed by numbers"
-
 
   val expectedEmptyTaxCodeErrorMessage =
     "Enter your current tax code or change your answer to ‘No’"

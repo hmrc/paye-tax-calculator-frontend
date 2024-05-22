@@ -17,9 +17,8 @@
 package config
 
 import java.util.UUID
-
-import akka.stream.Materializer
 import com.google.inject.Inject
+import org.apache.pekko.stream.Materializer
 import play.api.mvc._
 import play.api.mvc.request.{Cell, RequestAttrKey}
 import uk.gov.hmrc.http.{SessionKeys, HeaderNames => HMRCHeaderNames}
@@ -38,7 +37,7 @@ class SessionIdFilter(
     mat:                Materializer,
     ec:                 ExecutionContext,
     sessionCookieBaker: SessionCookieBaker
-  ) {
+  ) = {
     this(mat, UUID.randomUUID(), sessionCookieBaker, ec)
   }
 

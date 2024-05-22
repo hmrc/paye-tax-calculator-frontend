@@ -28,7 +28,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.{ActionWithSessionId, DefaultTaxCodeProvider}
+import utils.{ActionWithSessionId, DefaultTaxCodeProvider, SalaryRequired}
 import views.html.pages.TaxCodeView
 
 import scala.concurrent.ExecutionContext
@@ -46,13 +46,13 @@ class TaxCodeController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[UserTaxCode] = userTaxCodeFormProvider()
 
-  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean =
+  private def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedSalary.exists(_.amount > 100000)
 
   def showTaxCodeForm: Action[AnyContent] =
@@ -65,7 +65,7 @@ class TaxCodeController @Inject() (
           .getOrElse(form)
         Ok(
           taxCodeView(filledForm,
-                      agg.youHaveToldUsItems,
+                      agg.youHaveToldUsItems(),
                       defaultTaxCodeProvider.defaultUkTaxCode,
                       salaryOverHundredThousand(agg))
         )
@@ -73,7 +73,7 @@ class TaxCodeController @Inject() (
     )
 
   def submitTaxCodeForm(): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
+    validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
       form
         .bindFromRequest()
@@ -83,7 +83,7 @@ class TaxCodeController @Inject() (
               case Some(aggregate) =>
                 BadRequest(
                   taxCodeView(formWithErrors,
-                              aggregate.youHaveToldUsItems,
+                              aggregate.youHaveToldUsItems(),
                               defaultTaxCodeProvider.defaultUkTaxCode,
                               salaryOverHundredThousand(aggregate))
                 )
@@ -131,7 +131,7 @@ class TaxCodeController @Inject() (
                           navigator
                             .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
                               routes.YouHaveToldUsController.summary
-                            }
+                            }()
                         )
                       }
                     } else {
@@ -144,7 +144,7 @@ class TaxCodeController @Inject() (
                           navigator
                             .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
                               routes.YouHaveToldUsController.summary
-                            }
+                            }()
                         )
                       }
                     }
@@ -152,24 +152,6 @@ class TaxCodeController @Inject() (
             }
           }
         )
-    }
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
     }
 
 }

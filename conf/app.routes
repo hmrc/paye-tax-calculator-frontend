@@ -1,7 +1,5 @@
 # microservice specific routes
 
-->          /hmrc-frontend         hmrcfrontend.Routes
-
 GET         /                      controllers.QuickCalcController.redirectToSalaryForm
 
 GET         /your-pay              controllers.SalaryController.showSalaryForm
@@ -45,3 +43,5 @@ GET         /reset                 controllers.ResetController.reset()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file          controllers.Assets.at(path="/public", file)
+
+->          /hmrc-frontend         hmrcfrontend.Routes

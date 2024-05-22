@@ -16,18 +16,11 @@
 
 package utils
 
-import config.AppConfig
 import models.QuickCalcAggregateInput
-import uk.gov.hmrc.calculator.CalculatorUtils
-
-import java.time.{LocalDate, MonthDay}
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AggregateConditionsUtil @Inject() (defaultTaxCodeProvider: DefaultTaxCodeProvider) {
-
-  def isPensionsDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
-    aggregateInput.savedPensionContributions.isDefined
+class AggregateConditionsUtil @Inject()(defaultTaxCodeProvider: DefaultTaxCodeProvider) {
 
   def isTaxCodeDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedTaxCode.flatMap(_.taxCode).isDefined
@@ -37,35 +30,5 @@ class AggregateConditionsUtil @Inject() (defaultTaxCodeProvider: DefaultTaxCodeP
 
   def givenPensionContributionPercentage(aggregateInput: QuickCalcAggregateInput) : Boolean =
     aggregateInput.savedPensionContributions.exists(_.gaveUsPercentageAmount)
-
-  def taxCodeContainsS(aggregateInput: QuickCalcAggregateInput): Boolean =
-    aggregateInput.savedTaxCode.flatMap(_.taxCode.map(_.contains("S"))).getOrElse(false)
-
-  def taxCodeContainsK(aggregateInput: QuickCalcAggregateInput): Boolean = {
-    val taxCodeOpt = aggregateInput.savedTaxCode.flatMap(_.taxCode)
-    taxCodeOpt.exists { taxCode =>
-      taxCode.contains("K") || taxCode.contains("CK") || taxCode.contains("SK")
-    }
-  }
-
-
-  def payScottishRate(aggregateInput: QuickCalcAggregateInput): Boolean =
-    aggregateInput.savedScottishRate.exists(_.payScottishRate)
-
-  def isUkOrScottishTaxCode(aggregateInput: QuickCalcAggregateInput): Boolean =
-    aggregateInput.savedTaxCode
-      .flatMap(_.taxCode)
-      .exists(
-        _.equals(defaultTaxCodeProvider.defaultUkTaxCode)
-        || aggregateInput.savedTaxCode
-          .flatMap(_.taxCode)
-          .exists(_.equals(defaultTaxCodeProvider.defaultScottishTaxCode))
-      )
-
-  def isOverStatePensionAge(aggregateInput: QuickCalcAggregateInput): Boolean =
-    aggregateInput.savedIsOverStatePensionAge.exists(_.overStatePensionAge)
-
-  def salaryOverHundredThousand(aggregateInput: QuickCalcAggregateInput): Boolean =
-    aggregateInput.savedSalary.exists(_.amountYearly.getOrElse(BigDecimal(0.0)) > BigDecimal(100000))
 
 }

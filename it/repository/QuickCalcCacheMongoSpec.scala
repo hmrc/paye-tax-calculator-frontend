@@ -1,8 +1,8 @@
 package repository
 
-import akka.Done
 import config.AppConfig
 import models.{PayPeriodDetail, QuickCalcAggregateInput, QuickCalcMongoCache, Salary}
+import org.apache.pekko.Done
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec

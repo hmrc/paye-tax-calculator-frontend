@@ -16,8 +16,8 @@
 
 package controllers
 
-import akka.Done
 import forms.PensionContributionFormProvider
+import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
@@ -109,13 +109,13 @@ class PensionContributionsPercentageControllerSpec
 
         val view = application.injector.instanceOf[PensionContributionsPercentageView]
 
-        val formFilled = form.fill(cacheSalaryTaxCodeSavedPensionContributionsPercentage.value.savedPensionContributions.get)
+        val formFilled = form.fill(cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.savedPensionContributions.get)
 
         status(result) mustEqual OK
 
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
           view(formFilled,
-            cacheSalaryTaxCodeSavedPensionContributionsPercentage.value.additionalQuestionItems()(messages, mockAppConfig))(
+            cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.additionalQuestionItems()(messages, mockAppConfig))(
             request,
             messagesThing(application)
           ).toString

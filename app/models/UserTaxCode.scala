@@ -16,8 +16,6 @@
 
 package models
 
-import java.time.MonthDay
-
 import play.api.data.FormError
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.calculator.model.ValidationError
@@ -30,13 +28,11 @@ case class UserTaxCode(
 object UserTaxCode {
 
   implicit val format: OFormat[UserTaxCode] = Json.format[UserTaxCode]
-  private lazy val firstDayOfTaxYear = MonthDay.of(4, 6)
   val HasTaxCode                     = "hasTaxCode"
   val TaxCode                        = "taxCode"
-  val suffixKeys                     = List('L', 'M', 'N', 'T')
-  val WrongTaxCodePrefixKey          = "quick_calc.about_tax_code.wrong_tax_code_prefix"
-  val WrongTaxCodeSuffixKey          = "quick_calc.about_tax_code.wrong_tax_code_suffix"
-  val WrongTaxCodeKey                = "quick_calc.about_tax_code.wrong_tax_code"
+  private val WrongTaxCodePrefixKey          = "quick_calc.about_tax_code.wrong_tax_code_prefix"
+  private val WrongTaxCodeSuffixKey          = "quick_calc.about_tax_code.wrong_tax_code_suffix"
+  private val WrongTaxCodeKey                = "quick_calc.about_tax_code.wrong_tax_code"
 
   def wrongTaxCode(taxCode: String): Seq[FormError] = {
     val res = TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode)

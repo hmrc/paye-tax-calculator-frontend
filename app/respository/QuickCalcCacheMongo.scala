@@ -16,9 +16,9 @@
 
 package respository
 
-import akka.Done
 import config.AppConfig
 import models.QuickCalcMongoCache
+import org.apache.pekko.Done
 import org.mongodb.scala.bson.conversions.Bson
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository

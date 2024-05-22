@@ -52,7 +52,7 @@ class SalaryController @Inject() (
 
   val form: Form[Salary] = salaryFormProvider()
 
-  def showSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
+  def showSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId().async { implicit request =>
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     cache.fetchAndGetEntry().map {
@@ -64,7 +64,7 @@ class SalaryController @Inject() (
     }
   }
 
-  def submitSalaryAmount(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
+  def submitSalaryAmount(): Action[AnyContent] = validateAcceptWithSessionId().async { implicit request =>
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     val url = request.uri
@@ -88,7 +88,7 @@ class SalaryController @Inject() (
                     Redirect(routes.DaysPerWeekController.showDaysAWeek((salaryAmount.amount * 100.0).toInt))
                   case `hour` =>
                     Redirect(routes.HoursPerWeekController.showHoursAWeek((salaryAmount.amount * 100.0).toInt))
-                  case _ => Redirect(navigator.tryGetShowStatePension(agg))
+                  case _ => Redirect(navigator.tryGetShowStatePension(agg)())
                 }
               }
           )

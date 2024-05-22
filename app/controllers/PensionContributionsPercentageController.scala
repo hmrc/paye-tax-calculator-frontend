@@ -21,17 +21,16 @@ import forms.PensionContributionFormProvider
 import models.{PensionContributions, QuickCalcAggregateInput}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Results.Redirect
-import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, SalaryRequired}
 import views.html.pages.PensionContributionsPercentageView
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class PensionContributionsPercentageController @Inject()(
   override val messagesApi:           MessagesApi,
@@ -44,7 +43,7 @@ class PensionContributionsPercentageController @Inject()(
   implicit val executionContext:      ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId {
+    with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -71,7 +70,7 @@ class PensionContributionsPercentageController @Inject()(
   }
 
   def submitPensionContribution(): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
+    validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
       form
         .bindFromRequest()
@@ -103,30 +102,11 @@ class PensionContributionsPercentageController @Inject()(
               cache.save(updatedAgg).map(_ =>
                 Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
                   routes.YouHaveToldUsNewController.summary
-                })
+                }())
               )
             }
           }
         )
-
-    }
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
 
     }
 }

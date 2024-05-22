@@ -16,11 +16,10 @@
 
 package models
 
-import play.api.libs.json.{Format, JsObject, Json, OFormat, OWrites, Reads, __}
-import uk.gov.hmrc.http.SessionId
+import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import java.time.{Instant, ZoneOffset}
+import java.time.Instant
 
 case class QuickCalcMongoCache(
   id:                      String,

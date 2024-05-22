@@ -16,17 +16,14 @@
 
 package forms
 
-import config.AppConfig
 import models.{QuickCalcAggregateInput, Salary, StatePension, UserTaxCode}
 import org.scalatest.{Tag, TestData}
-import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import TaxResult._
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import setup.BaseSpec
-import uk.gov.hmrc.calculator.model.{CalculatorResponsePayPeriod, PayPeriod}
+import uk.gov.hmrc.calculator.model.PayPeriod
 import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
 
@@ -68,12 +65,10 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
   "Extracting OverStatePensionAge answer from user response" should {
 
     "return true if the response is user is over state pension StatePensionView" in {
-      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
       extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(true)), None, None, None)) mustBe true
     }
 
     "return false if the response is user is not over state pension StatePensionView" in {
-      val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
       extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(false)), None, None, None)) mustBe false
     }
 

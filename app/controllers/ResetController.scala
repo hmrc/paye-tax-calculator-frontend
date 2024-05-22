@@ -42,7 +42,7 @@ class ResetController @Inject() (
     with ActionWithSessionId {
   override def parser: BodyParser[AnyContent] = parse.anyContent
 
-  def reset(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
+  def reset(): Action[AnyContent] = validateAcceptWithSessionId().async { implicit request =>
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     cache.fetchAndGetEntry().flatMap {

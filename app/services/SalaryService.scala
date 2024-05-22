@@ -20,7 +20,6 @@ import forms.TaxResult
 
 import javax.inject.Inject
 import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary}
-import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Request}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
@@ -28,8 +27,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import scala.concurrent.{ExecutionContext, Future}
 
 class SalaryService @Inject() (
-  implicit val executionContext: ExecutionContext,
-  navigator:                     Navigator) {
+  implicit val executionContext: ExecutionContext) {
 
   def updateSalaryAmount(
     cache:            QuickCalcCache,
@@ -43,7 +41,7 @@ class SalaryService @Inject() (
       .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
       .map { oldAggregate =>
         val newAggregate = salaryAmount.period match {
-          case "an hour" | "a day" => {
+          case "an hour" | "a day" =>
             oldAggregate.copy(savedSalary = Some(
               salaryAmount.copy(
                 amountYearly         = oldAggregate.savedSalary.flatMap(_.amountYearly),
@@ -52,8 +50,7 @@ class SalaryService @Inject() (
               )
             )
             )
-          }
-          case _ => {
+          case _ =>
             val currentYearlyAmount: BigDecimal = {
               TaxResult.convertWagesToYearly(salaryAmount.amount, salaryAmount.period)
             }
@@ -70,7 +67,6 @@ class SalaryService @Inject() (
             } else {
               oldAggregate.copy(savedSalary = Some(salaryAmount.copy(amountYearly = Some(currentYearlyAmount), monthlyAmount = Some(monthlyAmount))))
             }
-          }
         }
         (newAggregate.savedSalary, newAggregate.savedPeriod) match {
           case (Some(salary), Some(detail)) =>

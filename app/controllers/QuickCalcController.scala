@@ -19,10 +19,9 @@ package controllers
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
-import models.QuickCalcAggregateInput
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{ControllerComponents, _}
-import services.{Navigator, QuickCalcCache}
+import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
@@ -35,7 +34,6 @@ class QuickCalcController @Inject() (
   override val messagesApi:      MessagesApi,
   cache:                         QuickCalcCache,
   val controllerComponents:      ControllerComponents,
-  navigator:                     Navigator
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends BackendBaseController
@@ -44,13 +42,11 @@ class QuickCalcController @Inject() (
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  def redirectToSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
-    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
+  def redirectToSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId().async {
     Future.successful(Redirect(routes.SalaryController.showSalaryForm))
   }
 
-  def restartQuickCalc(): Action[AnyContent] = validateAcceptWithSessionId.async { implicit request =>
+  def restartQuickCalc(): Action[AnyContent] = validateAcceptWithSessionId().async { implicit request =>
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     cache.fetchAndGetEntry().flatMap {
@@ -61,23 +57,5 @@ class QuickCalcController @Inject() (
         Future.successful(Redirect(routes.SalaryController.showSalaryForm))
     }
   }
-
-  private def salaryRequired[T](
-    cache:         QuickCalcCache,
-    furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-  ): Action[AnyContent] =
-    validateAcceptWithSessionId.async { implicit request =>
-      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-      cache.fetchAndGetEntry().map {
-        case Some(aggregate) =>
-          if (aggregate.savedSalary.isDefined)
-            furtherAction(request)(aggregate)
-          else
-            Redirect(routes.SalaryController.showSalaryForm)
-        case None =>
-          Redirect(routes.SalaryController.showSalaryForm)
-      }
-    }
 
 }

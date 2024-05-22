@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@
         features: config.features.Features,
 )
 
-@(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean, isScottish: Boolean, headerFrequency: String, pensionCheck: Boolean)(implicit request: Request[_], messages: Messages)
+@(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean, isScottish: Boolean, headerFrequency: String, pensionCheck: Boolean)(implicit messages: Messages)
 
 @formattedAmount = @{
     moneyFormatter(calculatorResponse.getTakeHome)

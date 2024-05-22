@@ -1,7 +1,7 @@
-$govuk-assets-path: "/estimate-paye-take-home-pay/assets/lib/govuk-frontend/govuk/assets/";
+$govuk-assets-path: "/estimate-paye-take-home-pay/assets/lib/govuk-frontend/dist/govuk/assets/";
 $hmrc-assets-path: "/estimate-paye-take-home-pay/assets/lib/hmrc-frontend/hmrc/assets/";
 
-@import "lib/govuk-frontend/govuk/all";
+@import "lib/govuk-frontend/dist/govuk/all";
 @import "lib/hmrc-frontend/hmrc/all";
 
 @import "timeout-dialog";

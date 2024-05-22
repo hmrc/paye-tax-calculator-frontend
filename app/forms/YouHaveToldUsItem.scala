@@ -57,7 +57,7 @@ object YouHaveToldUs {
     }
   }
 
-  implicit def overStatePensionAgeFormat(implicit messages: Messages) =
+  implicit def overStatePensionAgeFormat(implicit messages: Messages): YouHaveToldUs[StatePension] =
     new YouHaveToldUs[StatePension] {
 
       def toYouHaveToldUsItem(overStatePensionAge: StatePension): YouHaveToldUsItem = {
@@ -139,12 +139,6 @@ object YouHaveToldUs {
         YouHaveToldUsItem(detail.howManyAWeek.toString, label, url, idSuffix)
       }
     }
-
-  def formatForIndividualSalary[T <: Salary](implicit m: Messages): YouHaveToldUs[T] = new YouHaveToldUs[T] {
-
-    def toYouHaveToldUsItem(salary: T): YouHaveToldUsItem =
-      salaryFormat.toYouHaveToldUsItem(salary)
-  }
 
   def getGoBackLink(items: List[YouHaveToldUsItem]): String =
     items.flatMap(y => if (y.label == SCOTTISH_RATE) y.url else "") match {

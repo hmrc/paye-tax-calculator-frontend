@@ -62,6 +62,10 @@ quick_calc.you_have_told_us.about_tax_code.default.not.provided=Not provided
 quick_calc.you_have_told_us.taxCode.add=Add
 quick_calc.you_have_told_us.taxCode.remove=Remove
 
+quick_calc.pensionContributionError.invalidFormat=Enter your monthly pension contributions amount in the correct format
+quick_calc.pensionContributionError.poundAndPence=Your monthly pension contributions can only include pounds and pence
+quick_calc.pensionContributionError.lessThanHundredPercent=Your monthly pension contributions must be less than 100% of your income
+
 quick_calc.you_have_told_us.scottish_rate.label=Do you pay the   Scottish Income Tax rate?
 quick_calc.you_have_told_us.scottish_rate.label.new=Scottish Income Tax
 quick_calc.you_have_told_us.scottish_rate.yes=Yes
@@ -135,7 +139,7 @@ quick_calc.result.sidebar.one_job=You have 1 job.
 quick_calc.result.sidebar.appliedScottishIncomeTaxRates=We have applied Scottish Income Tax rates
 quick_calc.result.sidebar.scottish_tax_code=We have applied Scottish Income Tax rates because you used a Scottish tax code.
 quick_calc.result.sidebar.pay_scottish_income_tax=We have applied Scottish Income Tax rates because you said you pay Scottish Income Tax.
-quick_calc.result.sidebar.personal_allowance=Your Personal Allowance is £12,570 (because you did not provide a tax code)
+quick_calc.result.sidebar.personal_allowance=Your Personal Allowance is £{0} (because you did not provide a tax code)
 quick_calc.result.sidebar.not_over_state_pension_age_a=You make
 quick_calc.result.sidebar.not_over_state_pension_age_b=Class 1 National Insurance contributions: Categories A, H and M (opens in a new tab)
 quick_calc.result.sidebar.over_state_pension_age=You do not pay National Insurance because you are over State Pension age.

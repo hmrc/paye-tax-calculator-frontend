@@ -16,9 +16,10 @@
 
 package controllers
 
-import akka.Done
+
 import forms.ScottishRateFormProvider
 import models.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
+import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.ArgumentMatchers.any
@@ -82,7 +83,7 @@ class ScottishRateControllerSpec
       implicit val messages: Messages = messagesThing(application)
 
       val formFilled =
-        form.fill(cacheCompleteYearly.value.savedScottishRate.get)
+        form.fill(cacheCompleteYearly.get.savedScottishRate.get)
       running(application) {
 
         val request = FakeRequest(
@@ -99,7 +100,7 @@ class ScottishRateControllerSpec
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
           view(
             formFilled,
-            cacheCompleteYearly.value.youHaveToldUsItems()(messagesImplicit, mockAppConfig)
+            cacheCompleteYearly.get.youHaveToldUsItems()(messagesImplicit, mockAppConfig)
           )(request, messagesThing(application)).toString
         )
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
