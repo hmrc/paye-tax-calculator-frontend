@@ -16,11 +16,10 @@
 
 package setup
 
-import akka.stream.Materializer
 import config.AppConfig
 import forms.{AdditionalQuestionItem, YouHaveToldUsItem}
 import mocks.MockAppConfig
-import org.jsoup.Jsoup
+import org.apache.pekko.stream.Materializer
 import org.jsoup.nodes.{Document, Element}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
@@ -53,9 +52,9 @@ class BaseSpec
     .configure("metrics.enabled" -> "false", "auditing.enabled" -> "false")
     .build()
 
-  val appInjector               = app.injector
-  implicit val materializer     = appInjector.instanceOf[Materializer]
-  implicit val executionContext = appInjector.instanceOf[ExecutionContext]
+  val appInjector: Injector = app.injector
+  implicit val materializer: Materializer = appInjector.instanceOf[Materializer]
+  implicit val executionContext: ExecutionContext = appInjector.instanceOf[ExecutionContext]
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
     .withHeaders(HeaderNames.xSessionId -> "test")

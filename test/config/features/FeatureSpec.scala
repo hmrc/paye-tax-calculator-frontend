@@ -20,8 +20,6 @@ import setup.BaseSpec
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
-import org.scalatest.wordspec.AnyWordSpecLike
-import play.api.i18n.MessagesApi
 
 class FeatureSpec extends BaseSpec with GuiceOneAppPerSuite with BeforeAndAfterEach {
 

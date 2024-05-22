@@ -16,11 +16,12 @@
 
 package config
 
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
+
 import javax.inject.Inject
-import org.joda.time.{DateTime, DateTimeZone}
 import play.api.mvc.{Result, _}
 
+import java.time.{ZoneId, ZonedDateTime}
 import scala.concurrent.Future
 
 class CsrfBypassFilter @Inject() (implicit val mat: Materializer) extends Filter {
@@ -30,7 +31,7 @@ class CsrfBypassFilter @Inject() (implicit val mat: Materializer) extends Filter
 
   private[config] def filteredHeaders(
     rh:  RequestHeader,
-    now: () => DateTime = () => DateTime.now.withZone(DateTimeZone.UTC)
+    now: () => ZonedDateTime = () => ZonedDateTime.now(ZoneId.of("UTC"))
   ): RequestHeader =
     rh.withHeaders(rh.headers.add("Csrf-Token" -> "nocheck"))
 

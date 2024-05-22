@@ -16,8 +16,8 @@
 
 package controllers
 
-import akka.Done
 import forms.SalaryFormProvider
+import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.ArgumentMatchers.any

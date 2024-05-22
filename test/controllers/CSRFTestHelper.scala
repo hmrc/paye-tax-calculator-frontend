@@ -16,9 +16,6 @@
 
 package controllers
 
-import config.AppConfig
-import play.api.i18n.Messages
-
 trait CSRFTestHelper {
 
   // As we compare pages in a String format for our tests, it is necessary to remove the value of the hidden csrf token

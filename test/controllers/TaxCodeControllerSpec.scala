@@ -16,14 +16,13 @@
 
 package controllers
 
-import akka.Done
 import forms.UserTaxCodeFormProvider
+import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
@@ -154,13 +153,13 @@ class TaxCodeControllerSpec
 
         val view = application.injector.instanceOf[TaxCodeView]
 
-        val formFilled = form.fill(cacheSalaryStatePensionTaxCode.value.savedTaxCode.get)
+        val formFilled = form.fill(cacheSalaryStatePensionTaxCode.get.savedTaxCode.get)
 
         status(result) mustEqual OK
 
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
           view(formFilled,
-               cacheSalaryStatePensionTaxCode.value.youHaveToldUsItems()(messages, mockAppConfig),
+               cacheSalaryStatePensionTaxCode.get.youHaveToldUsItems()(messages, mockAppConfig),
                defaultTaxCodeProvider.defaultUkTaxCode,
                false)(
             request,

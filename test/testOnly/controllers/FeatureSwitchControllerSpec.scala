@@ -19,11 +19,9 @@ package testOnly.controllers
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.http.Status
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.CSRFTokenHelper._
 import play.api.test.Helpers._
-import play.test.Helpers.fakeRequest
 import setup.BaseSpec
 import testOnly.views.html.FeatureSwitchView
 

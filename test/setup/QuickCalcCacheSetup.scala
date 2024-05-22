@@ -16,9 +16,9 @@
 
 package setup
 
-import akka.Done
 import forms.YouHaveToldUsItem
 import models.{PayPeriodDetail, PensionContributions, QuickCalcAggregateInput, Salary, ScottishRate, StatePension, UserTaxCode}
+import org.apache.pekko.Done
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -59,15 +59,15 @@ object QuickCalcCacheSetup {
   val scottishRateTest: YouHaveToldUsItem =
     YouHaveToldUsItem("No", "Scottish", "/foo", "scottish_rate")
 
-  val aggregateListOnlyTaxCode: Seq[YouHaveToldUsItem] = List(taxCodeTest)
+  val aggregateListOnlyTaxCode: List[YouHaveToldUsItem] = List(taxCodeTest)
 
-  val aggregateListOnlyTaxCodeAndStatePension: Seq[YouHaveToldUsItem] =
+  val aggregateListOnlyTaxCodeAndStatePension: List[YouHaveToldUsItem] =
     List(taxCodeTest, overStatePensionTest)
 
-  val aggregateListTaxCodeStatePensionAndSalary: Seq[YouHaveToldUsItem] =
+  val aggregateListTaxCodeStatePensionAndSalary: List[YouHaveToldUsItem] =
     List(taxCodeTest, overStatePensionTest, salaryYearlyTest)
 
-  val aggregateCompleteListYearly: Seq[YouHaveToldUsItem] =
+  val aggregateCompleteListYearly: List[YouHaveToldUsItem] =
     List(taxCodeTest, overStatePensionTest, salaryYearlyTest, scottishRateTest)
 
   val aggregateCompleteListDaily: Seq[YouHaveToldUsItem] = List(
