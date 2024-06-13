@@ -51,8 +51,6 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     scalaVersion := "2.13.12",
     libraryDependencies ++= AppDependencies(),
-    retrieveManaged := true,
-    update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
