@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
 @import views.components.FooterLinks
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcScripts
 
 @this(
       govukLayout: GovukLayout,
@@ -25,6 +26,7 @@
       link: components.link,
       appConfig: config.AppConfig,
       footerLinks: FooterLinks,
+      hmrcScripts: HmrcScripts,
       hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
       timeoutDialog: HmrcTimeoutDialog,
       hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
@@ -82,12 +84,10 @@
   }
 
   @scriptElement = {
-      <script src='@controllers.routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
+      <script src='@controllers.routes.Assets.at("lib/govuk-frontend/dist/govuk/all.js")'></script>
       <script src='@controllers.routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
       <script src='@controllers.routes.Assets.at("javascripts/application.min.js")'></script>
       <script src='@controllers.routes.Assets.at("javascripts/androidInstallBanner.js")'></script>
-      <script>window.GOVUKFrontend.initAll();</script>
-      <script>window.HMRCFrontend.initAll();</script>
   @js.map(x => x)
   }
 
@@ -107,7 +107,7 @@
   @govukLayout(
       pageTitle = pageTitle,
       headBlock = Some(head),
-      scriptsBlock = Some(scriptElement),
+      scriptsBlock = Some(hmrcScripts(scriptsBlock = Some(scriptElement))),
       beforeContentBlock = Some(beforeContentBlock),
       headerBlock = Some(siteHeader()),
       footerItems = footerLinks.items,
