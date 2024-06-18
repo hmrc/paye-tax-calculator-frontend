@@ -1,0 +1,79 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.api.i18n._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
+@import views.html.components.beforeContent
+
+@this(
+        govuk_wrapper: templates.GovukLayoutWrapper,
+        formHelper: FormWithCSRF,
+        hmrcCurrencyInput: HmrcCurrencyInput,
+        h1: components.h1,
+        errorSummary: components.errorSummary,
+        inputNumber: components.inputNumber,
+        p: components.p,
+        inputRadio: components.inputRadio,
+        button: components.button,
+        beforeContent: components.beforeContent,
+        label: components.label,
+        features: config.features.Features
+)
+
+@(studentLoansForm: Form[StudentLoanContributions])(implicit request: Request[_], messages: Messages)
+
+@studentLoansLabels = @{
+        Seq("plan1", "plan2","plan4", "noneOfThese")
+}
+
+@radioFieldStudentLoan = @{
+        studentLoansForm("studentLoanPlan")
+}
+
+@studentLoanRadioButtons = @{
+        studentLoansLabels .map { label =>
+                RadioItem(
+                    content = Text(Messages(s"quick_calc.salary.studentLoan.$label.text")),
+                    label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.$label.label")))),
+                    value = Some(Messages(s"quick_calc.salary.studentLoan.$label.label")),
+                    checked = radioFieldStudentLoan.value.contains("quick_calc.salary.studentLoan.$label.label")
+                )
+        }
+}
+
+@govuk_wrapper(Some(title(studentLoansForm, Messages("quick_calc.salary.studentLoan.header"))), beforeContentBlock= beforeContent(controllers.routes.YouHaveToldUsNewController.summary.url), showAppBanner = true) {
+
+    @formHelper(action= controllers.routes.StudentLoanContributionsController.submitStudentLoansContribution) {
+
+        @errorSummary(studentLoansForm.errors)
+
+        @inputRadio(
+            legendAsHeading = false,
+            form = studentLoansForm,
+            classes = "govuk-fieldset__legend govuk-fieldset__legend--xl",
+            legendKey = Messages("quick_calc.salary.studentLoan.header"),
+            name = "studentLoanPlan",
+            items = studentLoanRadioButtons
+        )
+
+        
+
+        @button("continue", Some("button-continue"))
+
+    }
+
+}
+

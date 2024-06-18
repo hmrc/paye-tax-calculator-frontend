@@ -29,6 +29,12 @@ POST        /amount-contributions-percentage controllers.PensionContributionsPer
 GET         /amount-contributions-fixed  controllers.PensionContributionsFixedController.showPensionContributionForm
 POST        /amount-contributions-fixed  controllers.PensionContributionsFixedController.submitPensionContribution
 
+GET         /student-loans  controllers.StudentLoanContributionsController.showStudentLoansForm
+POST        /student-loans  controllers.StudentLoanContributionsController.submitStudentLoansContribution
+
+GET         /postgraduate-loans controllers.PostgraduateController.showPostGraduateForm
+POST        /postgraduate-loans controllers.PostgraduateController.submitPostGradLoanForm
+
 GET         /your-answers          controllers.YouHaveToldUsController.summary
 
 GET         /check-your-answers    controllers.YouHaveToldUsNewController.summary

@@ -17,7 +17,7 @@
 package forms
 
 import controllers.routes
-import models.{PensionContributions, ScottishRate, UserTaxCode}
+import models.{PayPeriodDetail, PensionContributions, PostgraduateLoanContributions, ScottishRate, StudentLoanContributions, UserTaxCode}
 import play.api.i18n.Messages
 
 case class AdditionalQuestionItem(
@@ -105,6 +105,53 @@ object AdditionalQuestionItem {
         }
 
         AdditionalQuestionItem(displayText, label, url, idSuffix)
+      }
+    }
+
+  implicit def studentLoanContributionFormat(implicit messages: Messages): AdditionalQuestion[StudentLoanContributions] =
+    new AdditionalQuestion[StudentLoanContributions] {
+
+      def toAdditionalQuestionItem(t: Option[StudentLoanContributions]): AdditionalQuestionItem = {
+        val label    = "about_student_loan_contribution"
+        val idSuffix = "student-loan-contributions"
+        val url      = routes.StudentLoanContributionsController.showStudentLoansForm.url
+
+        val labelText = t.map(_.studentLoanPlan) match {
+          case Some(studentLoanPlan) => studentLoanPlan match {
+            case "plan one" => Messages("Plan 1")
+            case "plan two" => Messages("Plan 2")
+            case "plan four" => Messages("Plan 4")
+            case "none of these" => Messages("None")
+          }
+          case None          => Messages("None")
+        }
+
+        AdditionalQuestionItem(
+          labelText,
+          label,
+          url,
+          idSuffix
+        )
+      }
+    }
+
+  implicit def  postGraduateLoanContributionFormat(implicit messages: Messages): AdditionalQuestion[PostgraduateLoanContributions] =
+    new AdditionalQuestion[PostgraduateLoanContributions] {
+
+      def toAdditionalQuestionItem(postGrad: Option[PostgraduateLoanContributions]): AdditionalQuestionItem = {
+        val label    = "about_post_graduate_loan_contribution"
+        val idSuffix = "post_graduate_loan_contribution"
+        val url      = routes.PostgraduateController.showPostGraduateForm.url
+        AdditionalQuestionItem(
+          postGrad.map(_.hasPostgraduatePlan) match {
+            case Some(true) => Messages("Yes")
+            case Some(false) => Messages("No")
+            case _           => "None"
+          },
+          label,
+          url,
+          idSuffix
+        )
       }
     }
 

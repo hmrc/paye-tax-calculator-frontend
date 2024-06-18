@@ -69,7 +69,8 @@ class YouHaveToldUsNewController @Inject() (
                 taxCodeCheck(aggregate),
                 aggregateConditionsUtil.isTaxCodeDefined(aggregate),
                 aggregateConditionsUtil.isPensionContributionsDefined(aggregate),
-                aggregateConditionsUtil.givenPensionContributionPercentage(aggregate)
+                aggregateConditionsUtil.givenPensionContributionPercentage(aggregate),
+                aggregateConditionsUtil.givenStudentLoanContribution(aggregate)
               )
             )
           } else

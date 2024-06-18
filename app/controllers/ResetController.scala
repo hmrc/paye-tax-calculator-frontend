@@ -47,7 +47,7 @@ class ResetController @Inject() (
 
     cache.fetchAndGetEntry().flatMap {
       case Some(aggregate) =>
-        val updatedAggregate = aggregate.copy(None, None, None, None, None, None)
+        val updatedAggregate = aggregate.copy(None, None, None, None, None, None, None)
         cache.save(updatedAggregate).map(_ => Ok(resetView()))
       case None =>
         Future.successful(Ok(resetView()))

@@ -195,9 +195,24 @@ quick_calc.salary.option_error=Select how often you are paid this amount
 quick_calc.salary.error_header=Something’s wrong
 quick_calc.salary.amount.label=Amount paid
 quick_calc.salary.grossAmount.label=Gross amount, in pounds
+quick_calc.you_have_told_us.about_student_loan_contribution.label.new= Student loan
+
+quick_calc.salary.studentLoan.header=Which student loan are you currently repaying?
+quick_calc.salary.studentLoan.plan1.text=Plan 1
+quick_calc.salary.studentLoan.plan2.text=Plan 2
+quick_calc.salary.studentLoan.plan4.text=Plan 4
+quick_calc.salary.studentLoan.noneOfThese.text=None of these
+quick_calc.salary.studentLoan.plan1.label=plan one
+quick_calc.salary.studentLoan.plan2.label=plan two
+quick_calc.salary.studentLoan.plan4.label=plan four
+quick_calc.salary.studentLoan.noneOfThese.label=none of these
+quick_calc.remove.student-loans= Are you sure you want to remove your Student Loans Contributions
+
+quick_calc.you_have_told_us.about_post_graduate_loan_contribution.label.new = Postgraduate loan
 
 quick_calc.remove_tax_code_error=Select yes if you want to remove your tax code
 quick_calc.remove_pensions_contributions_error= Select yes if you want to remove your pension contributions
+quick_calc.remove_student_loans_contributions_error= Select yes if you want to remove your student loans contributions
 
 quick_calc.salary.yearly.sub_label=a_year
 quick_calc.salary.monthly.sub_label=a_month

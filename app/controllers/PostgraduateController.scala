@@ -17,9 +17,9 @@
 package controllers
 
 import config.AppConfig
-import forms.forms.RemoveItemFormProvider
+import forms.PostGraduateLoanFormProvider
+import models.{PostgraduateLoanContributions, QuickCalcAggregateInput}
 import play.api.data.Form
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
 import services.{Navigator, QuickCalcCache}
@@ -27,67 +27,63 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.{ActionWithSessionId, SalaryRequired}
-import views.html.pages.RemoveItemView
+import views.html.pages.PostGraduatePlanContributionView
 
+import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-@Singleton
-class RemoveItemController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  navigator:                     Navigator,
-  removeItemView:                RemoveItemView,
-  removeTaxCodeFormProvider:     RemoveItemFormProvider
-)(implicit val app:              AppConfig,
+class PostgraduateController @Inject() (
+  override val messagesApi:         MessagesApi,
+  cache:                            QuickCalcCache,
+  val controllerComponents:         MessagesControllerComponents,
+  navigator:                        Navigator,
+  postGraduateView: PostGraduatePlanContributionView,
+  postGraduationFromProvider: PostGraduateLoanFormProvider)(
+  implicit val appConfig: AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  val form: String => Form[Boolean] = option => removeTaxCodeFormProvider(option)
+  val form: Form[PostgraduateLoanContributions]= postGraduationFromProvider()
 
-  def showRemoveItemForm(option: String): Action[AnyContent] =
-    salaryRequired(cache, showRemoveTaxCodeFormTestable(option))
+  def showPostGraduateForm(): Action[AnyContent] =
+    salaryRequired(cache, showPostGraduateContributionFormTestable)
 
-  private[controllers] def showRemoveTaxCodeFormTestable(option: String): ShowForm = { implicit request => agg =>
-    Ok(removeItemView(form(option), agg.additionalQuestionItems(), option))
+  private[controllers] def showPostGraduateContributionFormTestable: ShowForm = { implicit request => agg =>
+    val filledForm = agg.savedPostGraduateLoanContributions
+      .map { s =>
+        form.fill(s)
+      }
+      .getOrElse(form)
+
+    Ok(postGraduateView(filledForm))
   }
 
-  def submitRemoveItemForm(option: String): Action[AnyContent] =
+  def submitPostGradLoanForm(): Action[AnyContent] =
     validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-      form(option)
+
+      form
         .bindFromRequest()
         .fold(
           formWithErrors =>
             cache.fetchAndGetEntry().map {
               case Some(aggregate) =>
                 BadRequest(
-                  removeItemView(formWithErrors, aggregate.additionalQuestionItems(), option)
+                  postGraduateView(formWithErrors)
                 )
               case None =>
-                BadRequest(removeItemView(formWithErrors, Nil, option))
+                BadRequest(
+                  postGraduateView(formWithErrors)
+                )
             },
-          removeItemBoolean =>
+          postGradLoan =>
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
-                val updatedAggregate = if (removeItemBoolean) {
-                  if(option == "taxcode"){
-                    aggregate
-                      .copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
-                  } else if(option == "student-loans"){
-                    aggregate
-                      .copy(savedStudentLoanContributions = None)
-                  } else {
-                    aggregate
-                      .copy(savedPensionContributions = None)
-                  }
-                } else {
-                  aggregate
-                }
+                val updatedAggregate = aggregate.copy(savedPostGraduateLoanContributions = Some(postGradLoan))
                 cache.save(updatedAggregate).map { _ =>
                   Redirect(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(
@@ -97,8 +93,17 @@ class RemoveItemController @Inject() (
                     }()
                   )
                 }
-            }
-        )
-    }
+              case None =>
+                cache
+                  .save(
+                    QuickCalcAggregateInput.newInstance
+                      .copy(savedPostGraduateLoanContributions = Some(postGradLoan))
+                  )
+                  .map { _ =>
+                    Redirect(routes.YouHaveToldUsNewController.summary)
+                  }
+            })
 
+                }
 }
+

@@ -31,4 +31,7 @@ class AggregateConditionsUtil @Inject()(defaultTaxCodeProvider: DefaultTaxCodePr
   def givenPensionContributionPercentage(aggregateInput: QuickCalcAggregateInput) : Boolean =
     aggregateInput.savedPensionContributions.exists(_.gaveUsPercentageAmount)
 
+  def givenStudentLoanContribution(aggregateInput: QuickCalcAggregateInput) : Boolean =
+    aggregateInput.savedStudentLoanContributions.isDefined
+
 }

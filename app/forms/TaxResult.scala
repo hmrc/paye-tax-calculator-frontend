@@ -18,7 +18,7 @@ package forms
 
 import models.QuickCalcAggregateInput
 import uk.gov.hmrc.calculator.Calculator
-import uk.gov.hmrc.calculator.Calculator.PensionContribution
+import uk.gov.hmrc.calculator.Calculator.{PensionContribution, StudentLoanPlans}
 import uk.gov.hmrc.calculator.model.pension.PensionMethod
 import uk.gov.hmrc.calculator.model.{CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod, TaxYear}
 import uk.gov.hmrc.calculator.utils.WageConverterUtils
@@ -69,6 +69,10 @@ object TaxResult {
       extractPensionContributions(quickCalcAggregateInput) match {
         case Some(pensionContribution) =>  pensionContribution
         case None                      => null
+      },
+      extractStudentLoanContributions(quickCalcAggregateInput) match {
+        case Some(studentLoanContributions) => studentLoanContributions
+        case None => null
       }
     ).run()
 
@@ -98,6 +102,24 @@ object TaxResult {
       case _ => None
     }
   }
+
+  private def extractStudentLoanContributions(quickCalcAggregateInput: QuickCalcAggregateInput): Option[StudentLoanPlans] = {
+    (quickCalcAggregateInput.savedStudentLoanContributions.map(_.studentLoanPlan) match {
+      case Some("plan one") => Some(new StudentLoanPlans(true, false, false, extractPostGradLoan(quickCalcAggregateInput)))
+      case Some("plan two") => Some(new StudentLoanPlans(false, true, false, extractPostGradLoan(quickCalcAggregateInput)))
+      case Some("plan four") => Some(new StudentLoanPlans(false, false, true, extractPostGradLoan(quickCalcAggregateInput)))
+      case _ => None
+    })
+  }
+
+  private def extractPostGradLoan(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean = {
+    quickCalcAggregateInput.savedPostGraduateLoanContributions.map(_.hasPostgraduatePlan) match {
+      case Some(true) => true
+      case _ => false
+    }
+  }
+
+
 
   def convertWagesToMonthly(wages: BigDecimal): BigDecimal = BigDecimal(WageConverterUtils.INSTANCE.convertYearlyWageToMonthly(wages.toDouble))
 

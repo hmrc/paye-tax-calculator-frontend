@@ -120,6 +120,7 @@ class ShowResultsController @Inject() (
           )
         )
       )
+
     )
 
     val seqOfBullet: ListBuffer[Option[Html]] = ListBuffer(Some(Html(Messages("quick_calc.result.sidebar.one_job"))))
