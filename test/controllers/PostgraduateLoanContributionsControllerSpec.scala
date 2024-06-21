@@ -17,6 +17,7 @@
 package controllers
 
 import forms.{PostGraduateLoanFormProvider, StudentLoansFormProvider}
+import models.PostgraduateLoanContributions
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
@@ -25,6 +26,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
+import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -36,7 +38,7 @@ import services.QuickCalcCache
 import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
-import views.html.pages.{PostGraduatePlanContributionView, StudentLoansContributionView}
+import views.html.pages.PostGraduatePlanContributionView
 
 import scala.concurrent.Future
 
@@ -50,7 +52,7 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
   with CSRFTestHelper {
 
   val formProvider = new PostGraduateLoanFormProvider()
-  val form         = formProvider()
+  val form: Form[PostgraduateLoanContributions] = formProvider()
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
