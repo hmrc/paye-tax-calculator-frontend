@@ -99,7 +99,9 @@ class BaseSpec
       AdditionalQuestionItem("43% a month",
         "about_pensions_contributions",
         controllers.routes.PensionContributionsPercentageController.showPensionContributionForm.url,
-        "pension-contributions")
+        "pension-contributions"),
+      AdditionalQuestionItem("Plan 1", "about_student_loan_contribution", controllers.routes.StudentLoanContributionsController.showStudentLoansForm.url,"student_loan_contribution"),
+      AdditionalQuestionItem("Yes", "about_post_graduate_loan_contribution", controllers.routes.PostgraduateController.showPostgraduateForm.url,"post_graduate_loan_contribution")
     )
 }
 

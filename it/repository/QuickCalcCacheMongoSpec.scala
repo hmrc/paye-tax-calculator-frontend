@@ -35,6 +35,8 @@ class QuickCalcCacheMongoSpec
                                                       None,
                                                       None,
                                                       None,
+                                                      None,
+                                                      None,
                                                       None)
   )
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)

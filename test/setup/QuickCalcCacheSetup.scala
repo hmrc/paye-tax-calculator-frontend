@@ -17,7 +17,7 @@
 package setup
 
 import forms.YouHaveToldUsItem
-import models.{PayPeriodDetail, PensionContributions, QuickCalcAggregateInput, Salary, ScottishRate, StatePension, UserTaxCode}
+import models.{PayPeriodDetail, PensionContributions, PostgraduateLoanContributions, QuickCalcAggregateInput, Salary, ScottishRate, StatePension, StudentLoanContributions, UserTaxCode}
 import org.apache.pekko.Done
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
@@ -103,6 +103,14 @@ object QuickCalcCacheSetup {
     PensionContributions(gaveUsPercentageAmount = false, Some(50), Some(600))
   )
 
+  val cacheStudentLoanContributions: Option[StudentLoanContributions] = Some(
+    StudentLoanContributions("Plan 1")
+  )
+
+  val cachePostGradLoanContributions: Option[PostgraduateLoanContributions] = Some(
+    PostgraduateLoanContributions(true)
+  )
+
   val cacheTestPensionPecentageContributions: Option[PensionContributions] = Some(
     PensionContributions(gaveUsPercentageAmount = true, Some(50), None)
   )
@@ -156,6 +164,27 @@ object QuickCalcCacheSetup {
       savedTaxCode               = cacheTestTaxCode,
       savedIsOverStatePensionAge = cacheTestStatePensionYES,
       savedScottishRate          = cacheTestScottishNO
+    )
+  )
+
+  val cacheTaxCodeStatePensionSalaryStudentLoan: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlySalary,
+      savedTaxCode               = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedScottishRate          = cacheTestScottishNO,
+      savedStudentLoanContributions = cacheStudentLoanContributions
+    )
+  )
+
+  val cacheTaxCodeStatePensionSalaryStudentLoanPostGrad: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlySalary,
+      savedTaxCode               = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedScottishRate          = cacheTestScottishNO,
+      savedStudentLoanContributions = cacheStudentLoanContributions,
+      savedPostGraduateLoanContributions = cachePostGradLoanContributions
     )
   )
 
@@ -283,6 +312,13 @@ object QuickCalcCacheSetup {
 
   val expectedInvalidPensionsErrorMessage =
     "Enter your monthly pension contributions amount in the correct format"
+
+  //TODO Update Error Message when new ticket is released
+  val expectedInvalidStudentLoanErrorMessage =
+    "Placeholder"
+
+  val expectedInvalidPostgraduateLoanErrorMessage =
+  "Select yes if you pay Postgraduate loan contributions"
 
   val expectedInvalidPensionTwoDecimalPlaces =
     "Your monthly pension contributions can only include pounds and pence"

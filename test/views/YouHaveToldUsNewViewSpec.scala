@@ -44,13 +44,17 @@ class YouHaveToldUsNewViewSpec extends BaseSpec {
         "#main-content > div > div > dl:nth-child(8) > div:nth-child(2) > dd.govuk-summary-list__value"
       val pensionContributions = "#main-content > div > div > dl:nth-child(8) > div:nth-child(3) > dt"
       val pensionContributionsValue = "#main-content > div > div > dl:nth-child(8) > div:nth-child(3) > dd.govuk-summary-list__value"
+      val studentLoansContribution = "#main-content > div > div > dl:nth-child(8) > div:nth-child(4) > dt"
+      val studentLoansContributionValue = "#main-content > div > div > dl:nth-child(8) > div:nth-child(4) > dd.govuk-summary-list__value"
+      val postgraduateLoanContribution = "#main-content > div > div > dl:nth-child(8) > div:nth-child(5) > dt"
+      val postgraduateLoanContributionValue = "#main-content > div > div > dl:nth-child(8) > div:nth-child(5) > dd.govuk-summary-list__value"
       val calculateButton = "#button-get-results"
     }
 
-    lazy val view = youHaveToldUsNewView(youHaveToldUsItems, additionalQuestionItem, Map.empty, taxCodeExists = true, pensionContributionsExists = true, givenPensionPercentage = true )
+    lazy val view = youHaveToldUsNewView(youHaveToldUsItems, additionalQuestionItem, Map.empty, taxCodeExists = true, pensionContributionsExists = true, givenPensionPercentage = true, studentLoansDefined = true, postGradLoansDefined = false)
     lazy implicit val document: Document = Jsoup.parse(view.body)
 
-    "have thwe correct document title" in {
+    "have the correct document title" in {
       document.title mustBe "Check your answers - PAYE Tax Calculator - GOV.UK"
     }
 
@@ -108,6 +112,22 @@ class YouHaveToldUsNewViewSpec extends BaseSpec {
 
     "have a value of Pension contributions set to 43% a month" in {
       elementText(Selectors.pensionContributionsValue) mustBe "43% a month"
+    }
+
+    "have a subheading that says Student loan" in {
+      elementText(Selectors.studentLoansContribution) mustBe "Student loan"
+    }
+
+    "have a value of Student Loan Contributions set to Plan 1" in {
+      elementText(Selectors.studentLoansContributionValue) mustBe "Plan 1"
+    }
+
+    "have a subheading that says Postgraduate loan" in {
+      elementText(Selectors.postgraduateLoanContribution) mustBe "Postgraduate loan"
+    }
+
+    "have a value of Postgraduate Loan Contributions set to Yes" in {
+      elementText(Selectors.postgraduateLoanContributionValue) mustBe "Yes"
     }
 
     "have a calculate take home pay button" in {

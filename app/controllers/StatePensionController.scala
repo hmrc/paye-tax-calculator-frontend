@@ -45,7 +45,7 @@ class StatePensionController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 

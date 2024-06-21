@@ -39,7 +39,7 @@ class ScottishRateController @Inject() (
   cache:                         QuickCalcCache,
   val controllerComponents:      MessagesControllerComponents,
   scottishRateView:              ScottishRateView,
-  scottishRateFormProvider:      ScottishRateFormProvider,
+  scottishRateFormProvider:       ScottishRateFormProvider,
   defaultTaxCodeProvider:        DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)

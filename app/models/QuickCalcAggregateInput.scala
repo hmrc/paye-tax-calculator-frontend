@@ -17,18 +17,20 @@
 package models
 
 import config.AppConfig
-import forms.AdditionalQuestionItem.{pensionContributionsFormat, scottishIncomeFormat, taxCodeFormat}
+import forms.AdditionalQuestionItem.{pensionContributionsFormat, postGraduateLoanContributionFormat, scottishIncomeFormat, studentLoanContributionFormat, taxCodeFormat}
 import forms.{AdditionalQuestionItem, YouHaveToldUs, YouHaveToldUsItem}
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 
 case class QuickCalcAggregateInput(
-  savedSalary:                Option[Salary],
-  savedPeriod:                Option[PayPeriodDetail],
-  savedIsOverStatePensionAge: Option[StatePension],
-  savedTaxCode:               Option[UserTaxCode],
-  savedScottishRate:          Option[ScottishRate],
-  savedPensionContributions:  Option[PensionContributions]) {
+  savedSalary:                        Option[Salary],
+  savedPeriod:                        Option[PayPeriodDetail],
+  savedIsOverStatePensionAge:         Option[StatePension],
+  savedTaxCode:                       Option[UserTaxCode],
+  savedScottishRate:                  Option[ScottishRate],
+  savedPensionContributions:          Option[PensionContributions],
+  savedStudentLoanContributions:      Option[StudentLoanContributions],
+  savedPostGraduateLoanContributions: Option[PostgraduateLoanContributions]) {
 
   def allQuestionsAnswered: Boolean =
     List(
@@ -65,7 +67,9 @@ case class QuickCalcAggregateInput(
       List(
         AdditionalQuestionItem(savedTaxCode),
         AdditionalQuestionItem(savedScottishRate),
-        AdditionalQuestionItem(savedPensionContributions)
+        AdditionalQuestionItem(savedPensionContributions),
+        AdditionalQuestionItem(savedStudentLoanContributions),
+        AdditionalQuestionItem(savedPostGraduateLoanContributions)
       )
     } else {
       List.empty
@@ -81,6 +85,6 @@ case class QuickCalcAggregateInput(
 }
 
 object QuickCalcAggregateInput {
-  def newInstance:     QuickCalcAggregateInput          = QuickCalcAggregateInput(None, None, None, None, None, None)
+  def newInstance:     QuickCalcAggregateInput          = QuickCalcAggregateInput(None, None, None, None, None, None, None, None)
   implicit val format: OFormat[QuickCalcAggregateInput] = Json.format[QuickCalcAggregateInput]
 }

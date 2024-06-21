@@ -119,7 +119,29 @@ class ShowResultsController @Inject() (
             Messages("quick_calc.result.sidebar.kcode_d")
           )
         )
-      )
+      ),
+      Clarification.INCOME_BELOW_STUDENT_AND_POSTGRAD_LOAN -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.income_below_student_and_postgrad_loan")
+        )
+      ),
+      Clarification.INCOME_BELOW_STUDENT_LOAN -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.income_below_student_loan")
+        ),
+      ),
+        Clarification.INCOME_BELOW_POSTGRAD_LOAN -> Some(
+          Html(
+            Messages("quick_calc.result.sidebar.income_below_postgrad_loan")
+          )
+        ),
+        Clarification.INCOME_BELOW_STUDENT_BUT_ABOVE_POSTGRAD_LOAN -> Some(
+          Html(
+            Messages("quick_calc.result.sidebar.income_below_student_loan_but_above_postgrad")
+          )
+        )
+
+
     )
 
     val seqOfBullet: ListBuffer[Option[Html]] = ListBuffer(Some(Html(Messages("quick_calc.result.sidebar.one_job"))))

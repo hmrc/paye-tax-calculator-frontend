@@ -98,6 +98,26 @@
 } else {
     Seq.empty[SummaryListRow]
 }) ++
+(if (calculatorResponse.getFinalStudentLoanAmount > 0) {
+    Seq(
+        SummaryListRow(
+            key = Key(content = Text(Messages("quick_calc.result.student_loan")), classes = "govuk-!-font-weight-regular"),
+            value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getFinalStudentLoanAmount)}"), classes = "govuk-!-padding-left-9")
+        )
+    )
+} else {
+    Seq.empty[SummaryListRow]
+}) ++
+(if (calculatorResponse.getFinalPostgraduateLoanAmount > 0) {
+    Seq(
+        SummaryListRow(
+            key = Key(content = Text(Messages("quick_calc.result.postgraduate_loan")), classes = "govuk-!-font-weight-regular"),
+            value = Value(content = Text(s"£${moneyFormatter(calculatorResponse.getFinalPostgraduateLoanAmount)}"), classes = "govuk-!-padding-left-9")
+        )
+    )
+} else {
+    Seq.empty[SummaryListRow]
+}) ++
     Seq(
         SummaryListRow(
             key = Key(content = HtmlContent(Messages(if(isKCode) "quick_calc.result.adjusted.taxable_income" else "quick_calc.result.taxable_income"))),

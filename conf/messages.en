@@ -129,6 +129,8 @@ quick_calc.result.adjusted.info=HMRC can’t take more than 50% of your total pa
 quick_calc.result.gross.income= Gross income
 quick_calc.result.personal_allowance= Personal Allowance
 quick_calc.result.pension_contributions= Pension Contributions
+quick_calc.result.student_loan=Student loan
+quick_calc.result.postgraduate_loan=Postgraduate loan
 quick_calc.result.taxable_income= Taxable Income
 quick_calc.result.adjusted.taxable_income= Adjusted Taxable Income
 quick_calc.result.take_home_pay= Take-home pay
@@ -150,6 +152,10 @@ quick_calc.result.sidebar.kcode_a=For most people, tax codes starting with ‘K�
 quick_calc.result.sidebar.kcode_b=state benefits (opens in new tab)
 quick_calc.result.sidebar.kcode_c=or
 quick_calc.result.sidebar.kcode_d=company benefits (opens in new tab)
+quick_calc.result.sidebar.income_below_student_and_postgrad_loan=Your income is below the level needed to repay your student loan and postgraduate loan.
+quick_calc.result.sidebar.income_below_student_loan=Your income is below the level needed to repay your student loan.
+quick_calc.result.sidebar.income_below_postgrad_loan=Your income is below the level needed to repay your postgraduate loan.
+quick_calc.result.sidebar.income_below_student_loan_but_above_postgrad=Your income is below the level needed to repay your student loan.
 
 quick_calc.result.disclaimer.reducedPersonal_allowance_a.new=You used a tax code which is not usually for those on more than £100,000 a year. If you do not know your tax code, you can leave it blank and we will  calculate your
 quick_calc.result.disclaimer.reducedPersonal_allowance_b.new=reduced Personal Allowance (opens in a new tab).
@@ -195,9 +201,29 @@ quick_calc.salary.option_error=Select how often you are paid this amount
 quick_calc.salary.error_header=Something’s wrong
 quick_calc.salary.amount.label=Amount paid
 quick_calc.salary.grossAmount.label=Gross amount, in pounds
+quick_calc.you_have_told_us.about_student_loan_contribution.label.new= Student loan
+
+quick_calc.salary.studentLoan.header=Which student loan are you currently repaying?
+quick_calc.salary.studentLoan.subheading= If you have a student loan that you need to repay, select the plan that applies to you:
+quick_calc.salary.studentLoan.plan1.text=Plan 1
+quick_calc.salary.studentLoan.plan2.text=Plan 2
+quick_calc.salary.studentLoan.plan4.text=Plan 4
+quick_calc.salary.studentLoan.noneOfThese.text=I do not have a student loan I need to repay
+quick_calc.salary.studentLoan.plan1.label=plan one
+quick_calc.salary.studentLoan.plan2.label=plan two
+quick_calc.salary.studentLoan.plan4.label=plan four
+quick_calc.salary.studentLoan.noneOfThese.label=none of these
+quick_calc.remove.student-loans= Are you sure you want to remove your student loan?
+quick_calc.remove.postgraduate-loans= Are you sure you want to remove your Postgraduate loan?
+quick_calc.error.postgraduate-loans=Select yes if you pay Postgraduate loan contributions
+quick_calc.postgraduateLoan.header=Do you have a postgraduate loan?
+quick_calc.postgraduateLoan.subheading=Tell us if you have a postgraduate loan that you need to repay.
+
+quick_calc.you_have_told_us.about_post_graduate_loan_contribution.label.new = Postgraduate loan
 
 quick_calc.remove_tax_code_error=Select yes if you want to remove your tax code
 quick_calc.remove_pensions_contributions_error= Select yes if you want to remove your pension contributions
+quick_calc.remove_student_loans_contributions_error= Select yes if you want to remove your student loans contributions
 
 quick_calc.salary.yearly.sub_label=a_year
 quick_calc.salary.monthly.sub_label=a_month

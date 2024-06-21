@@ -1,0 +1,75 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import forms.YouHaveToldUsItem
+@import play.api.i18n._
+
+@this(
+     govuk_wrapper: templates.GovukLayoutWrapper,
+     formHelper: FormWithCSRF,
+     errorSummary: components.errorSummary,
+     link: components.linkNewTab,
+     inputRadio: components.inputRadio,
+     button: components.button,
+     beforeContent: components.beforeContent,
+     appConfig: config.AppConfig,
+     details: components.details,
+     features: config.features.Features,
+     h1: components.h1
+) 
+
+@(postGradForm: Form[PostgraduateLoanContributions])(implicit request: Request[_], messages: Messages)
+
+@radioFieldPostGradLoan = @{
+     postGradForm("havePostgraduatePlan")
+}
+
+@postGradRadiosRadios = @{
+Seq(
+   RadioItem(
+       content = Text(Messages("quick_calc.over_state_pension_age.yes")),
+       label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
+       value = Some("true"),
+       checked = radioFieldPostGradLoan.value.contains("true")
+   ),
+   RadioItem(
+       content = Text(Messages("quick_calc.over_state_pension_age.no")),
+       label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
+       value = Some("false"),
+       checked = radioFieldPostGradLoan.value.contains("false"))
+   )
+}
+
+@govuk_wrapper(Some(title(postGradForm, Messages("quick_calc.postgraduateLoan.header"))), beforeContentBlock = beforeContent(controllers.routes.YouHaveToldUsNewController.summary.url)) {
+
+@formHelper(action = controllers.routes.PostgraduateController.submitPostgradLoanForm) {
+
+@errorSummary(postGradForm.errors)
+
+@h1(Messages("quick_calc.postgraduateLoan.header"))
+
+@inputRadio(
+      form = postGradForm,
+      legendKey = Messages("quick_calc.postgraduateLoan.subheading"),
+      name = "havePostgraduatePlan",
+      items = postGradRadiosRadios,
+      classes="",
+      inline = true
+)
+
+@button("continue", Some("button-continue"))
+      }
+}

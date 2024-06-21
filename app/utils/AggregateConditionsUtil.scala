@@ -20,15 +20,20 @@ import models.QuickCalcAggregateInput
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AggregateConditionsUtil @Inject()(defaultTaxCodeProvider: DefaultTaxCodeProvider) {
+class AggregateConditionsUtil @Inject() (defaultTaxCodeProvider: DefaultTaxCodeProvider) {
 
   def isTaxCodeDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedTaxCode.flatMap(_.taxCode).isDefined
 
-  def isPensionContributionsDefined(aggregateInput: QuickCalcAggregateInput) : Boolean =
+  def isPensionContributionsDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).isDefined
 
-  def givenPensionContributionPercentage(aggregateInput: QuickCalcAggregateInput) : Boolean =
+  def givenPensionContributionPercentage(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedPensionContributions.exists(_.gaveUsPercentageAmount)
 
+  def givenStudentLoanContribution(aggregateInput: QuickCalcAggregateInput): Boolean =
+    aggregateInput.savedStudentLoanContributions.isDefined
+
+  def givenPostGradLoanContribution(aggregateInput: QuickCalcAggregateInput): Boolean =
+    aggregateInput.savedPostGraduateLoanContributions.isDefined
 }
