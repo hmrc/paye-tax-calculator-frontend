@@ -34,7 +34,7 @@
         beforeContent: components.beforeContent
 )
 
-@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean)(implicit request: Request[_], messages: Messages)
+@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean)(implicit request: Request[_], messages: Messages)
 
 @rows = @{
     items.map { item =>
@@ -89,6 +89,15 @@
             attributes = Map("id" -> s"change-${item.label}-link")
     )
 )}
+else if(item.label == "about_student_loan_contribution" && studentLoansDefined && item.value == "None"){
+Seq(
+ActionItem(
+href = item.url,
+content = Text(Messages("quick_calc.you_have_told_us.taxCode.add")),
+visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
+attributes = Map("id" -> s"change-${item.label}-link")
+)
+)}
     else if(item.label == "about_student_loan_contribution" && studentLoansDefined){
         Seq(
             ActionItem(
@@ -105,7 +114,29 @@
     )
     )
 
-}
+}     else if(item.label == "about_post_graduate_loan_contribution" && !postGradLoansDefined){
+Seq(
+ActionItem(
+href = item.url,
+content = Text(Messages("quick_calc.you_have_told_us.taxCode.add")),
+visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
+attributes = Map("id" -> s"change-${item.label}-link")
+)
+)} else if(item.label == "about_post_graduate_loan_contribution" && postGradLoansDefined){
+Seq(
+ActionItem(
+href = item.url,
+content = Text(Messages("quick_calc.you_have_told_us.edit")),
+visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
+attributes = Map("id" -> s"change-${item.label}-link")
+),
+ActionItem(
+href = controllers.routes.RemoveItemController.showRemoveItemForm("postgraduate-loans").url,
+content = Text(Messages("quick_calc.you_have_told_us.taxCode.remove")),
+visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.${item.label}.label")),
+attributes = Map("id" -> s"change-${item.label}-link")
+),
+)}
 
 else if(item.label == "about_pensions_contributions" && !pensionContributionsExists){
             Seq(
@@ -116,7 +147,7 @@ else if(item.label == "about_pensions_contributions" && !pensionContributionsExi
                 attributes = Map("id" -> s"change-${item.label}-link")
             )
     )
-            } else if(givenPensionPercentage && item.label == "about_pensions_contributions") {
+            } else if (givenPensionPercentage && item.label == "about_pensions_contributions") {
             Seq(
                 ActionItem(
                 href = item.url,

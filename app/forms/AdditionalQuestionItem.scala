@@ -125,6 +125,7 @@ object AdditionalQuestionItem {
           }
           case None          => Messages("None")
         }
+        println(Console.MAGENTA + labelText)
 
         AdditionalQuestionItem(
           labelText,

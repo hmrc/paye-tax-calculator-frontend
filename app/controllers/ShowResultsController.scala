@@ -119,7 +119,28 @@ class ShowResultsController @Inject() (
             Messages("quick_calc.result.sidebar.kcode_d")
           )
         )
-      )
+      ),
+      Clarification.INCOME_BELOW_STUDENT_AND_POSTGRAD_LOAN -> Some(
+        Html(
+          Messages("Your income is below the level needed to repay your student loan and postgraduate loan.")
+        )
+      ),
+      Clarification.INCOME_BELOW_STUDENT_LOAN -> Some(
+        Html(
+          Messages("Your income is below the level needed to repay your student loan.")
+        ),
+      ),
+        Clarification.INCOME_BELOW_POSTGRAD_LOAN -> Some(
+          Html(
+            Messages("Your income is below the level needed to repay your postgraduate loan.")
+          )
+        ),
+        Clarification.INCOME_BELOW_STUDENT_BUT_ABOVE_POSTGRAD_LOAN -> Some(
+          Html(
+            Messages("Your income is below the level needed to repay your student loan.")
+          )
+        )
+
 
     )
 

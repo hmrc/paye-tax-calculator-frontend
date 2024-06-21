@@ -27,8 +27,9 @@ button: components.button,
 beforeContent: components.beforeContent,
 appConfig: config.AppConfig,
 details: components.details,
-features: config.features.Features
-)
+features: config.features.Features,
+h1: components.h1
+) 
 
 @(postGradForm: Form[PostgraduateLoanContributions])(implicit request: Request[_], messages: Messages)
 
@@ -52,18 +53,21 @@ checked = radioFieldPostGradLoan.value.contains("false"))
 )
 }
 
-@govuk_wrapper(Some(title(postGradForm, Messages("Do you repay a Postgraduate loan?"))), beforeContentBlock = beforeContent(controllers.routes.YouHaveToldUsNewController.summary.url)) {
+@govuk_wrapper(Some(title(postGradForm, Messages("Do you have a postgraduate loan?"))), beforeContentBlock = beforeContent(controllers.routes.YouHaveToldUsNewController.summary.url)) {
 
 @formHelper(action = controllers.routes.PostgraduateController.submitPostGradLoanForm) {
 
 @errorSummary(postGradForm.errors)
 
+@h1(Messages("Do you have a postgraduate loan?	"))
+
 @inputRadio(
-  form = postGradForm,
-  legendKey = "Do you repay a Postgraduate loan?",
-name = "havePostGraduatePlan",
-items = postGradRadiosRadios,
-inline = true
+ form = postGradForm,
+ legendKey = "Tell us if you have a postgraduate loan that you need to repay.	",
+ name = "havePostGraduatePlan",
+ items = postGradRadiosRadios,
+ classes="",
+ inline = true
 )
 
 @button("continue", Some("button-continue"))

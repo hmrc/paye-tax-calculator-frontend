@@ -34,4 +34,6 @@ class AggregateConditionsUtil @Inject()(defaultTaxCodeProvider: DefaultTaxCodePr
   def givenStudentLoanContribution(aggregateInput: QuickCalcAggregateInput) : Boolean =
     aggregateInput.savedStudentLoanContributions.isDefined
 
+  def givenPostGradLoanContribution(aggregateInput: QuickCalcAggregateInput) : Boolean =
+    aggregateInput.savedPostGraduateLoanContributions.isDefined
 }

@@ -81,7 +81,10 @@ class RemoveItemController @Inject() (
                   } else if(option == "student-loans"){
                     aggregate
                       .copy(savedStudentLoanContributions = None)
-                  } else {
+                  } else if(option == "postgraduate-loans"){
+                  aggregate
+                    .copy(savedPostGraduateLoanContributions = None)
+                } else {
                     aggregate
                       .copy(savedPensionContributions = None)
                   }

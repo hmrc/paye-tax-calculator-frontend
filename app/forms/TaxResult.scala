@@ -108,6 +108,7 @@ object TaxResult {
       case Some("plan one") => Some(new StudentLoanPlans(true, false, false, extractPostGradLoan(quickCalcAggregateInput)))
       case Some("plan two") => Some(new StudentLoanPlans(false, true, false, extractPostGradLoan(quickCalcAggregateInput)))
       case Some("plan four") => Some(new StudentLoanPlans(false, false, true, extractPostGradLoan(quickCalcAggregateInput)))
+      case Some("none of these") => Some(new StudentLoanPlans(false, false,false,extractPostGradLoan(quickCalcAggregateInput)))
       case _ => None
     })
   }

@@ -30,7 +30,8 @@
         button: components.button,
         beforeContent: components.beforeContent,
         label: components.label,
-        features: config.features.Features
+        features: config.features.Features,
+        link: components.linkNewTab
 )
 
 @(studentLoansForm: Form[StudentLoanContributions])(implicit request: Request[_], messages: Messages)
@@ -60,15 +61,21 @@
 
         @errorSummary(studentLoansForm.errors)
 
+        @h1(Messages("quick_calc.salary.studentLoan.header"))
+
+
         @inputRadio(
             legendAsHeading = false,
             form = studentLoansForm,
-            classes = "govuk-fieldset__legend govuk-fieldset__legend--xl",
-            legendKey = Messages("quick_calc.salary.studentLoan.header"),
+            classes = "govuk-body",
+            legendKey = Messages("quick_calc.salary.studentLoan.subheading"),
             name = "studentLoanPlan",
             items = studentLoanRadioButtons
         )
 
+    @p{
+    @Messages("Find out which") @link("https://www.gov.uk/repaying-your-student-loan/which-repayment-plan-you-are-on","repayment plan you're on (opens in a new tab)")
+    }
         
 
         @button("continue", Some("button-continue"))

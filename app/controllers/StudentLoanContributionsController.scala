@@ -26,7 +26,7 @@ import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.ActionWithSessionId
+import utils.{ActionWithSessionId, SalaryRequired}
 import views.html.pages.StudentLoansContributionView
 
 import javax.inject.{Inject, Singleton}
@@ -42,22 +42,25 @@ class StudentLoanContributionsController@Inject()(
   studentLoansFormProvider: StudentLoansFormProvider)(implicit val appConfig: AppConfig, implicit val executionContext: ExecutionContext
 ) extends FrontendBaseController
   with I18nSupport
-  with ActionWithSessionId{
+  with ActionWithSessionId with SalaryRequired{
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[StudentLoanContributions] = studentLoansFormProvider()
 
-  def showStudentLoansForm(): Action[AnyContent] = validateAcceptWithSessionId().async{ implicit request =>
-    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-
-    cache.fetchAndGetEntry().map {
-      case Some(aggregate) =>
-        val filledForm = aggregate.savedStudentLoanContributions.map(s => form.fill(s)).getOrElse(form)
-        Ok(studentLoansView(filledForm))
-      case None =>
-        Ok(studentLoansView(form))
-    }
+  def showStudentLoansForm(): Action[AnyContent] = {
+    salaryRequired(
+      cache,
+      implicit request =>
+        agg => {
+          val filledForm = agg.savedStudentLoanContributions
+            .map { s =>
+              form.fill(s)
+            }
+            .getOrElse(form)
+          Ok(studentLoansView(filledForm))
+        }
+    )
 
   }
 

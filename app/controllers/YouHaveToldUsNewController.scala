@@ -70,7 +70,8 @@ class YouHaveToldUsNewController @Inject() (
                 aggregateConditionsUtil.isTaxCodeDefined(aggregate),
                 aggregateConditionsUtil.isPensionContributionsDefined(aggregate),
                 aggregateConditionsUtil.givenPensionContributionPercentage(aggregate),
-                aggregateConditionsUtil.givenStudentLoanContribution(aggregate)
+                aggregateConditionsUtil.givenStudentLoanContribution(aggregate),
+                aggregateConditionsUtil.givenPostGradLoanContribution(aggregate)
               )
             )
           } else
