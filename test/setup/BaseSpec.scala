@@ -101,7 +101,7 @@ class BaseSpec
         controllers.routes.PensionContributionsPercentageController.showPensionContributionForm.url,
         "pension-contributions"),
       AdditionalQuestionItem("Plan 1", "about_student_loan_contribution", controllers.routes.StudentLoanContributionsController.showStudentLoansForm.url,"student_loan_contribution"),
-      AdditionalQuestionItem("Yes", "about_post_graduate_loan_contribution", controllers.routes.PostgraduateController.showPostGraduateForm.url,"post_graduate_loan_contribution")
+      AdditionalQuestionItem("Yes", "about_post_graduate_loan_contribution", controllers.routes.PostgraduateController.showPostgraduateForm.url,"post_graduate_loan_contribution")
     )
 }
 

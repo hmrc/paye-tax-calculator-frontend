@@ -74,7 +74,7 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.PostgraduateController.showPostGraduateForm.url)
+        val request = FakeRequest(GET, routes.PostgraduateController.showPostgraduateForm.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -108,7 +108,7 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
 
         val request = FakeRequest(
           GET,
-          routes.PostgraduateController.showPostGraduateForm.url
+          routes.PostgraduateController.showPostgraduateForm.url
         ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
         val result = route(application, request).get
@@ -144,7 +144,7 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
 
         val formData = Map("havePostGraduatePlan" -> "")
 
-        val request = FakeRequest(POST, routes.PostgraduateController.submitPostGradLoanForm.url)
+        val request = FakeRequest(POST, routes.PostgraduateController.submitPostgradLoanForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
