@@ -23,13 +23,13 @@ import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 
 case class QuickCalcAggregateInput(
-  savedSalary:                Option[Salary],
-  savedPeriod:                Option[PayPeriodDetail],
-  savedIsOverStatePensionAge: Option[StatePension],
-  savedTaxCode:               Option[UserTaxCode],
-  savedScottishRate:          Option[ScottishRate],
-  savedPensionContributions:  Option[PensionContributions],
-  savedStudentLoanContributions: Option[StudentLoanContributions],
+  savedSalary:                        Option[Salary],
+  savedPeriod:                        Option[PayPeriodDetail],
+  savedIsOverStatePensionAge:         Option[StatePension],
+  savedTaxCode:                       Option[UserTaxCode],
+  savedScottishRate:                  Option[ScottishRate],
+  savedPensionContributions:          Option[PensionContributions],
+  savedStudentLoanContributions:      Option[StudentLoanContributions],
   savedPostGraduateLoanContributions: Option[PostgraduateLoanContributions]) {
 
   def allQuestionsAnswered: Boolean =

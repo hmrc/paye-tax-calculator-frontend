@@ -22,6 +22,6 @@ case class StudentLoanContributions(studentLoanPlan: String)
 
 object StudentLoanContributions {
 
-  implicit val format:Format[StudentLoanContributions] = Json.format[StudentLoanContributions]
+  implicit val format: Format[StudentLoanContributions] = Json.format[StudentLoanContributions]
 
 }

@@ -25,4 +25,3 @@ object PostgraduateLoanContributions {
   implicit val format: Format[PostgraduateLoanContributions] = Json.format[PostgraduateLoanContributions]
 
 }
-

@@ -152,6 +152,10 @@ quick_calc.result.sidebar.kcode_a=For most people, tax codes starting with ‘K�
 quick_calc.result.sidebar.kcode_b=state benefits (opens in new tab)
 quick_calc.result.sidebar.kcode_c=or
 quick_calc.result.sidebar.kcode_d=company benefits (opens in new tab)
+quick_calc.result.sidebar.income_below_student_and_postgrad_loan=Your income is below the level needed to repay your student loan and postgraduate loan.
+quick_calc.result.sidebar.income_below_student_loan=Your income is below the level needed to repay your student loan.
+quick_calc.result.sidebar.income_below_postgrad_loan=Your income is below the level needed to repay your postgraduate loan.
+quick_calc.result.sidebar.income_below_student_loan_but_above_postgrad=Your income is below the level needed to repay your student loan.
 
 quick_calc.result.disclaimer.reducedPersonal_allowance_a.new=You used a tax code which is not usually for those on more than £100,000 a year. If you do not know your tax code, you can leave it blank and we will  calculate your
 quick_calc.result.disclaimer.reducedPersonal_allowance_b.new=reduced Personal Allowance (opens in a new tab).
@@ -211,6 +215,9 @@ quick_calc.salary.studentLoan.plan4.label=plan four
 quick_calc.salary.studentLoan.noneOfThese.label=none of these
 quick_calc.remove.student-loans= Are you sure you want to remove your student loan?
 quick_calc.remove.postgraduate-loans= Are you sure you want to remove your Postgraduate loan?
+quick_calc.error.postgraduate-loans=Select yes if you pay Postgraduate loan contributions
+quick_calc.postgraduateLoan.header=Do you have a postgraduate loan?
+quick_calc.postgraduateLoan.subheading=Tell us if you have a postgraduate loan that you need to repay.
 
 quick_calc.you_have_told_us.about_post_graduate_loan_contribution.label.new = Postgraduate loan
 

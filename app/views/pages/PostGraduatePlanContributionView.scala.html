@@ -18,58 +18,58 @@
 @import play.api.i18n._
 
 @this(
-govuk_wrapper: templates.GovukLayoutWrapper,
-formHelper: FormWithCSRF,
-errorSummary: components.errorSummary,
-link: components.linkNewTab,
-inputRadio: components.inputRadio,
-button: components.button,
-beforeContent: components.beforeContent,
-appConfig: config.AppConfig,
-details: components.details,
-features: config.features.Features,
-h1: components.h1
+     govuk_wrapper: templates.GovukLayoutWrapper,
+     formHelper: FormWithCSRF,
+     errorSummary: components.errorSummary,
+     link: components.linkNewTab,
+     inputRadio: components.inputRadio,
+     button: components.button,
+     beforeContent: components.beforeContent,
+     appConfig: config.AppConfig,
+     details: components.details,
+     features: config.features.Features,
+     h1: components.h1
 ) 
 
 @(postGradForm: Form[PostgraduateLoanContributions])(implicit request: Request[_], messages: Messages)
 
 @radioFieldPostGradLoan = @{
-postGradForm("havePostGraduatePlan")
+     postGradForm("havePostgraduatePlan")
 }
 
 @postGradRadiosRadios = @{
 Seq(
-RadioItem(
-content = Text(Messages("quick_calc.over_state_pension_age.yes")),
-label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
-value = Some("true"),
-checked = radioFieldPostGradLoan.value.contains("true")
-),
-RadioItem(
-content = Text(Messages("quick_calc.over_state_pension_age.no")),
-label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
-value = Some("false"),
-checked = radioFieldPostGradLoan.value.contains("false"))
-)
+   RadioItem(
+       content = Text(Messages("quick_calc.over_state_pension_age.yes")),
+       label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
+       value = Some("true"),
+       checked = radioFieldPostGradLoan.value.contains("true")
+   ),
+   RadioItem(
+       content = Text(Messages("quick_calc.over_state_pension_age.no")),
+       label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
+       value = Some("false"),
+       checked = radioFieldPostGradLoan.value.contains("false"))
+   )
 }
 
-@govuk_wrapper(Some(title(postGradForm, Messages("Do you have a postgraduate loan?"))), beforeContentBlock = beforeContent(controllers.routes.YouHaveToldUsNewController.summary.url)) {
+@govuk_wrapper(Some(title(postGradForm, Messages("quick_calc.postgraduateLoan.header"))), beforeContentBlock = beforeContent(controllers.routes.YouHaveToldUsNewController.summary.url)) {
 
-@formHelper(action = controllers.routes.PostgraduateController.submitPostGradLoanForm) {
+@formHelper(action = controllers.routes.PostgraduateController.submitPostgradLoanForm) {
 
 @errorSummary(postGradForm.errors)
 
-@h1(Messages("Do you have a postgraduate loan?	"))
+@h1(Messages("quick_calc.postgraduateLoan.header"))
 
 @inputRadio(
- form = postGradForm,
- legendKey = "Tell us if you have a postgraduate loan that you need to repay.	",
- name = "havePostGraduatePlan",
- items = postGradRadiosRadios,
- classes="",
- inline = true
+      form = postGradForm,
+      legendKey = Messages("quick_calc.postgraduateLoan.subheading"),
+      name = "havePostgraduatePlan",
+      items = postGradRadiosRadios,
+      classes="",
+      inline = true
 )
 
 @button("continue", Some("button-continue"))
-}
+      }
 }

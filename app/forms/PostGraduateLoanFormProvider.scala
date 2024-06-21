@@ -28,7 +28,7 @@ class PostGraduateLoanFormProvider @Inject() () {
 
   def apply(): Form[PostgraduateLoanContributions] = Form(
     mapping(
-      "havePostGraduatePlan" -> of(postGraduateLoanValidation)
+      "havePostgraduatePlan" -> of(postGraduateLoanValidation)
     )(PostgraduateLoanContributions.apply)(PostgraduateLoanContributions.unapply)
   )
 }

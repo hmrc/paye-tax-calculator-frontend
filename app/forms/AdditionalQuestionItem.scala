@@ -86,13 +86,16 @@ object AdditionalQuestionItem {
         val label    = "about_pensions_contributions"
         val idSuffix = "pension-contributions"
         val url      = routes.PensionContributionsPercentageController.showPensionContributionForm.url
-        val formattedContribution = pensions.flatMap(_.monthlyContributionAmount).map { contribution =>
-          if (contribution.isWhole) {
-            contribution.setScale(0).toString()
-          } else {
-            contribution.setScale(2, BigDecimal.RoundingMode.HALF_UP).toString().stripSuffix("0").stripSuffix(".")
+        val formattedContribution = pensions
+          .flatMap(_.monthlyContributionAmount)
+          .map { contribution =>
+            if (contribution.isWhole) {
+              contribution.setScale(0).toString()
+            } else {
+              contribution.setScale(2, BigDecimal.RoundingMode.HALF_UP).toString().stripSuffix("0").stripSuffix(".")
+            }
           }
-        }.getOrElse("None")
+          .getOrElse("None")
 
         val displayText = if (formattedContribution == "None") {
           "None"
@@ -108,7 +111,9 @@ object AdditionalQuestionItem {
       }
     }
 
-  implicit def studentLoanContributionFormat(implicit messages: Messages): AdditionalQuestion[StudentLoanContributions] =
+  implicit def studentLoanContributionFormat(
+    implicit messages: Messages
+  ): AdditionalQuestion[StudentLoanContributions] =
     new AdditionalQuestion[StudentLoanContributions] {
 
       def toAdditionalQuestionItem(t: Option[StudentLoanContributions]): AdditionalQuestionItem = {
@@ -117,15 +122,15 @@ object AdditionalQuestionItem {
         val url      = routes.StudentLoanContributionsController.showStudentLoansForm.url
 
         val labelText = t.map(_.studentLoanPlan) match {
-          case Some(studentLoanPlan) => studentLoanPlan match {
-            case "plan one" => Messages("Plan 1")
-            case "plan two" => Messages("Plan 2")
-            case "plan four" => Messages("Plan 4")
-            case "none of these" => Messages("None")
-          }
-          case None          => Messages("None")
+          case Some(studentLoanPlan) =>
+            studentLoanPlan match {
+              case "plan one"      => Messages("Plan 1")
+              case "plan two"      => Messages("Plan 2")
+              case "plan four"     => Messages("Plan 4")
+              case "none of these" => Messages("None")
+            }
+          case None => Messages("None")
         }
-        println(Console.MAGENTA + labelText)
 
         AdditionalQuestionItem(
           labelText,
@@ -136,16 +141,18 @@ object AdditionalQuestionItem {
       }
     }
 
-  implicit def  postGraduateLoanContributionFormat(implicit messages: Messages): AdditionalQuestion[PostgraduateLoanContributions] =
+  implicit def postGraduateLoanContributionFormat(
+    implicit messages: Messages
+  ): AdditionalQuestion[PostgraduateLoanContributions] =
     new AdditionalQuestion[PostgraduateLoanContributions] {
 
       def toAdditionalQuestionItem(postGrad: Option[PostgraduateLoanContributions]): AdditionalQuestionItem = {
         val label    = "about_post_graduate_loan_contribution"
         val idSuffix = "post_graduate_loan_contribution"
-        val url      = routes.PostgraduateController.showPostGraduateForm.url
+        val url      = routes.PostgraduateController.showPostgraduateForm.url
         AdditionalQuestionItem(
           postGrad.map(_.hasPostgraduatePlan) match {
-            case Some(true) => Messages("Yes")
+            case Some(true)  => Messages("Yes")
             case Some(false) => Messages("No")
             case _           => "None"
           },

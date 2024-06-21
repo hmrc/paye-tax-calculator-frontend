@@ -32,8 +32,8 @@ POST        /amount-contributions-fixed  controllers.PensionContributionsFixedCo
 GET         /student-loans  controllers.StudentLoanContributionsController.showStudentLoansForm
 POST        /student-loans  controllers.StudentLoanContributionsController.submitStudentLoansContribution
 
-GET         /postgraduate-loans controllers.PostgraduateController.showPostGraduateForm
-POST        /postgraduate-loans controllers.PostgraduateController.submitPostGradLoanForm
+GET         /postgraduate-loans controllers.PostgraduateController.showPostgraduateForm
+POST        /postgraduate-loans controllers.PostgraduateController.submitPostgradLoanForm
 
 GET         /your-answers          controllers.YouHaveToldUsController.summary
 

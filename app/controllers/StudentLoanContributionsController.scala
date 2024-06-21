@@ -33,22 +33,25 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StudentLoanContributionsController@Inject()(
-  override val messagesApi: MessagesApi,
-  cache: QuickCalcCache,
-  val controllerComponents: MessagesControllerComponents,
-  navigator: Navigator,
-  studentLoansView: StudentLoansContributionView,
-  studentLoansFormProvider: StudentLoansFormProvider)(implicit val appConfig: AppConfig, implicit val executionContext: ExecutionContext
-) extends FrontendBaseController
-  with I18nSupport
-  with ActionWithSessionId with SalaryRequired{
+class StudentLoanContributionsController @Inject() (
+  override val messagesApi:      MessagesApi,
+  cache:                         QuickCalcCache,
+  val controllerComponents:      MessagesControllerComponents,
+  navigator:                     Navigator,
+  studentLoansView:              StudentLoansContributionView,
+  studentLoansFormProvider:      StudentLoansFormProvider
+)(implicit val appConfig:        AppConfig,
+  implicit val executionContext: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[StudentLoanContributions] = studentLoansFormProvider()
 
-  def showStudentLoansForm(): Action[AnyContent] = {
+  def showStudentLoansForm(): Action[AnyContent] =
     salaryRequired(
       cache,
       implicit request =>
@@ -61,8 +64,6 @@ class StudentLoanContributionsController@Inject()(
           Ok(studentLoansView(filledForm))
         }
     )
-
-  }
 
   def submitStudentLoansContribution(): Action[AnyContent] = validateAcceptWithSessionId().async { implicit request =>
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
@@ -86,25 +87,23 @@ class StudentLoanContributionsController@Inject()(
             .fetchAndGetEntry()
             .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
             .map(agg =>
-            agg.copy(
-              savedStudentLoanContributions = Some(
-                StudentLoanContributions(newStudentLoanContribution.studentLoanPlan)
+              agg.copy(
+                savedStudentLoanContributions = Some(
+                  StudentLoanContributions(newStudentLoanContribution.studentLoanPlan)
+                )
               )
             )
-            )
-          updatedAggregate.flatMap(
-            updatedAgg =>
-              cache.save(updatedAgg)
-                .map(_ =>
-                  Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
-                    routes.YouHaveToldUsNewController.summary
-                  }()
-                  )
-                )
+          updatedAggregate.flatMap(updatedAgg =>
+            cache
+              .save(updatedAgg)
+              .map(_ =>
+                Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
+                  routes.YouHaveToldUsNewController.summary
+                }())
+              )
           )
         }
       )
-
 
   }
 

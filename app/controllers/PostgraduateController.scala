@@ -33,26 +33,27 @@ import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class PostgraduateController @Inject() (
-  override val messagesApi:         MessagesApi,
-  cache:                            QuickCalcCache,
-  val controllerComponents:         MessagesControllerComponents,
-  navigator:                        Navigator,
-  postGraduateView: PostGraduatePlanContributionView,
-  postGraduationFromProvider: PostGraduateLoanFormProvider)(
-  implicit val appConfig: AppConfig,
+  override val messagesApi:      MessagesApi,
+  cache:                         QuickCalcCache,
+  val controllerComponents:      MessagesControllerComponents,
+  navigator:                     Navigator,
+  postGraduateView:              PostGraduatePlanContributionView,
+  postGraduationFromProvider:    PostGraduateLoanFormProvider
+)(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired {
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  val form: Form[PostgraduateLoanContributions]= postGraduationFromProvider()
+  val form: Form[PostgraduateLoanContributions] = postGraduationFromProvider()
 
-  def showPostGraduateForm(): Action[AnyContent] =
-    salaryRequired(cache, showPostGraduateContributionFormTestable)
+  def showPostgraduateForm(): Action[AnyContent] =
+    salaryRequired(cache, showPostgraduateContributionFormTestable)
 
-  private[controllers] def showPostGraduateContributionFormTestable: ShowForm = { implicit request => agg =>
+  private[controllers] def showPostgraduateContributionFormTestable: ShowForm = { implicit request => agg =>
     val filledForm = agg.savedPostGraduateLoanContributions
       .map { s =>
         form.fill(s)
@@ -62,7 +63,7 @@ class PostgraduateController @Inject() (
     Ok(postGraduateView(filledForm))
   }
 
-  def submitPostGradLoanForm(): Action[AnyContent] =
+  def submitPostgradLoanForm(): Action[AnyContent] =
     validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
@@ -80,10 +81,10 @@ class PostgraduateController @Inject() (
                   postGraduateView(formWithErrors)
                 )
             },
-          postGradLoan =>
+          postgradLoan =>
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
-                val updatedAggregate = aggregate.copy(savedPostGraduateLoanContributions = Some(postGradLoan))
+                val updatedAggregate = aggregate.copy(savedPostGraduateLoanContributions = Some(postgradLoan))
                 cache.save(updatedAggregate).map { _ =>
                   Redirect(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(
@@ -97,13 +98,13 @@ class PostgraduateController @Inject() (
                 cache
                   .save(
                     QuickCalcAggregateInput.newInstance
-                      .copy(savedPostGraduateLoanContributions = Some(postGradLoan))
+                      .copy(savedPostGraduateLoanContributions = Some(postgradLoan))
                   )
                   .map { _ =>
                     Redirect(routes.YouHaveToldUsNewController.summary)
                   }
-            })
+            }
+        )
 
-                }
+    }
 }
-

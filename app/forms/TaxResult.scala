@@ -67,12 +67,12 @@ object TaxResult {
       },
       extractTaxYear(getTaxYear),
       extractPensionContributions(quickCalcAggregateInput) match {
-        case Some(pensionContribution) =>  pensionContribution
+        case Some(pensionContribution) => pensionContribution
         case None                      => null
       },
       extractStudentLoanContributions(quickCalcAggregateInput) match {
         case Some(studentLoanContributions) => studentLoanContributions
-        case None => null
+        case None                           => null
       }
     ).run()
 
@@ -83,46 +83,61 @@ object TaxResult {
   ): BigDecimal = {
 
     val result = period match {
-      case "a year"        => wages.toDouble
-      case "a month"       => WageConverterUtils.INSTANCE.convertMonthlyWageToYearly(wages.toDouble)
-      case "a day"         => WageConverterUtils.INSTANCE.convertDailyWageToYearly(wages.toDouble, hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied days")))
-      case "an hour"       => WageConverterUtils.INSTANCE.convertHourlyWageToYearly(wages.toDouble,  hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied hours")))
+      case "a year"  => wages.toDouble
+      case "a month" => WageConverterUtils.INSTANCE.convertMonthlyWageToYearly(wages.toDouble)
+      case "a day" =>
+        WageConverterUtils.INSTANCE.convertDailyWageToYearly(
+          wages.toDouble,
+          hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied days"))
+        )
+      case "an hour" =>
+        WageConverterUtils.INSTANCE.convertHourlyWageToYearly(
+          wages.toDouble,
+          hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied hours"))
+        )
       case "a week"        => WageConverterUtils.INSTANCE.convertWeeklyWageToYearly(wages.toDouble)
       case "every 4 weeks" => WageConverterUtils.INSTANCE.convertFourWeeklyWageToYearly(wages.toDouble)
     }
 
-   BigDecimal(result)
+    BigDecimal(result)
   }
 
-
-  private def extractPensionContributions(quickCalcAggregateInput: QuickCalcAggregateInput): Option[PensionContribution] = {
-    (quickCalcAggregateInput.savedPensionContributions.map(_.gaveUsPercentageAmount), quickCalcAggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).getOrElse(BigDecimal(0))) match {
-      case (Some(true), amount) =>  Some(new PensionContribution(PensionMethod.PERCENTAGE, amount.toDouble))
-      case (Some(false), amount) => Some(new PensionContribution(PensionMethod.MONTHLY_AMOUNT_IN_POUNDS, amount.toDouble))
+  private def extractPensionContributions(
+    quickCalcAggregateInput: QuickCalcAggregateInput
+  ): Option[PensionContribution] =
+    (quickCalcAggregateInput.savedPensionContributions.map(_.gaveUsPercentageAmount),
+     quickCalcAggregateInput.savedPensionContributions
+       .flatMap(_.monthlyContributionAmount)
+       .getOrElse(BigDecimal(0))) match {
+      case (Some(true), amount) => Some(new PensionContribution(PensionMethod.PERCENTAGE, amount.toDouble))
+      case (Some(false), amount) =>
+        Some(new PensionContribution(PensionMethod.MONTHLY_AMOUNT_IN_POUNDS, amount.toDouble))
       case _ => None
     }
-  }
 
-  private def extractStudentLoanContributions(quickCalcAggregateInput: QuickCalcAggregateInput): Option[StudentLoanPlans] = {
+  private def extractStudentLoanContributions(
+    quickCalcAggregateInput: QuickCalcAggregateInput
+  ): Option[StudentLoanPlans] =
     (quickCalcAggregateInput.savedStudentLoanContributions.map(_.studentLoanPlan) match {
-      case Some("plan one") => Some(new StudentLoanPlans(true, false, false, extractPostGradLoan(quickCalcAggregateInput)))
-      case Some("plan two") => Some(new StudentLoanPlans(false, true, false, extractPostGradLoan(quickCalcAggregateInput)))
-      case Some("plan four") => Some(new StudentLoanPlans(false, false, true, extractPostGradLoan(quickCalcAggregateInput)))
-      case Some("none of these") => Some(new StudentLoanPlans(false, false,false,extractPostGradLoan(quickCalcAggregateInput)))
+      case Some("plan one") =>
+        Some(new StudentLoanPlans(true, false, false, extractPostGradLoan(quickCalcAggregateInput)))
+      case Some("plan two") =>
+        Some(new StudentLoanPlans(false, true, false, extractPostGradLoan(quickCalcAggregateInput)))
+      case Some("plan four") =>
+        Some(new StudentLoanPlans(false, false, true, extractPostGradLoan(quickCalcAggregateInput)))
+      case Some("none of these") =>
+        Some(new StudentLoanPlans(false, false, false, extractPostGradLoan(quickCalcAggregateInput)))
       case _ => None
     })
-  }
 
-  private def extractPostGradLoan(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean = {
+  private def extractPostGradLoan(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedPostGraduateLoanContributions.map(_.hasPostgraduatePlan) match {
       case Some(true) => true
-      case _ => false
+      case _          => false
     }
-  }
 
-
-
-  def convertWagesToMonthly(wages: BigDecimal): BigDecimal = BigDecimal(WageConverterUtils.INSTANCE.convertYearlyWageToMonthly(wages.toDouble))
+  def convertWagesToMonthly(wages: BigDecimal): BigDecimal =
+    BigDecimal(WageConverterUtils.INSTANCE.convertYearlyWageToMonthly(wages.toDouble))
 
   def extractTaxYear(currentTaxYear: Int): TaxYear =
     currentTaxYear match {

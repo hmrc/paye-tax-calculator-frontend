@@ -116,9 +116,9 @@ object CustomFormatters {
   def removeStudentLoanContributions(): Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key:  String,
-                       data: Map[String, String]
-                     ): Either[Seq[FormError], Boolean] =
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], Boolean] =
       Right(data.getOrElse(key, "")).flatMap {
         case "true"  => Right(true)
         case "false" => Right(false)
@@ -131,17 +131,17 @@ object CustomFormatters {
       }
 
     override def unbind(
-                         key:   String,
-                         value: Boolean
-                       ): Map[String, String] = Map(key -> value.toString)
+      key:   String,
+      value: Boolean
+    ): Map[String, String] = Map(key -> value.toString)
   }
 
   def removePostGradLoanContributions(): Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key:  String,
-                       data: Map[String, String]
-                     ): Either[Seq[FormError], Boolean] =
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], Boolean] =
       Right(data.getOrElse(key, "")).flatMap {
         case "true"  => Right(true)
         case "false" => Right(false)
@@ -154,9 +154,9 @@ object CustomFormatters {
       }
 
     override def unbind(
-                         key:   String,
-                         value: Boolean
-                       ): Map[String, String] = Map(key -> value.toString)
+      key:   String,
+      value: Boolean
+    ): Map[String, String] = Map(key -> value.toString)
   }
 
   def statePensionAgeValidation: Formatter[Boolean] = new Formatter[Boolean] {
@@ -185,24 +185,24 @@ object CustomFormatters {
   def postGraduateLoanValidation: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
-                       key:  String,
-                       data: Map[String, String]
-                     ): Either[Seq[FormError], Boolean] =
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], Boolean] =
       Right(data.getOrElse(key, "")).flatMap {
         case "true"  => Right(true)
         case "false" => Right(false)
         case _ =>
           Left(
             Seq(
-              FormError(key, "Select yes if you pay Postgraduate loan contributions")
+              FormError(key, "quick_calc.error.postgraduate-loans")
             )
           )
       }
 
     override def unbind(
-                         key:   String,
-                         value: Boolean
-                       ): Map[String, String] = Map(key -> value.toString)
+      key:   String,
+      value: Boolean
+    ): Map[String, String] = Map(key -> value.toString)
   }
 
   def hasTaxCodeBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
@@ -241,19 +241,20 @@ object CustomFormatters {
   }
 
   def studentLoanContributionsFormatter: Formatter[String] = new Formatter[String] {
+
     override def bind(
-                       key:  String,
-                       data: Map[String, String]
-                     ): Either[Seq[FormError], String] =
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], String] =
       Right(data.getOrElse(key, "")).flatMap {
         case "" => Left(Seq(FormError(key, "Placeholder")))
         case p  => Right(p)
       }
 
     override def unbind(
-                         key:   String,
-                         value: String
-                       ): Map[String, String] = Map(key -> value)
+      key:   String,
+      value: String
+    ): Map[String, String] = Map(key -> value)
   }
 
   def dayValidation: Formatter[BigDecimal] = new Formatter[BigDecimal] {
