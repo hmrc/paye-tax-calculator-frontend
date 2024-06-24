@@ -139,9 +139,18 @@ class ShowResultsController @Inject() (
           Html(
             Messages("quick_calc.result.sidebar.income_below_student_loan_but_above_postgrad")
           )
+        ),
+      Clarification.PENSION_BELOW_ANNUAL_ALLOWANCE -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.pension_below_annual_allowance")
         )
-
-
+      ),
+      Clarification.PENSION_EXCEED_ANNUAL_ALLOWANCE -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.pension_exceed_annual_allowance_a") +
+            linkInNewTab("https://www.gov.uk/tax-on-your-private-pension/annual-allowance","quick_calc.result.sidebar.pension_exceed_annual_allowance_b")
+        )
+      )
     )
 
     val seqOfBullet: ListBuffer[Option[Html]] = ListBuffer(Some(Html(Messages("quick_calc.result.sidebar.one_job"))))

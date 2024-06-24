@@ -156,6 +156,10 @@ quick_calc.result.sidebar.income_below_student_and_postgrad_loan=Your income is 
 quick_calc.result.sidebar.income_below_student_loan=Your income is below the level needed to repay your student loan.
 quick_calc.result.sidebar.income_below_postgrad_loan=Your income is below the level needed to repay your postgraduate loan.
 quick_calc.result.sidebar.income_below_student_loan_but_above_postgrad=Your income is below the level needed to repay your student loan.
+quick_calc.result.sidebar.pension_below_annual_allowance=We took your pension contributions off your gross income, the amount before deductions and not including contributions from your employer
+quick_calc.result.sidebar.pension_exceed_annual_allowance_a=We took your pension contributions off your gross income, the amount before deductions and not including contributions from your employer. Find out about the
+quick_calc.result.sidebar.pension_exceed_annual_allowance_b=annual allowance for your private pension (opens in a new tab)
+
 
 quick_calc.result.disclaimer.reducedPersonal_allowance_a.new=You used a tax code which is not usually for those on more than £100,000 a year. If you do not know your tax code, you can leave it blank and we will  calculate your
 quick_calc.result.disclaimer.reducedPersonal_allowance_b.new=reduced Personal Allowance (opens in a new tab).
