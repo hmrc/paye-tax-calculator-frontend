@@ -16,14 +16,16 @@
 
 package controllers
 
+import config.features.Features
 import forms.TaxResult
 import org.jsoup.Jsoup
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.ArgumentMatchers.any
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.TryValues
+import org.scalatest.{BeforeAndAfterEach, TryValues}
 import org.scalatest.concurrent.IntegrationPatience
-import play.api.Application
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.{Application, Configuration}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -40,10 +42,18 @@ import views.html.pages.ResultView
 
 import scala.concurrent.Future
 
-class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience with CSRFTestHelper {
+class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience with CSRFTestHelper with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
+  private val features = new Features()(app.injector.instanceOf[Configuration])
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    features.newScreenContentFeature(false)
+    features.welshTranslationFeature(false)
+  }
 
   def messagesThing(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 

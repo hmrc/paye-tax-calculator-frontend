@@ -20,6 +20,8 @@ import config.features.Features
 
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
+import play.api.i18n.Lang
+import play.api.mvc.Call
 
 trait AppConfig {
   val host:                       String
@@ -34,12 +36,13 @@ trait AppConfig {
   val termsConditions:            String
   val govukHelp:                  String
   val accessibilityStatement:     String
-  val languageTranslationEnabled: Boolean
   val timeout:                    Int
   val countdown:                  Int
   val dateOverride:               Option[String]
   val mongoTtl:                   Int
   def feedbackUrl(signedInUser: Boolean): String
+  val languageMap:Map[String,Lang]
+  val routeToSwitchLanguage: String => Call
 }
 
 @Singleton
@@ -70,7 +73,6 @@ class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
   lazy val termsConditions:            String  = host + config.get[String]("urls.footer.termsConditions")
   lazy val govukHelp:                  String  = config.get[String]("urls.footer.govukHelp")
   lazy val accessibilityStatement:     String  = config.get[String]("urls.footer.accessibilityStatement")
-  lazy val languageTranslationEnabled: Boolean = config.get[Boolean]("features.welsh-translation")
   lazy val timeout:                    Int     = config.get[Int]("timeout.timeout")
   lazy val countdown:                  Int     = config.get[Int]("timeout.countdown")
 
@@ -84,5 +86,13 @@ class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
     } else {
       s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
     }
+
+  override val languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy")
+  )
+
+  override val routeToSwitchLanguage: String => Call = (lang: String) => controllers.routes.LanguageController.switchToLanguage(lang)
+
 
 }

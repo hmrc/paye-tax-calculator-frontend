@@ -41,7 +41,8 @@ class FeatureSwitchItems @Inject() () {
     Seq(
       formCheckBoxItem(form,
                        FeatureConfigKey.enableNewScreenContent,
-                       "Enable new screen content for Paye Tax Calculator")
+                       "Enable new screen content for Paye Tax Calculator"),
+      formCheckBoxItem(form, FeatureConfigKey.enableWelshContent, "Enable welsh content for Paye Tax Calculator")
     )
 
 }

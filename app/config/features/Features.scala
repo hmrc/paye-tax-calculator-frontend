@@ -24,5 +24,6 @@ import javax.inject.{Inject, Singleton}
 class Features @Inject() (implicit config: Configuration) {
 
   val newScreenContentFeature = new Feature(FeatureConfigKey.enableNewScreenContent)
+  val welshTranslationFeature = new Feature(FeatureConfigKey.enableWelshContent)
 
 }

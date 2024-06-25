@@ -1,241 +1,384 @@
-legacy.title=Cyfrifiannell CThEM - amcangyfrifiad o’ch cyflog clir
-legacy.introduction=Amcangyfrifwch faint o Dreth Incwm a chyfraniadau Yswiriant Gwladol y disgwyliwch eu talu ar eich incwm - a chanfyddwch sut mae’r arian hwn yn cael ei wario gan y Llywodraeth. Mae’r gyfrifiannell wedi ei hanelu at bobl sy’n talu treth drwy Talu Wrth Ennill (sef y system a ddefnyddir gan gyflogwyr a darparwyr pensiynau i ddidynnu treth o’ch cyflog neu’ch pensiwn). Mae’n rhad ac am ddim ac yn hawdd ei defnyddio.
-legacy.scottish_taxpayer_intro=Os ydych yn drethdalwr yn yr Alban dylech roi’ch cod treth yr Alban, er enghraifft "S1100L". I gael gwybodaeth bellach am gyfradd Treth Incwm yr Alban, ewch i
-legacy.scottish_income_tax=Dreth Incwm yr Alban
-index.use_the_detailed_calc_if=Nodiadau ar gyfer cyflogeion o dan 21 oed a phrentisiaid o dan 25 oed:
-index.use_the_detailed_calc_NI_select=Bydd angen i chi ddewis y llythyren gategori Yswiriant Gwladol:
-index.use_the_detailed_calc_NI_select_A=‘A’ os yw’r llythyren gategori naill ai ‘H’ neu ‘M’
-index.use_the_detailed_calc_NI_select_D=‘D’ os yw’r llythyren gategori’n ‘I’
-index.use_the_detailed_calc_NI_select_Other=Ni fydd dewis y llythyren amgen yn effeithio ar swm yr ‘Yswiriant Gwladol’ a amcangyfrifir.
-index.use_the_detailed_calc_ENI=Ni fydd yr amcangyfrif o ‘Yswiriant Gwladol y Cyflogwr’ yn gywir. Os ydych eisiau gwybod y swm cywir, defnyddiwch y
-index.use_the_detailed_calc_NIC_link=gyfrifiannell Cyfraniadau Yswiriant Gwladol
+legacy.title=Translation needed
+legacy.introduction=Translation needed
+legacy.scottish_taxpayer_intro=Translation needed
+legacy.scottish_income_tax=Treth Incwm yn yr Alban
+index.use_the_detailed_calc_if=Translation needed
+index.use_the_detailed_calc_NI_select=Translation needed
+index.use_the_detailed_calc_NI_select_A=Translation needed
+index.use_the_detailed_calc_NI_select_D=Translation needed
+index.use_the_detailed_calc_NI_select_Other=Translation needed
+index.use_the_detailed_calc_ENI=Translation needed
+index.use_the_detailed_calc_NIC_link=Translation needed
 
-index.detailed_calc_under_age=rydych o dan 21 oed neu’n brentis o dan 25 oed
-index.title=Faint yw’ch incwm, treth ac Yswiriant Gwladol?
-index.introduction=Mae’r gyfrifiannell wedi ei hanelu at bobl sy’n talu treth drwy Talu Wrth Ennill (sef y system a ddefnyddir gan gyflogwyr a darparwyr pensiynau i ddidynnu treth o’ch cyflog neu’ch pensiwn). Mae’n rhad ac am ddim ac yn hawdd ei defnyddio.
-index.quick_calculation=Cyfrifiad cyflym
-index.detailed_calculation=Cyfrifiad manwl
-index.welsh_version=Welsh Version
-index.welsh_version_description=Defnyddiwch y cysylltiad isod i ddefnyddio’r fersiwn Cymraeg o’r gyfrifiannell ar-lein.
-index.welsh_version_link=Cyfrifiannell Treth CThEM
-index.use_the_quick_calc_if=Defnyddiwch y cyfrifiad cyflym os gallwch ateb yn gadarnhaol i’r canlynol:
-index.employment_only=mae gennych incwm cyflogaeth yn unig
-index.dont_contribute_pension=nid ydych yn cyfrannu at bensiwn yn y gweithle neu at bensiwn personol drwy’ch cyflogwr.
-index.language_version.header=Welsh Version
-index.language_version.click_here=Cliciwch yma
-index.language_version.paragraph=i ddefnyddio’r fersiwn Cymraeg o’r gyfrifiannell ar-lein.
-index.language_version.target_language=Welsh
+index.detailed_calc_under_age=Translation needed
+index.title=Translation needed
+index.introduction=Translation needed
+index.quick_calculation=Translation needed
+index.detailed_calculation=Translation needed
+index.welsh_version=Translation needed
+index.welsh_version_description=Translation needed
+index.welsh_version_link=Translation needed
+index.use_the_quick_calc_if=Translation needed
+index.employment_only=Translation needed
+index.dont_contribute_pension=Translation needed
+index.language_version.header=Translation needed
+index.language_version.click_here=Translation needed
+index.language_version.paragraph=Translation needed
+index.language_version.target_language=Translation needed
 
 continue=Yn eich blaen
-back =Yn ôl
-restart =Dechrau eto
-get_results=Canlyniadau
-a=a
+back =Translation needed
+restart =Translation needed
+get_results=Translation needed
+update_answers=Diweddaruâ€™r atebion
+calculate_take_home_pay=Cyfrifoâ€™ch cyflog clir
+a=Translation needed
+clear_results=Clirio a dechrau eto
 
-feedback=Rhowch wybod i ni beth yw’ch barn ynghylch y gyfrifiannell hon (yn agor mewn tab newydd)
-#TODO Allow formatting for quote marks
-select_one=Atebwch ‘Iawn’ neu ‘Na’
+feedback=Rhowch eich barn am y gyfrifiannell hon (yn agor tab newydd)
 
-quick_calc.title=Cyfrifiannell CThEM - amcangyfrifiad o’ch cyflog clir
-quick_calc.header.title=Amcangyfrifwch eich cyflog clir
+select_one=Translation needed
 
-quick_calc.you_have_told_us.header=Gwiriwch eich atebion
-quick_calc.you_have_told_us.header_question=Gofynnon ni
-quick_calc.you_have_told_us.header_answers=Ateboch chi
-quick_calc.you_have_told_us.header_change_link=Gallwch
+quick_calc.title=Translation needed
+quick_calc.header.title=Translation needed
+site.govuk=Translation needed
+
+quick_calc.you_have_told_us.header=Gwirioâ€™ch atebion
+quick_calc.you_have_told_us.header_question=Translation needed
+quick_calc.you_have_told_us.header_answers=Translation needed
+quick_calc.you_have_told_us.header_change_link=Translation needed
 quick_calc.you_have_told_us.edit=Newid
 
-quick_calc.you_have_told_us.about_tax_code.label=A ydych eisiau defnyddio’ch cod treth presennol?
+quick_calc.you_have_told_us.about_tax_code.label=Beth yw eich cod treth? (dewisol)
+quick_calc.you_have_told_us.about_tax_code.label.newTitle=Beth yw eich cod treth?
+quick_calc.you_have_told_us.about_pension_contributions.label=Translation needed
+quick_calc.you_have_told_us.about_pensions_contributions.label.new=Translation needed
+quick_calc.you_have_told_us.about_tax_code.label.new=Cod treth
 quick_calc.you_have_told_us.about_tax_code.no=Na
 quick_calc.you_have_told_us.about_tax_code.yes=Iawn
-quick_calc.you_have_told_us.about_tax_code.default= - gwnawn ddefnyddio’r gosodiad gwreiddiol
+quick_calc.you_have_told_us.about_tax_code.default_a=Translation needed
+quick_calc.you_have_told_us.about_tax_code.default_b=Translation needed
+quick_calc.you_have_told_us.about_tax_code.default.not.provided=Heb ei ddarparu
+quick_calc.you_have_told_us.taxCode.add=Ychwanegu
+quick_calc.you_have_told_us.taxCode.remove=Tynnu
 
-quick_calc.you_have_told_us.scottish_rate.label=A ydych yn talu cyfradd yr Alban o Dreth Incwm?
+quick_calc.pensionContributionError.invalidFormat=Nodwch swm eich cyfraniadau pensiwn misol yn y fformat cywir
+quick_calc.pensionContributionError.poundAndPence=Gall eich cyfraniadau pensiwn misol dim ond cynnwys punnoedd a cheiniogau
+quick_calc.pensionContributionError.lessThanHundredPercent=Maeâ€™n rhaid iâ€™ch cyfraniadau pensiwn misol fod yn llai na 100% oâ€™ch incwm
+
+quick_calc.you_have_told_us.scottish_rate.label=Translation needed
+quick_calc.you_have_told_us.scottish_rate.label.new=Treth Incwm yn yr Alban
 quick_calc.you_have_told_us.scottish_rate.yes=Iawn
 quick_calc.you_have_told_us.scottish_rate.no=Na
 
 quick_calc.you_have_told_us.over_state_pension_age.label=A ydych dros oedran Pensiwn y Wladwriaeth?
+quick_calc.you_have_told_us.over_state_pension_age.label.new=Dros oedran Pensiwn y Wladwriaeth
 quick_calc.you_have_told_us.over_state_pension_age.yes=Iawn
 quick_calc.you_have_told_us.over_state_pension_age.no=Na
+
+quick_calc.you_have_told_us.subheading=Eich incwm
+quick_calc.you_have_told_us.subheading.additional=Cwestiynau ychwanegol (Dewisol)
+quick_calc.you_have_told_us.body.additional=Gall eich canlyniadau fod yn fwy cywir os byddwch yn ateb cwestiynau ychwanegol.
+
 
 quick_calc.you_have_told_us.a_year.label=Faint ydych yn cael eich talu?
 quick_calc.you_have_told_us.a_month.label=Faint ydych yn cael eich talu?
 quick_calc.you_have_told_us.a_week.label=Faint ydych yn cael eich talu?
 quick_calc.you_have_told_us.a_day.label=Faint ydych yn cael eich talu?
 quick_calc.you_have_told_us.an_hour.label=Faint ydych yn cael eich talu?
+quick_calc.you_have_told_us.every_4_weeks.label=Faint ydych yn cael eich talu?
 
-quick_calc.you_have_told_us.a_day_sub.label=Sawl diwrnod yr wythnos ydych chi’n gweithio fel arfer?
-quick_calc.you_have_told_us.an_hour_sub.label=Sawl awr yr wythnos ydych chi’n gweithio fel arfer?
+quick_calc.you_have_told_us.a_year.label.new=Incwm gros
+quick_calc.you_have_told_us.a_month.label.new=Incwm gros
+quick_calc.you_have_told_us.a_week.label.new=Incwm gros
+quick_calc.you_have_told_us.a_day.label.new=Incwm gros
+quick_calc.you_have_told_us.an_hour.label.new=Incwm gros
+quick_calc.you_have_told_us.every_4_weeks.label.new=Incwm gros
 
-quick_calc.result.header=Amcangyfrif o’ch cyflog clir
-quick_calc.result.you_take_home=Amcangyfrif o’ch cyflog clir ar gyfer
-quick_calc.result.total_deductions.info=Yn seiliedig ar yr wybodaeth rydych wedi’i rhoi i ni:
-quick_calc.result.income=Incwm
-quick_calc.result.tax_free_allowance=Eich lwfans rhydd o dreth yw
-quick_calc.result.tax_free_allowance_scottish=Eich lwfans rhydd o dreth yr Alban yw
-quick_calc.result.k_code=Eich addasiad cyflog ar gyfer ‘cod K’
-quick_calc.result.sk_code=Eich addasiad cyflog ar gyfer ‘cod SK’
-quick_calc.result.adjusted_taxable_pay=Eich cyflog trethadwy wedi’i addasu yw
-quick_calc.result.taxable_pay=Eich cyflog trethadwy yw
-quick_calc.result.deductions=rydych yn talu cyfanswm o
-quick_calc.result.income_tax=eich Treth Incwm yw
-quick_calc.result.income_tax_scottish=eich Treth Incwm yr Alban yw
-quick_calc.result.income_tax_adjusted=eich Treth Incwm wedi’i haddasu yw
-quick_calc.result.income_tax_scottish_adjusted=eich Treth Incwm yr Alban wedi’i haddasu yw
-quick_calc.result.your_national_insurance=eich Yswiriant Gwladol yw
-quick_calc.result.how_we_calculated=Sut y gwnaethom gyfrifo’ch canlyniadau
-quick_calc.result.how_we_calculated.you_earn_a=Eich cyflog yw
-quick_calc.result.how_we_calculated.you_earn_b=(chi roddodd wybod i ni am hyn)
-quick_calc.result.adjusted.head=Beth yw Treth Incwm wedi’i haddasu?
-quick_calc.result.adjusted.info=Ni all CThEM gymryd mwy na 50% o’ch cyflog llawn ar gyfer Treth Incwm. Mae amcangyfrif o’ch Treth Incwm yn fwy na 50% yn yr achos hwn, felly rydym wedi’i haddasu i adlewyrchu’r ffin hon.
+quick_calc.you_have_told_us.a_day_sub.label=Sawl diwrnod yr wythnos ydych yn ei weithio fel arfer?
+quick_calc.you_have_told_us.a_day_sub.label.new=Diwrnodau a weithir bob wythnos
+quick_calc.you_have_told_us.an_hour_sub.label.new=Oriau a weithiwyd bob wythnos
+quick_calc.you_have_told_us.an_hour_sub.label=Sawl awr yr wythnos ydych yn ei gweithio fel arfer?
 
-quick_calc.result.tabLabels.year=Blwyddyn
-quick_calc.result.tabLabels.month=Mis
-quick_calc.result.tabLabels.week=Wythnos
-quick_calc.result.info_a=Rydym wedi amcangyfrif eich cyfraniadau Yswiriant Gwladol yn seiliedig ar y dewisiadau Dosbarth 1
-quick_calc.result.info_b=mwyaf cyffredin: Categorïau A, H ac M (yn agor mewn tab newydd)
-quick_calc.result.info_e=Am resymau diogelwch, ni fydd CThEM yn cadw cofnod o’ch data.
-quick_calc.result.info_print=Argraffu fy nghyfrifiad
+quick_calc.result.header=Eich cyflog clir amcangyfrifedig
+quick_calc.result.header.new=Eich cyflog clir amcangyfrifedig ar gyfer
+quick_calc.result.you_take_home=Eich cyflog clir amcangyfrifedig ar gyfer
+quick_calc.result.total_deductions.info_a=Translation needed
+quick_calc.result.total_deductions.info_b=Translation needed
+quick_calc.result.total_deductions.info.new=Sut y gwnaethom gyfrifo hyn:
+quick_calc.result.income=Translation needed
+quick_calc.result.tax_free_allowance=Translation needed
+quick_calc.result.tax_free_allowance_scottish=Translation needed
+quick_calc.result.k_code=Translation needed
+quick_calc.result.k_code.new=Addasiad cyflog cod K
+quick_calc.result.sk_code=Translation needed
+quick_calc.result.adjusted_taxable_pay=Translation needed
+quick_calc.result.taxable_pay=Translation needed
+quick_calc.result.deductions=Translation needed
+quick_calc.result.income_tax=Treth Incwm
+quick_calc.result.income_tax_scottish=Treth Incwm yn yr Alban
+quick_calc.result.income_tax_adjusted=Translation needed
+quick_calc.result.income_tax_scottish_adjusted=Translation needed
+quick_calc.result.your_national_insurance=Yswiriant Gwladol
+quick_calc.result.how_we_calculate_a=Translation needed
+quick_calc.result.how_we_calculate_b=Translation needed
+quick_calc.result.how_we_calculated.you_earn_a=Translation needed
+quick_calc.result.how_we_calculated.you_earn_b=Translation needed
+quick_calc.result.adjusted.head=Translation needed
+quick_calc.result.adjusted.info=Translation needed
+quick_calc.result.gross.income=Incwm gros
+quick_calc.result.personal_allowance=Lwfans Personol
+quick_calc.result.pension_contributions=Cyfraniadau pensiwn
+quick_calc.result.taxable_income=Incwm trethadwy
+quick_calc.result.adjusted.taxable_income=Translation needed
+quick_calc.result.take_home_pay=Cyflog clir
+quick_calc.result.incomeTaxPercentage=Treth Incwm ar
+quick_calc.result.sidebar.header=Ar gyfer y cyfrifiad hwn:
 
-quick_calc.result.info_url_list=Yr hyn i’w wneud nawr
-quick_calc.result.info_url_a=Gwirio fy nhreth am y flwyddyn flaenorol
-quick_calc.result.info_url_b=Gwirio os bu gordaliad
-quick_calc.result.info_url_c=Hawlio ad-daliad treth
+quick_calc.result.sidebar.one_job=Mae gennych 1 swydd.
+quick_calc.result.sidebar.appliedScottishIncomeTaxRates=Rydym wedi cymhwyso cyfraddau Treth Incwm yr Alban.
+quick_calc.result.sidebar.scottish_tax_code=Rydym wedi cymhwyso cyfraddau Treth Incwm yr Alban oherwydd eich bod wedi defnyddio cod treth yr Alban.
+quick_calc.result.sidebar.pay_scottish_income_tax=Rydym wedi cymhwyso cyfraddau Treth Incwm yr Alban oherwydd gwnaethoch roi gwybod eich bod yn talu Treth Incwm yr Alban.
+quick_calc.result.sidebar.personal_allowance=Eich Lwfans Personol yw Â£12,570 (oherwydd nad ydych wedi rhoi cod treth)
+quick_calc.result.sidebar.not_over_state_pension_age_b=Rydych yn gwneud cyfraniadau Yswiriant Gwladol Dosbarth 1: CategorÃ¯au A, H ac M (yn agor tab newydd)
+quick_calc.result.sidebar.over_state_pension_age=Nid ydych yn talu Yswiriant Gwladol oherwydd eich bod dros oedran Pensiwn y Wladwriaeth.
+quick_calc.result.sidebar.youHaveReducedPersonal_allowance_a=Mae gennych Lwfans Personol wediâ€™i ostwng (yn agor tab newydd) oherwydd bod gennych incwm sydd dros Â£100,000.
+quick_calc.result.sidebar.kcode_a=Translation needed
+quick_calc.result.sidebar.kcode_b=Translation needed
+quick_calc.result.sidebar.kcode_c=Translation needed
+quick_calc.result.sidebar.kcode_d=Translation needed
+
+quick_calc.result.disclaimer.reducedPersonal_allowance_a.new=Rydych wedi defnyddio cod treth nad yw fel arfer ar gyfer incwm dros Â£100,000 y flwyddyn. Os nad ydych yn gwybod eich cod treth, gallwch adael hwnnwâ€™n wag a byddwn yn cyfrifoâ€™ch Lwfans Personol wediâ€™i ostwng (yn agor tab newydd).
+
+quick_calc.result.tabLabels.yearly=Bob blwyddyn
+quick_calc.result.tabLabels.annually=Bob blwyddyn
+quick_calc.result.tabLabels.monthly=Bob mis
+quick_calc.result.tabLabels.weekly=bob wythnos
+quick_calc.result.info.new=Nid ywâ€™n cyfrifiad yn rhoi ystyriaeth i unrhyw ddidyniadau eraill y gallaiâ€™ch cyflogwr eu gwneud cyn iddo eich talu. Ni fyddwn yn cadw cofnod oâ€™ch data am resymau diogelwch.
+quick_calc.result.info_a=Translation needed
+quick_calc.result.info_b=Translation needed
+quick_calc.result.info_e=Translation needed
+quick_calc.result.info_print=Translation needed
+
+quick_calc.result.info_url_list=Translation needed
+quick_calc.result.info_url_a=Translation needed
+quick_calc.result.info_url_b=Translation needed
+quick_calc.result.info_url_c=Translation needed
+
+quick_calc.result.23_24.disclaimer.yearly=O ganlyniad, bydd eich cyflog clir gwirioneddol, yn is naâ€™r amcangyfrif a ddangosir.
+quick_calc.result.23_24.disclaimer.monthly=O ganlyniad, bydd eich cyflog clir ar gyfer unrhyw fis o 6 Ebrill 2023 i 6 Ionawr 2024 yn is naâ€™r amcangyfrif a ddangosir.
+quick_calc.result.23_24.disclaimer.weekly=O ganlyniad, bydd eich cyflog clir ar gyfer unrhyw wythnos o 6 Ebrill 2023 i 6 Ionawr 2024 yn is naâ€™r amcangyfrif a ddangosir.
 
 quick_calc.salary.header=Faint ydych yn cael eich talu?
-quick_calc.salary.sub_header=Pa mor aml ydych yn cael eich talu?
-quick_calc.salary.description_a=Am bob swydd sydd gennych, defnyddiwch y swm cyn bod treth ac Yswiriant Gwladol yn cael eu didynnu, er enghraifft £7.20 yr awr neu £26500 y flwyddyn.
-quick_calc.salary.description_b=Gallwch ddefnyddio’r gyfrifiannell pa mor aml bynnag ag yr hoffechpo gymaint o weithiau ag y sydd angen.
+quick_calc.salary.oldHeader=Faint ydych yn cael eich talu?
+quick_calc.salary.sub_header=Translation needed
+quick_calc.salary.description_a=Translation needed
+quick_calc.salary.description_b=Translation needed
 
-quick_calc.salary.yearly.label=y flwyddyn
-quick_calc.salary.monthly.label=y mis
-quick_calc.salary.weekly.label=yr wythnos
-quick_calc.salary.daily.label=y diwrnod
-quick_calc.salary.hourly.label=yr awr
-quick_calc.salary.option_error =Dewiswch pa mor aml rydych yn cael eich talu
-quick_calc.salary.option_error_link = Nid ydych wedi dewis pa mor aml rydych yn cael eich talu
-quick_calc.salary.amount_empty_error_link = Nid ydych wedi rhoi faint gewch eich talu
-quick_calc.salary.amount_input_error_link =Mae problem gyda’r swm rydych wedi’i nodi
-quick_calc.salary.error_header = Mae rhywbeth o’i le
+quick_calc.salary.yearly.label=Translation needed
+quick_calc.salary.fourWeeks.label=bob 4 wythnos
+quick_calc.salary.monthly.label=Translation needed
+quick_calc.salary.weekly.label=Translation needed
+quick_calc.salary.daily.label=Translation needed
+quick_calc.salary.hourly.label=Translation needed
+quick_calc.salary.yearly.text=Bob blwyddyn
+quick_calc.salary.monthly.text=Bob mis
+quick_calc.salary.fourWeeks.text=bob 4 wythnos
+quick_calc.salary.weekly.text=bob wythnos
+quick_calc.salary.daily.text=Translation needed
+quick_calc.salary.hourly.text=Fesul awr
+quick_calc.salary.option_error=Translation needed
+quick_calc.salary.error_header=Translation needed
+quick_calc.salary.amount.label=Translation needed
+quick_calc.salary.grossAmount.label=Swm gros, mewn punnoedd
 
-quick_calc.salary.yearly.sub_label=y_flwyddyn
-quick_calc.salary.monthly.sub_label=y_mis
-quick_calc.salary.weekly.sub_label=yr_wythnos
-quick_calc.salary.daily.sub_label=y_diwrnod_sub
-quick_calc.salary.hourly.sub_label=yr_awr_sub
+quick_calc.remove_tax_code_error=Translation needed
+quick_calc.remove_pensions_contributions_error=Translation needed
 
-quick_calc.salary.question.approximate=Os nad ydych yn gwybod, mae amcangyfrif o’r rhif yn iawn.
-quick_calc.salary.question.days_a_week=Sawl diwrnod yr wythnos ydych chi’n gweithio fel arfer?
-quick_calc.salary.question.hours_a_week=Sawl awr yr wythnos ydych chi’n gweithio fel arfer?
-quick_calc.salary.question.state_pension_url_a=Gallwch
-quick_calc.salary.question.state_pension_url_b=wirio’ch oedran Pensiwn y Wladwriaeth (yn agor mewn tab newydd)
-quick_calc.salary.question.state_pension_url_c=os nad ydych yn siŵr.
-quick_calc.salary.question.state_pension_inf=Os ydych dros oedran Pensiwn y Wladwriaeth ni fyddwch yn talu cyfraniadau Yswiriant Gwladol.
+quick_calc.salary.yearly.sub_label=Translation needed
+quick_calc.salary.monthly.sub_label=Translation needed
+quick_calc.salary.weekly.sub_label=Translation needed
+quick_calc.salary.fourWeeks.sub_label=Translation needed
+quick_calc.salary.daily.sub_label=Translation needed
+quick_calc.salary.hourly.sub_label=Translation needed
 
-quick_calc.salary.question.scottish_income=A ydych yn talu cyfradd yr Alban o Dreth Incwm?
-quick_calc.salary.question.scottish_income_info=Byddwch yn talu cyfradd yr Alban o Dreth Incwm os ydych yn byw yn yr Alban am fwy na hanner y flwyddyn dreth. Dim ots ble rydych yn byw.
-quick_calc.salary.question.scottish_income_url_a=Gallwch wirio os ydych yn talu
-quick_calc.salary.question.scottish_income_url_b=Treth Incwm yr Alban (yn agor mewn tab newydd)
-quick_calc.salary.question.scottish_income_url_c=os nad ydych yn siŵr.
-quick_calc.salary.question.scottish_income_error_link = Nid ydych wedi rhoi gwybod i ni a ydych yn talu Treth Incwm yr Alban
+quick_calc.salary.question.approximate=Translation needed
+quick_calc.salary.question.days_a_week=Translation needed
+quick_calc.salary.question.hours_a_week=Sawl awr yr wythnos ydych yn ei gweithio fel arfer?
+quick_calc.salary.question.state_pension_info=Translation needed
+quick_calc.salary.question.state_pension_url_a=Translation needed
+quick_calc.salary.question.state_pension_url_b=Translation needed
+quick_calc.salary.question.state_pension_url_c=Translation needed
+quick_calc.salary.question.state_pension_inf=Translation needed
 
-quick_calc.salary.question.tax_code_info=Os ydych yn ei wybod, bydd eich amcangyfrif o’ch cyflog clir yn fwy cywir. Os nad ydych yn ei wybod, defnyddiwn y cod treth mwyaf cyffredin yn lle hynny.
-quick_calc.salary.question.tax_code_info_url_a=Gallwch ddod o hyd i’ch cod treth ar
-quick_calc.salary.question.tax_code_info_url_b=slip cyflog diweddar neu P45 (yn agor mewn tab newydd)
+quick_calc.salary.question.scottish_income=Translation needed
+quick_calc.salary.question.scottish_income.new=Translation needed
+quick_calc.salary.question.scottish_income_info=Translation needed
+quick_calc.salary.question.scottish_income_info.new=Fel arfer, byddwch yn talu Treth Incwm yr Alban os ydych yn byw yn yr Alban am fwy na hanner y flwyddyn dreth. Does dim ots lle rydych chiâ€™n gweithio.
+quick_calc.salary.question.scottish_income_url_a=Translation needed
+quick_calc.salary.question.scottish_income_url_b=Translation needed
+quick_calc.salary.question.scottish_income_url_c=Translation needed
+quick_calc.scottish_rate_error=Translation needed
 
-quick_calc.salary.period_error_link_a = Mae problem gyda’r swm rydych wedi’i nodi
-quick_calc.salary.period_error_link_b = Nid ydych wedi rhoi sawl diwrnod rydych yn gweithio
-quick_calc.salary.period_error_link_c = Nid ydych wedi rhoi sawl awr rydych yn gweithio
-quick_calc.salary.question.error.number_of_days.less_than_zero=Nodwch eich diwrnodau yr wythnos fel ffigur rhwng 1 a 7
-quick_calc.salary.question.error.number_of_days.more_than_seven=Nodwch eich diwrnodau yr wythnos fel ffigur rhwng 1 a 7
-quick_calc.salary.question.error.number_of_hours.less_than_one=Nodwch eich oriau yr wythnos fel ffigur rhwng 1 a 168
-quick_calc.salary.question.error.number_of_hours.more_than_168=Nodwch eich oriau yr wythnos fel ffigur rhwng 1 a 168
+quick_calc.salary.question.tax_code_info=Bydd eich cod treth yn rhoi gwybod i ni a oes arnoch dreth o flwyddyn flaenorol neu a oes gennych unrhyw lwfansau, megis Lwfans Person Dall.
+quick_calc.salary.question.tax_code_info_a=Translation needed
+quick_calc.salary.question.tax_code_info_b=Translation needed
+quick_calc.salary.question.tax_code_info_url_a=Translation needed
+quick_calc.salary.question.tax_code_info_url_b=Translation needed
 
-quick_calc.salary.question.error.invalid_number_daily=Nodwch eich diwrnodau yr wythnos fel ffigur llawn
-quick_calc.salary.question.error.empty_number_daily=Nodwch sawl diwrnod yr wythnos rydych yn gweithio
+quick_calc.salary.period_error_link_a =Translation needed
+quick_calc.salary.period_error_link_b =Translation needed
+quick_calc.salary.period_error_link_c =Translation needed
 
-quick_calc.salary.question.error.invalid_number_hourly=Nodwch eich oriau yr wythnos fel ffigur llawn
-quick_calc.salary.question.error.empty_number_hourly=Nodwch sawl awr yr wythnos rydych yn gweithio
-quick_calc.salary.question.error.invalid_salary=Nodwch y swm mewn punnoedd a cheiniogau e.e. 123.45
-quick_calc.salary.question_error_invalid_input = Nodwch eich cyflog mewn punnoedd a cheiniogau, er enghraifft 7.20 neu 26500. Peidiwch â defnyddio atalnod
+quick_calc.salary.question.error.number_of_days.invalid_hours=Translation needed
 
-quick_calc.salary.question.error.maximum_salary_input=Nodwch eich cyflog mewn punnoedd a cheiniogau. Gwnewch yn siŵr ei fod yn llai na 10000000.00
-quick_calc.salary.question.error.minimum_salary_input=Nodwch eich cyflog fel rhif sy’n fwy na £0.00
+quick_calc.salary.question.error.number_of_hours.invalid_number=Nodwch y nifer o oriau rydych yn eu gweithio mewn wythnos rhwng 1 neu 168
 
-quick_calc.salary.question.error.empty_salary_input=Nodwch faint rydych yn cael eich talu
+quick_calc.salary.question.error.number_of_hours.more_than_168=Translation needed
 
-quick_calc.salary.question.error.empty_daily_salary_input=Nodwch eich cyfradd y diwrnod
-quick_calc.salary.question.error.empty_hourly_salary_input=Nodwch eich cyfradd yr awr
+quick_calc.salary.question.error.empty_number_daily=Translation needed
 
-quick_calc.salary.question.error.minimum_hourly_salary_input=Rhaid i gyfradd yr awr fod yn 0.01 o leiaf
-quick_calc.salary.question.error.minimum_daily_salary_input=Rhaid i gyfradd y diwrnod fod yn 0.01 o leiaf
+quick_calc.salary.question.error.empty_number_hourly=Nodwch nifer o oriauâ€™r wythnos rydych yn eu gweithio
+
+quick_calc.salary.question.error.invalid_salary=Nodwch y swm a delir i chi yn y fformat cywir, er enghraifft Â£600 neu Â£193.54
+
+quick_calc.salary.question_error_invalid_input=Nodwch y swm a delir i chi yn y fformat cywir, er enghraifft Â£600 neu Â£193.54
+
+quick_calc.salary.question.error.maximum_salary_input=Maeâ€™n rhaid iâ€™r swm a delir i chi fod yn Â£9,999,999.99 neu lai
+
+quick_calc.salary.question.error.minimum_salary_input=Translation needed
+
+quick_calc.salary.question.error.empty_salary_input=Nodwch y swm a delir i chi
+
+quick_calc.salary.question.error.empty_daily_salary_input=Translation needed
+quick_calc.salary.question.error.empty_hourly_salary_input=Translation needed
+
+quick_calc.salary.question.error.minimum_hourly_salary_input=Translation needed
+quick_calc.salary.question.error.minimum_daily_salary_input=Translation needed
 
 quick_calc.over_state_pension_age.header=A ydych dros oedran Pensiwn y Wladwriaeth?
 quick_calc.over_state_pension_age.yes=Iawn
 quick_calc.over_state_pension_age.no=Na
-quick_calc.over_state_pension_age_error_link = Nid ydych wedi rhoi gwybod i ni os ydych dros oedran Pensiwn y Wladwriaeth
+quick_calc.over_state_pension_age_error=Translation needed
 
-quick_calc.about_tax_code_error_link = Nid ydych wedi rhoi gwybod i ni beth yw’ch cod treth
-quick_calc.about_has_tax_code_error_link = Nid ydych wedi rhoi gwybod i ni os ydych eisiau i ni ddefnyddio’ch cod treth presenol
-quick_calc.about_tax_code.header=A ydych eisiau defnyddio’ch cod treth presennol?
-quick_calc.about_tax_code.has_tax_code=Nodwch eich cod treth
-quick_calc.about_tax_code.wrong_tax_code_suffix=Nodwch eich cod treth, sy’n gorffen ag L, M, N neu T
-quick_calc.about_tax_code.wrong_tax_code=Nodwch eich cod treth presennol fel rhifau a llythrennau, er enghraifft 1117L, K497, S1117L NEU SK497
+quick_calc.about_tax_code.header=Beth yw eich cod treth? (dewisol)
+quick_calc.about_tax_code.header.new=Translation needed
+quick_calc.about_tax_code.has_tax_code=Translation needed
+
+quick_calc.about_tax_code.subheading=Cod treth
+quick_calc.about_tax_code.details.start=Translation needed
+quick_calc.about_tax_code.details.firstBullet_a=Translation needed
+quick_calc.about_tax_code.details.firstBullet_b=Translation needed
+quick_calc.about_tax_code.details.secondBullet=Translation needed
+quick_calc.about_tax_code.details.thirdBullet=Translation needed
+quick_calc.about_tax_code.details.fourthBullet=Translation needed
+quick_calc.about_tax_code.details.firstInfoPara=Os byddwch yn ei adael yn wag, byddwn yn defnyddio 1257L (oni bai eich bod yn ennill dros Â£100,000 y flwyddyn). 1257L ywâ€™r cod treth mwyaf cyffredin.
+quick_calc.about_tax_code.details.secondInfoPara_a=Translation needed
+quick_calc.about_tax_code.details.secondInfoPara_b=Translation needed
+
+quick_calc.about_tax_code.wrong_tax_code_prefix=Nodwch god treth syâ€™n dechrau gydaâ€™r llythyren S, K, SK, C, neu CK wediâ€™i ddilyn gan rifau
+
+quick_calc.about_tax_code.wrong_tax_code=Nodwch god treth yn y fformat cywir, er enghraifft, 1117L, K497, S1117L neu SK497
+
 quick_calc.about_tax_code.has_tax_code_yes=Iawn
 quick_calc.about_tax_code.has_tax_code_no=Na
-quick_calc.about_tax_code.wrong_tax_code_number=Nodwch eich cod treth presennol fel rhifau a llythrennau, gan wneud yn siŵr bod y rhif rhwng 0 a 9999
-quick_calc.about_tax_code.wrong_tax_code_prefix =Nodwch eich cod treth presennol, sy’n dechrau gyda’r llythyren S neu K, neu’r llythrennau SK, a ddilynir gan rifau
-quick_calc.about_tax_code.wrong_tax_code_error_link = Mae problem gyda’r cod treth rydych wedi’i nodi
-quick_calc.about_tax_code_empty_error = Nodwch eich cod treth presennol neu newidiwch eich ateb i ‘Na’
 
-quick_calc.about_k_code_a = Amcangyfrif yw’ch Treth Incwm wedi’i addasu sy’n cynnwys unrhyw gynnydd gaiff ei ddangos gan
-quick_calc.about_k_code_b_k = y K yn eich cod treth (yn agor mewn tab newydd)
-quick_calc.about_k_code_b_sk = yr SK yn eich cod treth (yn agor mewn tab newydd)
-quick_calc.about_k_code_c = Defnyddir y cod K ledled y DU ac fel arfer mae’n dynodi bod arnoch dreth o flwyddyn flaenorol.
+quick_calc.about_tax_code.wrong_tax_code_suffix=Translation needed
+
+quick_calc.about_tax_code_empty_error =Translation needed
+
+quick_calc.about_k_code_a =Translation needed
+quick_calc.about_k_code_b_k =Translation needed
+quick_calc.about_k_code_b_sk =Translation needed
+quick_calc.about_k_code_c =Translation needed
+
+quick_calc.tax_code.over_hundred_thousand.warning =Translation needed
+quick_calc.tax_code.scottish_rate.warning =Translation needed
+quick_calc.scottish_rate.payScottishRate.warning =Translation needed
+
+quick_calc.remove.taxcode =Translation needed
+quick_calc.remove.pension-contributions =Translation needed
+
+quick_calc.results.disclaimer =Translation needed
+
+quick_calc.results.opening =Translation needed
+
+quick_calc.pensionContributionsPercentage.subheading =Translation needed
+quick_calc.pensionContributionsPercentage.hint =Translation needed
+quick_calc.pensionContributionsPercentage.input.heading =Translation needed
+quick_calc.pensionContributionsPercentage.link =Translation needed
+quick_calc.pensionContributionsFixed.subheading =Translation needed
+quick_calc.pensionContributionsFixed.hint =Translation needed
+quick_calc.pensionContributionsFixed.input.heading =Translation needed
+quick_calc.pensionContributionsFixed.link =Translation needed
+quick_calc.pensionContributionsFixed.warning =Translation needed
 
 
-#######################################################
-## Beta Banner
-#######################################################
-feedback.before = Gwasanaeth newydd yw hwn – bydd eich
-feedback.link = adborth
-feedback.after = yn ein helpu i’w wella.
 
-#######################################################
-## Languages
-#######################################################
-language.cymraeg = Cymraeg
-language.change.cymraeg = Newid yr iaith i’r Gymraeg
-language.english = English
-language.change.english = Change the language to English
-language.switcher = Language switcher
 
-#######################################################
-## Footer
-#######################################################
-footer.accessibility = Datganiad Hygyrchedd
-footer.cookies = Cwcis
-footer.privacy = Polisi preifatrwydd
-footer.termsConditions = Telerau ac amodau
-footer.govukHelp = Help wrth ddefnyddio GOV.UK
+feedback.before =Translation needed
+feedback.link =Translation needed
+feedback.after =Translation needed
 
-site.print_and_save = Argraffu neu arbed tudalen
 
-#######################################################
-## error Messages
-#######################################################
-#######################################################
-## error Messages
-#######################################################
-error.browser.title.prefix = Gwall:
-error.boolean = Rhowch ateb
-error.number = Nodwch rif dilys
-error.required = Nodwch ateb
-error.summary.title = Mae problem wedi codi
 
-#######################################################
-## Timeout Messagesfor not signed in user
-#######################################################
-timeout.message.notSignedIn = Er eich diogelwch, byddwn yn dileu’ch atebion cyn pen 2 funud.
-timeout.keepAlive.notSignedIn= Dychwelyd i’r gwasanaeth
-timeout.deleteAnswers = Dileu’ch atebion
+
+language.cymraeg =Translation needed
+language.change.cymraeg =Translation needed
+language.english =Translation needed
+language.change.english =Translation needed
+language.switcher =Translation needed
+
+
+
+
+footer.accessibility   =Translation needed
+footer.cookies         =Translation needed
+footer.privacy         =Translation needed
+footer.termsConditions =Translation needed
+footer.govukHelp       =Translation needed
+
+
+
+
+error.browser.title.prefix =Translation needed
+error.boolean =Translation needed
+error.number =Translation needed
+error.required =Translation needed
+error.summary.title =Translation needed
+
+site.print_and_save =Translation needed
+
+
+quick_calc.salary.question.error.number_of_days.invalid_number=Translation needed
+
+quick_calc.salary.question.error.invalid_number_hourly=Nodwch y nifer o oriauâ€™r wythnos rydych yn eu gweithio ar ffurf rhif, fel 8 neu 37.5
+
+label.salary=Faint ydych yn cael eich talu?
+hint.salary=Dymaâ€™r swm a delir i chi cyn i unrhyw ddidyniadau gael eu gwneud.
+hint.oldSalary=Translation needed
+label.payperiod=Pa mor aml y maeâ€™r swm hwn yn cael ei dalu i chi?
+label.old.payperiod=Translation needed
+label.state-pension-details=Translation needed
+label.state-pension-details.old=Gwiriwch eich oedran Pensiwn y Wladwriaeth
+label.tax-code=Translation needed
+label.tax-code.new=Dydw i ddim yn gwybod fy nghod treth
+label.scottish-rate-details=Gwiriwch a ydych yn talu Treth Incwm yr Alban
+
+label.breakdown_per =Translation needed
+label.DAILY =Translation needed
+label.HOURLY =Translation needed
+label.FOUR_WEEKLY =Translation needed
+label.WEEKLY =Translation needed
+label.MONTHLY =Translation needed
+label.YEARLY =Translation needed
+
+
+
+
+
+timeout.message.notSignedIn =Translation needed
+timeout.keepAlive.notSignedIn=Translation needed
+timeout.deleteAnswers =Translation needed
+
+reset.h1=Translation needed

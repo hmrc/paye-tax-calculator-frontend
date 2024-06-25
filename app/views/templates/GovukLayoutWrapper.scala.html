@@ -19,9 +19,14 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
 @import views.components.FooterLinks
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcScripts
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
+
 
 @this(
+      hmrcStandardFooter: HmrcStandardFooter,
+      govukTemplate: GovukTemplate,
       govukLayout: GovukLayout,
+      hmrcLanguageSelect: HmrcLanguageSelect,
       siteHeader: components.siteHeader,
       link: components.link,
       appConfig: config.AppConfig,
@@ -29,7 +34,8 @@
       hmrcScripts: HmrcScripts,
       hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
       timeoutDialog: HmrcTimeoutDialog,
-      hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
+      hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
+      features: config.features.Features,
 )
 @(
       pageTitle: Option[String] = None,
@@ -91,8 +97,18 @@
   @js.map(x => x)
   }
 
-  @content = {
 
+@beforeContentBlock = {
+    @if(features.welshTranslationFeature()) {
+    @hmrcLanguageSelect(LanguageSelect(
+        language = if (messages.lang.language == "en") En else Cy,
+        languageLinks =
+        En -> appConfig.routeToSwitchLanguage("english").url,
+        Cy -> appConfig.routeToSwitchLanguage("cymraeg").url
+    ))
+    }
+}
+  @content = {
   @contentBlock
 
   @if(showDeskproLink) {
@@ -107,7 +123,6 @@
   @govukLayout(
       pageTitle = pageTitle,
       headBlock = Some(head),
-      scriptsBlock = Some(hmrcScripts(scriptsBlock = Some(scriptElement))),
       beforeContentBlock = Some(beforeContentBlock),
       headerBlock = Some(siteHeader()),
       footerItems = footerLinks.items,
