@@ -19,6 +19,8 @@ package mocks
 import config.AppConfig
 import config.features.Features
 import play.api.Configuration
+import play.api.i18n.Lang
+import play.api.mvc.Call
 
 class MockAppConfig(val runModeConfiguration: Configuration) extends AppConfig {
   override val host:                       String         = "host"
@@ -33,7 +35,6 @@ class MockAppConfig(val runModeConfiguration: Configuration) extends AppConfig {
   override val termsConditions:            String         = "/help/terms-and-conditions"
   override val govukHelp:                  String         = "https://www.gov.uk/help"
   override val accessibilityStatement:     String         = "/accessibility-statement/take-home-pay-calculator"
-  override val languageTranslationEnabled: Boolean        = false
   override val timeout:                    Int            = 900
   override val countdown:                  Int            = 120
   override val dateOverride:               Option[String] = None
@@ -41,4 +42,11 @@ class MockAppConfig(val runModeConfiguration: Configuration) extends AppConfig {
 
   override def feedbackUrl(signedInUser: Boolean): String =
     "/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+
+  override val languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy")
+  )
+
+  override val routeToSwitchLanguage: String => Call = (lang: String) => controllers.routes.LanguageController.switchToLanguage(lang)
 }

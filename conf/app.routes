@@ -43,7 +43,7 @@ GET         /your-results          controllers.ShowResultsController.showResult
 
 GET         /restart               controllers.QuickCalcController.restartQuickCalc
 
-GET         /language/:lang        controllers.LanguageSwitchController.switchToLanguage(lang: Language)
+GET        /language/:lang         controllers.LanguageController.switchToLanguage(lang: String)
 
 GET         /reset                 controllers.ResetController.reset()
 

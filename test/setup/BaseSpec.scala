@@ -31,7 +31,7 @@ import play.api.{Application, Environment, Mode}
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.inject.Injector
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import services.Navigator
 import uk.gov.hmrc.http.HeaderNames
@@ -55,6 +55,8 @@ class BaseSpec
   val appInjector: Injector = app.injector
   implicit val materializer: Materializer = appInjector.instanceOf[Materializer]
   implicit val executionContext: ExecutionContext = appInjector.instanceOf[ExecutionContext]
+  val mcc: MessagesControllerComponents = appInjector.instanceOf[MessagesControllerComponents]
+
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
     .withHeaders(HeaderNames.xSessionId -> "test")

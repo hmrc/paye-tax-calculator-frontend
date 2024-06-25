@@ -30,7 +30,7 @@ class FeatureSwitchControllerSpec extends BaseSpec {
   override implicit val mockAppConfig: AppConfig = new MockAppConfig(app.configuration)
 
   implicit val featureSwitch: FeatureSwitchView            = appInjector.instanceOf[FeatureSwitchView]
-  implicit val mcc:           MessagesControllerComponents = appInjector.instanceOf[MessagesControllerComponents]
+  override implicit val mcc:           MessagesControllerComponents = appInjector.instanceOf[MessagesControllerComponents]
 
   private lazy val target = new FeatureSwitchController
 
