@@ -313,12 +313,11 @@ object QuickCalcCacheSetup {
   val expectedInvalidPensionsErrorMessage =
     "Enter your monthly pension contributions amount in the correct format"
 
-  //TODO Update Error Message when new ticket is released
   val expectedInvalidStudentLoanErrorMessage =
-    "Placeholder"
+    "Select which student loan you are currently repaying"
 
   val expectedInvalidPostgraduateLoanErrorMessage =
-  "Select yes if you pay Postgraduate loan contributions"
+  "Select yes if you repay a postgraduate loan"
 
   val expectedInvalidPensionTwoDecimalPlaces =
     "Your monthly pension contributions can only include pounds and pence"

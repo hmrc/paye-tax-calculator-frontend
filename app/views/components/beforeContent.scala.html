@@ -16,13 +16,22 @@
 
 @import views.html.components.phaseBanner
 
-@this(phaseBanner: phaseBanner, appConfig: config.AppConfig, govukBackLink: GovukBackLink)
+@this(phaseBanner: phaseBanner, appConfig: config.AppConfig, govukBackLink: GovukBackLink, hmrcLanguageSelect: HmrcLanguageSelect,  features: config.features.Features)
 
 @(backLinkUrl: String)(implicit messages: Messages)
 
 <nav id="navigation-content" role="navigation">
 
 @phaseBanner("BETA")
+
+ @if(features.welshTranslationFeature()) {
+      @hmrcLanguageSelect(LanguageSelect(
+          language = if (messages.lang.language == "en") En else Cy,
+          languageLinks =
+          En -> appConfig.routeToSwitchLanguage("english").url,
+          Cy -> appConfig.routeToSwitchLanguage("cymraeg").url
+    ))
+ }
 
 </nav>
 
