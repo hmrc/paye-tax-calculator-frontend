@@ -92,7 +92,7 @@ object AdditionalQuestionItem {
             if (contribution.isWhole) {
               contribution.setScale(0).toString()
             } else {
-              contribution.setScale(2, BigDecimal.RoundingMode.HALF_UP).toString().stripSuffix("0").stripSuffix(".")
+              contribution.setScale(2, BigDecimal.RoundingMode.HALF_UP).toString().stripSuffix(".")
             }
           }
           .getOrElse("None")
