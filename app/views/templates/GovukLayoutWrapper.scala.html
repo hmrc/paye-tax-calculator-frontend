@@ -113,6 +113,7 @@
   @govukLayout(
       pageTitle = pageTitle,
       headBlock = Some(head),
+      scriptsBlock = Some(hmrcScripts(scriptsBlock = Some(scriptElement))),
       beforeContentBlock = Some(beforeContentBlock),
       headerBlock = Some(siteHeader()),
       footerItems = footerLinks.items,
