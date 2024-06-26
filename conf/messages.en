@@ -219,6 +219,8 @@ quick_calc.salary.studentLoan.plan4.label=plan four
 quick_calc.salary.studentLoan.noneOfThese.label=none of these
 quick_calc.error.postgraduate-loans=Select yes if you repay a postgraduate loan
 quick_calc.error.student-loans=Select which student loan you are currently repaying
+quick_calc.remove.student-loans= Are you sure you want to remove your student loan?
+quick_calc.remove.postgraduate-loans= Are you sure you want to remove your Postgraduate loan?
 quick_calc.postgraduateLoan.header=Do you have a postgraduate loan?
 quick_calc.postgraduateLoan.subheading=Tell us if you have a postgraduate loan that you need to repay.
 
