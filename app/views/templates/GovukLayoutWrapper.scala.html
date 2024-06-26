@@ -98,16 +98,6 @@
   }
 
 
-@beforeContentBlock = {
-    @if(features.welshTranslationFeature()) {
-    @hmrcLanguageSelect(LanguageSelect(
-        language = if (messages.lang.language == "en") En else Cy,
-        languageLinks =
-        En -> appConfig.routeToSwitchLanguage("english").url,
-        Cy -> appConfig.routeToSwitchLanguage("cymraeg").url
-    ))
-    }
-}
   @content = {
   @contentBlock
 

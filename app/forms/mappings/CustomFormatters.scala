@@ -148,7 +148,7 @@ object CustomFormatters {
         case _ =>
           Left(
             Seq(
-              FormError(key, "Select yes if you want to remove your Postgraduate loan contributions")
+              FormError(key, "quick_calc.remove_postgraduate_loans_contributions_error")
             )
           )
       }
@@ -247,7 +247,7 @@ object CustomFormatters {
       data: Map[String, String]
     ): Either[Seq[FormError], String] =
       Right(data.getOrElse(key, "")).flatMap {
-        case "" => Left(Seq(FormError(key, "Placeholder")))
+        case "" => Left(Seq(FormError(key, "quick_calc.error.student-loans")))
         case p  => Right(p)
       }
 
