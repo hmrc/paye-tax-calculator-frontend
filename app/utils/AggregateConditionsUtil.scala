@@ -16,11 +16,18 @@
 
 package utils
 
+import forms.TaxResult
+import forms.TaxResult.moneyFormatter
 import models.QuickCalcAggregateInput
+import uk.gov.hmrc.calculator.utils.validation.PensionValidator
+import uk.gov.hmrc.calculator.utils.validation.PensionValidator.PensionError
+import utils.GetCurrentTaxYear.getTaxYear
+import scala.jdk.CollectionConverters._
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AggregateConditionsUtil @Inject() (defaultTaxCodeProvider: DefaultTaxCodeProvider) {
+class AggregateConditionsUtil @Inject() {
 
   def isTaxCodeDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedTaxCode.flatMap(_.taxCode).isDefined
@@ -36,4 +43,27 @@ class AggregateConditionsUtil @Inject() (defaultTaxCodeProvider: DefaultTaxCodeP
 
   def givenPostGradLoanContribution(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedPostGraduateLoanContributions.isDefined
+
+  def roundedMonthlySalary(
+                                    aggregateInput: QuickCalcAggregateInput
+                                  ): String = {
+
+    val monthlySalary: BigDecimal = aggregateInput.savedSalary.flatMap(_.monthlyAmount).getOrElse(BigDecimal(0))
+    moneyFormatter(monthlySalary.setScale(2, BigDecimal.RoundingMode.HALF_UP))
+  }
+
+  def isPensionWarning(aggregateInput: QuickCalcAggregateInput): Boolean = {
+    val monthlyContributions: BigDecimal =
+      aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).getOrElse(BigDecimal(0))
+    val monthlySalary: BigDecimal = aggregateInput.savedSalary.flatMap(_.monthlyAmount).getOrElse(BigDecimal(0))
+    val listOfPensionError = PensionValidator.INSTANCE
+      .isValidMonthlyPension(monthlyContributions.toDouble,
+        monthlySalary.toDouble,
+        TaxResult.extractTaxYear(getTaxYear))
+      .asScala
+      .toList
+    listOfPensionError.contains(PensionError.ABOVE_WAGE)
+  }
+
+
 }
