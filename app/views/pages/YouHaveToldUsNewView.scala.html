@@ -31,10 +31,11 @@
         formHelper: FormWithCSRF,
         button: components.button,
         govukSummaryList: GovukSummaryList,
-        beforeContent: components.beforeContent
+        beforeContent: components.beforeContent,
+        notification: components.notification
 )
 
-@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean)(implicit request: Request[_], messages: Messages)
+@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean, pensionWarning: Boolean, roundedMonthlySalary: String)(implicit request: Request[_], messages: Messages)
 
 @rows = @{
     items.map { item =>
@@ -209,6 +210,10 @@ s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warning
 }
 
 @govukTemplate(Some(titleNoForm(Messages("quick_calc.you_have_told_us.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
+
+    @if(pensionWarning) {
+        @notification(Messages("quick_calc.pensionContributionsFixed.warning",roundedMonthlySalary))
+    }
 
     @h1("quick_calc.you_have_told_us.header")
     <br><br>

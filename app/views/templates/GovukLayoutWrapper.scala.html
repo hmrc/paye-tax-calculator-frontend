@@ -16,10 +16,11 @@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 @import views.components.FooterLinks
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcScripts
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
+@import views.html.helper.CSPNonce
 
 
 @this(
@@ -51,13 +52,13 @@
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
   @head = {
   @hmrcTrackingConsentSnippet()
-      <!--[if lte IE 8]><link href=' @controllers.routes.Assets.at("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
-      <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.at("stylesheets/application.css")' rel="stylesheet" type="text/css" />
+      <!--[if lte IE 8]><link href=' @routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+      <!--[if gt IE 8]><!--> <link href='@routes.Assets.versioned("stylesheets/application.css")' rel="stylesheet" type="text/css" />
           <!--<![endif]-->
   @if(showAppBanner) {
       <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
       <meta name="google-play-app" content="app-id=uk.gov.hmrc.ptcalc">
-      <link rel="manifest" href="@{controllers.routes.Assets.at("manifest.json")}"
+      <link rel="manifest" href="@{routes.Assets.versioned("manifest.json")}"
   }
   @if(timeout) {
       <meta
@@ -90,10 +91,7 @@
   }
 
   @scriptElement = {
-      <script src='@controllers.routes.Assets.at("lib/govuk-frontend/dist/govuk/all.js")'></script>
-      <script src='@controllers.routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
-      <script src='@controllers.routes.Assets.at("javascripts/application.min.js")'></script>
-      <script src='@controllers.routes.Assets.at("javascripts/androidInstallBanner.js")'></script>
+      <script @CSPNonce.attr type="module" src='@routes.Assets.versioned("javascripts/androidInstallBanner.js")'></script>
   @js.map(x => x)
   }
 
