@@ -52,7 +52,7 @@ class YouHaveToldUsNewController @Inject() (
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   private val taxCodeLabel: String = "about_tax_code"
-  private val aboutPensionContributionsLabel: String = "about_pensions_contributions"
+  val SCOTTISH_RATE = "scottish_rate"
 
   def summary(): Action[AnyContent] =
     salaryRequired(
@@ -83,13 +83,13 @@ class YouHaveToldUsNewController @Inject() (
   )(implicit messages: Messages
   ): List[(String, String)] = {
     val payScottishRate = aggregateInput.savedScottishRate.exists(_.payScottishRate)
-    val taxCode         = aggregateInput.savedTaxCode.flatMap(_.taxCode).getOrElse(defaultTaxCodeProvider.defaultUkTaxCode)
+    val taxCode         = aggregateInput.savedTaxCode.flatMap(_.taxCode).getOrElse("")
     val result = Option(TaxCodeValidator.INSTANCE.validateTaxCodeMatchingRate(taxCode, payScottishRate))
     result.map(_.getErrorType) match {
       case Some(ValidationError.ScottishCodeButOtherRate) =>
         List(taxCodeLabel -> Messages("quick_calc.tax_code.scottish_rate.warning"))
       case Some(ValidationError.NonScottishCodeButScottishRate) =>
-        List(taxCodeLabel -> Messages("quick_calc.scottish_rate.payScottishRate.warning"))
+        List(SCOTTISH_RATE -> Messages("quick_calc.scottish_rate.payScottishRate.warning"))
       case _ => List.empty
     }
   }

@@ -150,8 +150,8 @@ object TaxResult {
   def extractTaxCode(
     quickCalcAggregateInput: QuickCalcAggregateInput,
     defaultTaxCodeProvider:  DefaultTaxCodeProvider
-  ): String =
-    quickCalcAggregateInput.savedTaxCode match {
+  ): String = {
+    val taxCode = quickCalcAggregateInput.savedTaxCode match {
       case Some(s) =>
         s.taxCode match {
           case Some(taxCode) => taxCode
@@ -159,6 +159,8 @@ object TaxResult {
         }
       case None => defaultTaxCodeProvider.defaultUkTaxCode
     }
+    taxCode
+  }
 
   def extractOverStatePensionAge(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedIsOverStatePensionAge match {

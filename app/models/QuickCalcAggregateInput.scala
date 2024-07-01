@@ -32,12 +32,20 @@ case class QuickCalcAggregateInput(
   savedStudentLoanContributions:      Option[StudentLoanContributions],
   savedPostGraduateLoanContributions: Option[PostgraduateLoanContributions]) {
 
-  def allQuestionsAnswered: Boolean =
-    List(
-      savedSalary,
-      savedIsOverStatePensionAge,
-      savedTaxCode
-    ).forall(_.isDefined)
+  def allQuestionsAnswered()(implicit appConfig: AppConfig): Boolean =
+    if (appConfig.features.newScreenContentFeature()) {
+      List(
+        savedSalary,
+        savedIsOverStatePensionAge,
+      ).forall(_.isDefined)
+    } else {
+      List(
+        savedSalary,
+        savedIsOverStatePensionAge,
+        savedTaxCode
+      ).forall(_.isDefined)
+    }
+
 
   def youHaveToldUsItems(
   )(implicit m: Messages,
