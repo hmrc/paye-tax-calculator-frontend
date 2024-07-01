@@ -23,7 +23,7 @@ import javax.inject.Inject
 import models.QuickCalcAggregateInput
 import play.api.mvc.Call
 
-class Navigator @Inject() (appConfig: AppConfig) {
+class Navigator @Inject() (implicit appConfig: AppConfig) {
 
   def nextPageOrSummaryIfAllQuestionsAnswered(
     aggregate:        QuickCalcAggregateInput

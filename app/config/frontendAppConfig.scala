@@ -80,7 +80,7 @@ class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
 
   lazy val mongoTtl: Int = config.get[Int]("mongodb.timeToLiveInSeconds")
 
-  def feedbackUrl(signedInUser: Boolean): String =
+   override def feedbackUrl(signedInUser: Boolean): String =
     if (signedInUser) {
       s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
     } else {
