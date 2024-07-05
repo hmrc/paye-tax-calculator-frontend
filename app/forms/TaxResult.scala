@@ -155,7 +155,11 @@ object TaxResult {
       case Some(s) =>
         s.taxCode match {
           case Some(taxCode) => taxCode
-          case None          => defaultTaxCodeProvider.defaultUkTaxCode
+          case None          => if (quickCalcAggregateInput.savedScottishRate.exists(_.payScottishRate)) {
+            defaultTaxCodeProvider.defaultScottishTaxCode
+          } else {
+            defaultTaxCodeProvider.defaultUkTaxCode
+          }
         }
       case None => defaultTaxCodeProvider.defaultUkTaxCode
     }
