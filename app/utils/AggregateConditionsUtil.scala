@@ -27,7 +27,7 @@ import scala.jdk.CollectionConverters._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AggregateConditionsUtil @Inject()(defaultTaxCodeProvider: DefaultTaxCodeProvider) {
+class AggregateConditionsUtil @Inject() {
 
   def isTaxCodeDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedTaxCode.flatMap(_.taxCode).isDefined
