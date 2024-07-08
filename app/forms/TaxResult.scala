@@ -147,21 +147,25 @@ object TaxResult {
       case 2024 => TaxYear.TWENTY_TWENTY_FOUR
     }
 
+  def taxCodeCheck(quickCalcAggregateInput: QuickCalcAggregateInput, defaultTaxCodeProvider: DefaultTaxCodeProvider): String = {
+    if (quickCalcAggregateInput.savedScottishRate.exists(_.payScottishRate)) {
+      defaultTaxCodeProvider.defaultScottishTaxCode
+    } else {
+      defaultTaxCodeProvider.defaultUkTaxCode
+    }
+  }
+
   def extractTaxCode(
-    quickCalcAggregateInput: QuickCalcAggregateInput,
-    defaultTaxCodeProvider:  DefaultTaxCodeProvider
-  ): String = {
+                      quickCalcAggregateInput: QuickCalcAggregateInput,
+                      defaultTaxCodeProvider:  DefaultTaxCodeProvider
+                    ): String = {
     val taxCode = quickCalcAggregateInput.savedTaxCode match {
       case Some(s) =>
         s.taxCode match {
           case Some(taxCode) => taxCode
-          case None          => if (quickCalcAggregateInput.savedScottishRate.exists(_.payScottishRate)) {
-            defaultTaxCodeProvider.defaultScottishTaxCode
-          } else {
-            defaultTaxCodeProvider.defaultUkTaxCode
-          }
+          case None          => taxCodeCheck(quickCalcAggregateInput, defaultTaxCodeProvider)
         }
-      case None => defaultTaxCodeProvider.defaultUkTaxCode
+      case None => taxCodeCheck(quickCalcAggregateInput, defaultTaxCodeProvider)
     }
     taxCode
   }
