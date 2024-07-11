@@ -47,6 +47,6 @@ object Salary {
       (__ \ "period").write[String] and
       (__ \ "how-many-a-week").writeNullable[BigDecimal] and
       (__ \ "monthlyAmount").writeNullable[BigDecimal]
-    )(a => (a.amount, a.amountYearly, a.previousAmountYearly, a.period, a.howManyAWeek, a.monthlyAmount))
+    )(a => (if(a.amount.isWhole) a.amount.setScale(0) else a.amount, a.amountYearly, a.previousAmountYearly, a.period, a.howManyAWeek, a.monthlyAmount))
 
 }

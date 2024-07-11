@@ -16,15 +16,40 @@
 
 package models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json._
 
-  case class  PensionContributions(gaveUsPercentageAmount: Boolean = false, monthlyContributionAmount: Option[BigDecimal], yearlyContributionAmount: Option[BigDecimal])
+case class PensionContributions(
+  gaveUsPercentageAmount:    Boolean = false,
+  monthlyContributionAmount: Option[BigDecimal],
+  yearlyContributionAmount:  Option[BigDecimal]) {
+}
 
 object PensionContributions {
 
   implicit val format: Format[PensionContributions] = Json.format[PensionContributions]
-  val yearlyContributionAmount = "contributionAmount"
-  val gaveUsPensionPercentage = "gaveUsPensionPercentage"
+
+  import play.api.libs.functional.syntax._
+
+  implicit lazy val reads: Reads[PensionContributions] = (
+    (__ \ "gaveUsPercentageAmount").read[Boolean] and
+    (__ \ "monthlyContributionAmount").readNullable[BigDecimal] and
+    (__ \ "yearlyContributionAmount").readNullable[BigDecimal]
+  )(PensionContributions(_, _, _))
+
+  implicit lazy val writes: Writes[PensionContributions] =
+    (
+      (__ \ "gaveUsPercentageAmount").write[Boolean] and
+      (__ \ "monthlyContributionAmount").writeNullable[BigDecimal] and
+      (__ \ "previousAmountYearly").writeNullable[BigDecimal]
+    )(a =>
+      (a.gaveUsPercentageAmount,
+       if (a.monthlyContributionAmount.map(_.isWhole).isDefined) a.monthlyContributionAmount.map(_.setScale(0))
+       else a.monthlyContributionAmount,
+       a.yearlyContributionAmount)
+    )
+
+  val yearlyContributionAmount   = "contributionAmount"
+  val gaveUsPensionPercentage    = "gaveUsPensionPercentage"
   val monthlyPensionContribution = "monthlyPensionContributions"
 
 }
