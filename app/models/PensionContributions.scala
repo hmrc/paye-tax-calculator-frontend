@@ -16,7 +16,6 @@
 
 package models
 
-import kotlin.OptIn
 import play.api.libs.json._
 
 case class PensionContributions(
