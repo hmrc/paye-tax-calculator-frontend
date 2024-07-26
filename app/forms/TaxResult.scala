@@ -125,9 +125,8 @@ object TaxResult {
         Some(new StudentLoanPlans(false, true, false, extractPostGradLoan(quickCalcAggregateInput)))
       case Some("plan four") =>
         Some(new StudentLoanPlans(false, false, true, extractPostGradLoan(quickCalcAggregateInput)))
-      case Some("none of these") =>
-        Some(new StudentLoanPlans(false, false, false, extractPostGradLoan(quickCalcAggregateInput)))
-      case _ => None
+      case _ => Some(new StudentLoanPlans(false, false, false, extractPostGradLoan(quickCalcAggregateInput)))
+
     })
 
   private def extractPostGradLoan(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
