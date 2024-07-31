@@ -121,7 +121,7 @@
     Seq(
         SummaryListRow(
             key = Key(content = HtmlContent(Messages(if(isKCode) "quick_calc.result.adjusted.taxable_income" else "quick_calc.result.taxable_income"))),
-            value = Value(content = HtmlContent("<strong>" + s"£${moneyFormatter(if (calculatorResponse.getWages - calculatorResponse.getTaxFree < 0) 0 else if (isKCode) calculatorResponse.getWages + calculatorResponse.getKCodeAdjustment else calculatorResponse.getWages - calculatorResponse.getTaxFree)}" + "</strong>"), classes = "govuk-!-padding-left-9")
+            value = Value(content = HtmlContent("<strong>" + s"£${moneyFormatter(calculatorResponse.getTaxableIncome)}" + "</strong>"), classes = "govuk-!-padding-left-9")
         )
 ) ++
 incomeTaxBands(calculatorResponse).map { case (percentage, amount) =>
