@@ -64,6 +64,7 @@ quick_calc.you_have_told_us.taxCode.remove=Tynnu
 
 quick_calc.pensionContributionError.invalidFormat=Nodwch swm eich cyfraniadau pensiwn misol yn y fformat cywir
 quick_calc.pensionContributionError.poundAndPence=Gall eich cyfraniadau pensiwn misol dim ond cynnwys punnoedd a cheiniogau
+quick_calc.pensionContributionError.aboveTenMill=Mae’n rhaid i’ch cyfraniadau pensiwn misol fod yn llai na £9,999,999.99
 quick_calc.pensionContributionError.lessThanHundredPercent=Maeâ€™n rhaid iâ€™ch cyfraniadau pensiwn misol fod yn llai na 100% oâ€™ch incwm
 
 quick_calc.you_have_told_us.scottish_rate.label=Translation needed
