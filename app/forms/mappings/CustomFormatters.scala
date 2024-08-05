@@ -513,7 +513,7 @@ object CustomFormatters {
                 if (pensionError.nonEmpty) {
                   pensionError.head match {
                     case PensionError.BELOW_ZERO =>
-                      Left(Seq(FormError(key, "quick_calc.pensionContributionError.invalidFormat")))
+                      Left(Seq(FormError(key, "quick_calc.pensionContributionError.belowZero")))
                     case PensionError.ABOVE_HUNDRED_PERCENT =>
                       Left(
                         Seq(FormError(key, "quick_calc.pensionContributionError.lessThanHundredPercent"))
