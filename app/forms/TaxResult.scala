@@ -44,7 +44,6 @@ object TaxResult {
       case _ =>
         Seq.empty
     }
-    println(result)
     result
   }
 
