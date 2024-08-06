@@ -28,7 +28,6 @@ import utils.GetCurrentTaxYear.getTaxYear
 
 import scala.jdk.CollectionConverters._
 import scala.math.BigDecimal.RoundingMode
-import scala.collection.mutable.LinkedHashMap
 
 object TaxResult {
 
@@ -46,7 +45,6 @@ object TaxResult {
     }
     result
   }
-
 
   private def extractUserPaysScottishTax(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedScottishRate match {
