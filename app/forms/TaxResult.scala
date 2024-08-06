@@ -34,16 +34,16 @@ object TaxResult {
   def extractIncomeTax(response: CalculatorResponsePayPeriod): BigDecimal =
     response.getTaxToPay
 
-  def incomeTaxBands(response: CalculatorResponsePayPeriod): Map[Double, Double] = {
-    Option(response.getTaxBreakdown) match {
+  def incomeTaxBands(response: CalculatorResponsePayPeriod): Seq[(Double, Double)] = {
+    val result = Option(response.getTaxBreakdown) match {
       case Some(breakdownList) if !breakdownList.isEmpty =>
         breakdownList.asScala
           .map(band => (band.getPercentage * 100, band.getAmount))
-          .sortBy(_._1)
-          .toMap
+          .sortBy(_._1).toSeq
       case _ =>
-        Map.empty
+        Seq.empty
     }
+    result
   }
 
   private def extractUserPaysScottishTax(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
