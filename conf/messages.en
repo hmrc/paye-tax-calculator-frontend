@@ -406,10 +406,10 @@ label.scottish-rate-details=Check if you pay Scottish Income Tax
 label.breakdown_per = Breakdown per:
 label.DAILY = Daily
 label.HOURLY = Hourly
-label.FOUR_WEEKLY = Four weekly
-label.WEEKLY = Week
-label.MONTHLY = Month
-label.YEARLY = Year
+label.FOUR_WEEKLY = every 4 weeks
+label.WEEKLY = a Week
+label.MONTHLY = a Month
+label.YEARLY = a Year
 
 
 #######################################################

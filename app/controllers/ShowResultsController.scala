@@ -185,7 +185,8 @@ class ShowResultsController @Inject() (
                   over100KDisclaimerCheck(aggregate),
                   getCurrentTaxYear,
                   sideBarBullets(aggregate),
-                  aggregateConditions.isPensionContributionsDefined(aggregate)
+                  aggregateConditions.isPensionContributionsDefined(aggregate),
+                  aggregateConditions.isFourWeekly(aggregate)
                 )
               )
             } catch {

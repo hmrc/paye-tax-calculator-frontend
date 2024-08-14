@@ -65,5 +65,9 @@ class AggregateConditionsUtil @Inject() {
     listOfPensionError.contains(PensionError.ABOVE_WAGE)
   }
 
+  def isFourWeekly(aggregateInput: QuickCalcAggregateInput): Boolean = {
+    aggregateInput.savedSalary.exists(_.period.contains("every 4 weeks"))
+  }
+
 
 }

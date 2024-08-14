@@ -53,7 +53,7 @@
         disclaimerWarningText: components.disclaimerWarningText
 )
 
-@(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean, salaryCheck: Boolean, currentTaxYear: String, sideBarBullets: Seq[Option[Html]], pensionCheck: Boolean)(implicit request: Request[_], messages: Messages)
+@(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean, salaryCheck: Boolean, currentTaxYear: String, sideBarBullets: Seq[Option[Html]], pensionCheck: Boolean, fourWeekly: Boolean)(implicit request: Request[_], messages: Messages)
 
 @tabsItems = @{
     Seq(
@@ -66,6 +66,7 @@
                 content = HtmlContent(resultDetailView(calculatorResponse.getYearly, taxYear, Messages("label.YEARLY"), calculatorResponse.isKCode, isScottish, Messages("quick_calc.result.tabLabels.yearly"), pensionCheck))
             )
         ),
+        if(!fourWeekly) {
         TabItem(
             id = Some(
                 PayPeriod.MONTHLY.toString
@@ -74,7 +75,18 @@
             panel = TabPanel(
                 content = HtmlContent(resultDetailView(calculatorResponse.getMonthly, taxYear, Messages("label.MONTHLY"), calculatorResponse.isKCode, isScottish, Messages("quick_calc.result.tabLabels.monthly"), pensionCheck))
             )
-        ),
+        )
+        } else {
+        TabItem(
+            id = Some(
+                PayPeriod.FOUR_WEEKLY.toString
+            ),
+            label = Messages("4 Weekly"),
+            panel = TabPanel(
+                content = HtmlContent(resultDetailView(calculatorResponse.getFourWeekly, taxYear, Messages("label.FOUR_WEEKLY"), calculatorResponse.isKCode, isScottish, Messages("4 weekly"), pensionCheck))
+            )
+        )
+        },
         TabItem(
             id = Some(
                 PayPeriod.WEEKLY.toString
