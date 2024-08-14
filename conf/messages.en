@@ -170,6 +170,7 @@ quick_calc.result.tabLabels.yearly=Yearly
 quick_calc.result.tabLabels.annually=Annually
 quick_calc.result.tabLabels.monthly=Monthly
 quick_calc.result.tabLabels.weekly=Weekly
+quick_calc.result.tabLabels.fourWeekly = 4 weekly
 quick_calc.result.info.new=Our calculation does not account for any other deductions your employer might make before they pay you. We will not keep a record of your data for security reasons.
 quick_calc.result.info_a=We have estimated your National Insurance contribution based on the most common
 quick_calc.result.info_b=Class 1 options: Categories A, H and M (opens in a new tab)
@@ -406,10 +407,10 @@ label.scottish-rate-details=Check if you pay Scottish Income Tax
 label.breakdown_per = Breakdown per:
 label.DAILY = Daily
 label.HOURLY = Hourly
-label.FOUR_WEEKLY = Four weekly
-label.WEEKLY = Week
-label.MONTHLY = Month
-label.YEARLY = Year
+label.FOUR_WEEKLY = every 4 weeks
+label.WEEKLY = a Week
+label.MONTHLY = a Month
+label.YEARLY = a Year
 
 
 #######################################################
