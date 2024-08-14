@@ -101,6 +101,51 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
       }
     }
 
+    "return 200, with current list of aggregate which contains all answers from previous questions and sidebar links with fourWkeely set to true" in {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalaryFourWeekly)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
+        val taxResult =
+          TaxResult.taxCalculation(cacheTaxCodeStatePensionSalaryFourWeekly.get, defaultTaxCodeProvider)
+
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).get
+
+        val view = application.injector.instanceOf[ResultView]
+
+        status(result) mustEqual OK
+
+        val responseBody = contentAsString(result)
+        val parseHtml    = Jsoup.parse(responseBody)
+
+        removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = true)(
+            request,
+            messagesThing(application)
+          ).toString
+        )
+
+        val sidebar = parseHtml.getElementsByClass("govuk-grid-column-one-third")
+        val links   = sidebar.get(0).getElementsByClass("govuk-link")
+        val fourWeekly = parseHtml.getElementsByClass("#main-content > div > div.govuk-grid-column-two-thirds > div.govuk-tabs > ul > li:nth-child(2) > a").text()
+
+        links.size() mustEqual 3
+        fourWeekly.contains("4 Weekly")
+
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+      }
+    }
+
     "return 200, and show disclaimer text if salary is over 100,002 and tax code is default uk or scottish" in {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 

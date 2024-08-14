@@ -94,6 +94,7 @@ object QuickCalcCacheSetup {
   val cacheTestStatePensionYES:                 Option[StatePension]    = Some(StatePension(true))
   val cacheTestStatusPensionNO:                 Option[StatePension]    = Some(StatePension(false))
   val cacheTestYearlySalary:                    Option[Salary]          = Some(Salary(20000, None, None, "a year", None, None))
+  val cacheTestFourWeeklySalary:                Option[Salary]          = Some(Salary(20000, None, None, "every 4 weeks", None, None))
   val cacheTestYearlyOverHundredThoudandSalary: Option[Salary]          = Some(Salary(100003, None, None, "a year", None, None))
   val cacheTestDailySalary:                     Option[Salary]          = Some(Salary(40, None, None, "a day", None, None))
   val cacheTestHourlySalary:                    Option[Salary]          = Some(Salary(8.5, None, None, "an hour", None, None))
@@ -161,6 +162,15 @@ object QuickCalcCacheSetup {
   val cacheTaxCodeStatePensionSalary: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlySalary,
+      savedTaxCode               = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedScottishRate          = cacheTestScottishNO
+    )
+  )
+
+  val cacheTaxCodeStatePensionSalaryFourWeekly: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestFourWeeklySalary,
       savedTaxCode               = cacheTestTaxCode,
       savedIsOverStatePensionAge = cacheTestStatePensionYES,
       savedScottishRate          = cacheTestScottishNO
