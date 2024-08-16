@@ -238,4 +238,12 @@ object TaxResult {
       case _ => formatter.format(value)
     }
   }
+
+  def moneyFormatterResult(value2: BigDecimal): String = {
+    val formatter = java.text.NumberFormat.getCurrencyInstance
+    formatter.setMaximumFractionDigits(2)
+    formatter.setMinimumFractionDigits(2)
+    val formattedValue = formatter.format(value2)
+    formattedValue.replaceAll("£", "")
+  }
 }
