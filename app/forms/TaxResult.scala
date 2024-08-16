@@ -240,10 +240,12 @@ object TaxResult {
   }
 
   def moneyFormatterResult(value2: BigDecimal): String = {
-    val formatter = java.text.NumberFormat.getCurrencyInstance
+    val roundedValue = value2.setScale(2, RoundingMode.HALF_UP)
+    val formatter = java.text.NumberFormat.getInstance
     formatter.setMaximumFractionDigits(2)
     formatter.setMinimumFractionDigits(2)
-    val formattedValue = formatter.format(value2)
-    formattedValue.replaceAll("£", "")
+    val formattedValue = formatter.format(roundedValue)
+    formattedValue
   }
+
 }

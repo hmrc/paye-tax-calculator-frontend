@@ -199,7 +199,7 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
       }
 
     "return a 3dp value to 2dp value" in {
-      moneyFormatterResult(123.455) mustBe "123.45"
+      moneyFormatterResult(123.455) mustBe "123.46"
     }
   }
 
