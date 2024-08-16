@@ -238,4 +238,14 @@ object TaxResult {
       case _ => formatter.format(value)
     }
   }
+
+  def moneyFormatterResult(value2: BigDecimal): String = {
+    val roundedValue = value2.setScale(2, RoundingMode.HALF_UP)
+    val formatter = java.text.NumberFormat.getInstance
+    formatter.setMaximumFractionDigits(2)
+    formatter.setMinimumFractionDigits(2)
+    val formattedValue = formatter.format(roundedValue)
+    formattedValue
+  }
+
 }
