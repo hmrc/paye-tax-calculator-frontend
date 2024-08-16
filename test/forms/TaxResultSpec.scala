@@ -188,6 +188,21 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
     }
   }
 
+  "Calling the moneyFormatterResult function" should {
+
+    "return the big decimal with a value of 12 to 2dp" in {
+      moneyFormatterResult(BigDecimal(12)) mustBe "12.00"
+    }
+
+    "return 0 to 2dp" in {
+      moneyFormatterResult(BigDecimal(0)) mustBe "0.00"
+      }
+
+    "return a 3dp value to 2dp value" in {
+      moneyFormatterResult(123.455) mustBe "123.45"
+    }
+  }
+
   //"Extracting income tax" should {
 
 //    "return the maxTaxAmount if the tax is over 50% of the gross income" in {
