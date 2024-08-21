@@ -332,6 +332,9 @@ object QuickCalcCacheSetup {
   val expectedInvalidPensionTwoDecimalPlaces =
     "Your monthly pension contributions can only include pounds and pence"
 
+  val expectedInvalidPensionMessageOverTenMill =
+    "Your monthly pension contributions must be £9,999,999.99 or less"
+
   val expectedPrefixTaxCodeErrorMessage =
     "Enter a tax code that starts with the letters S, K, SK, C or CK followed by numbers"
 
