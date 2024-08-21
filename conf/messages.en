@@ -50,8 +50,8 @@ quick_calc.you_have_told_us.header_change_link=You can
 quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=What is your tax code? (Optional)
-quick_calc.you_have_told_us.about_tax_code.label.newTitle=What is your tax code?
-quick_calc.you_have_told_us.about_pension_contributions.label=How much are your monthly pension contributions?
+quick_calc.you_have_told_us.about_tax_code.label.newTitle=What is your tax code? (Optional)
+quick_calc.you_have_told_us.about_pension_contributions.label=How much are your monthly pension contributions? (Optional)
 quick_calc.you_have_told_us.about_pensions_contributions.label.new= Pension contributions
 quick_calc.you_have_told_us.about_tax_code.label.new=Tax Code
 quick_calc.you_have_told_us.about_tax_code.no=No
@@ -68,7 +68,7 @@ quick_calc.pensionContributionError.aboveTenMill=Your monthly pension contributi
 quick_calc.pensionContributionError.belowZero=Your pension contributions must be more than zero
 quick_calc.pensionContributionError.lessThanHundredPercent=Your monthly pension contributions must be less than 100% of your income
 
-quick_calc.you_have_told_us.scottish_rate.label=Do you pay the   Scottish Income Tax rate?
+quick_calc.you_have_told_us.scottish_rate.label=Do you pay the Scottish Income Tax rate?
 quick_calc.you_have_told_us.scottish_rate.label.new=Scottish Income Tax
 quick_calc.you_have_told_us.scottish_rate.yes=Yes
 quick_calc.you_have_told_us.scottish_rate.no=No
@@ -210,7 +210,7 @@ quick_calc.salary.amount.label=Amount paid
 quick_calc.salary.grossAmount.label=Gross amount, in pounds
 quick_calc.you_have_told_us.about_student_loan_contribution.label.new= Student loan
 
-quick_calc.salary.studentLoan.header=Which student loan are you currently repaying?
+quick_calc.salary.studentLoan.header=Which student loan are you currently repaying? (Optional)
 quick_calc.salary.studentLoan.subheading= If you have a student loan that you need to repay, select the plan that applies to you:
 quick_calc.salary.studentLoan.plan1.text=Plan 1
 quick_calc.salary.studentLoan.plan2.text=Plan 2
@@ -224,7 +224,7 @@ quick_calc.error.postgraduate-loans=Select yes if you repay a postgraduate loan
 quick_calc.error.student-loans=Select which student loan you are currently repaying
 quick_calc.remove.student-loans= Are you sure you want to remove your student loan?
 quick_calc.remove.postgraduate-loans= Are you sure you want to remove your Postgraduate loan?
-quick_calc.postgraduateLoan.header=Do you have a postgraduate loan?
+quick_calc.postgraduateLoan.header=Do you have a postgraduate loan? (Optional)
 quick_calc.postgraduateLoan.subheading=Tell us if you have a postgraduate loan that you need to repay.
 
 quick_calc.you_have_told_us.about_post_graduate_loan_contribution.label.new = Postgraduate loan
@@ -250,8 +250,8 @@ quick_calc.salary.question.state_pension_url_b=check your State Pension age (ope
 quick_calc.salary.question.state_pension_url_c=if you are not sure.
 quick_calc.salary.question.state_pension_inf=If you’re over State Pension age you don’t pay National Insurance contributions.
 
-quick_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax Rate?
-quick_calc.salary.question.scottish_income.new=Do you pay the Scottish Income Tax rate?
+quick_calc.salary.question.scottish_income=Do you pay the Scottish Income Tax?
+quick_calc.salary.question.scottish_income.new=Do you pay the Scottish Income Tax? (Optional)
 quick_calc.salary.question.scottish_income_info=You usually pay Scottish Income Tax if you live in Scotland for more than half the tax year. It doesn’t matter where you work.
 quick_calc.salary.question.scottish_income_info.new=You usually pay Scottish Income Tax if you live in Scotland for more than half the tax year. It does not matter where you work.
 quick_calc.salary.question.scottish_income_url_a=You can check if you pay
@@ -301,7 +301,7 @@ quick_calc.over_state_pension_age.no=No
 quick_calc.over_state_pension_age_error=Select yes if you are over the State Pension age
 
 quick_calc.about_tax_code.header=What is your tax code? (Optional)
-quick_calc.about_tax_code.header.new=What is your tax code?
+quick_calc.about_tax_code.header.new=What is your tax code? (Optional)
 quick_calc.about_tax_code.has_tax_code=Enter your tax code
 
 quick_calc.about_tax_code.subheading=Tax code
