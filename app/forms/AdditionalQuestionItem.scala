@@ -98,7 +98,7 @@ object AdditionalQuestionItem {
           .getOrElse("None")
 
         val displayText = if (formattedContribution == "None") {
-          "None"
+          "Not provided"
         } else {
           if (pensions.exists(_.gaveUsPercentageAmount)) {
             s"$formattedContribution% a month"
@@ -127,9 +127,9 @@ object AdditionalQuestionItem {
               case "plan one"      => Messages("Plan 1")
               case "plan two"      => Messages("Plan 2")
               case "plan four"     => Messages("Plan 4")
-              case "none of these" => Messages("None")
+              case "none of these" => Messages("Not provided")
             }
-          case None => Messages("None")
+          case None => Messages("Not provided")
         }
 
         AdditionalQuestionItem(
@@ -154,7 +154,7 @@ object AdditionalQuestionItem {
           postGrad.map(_.hasPostgraduatePlan) match {
             case Some(true)  => Messages("Yes")
             case Some(false) => Messages("No")
-            case _           => "None"
+            case _           => "Not provided"
           },
           label,
           url,
