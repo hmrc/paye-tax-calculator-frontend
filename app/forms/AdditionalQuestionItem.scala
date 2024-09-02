@@ -71,7 +71,7 @@ object AdditionalQuestionItem {
             scottishValue.payScottishRate match {
               case Some(true)  => Messages("quick_calc.you_have_told_us.scottish_rate.yes")
               case Some(false) => Messages("quick_calc.you_have_told_us.scottish_rate.no")
-              case _                   => "Not provided"
+              case _                   => Messages("not_provided")
             }
           }.getOrElse("Not provided"),
           label,
@@ -100,7 +100,7 @@ object AdditionalQuestionItem {
           .getOrElse("None")
 
         val displayText = if (formattedContribution == "None") {
-          "Not provided"
+          Messages("not_provided")
         } else {
           if (pensions.exists(_.gaveUsPercentageAmount)) {
             s"$formattedContribution% a month"
@@ -129,10 +129,10 @@ object AdditionalQuestionItem {
               case "plan one"      => Messages("Plan 1")
               case "plan two"      => Messages("Plan 2")
               case "plan four"     => Messages("Plan 4")
-              case "none of these" => Messages("Not provided")
-              case _               => Messages("Not provided")
+              case "none of these" => Messages("not_provided")
+              case _               => Messages("not_provided")
             }
-          case None => Messages("Not provided")
+          case None => Messages("not_provided")
         }
         AdditionalQuestionItem(
           labelText,
@@ -155,11 +155,11 @@ object AdditionalQuestionItem {
         AdditionalQuestionItem(
           postGrad.map{ postGradValue =>
             postGradValue.hasPostgraduatePlan match {
-              case Some(true) => Messages("Yes")
-              case Some(false) => Messages("No")
-              case _ => "Not provided"
+              case Some(true) => Messages("yes")
+              case Some(false) => Messages("no")
+              case _ => Messages("not_provided")
             }
-          }.getOrElse("Not provided"),
+          }.getOrElse(Messages("not_provided")),
           label,
           url,
           idSuffix
