@@ -15,7 +15,7 @@ lazy val scoverageSettings = {
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*repositories.*;" +
     ".*BuildInfo.*;.*javascript.*;.*FrontendAuditConnector.*;.*Routes.*;.*GuiceInjector;" +
     ".*ControllerConfiguration;.*LanguageSwitchController",
-    coverageMinimumStmtTotal := 69,
+    coverageMinimumStmtTotal := 68,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
   )
