@@ -127,34 +127,4 @@ class StudentLoanContributionsControllerSpec extends BaseSpec
       }
     }
   }
-
-  "Submit Student Loans Form" should {
-    //TODO Look into this test
-//    "return 400, with aggregate data and an error message if no option is picked" in {
-//
-//      val mockCache = MockitoSugar.mock[QuickCalcCache]
-//
-//      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalaryStudentLoan)
-//
-//      val application = new GuiceApplicationBuilder()
-//        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-//        .build()
-//      implicit val messages: Messages = messagesThing(application)
-//
-//      running(application) {
-//
-//        val formData = Map("studentLoanPlan" -> "")
-//
-//        val request = FakeRequest(POST, routes.StudentLoanContributionsController.submitStudentLoansContribution.url)
-//          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-//          .withHeaders(HeaderNames.xSessionId -> "test")
-//          .withCSRFToken
-//
-//        val result = route(application, request).get
-//
-//        status(result) mustEqual SEE_OTHER
-//
-//      }
-//    }
-    }
 }
