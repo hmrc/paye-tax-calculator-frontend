@@ -16,8 +16,6 @@
 
 package forms
 
-import mappings.CustomFormatters._
-
 import javax.inject.Inject
 import models.ScottishRate
 import play.api.data.Form

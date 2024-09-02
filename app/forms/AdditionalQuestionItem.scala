@@ -81,9 +81,6 @@ object AdditionalQuestionItem {
       }
     }
 
-
-
-
   implicit def pensionContributionsFormat(implicit messages: Messages): AdditionalQuestion[PensionContributions] =
     new AdditionalQuestion[PensionContributions] {
 
@@ -169,7 +166,4 @@ object AdditionalQuestionItem {
         )
       }
     }
-
-
-
 }
