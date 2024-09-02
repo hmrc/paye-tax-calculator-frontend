@@ -50,7 +50,7 @@
                     content = Text(Messages(s"quick_calc.salary.studentLoan.$label.text")),
                     label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.$label.label")))),
                     value = Some(Messages(s"quick_calc.salary.studentLoan.$label.label")),
-                    checked = radioFieldStudentLoan.value.contains("quick_calc.salary.studentLoan.$label.label")
+                    checked = radioFieldStudentLoan.value.contains(Messages(s"quick_calc.salary.studentLoan.$label.label"))
                 )
         }
 }

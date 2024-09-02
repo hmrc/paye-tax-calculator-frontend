@@ -18,15 +18,15 @@ package forms
 
 import models.StudentLoanContributions
 import play.api.data.Form
-import mappings.CustomFormatters
 import javax.inject.Inject
 import play.api.data.Forms.{mapping, of, optional}
+import play.api.data.format.Formats.stringFormat
 
 class StudentLoansFormProvider @Inject()() {
 
   def apply(): Form[StudentLoanContributions] = Form(
     mapping(
-      "studentLoanPlan" -> of(CustomFormatters.studentLoanContributionsFormatter)
+      "studentLoanPlan" -> optional(of[String])
     )(StudentLoanContributions.apply)(StudentLoanContributions.unapply)
   )
 

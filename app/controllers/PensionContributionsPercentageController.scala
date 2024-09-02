@@ -90,11 +90,15 @@ class PensionContributionsPercentageController @Inject()(
             val updateAggregate = cache.fetchAndGetEntry().map(_.getOrElse(QuickCalcAggregateInput.newInstance))
               .map(agg =>
                 agg.copy(
-                  savedPensionContributions = Some(
-                    newPensionContributions.copy(
-                      gaveUsPercentageAmount = true
-                    ),
-                  )
+                  savedPensionContributions = if (newPensionContributions.monthlyContributionAmount.isDefined)  {
+                    Some(
+                      newPensionContributions.copy(
+                        gaveUsPercentageAmount = true
+                      ),
+                    )
+                  } else {
+                    None
+                  }
                 )
               )
 

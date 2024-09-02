@@ -127,48 +127,4 @@ class StudentLoanContributionsControllerSpec extends BaseSpec
       }
     }
   }
-
-  "Submit Student Loans Form" should {
-    "return 400, with aggregate data and an error message if no option is picked" in {
-
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalaryStudentLoan)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-      implicit val messages: Messages = messagesThing(application)
-
-      running(application) {
-
-        val formData = Map("studentLoanPlan" -> "")
-
-        val request = FakeRequest(POST, routes.StudentLoanContributionsController.submitStudentLoansContribution.url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-
-        status(result) mustEqual BAD_REQUEST
-
-        val parseHtml = Jsoup.parse(contentAsString(result))
-
-        val errorHeader = parseHtml.getElementsByClass("govuk-error-summary__title").text()
-        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
-
-        errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedInvalidStudentLoanErrorMessage) mustEqual true
-        errorMessage.contains(expectedInvalidStudentLoanErrorMessage) mustEqual true
-
-      }
-
-
-
-    }
-  }
-
-
 }

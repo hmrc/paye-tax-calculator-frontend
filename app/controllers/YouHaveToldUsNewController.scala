@@ -71,7 +71,8 @@ class YouHaveToldUsNewController @Inject() (
                 aggregateConditionsUtil.givenStudentLoanContribution(aggregate),
                 aggregateConditionsUtil.givenPostGradLoanContribution(aggregate),
                 aggregateConditionsUtil.isPensionWarning(aggregate),
-                aggregateConditionsUtil.roundedMonthlySalary(aggregate)
+                aggregateConditionsUtil.roundedMonthlySalary(aggregate),
+                aggregateConditionsUtil.isScottishRateDefined(aggregate)
               )
             )
           } else
@@ -82,7 +83,7 @@ class YouHaveToldUsNewController @Inject() (
     aggregateInput:    QuickCalcAggregateInput
   )(implicit messages: Messages
   ): List[(String, String)] = {
-    val payScottishRate = aggregateInput.savedScottishRate.exists(_.payScottishRate)
+    val payScottishRate = aggregateInput.savedScottishRate.exists(_.payScottishRate.getOrElse(false))
     val taxCode         = aggregateInput.savedTaxCode.flatMap(_.taxCode).getOrElse("")
     val result = Option(TaxCodeValidator.INSTANCE.validateTaxCodeMatchingRate(taxCode, payScottishRate))
     result.map(_.getErrorType) match {

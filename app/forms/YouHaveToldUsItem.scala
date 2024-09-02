@@ -84,7 +84,7 @@ object YouHaveToldUs {
         val idSuffix = SCOTTISH_RATE
         val url      = routes.ScottishRateController.showScottishRateForm.url
         YouHaveToldUsItem(
-          if (scottish.payScottishRate)
+          if (scottish.payScottishRate.getOrElse(false))
             Messages("quick_calc.you_have_told_us.scottish_rate.yes")
           else Messages("quick_calc.you_have_told_us.scottish_rate.no"),
           label,

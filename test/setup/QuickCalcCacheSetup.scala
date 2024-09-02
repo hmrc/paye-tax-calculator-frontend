@@ -89,8 +89,8 @@ object QuickCalcCacheSetup {
   val cacheTestTaxCode:                         Option[UserTaxCode]     = Some(UserTaxCode(gaveUsTaxCode = false, Some("1250L")))
   val cacheDefaultTestTaxCode:                  Option[UserTaxCode]     = Some(UserTaxCode(gaveUsTaxCode = true, Some("1257L")))
   val cacheTestTaxCodeScottish:                 Option[UserTaxCode]     = Some(UserTaxCode(gaveUsTaxCode = false, Some("S1250L")))
-  val cacheTestScottishNO:                      Option[ScottishRate]    = Some(ScottishRate(gaveUsScottishRate = false, payScottishRate = false))
-  val cacheTestScottishYES:                     Option[ScottishRate]    = Some(ScottishRate(gaveUsScottishRate = true, payScottishRate = true))
+  val cacheTestScottishNO:                      Option[ScottishRate]    = Some(ScottishRate(payScottishRate = Some(false)))
+  val cacheTestScottishYES:                     Option[ScottishRate]    = Some(ScottishRate(payScottishRate = Some(true)))
   val cacheTestStatePensionYES:                 Option[StatePension]    = Some(StatePension(true))
   val cacheTestStatusPensionNO:                 Option[StatePension]    = Some(StatePension(false))
   val cacheTestYearlySalary:                    Option[Salary]          = Some(Salary(20000, None, None, "a year", None, None))
@@ -105,11 +105,11 @@ object QuickCalcCacheSetup {
   )
 
   val cacheStudentLoanContributions: Option[StudentLoanContributions] = Some(
-    StudentLoanContributions("Plan 1")
+    StudentLoanContributions(Some("Plan 1"))
   )
 
   val cachePostGradLoanContributions: Option[PostgraduateLoanContributions] = Some(
-    PostgraduateLoanContributions(true)
+    PostgraduateLoanContributions(Some(true))
   )
 
   val cacheTestPensionPecentageContributions: Option[PensionContributions] = Some(

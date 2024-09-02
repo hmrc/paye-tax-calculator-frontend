@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class PostgraduateLoanContributions(hasPostgraduatePlan: Boolean)
+case class PostgraduateLoanContributions(hasPostgraduatePlan: Option[Boolean])
 
 object PostgraduateLoanContributions {
 

@@ -31,42 +31,6 @@ import scala.util.{Failure, Success, Try}
 
 object CustomFormatters {
 
-  def scottishRateValidation: Formatter[Boolean] = new Formatter[Boolean] {
-
-    override def bind(
-      key:  String,
-      data: Map[String, String]
-    ): Either[Seq[FormError], Boolean] =
-      Right(data.getOrElse(key, "")).flatMap {
-        case "true"  => Right(true)
-        case "false" => Right(false)
-        case _       => Left(Seq(FormError(key, "quick_calc.scottish_rate_error")))
-      }
-
-    override def unbind(
-      key:   String,
-      value: Boolean
-    ): Map[String, String] = Map(key -> value.toString)
-  }
-
-  def hasScottishRateBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
-
-    override def bind(
-      key:  String,
-      data: Map[String, String]
-    ): Either[Seq[FormError], Boolean] =
-      Right(data.getOrElse(key, "")).flatMap {
-        case "" => Right(false)
-        case _  => Right(true)
-      }
-
-    override def unbind(
-      key:   String,
-      value: Boolean
-    ): Map[String, String] =
-      Map(key -> value.toString)
-  }
-
   def removeTaxCodeValidation(): Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
