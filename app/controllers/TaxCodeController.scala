@@ -101,10 +101,7 @@ class TaxCodeController @Inject() (
                   savedTaxCode = Some(
                     UserTaxCode(
                       newTaxCode.taxCode.isDefined,
-                      Some(
-                        newTaxCode.taxCode
-                          .getOrElse(defaultTaxCodeProvider.defaultUkTaxCode)
-                      )
+                      newTaxCode.taxCode.flatMap(Some(_)).orElse(None)
                     )
                   )
                 )
@@ -125,7 +122,7 @@ class TaxCodeController @Inject() (
                   .map(_ =>
                     if (appConfig.features.newScreenContentFeature()) {
                       if (newTaxCode.taxCode.isEmpty) {
-                        Redirect(routes.ScottishRateController.showScottishRateForm)
+                        Redirect(routes.YouHaveToldUsNewController.summary)
                       } else {
                         Redirect(
                           navigator

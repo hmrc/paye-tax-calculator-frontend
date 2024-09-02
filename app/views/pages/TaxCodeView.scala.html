@@ -38,7 +38,7 @@
 @(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem], defaultTaxCode: String, salaryCheck: Boolean)(implicit request: Request[_], messages: Messages)
 
 @backButtonUrl = @{
-    s"${youHaveToldUsItems.flatMap(y => if(y.label == "over_state_pension_age") y.url else "").mkString}"
+    controllers.routes.YouHaveToldUsNewController.summary.url
 }
 
 @headerText = @{

@@ -69,5 +69,9 @@ class AggregateConditionsUtil @Inject() {
     aggregateInput.savedSalary.exists(_.period.contains("every 4 weeks"))
   }
 
+  def isScottishRateDefined(aggregateInput: QuickCalcAggregateInput) : Boolean = {
+    aggregateInput.savedScottishRate.isDefined
+  }
+
 
 }

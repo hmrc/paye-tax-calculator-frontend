@@ -82,7 +82,7 @@ class ScottishRateController @Inject() (
               .map(itemList => BadRequest(scottishRateView(formWithErrors, itemList))),
           scottish => {
             val taxCode =
-              if (scottish.payScottishRate)
+              if (scottish.payScottishRate.getOrElse(false))
                 defaultTaxCodeProvider.defaultScottishTaxCode
               else
                 defaultTaxCodeProvider.defaultUkTaxCode
@@ -93,7 +93,11 @@ class ScottishRateController @Inject() (
                 .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
                 .map(
                   _.copy(
-                    savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, scottish.payScottishRate))
+                    savedScottishRate = if(scottish.payScottishRate.isDefined) {
+                      Some(ScottishRate(scottish.payScottishRate))
+                    } else {
+                      None
+                    }
                   )
                 )
             } else {
@@ -103,7 +107,7 @@ class ScottishRateController @Inject() (
                 .map(
                   _.copy(
                     savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some(taxCode))),
-                    savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, scottish.payScottishRate))
+                    savedScottishRate = Some(ScottishRate(scottish.payScottishRate))
                   )
                 )
             }

@@ -17,17 +17,18 @@
 package forms
 
 import mappings.CustomFormatters._
+
 import javax.inject.Inject
 import models.ScottishRate
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.format.Formats._
 
 class ScottishRateFormProvider @Inject() () {
 
   def apply(): Form[ScottishRate] = Form(
     mapping(
-      "hasScottishRate" -> of(hasScottishRateBooleanFormatter),
-      "payScottishRate" -> of(scottishRateValidation)
+      "payScottishRate" -> optional(of[Boolean])
     )(ScottishRate.apply)(ScottishRate.unapply)
   )
 }

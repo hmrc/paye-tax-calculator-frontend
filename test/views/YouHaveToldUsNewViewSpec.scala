@@ -51,7 +51,7 @@ class YouHaveToldUsNewViewSpec extends BaseSpec {
       val calculateButton = "#button-get-results"
     }
 
-    lazy val view = youHaveToldUsNewView(youHaveToldUsItems, additionalQuestionItem, Map.empty, taxCodeExists = true, pensionContributionsExists = true, givenPensionPercentage = true, studentLoansDefined = true, postGradLoansDefined = false, pensionWarning = false, roundedMonthlySalary = "166")
+    lazy val view = youHaveToldUsNewView(youHaveToldUsItems, additionalQuestionItem, Map.empty, taxCodeExists = true, pensionContributionsExists = true, givenPensionPercentage = true, studentLoansDefined = true, postGradLoansDefined = false, pensionWarning = false, roundedMonthlySalary = "166",scottishDefined = false)
     lazy implicit val document: Document = Jsoup.parse(view.body)
 
     "have the correct document title" in {

@@ -67,17 +67,22 @@ object AdditionalQuestionItem {
         val idSuffix = SCOTTISH_RATE
         val url      = routes.ScottishRateController.showScottishRateForm.url
         AdditionalQuestionItem(
-          (scottish.map(_.gaveUsScottishRate), scottish.map(_.payScottishRate)) match {
-            case (Some(true), Some(true))  => Messages("quick_calc.you_have_told_us.scottish_rate.yes")
-            case (Some(true), Some(false)) => Messages("quick_calc.you_have_told_us.scottish_rate.no")
-            case _                         => "Not provided"
-          },
+          scottish.map{ scottishValue =>
+            scottishValue.payScottishRate match {
+              case Some(true)  => Messages("quick_calc.you_have_told_us.scottish_rate.yes")
+              case Some(false) => Messages("quick_calc.you_have_told_us.scottish_rate.no")
+              case _                   => "Not provided"
+            }
+          }.getOrElse("Not provided"),
           label,
           url,
           idSuffix
         )
       }
     }
+
+
+
 
   implicit def pensionContributionsFormat(implicit messages: Messages): AdditionalQuestion[PensionContributions] =
     new AdditionalQuestion[PensionContributions] {
@@ -121,17 +126,17 @@ object AdditionalQuestionItem {
         val idSuffix = "student-loan-contributions"
         val url      = routes.StudentLoanContributionsController.showStudentLoansForm.url
 
-        val labelText = t.map(_.studentLoanPlan) match {
+        val labelText = t.map(_.studentLoanPlan.getOrElse("")) match {
           case Some(studentLoanPlan) =>
             studentLoanPlan match {
               case "plan one"      => Messages("Plan 1")
               case "plan two"      => Messages("Plan 2")
               case "plan four"     => Messages("Plan 4")
               case "none of these" => Messages("Not provided")
+              case _               => Messages("Not provided")
             }
           case None => Messages("Not provided")
         }
-
         AdditionalQuestionItem(
           labelText,
           label,
@@ -151,16 +156,20 @@ object AdditionalQuestionItem {
         val idSuffix = "post_graduate_loan_contribution"
         val url      = routes.PostgraduateController.showPostgraduateForm.url
         AdditionalQuestionItem(
-          postGrad.map(_.hasPostgraduatePlan) match {
-            case Some(true)  => Messages("Yes")
-            case Some(false) => Messages("No")
-            case _           => "Not provided"
-          },
+          postGrad.map{ postGradValue =>
+            postGradValue.hasPostgraduatePlan match {
+              case Some(true) => Messages("Yes")
+              case Some(false) => Messages("No")
+              case _ => "Not provided"
+            }
+          }.getOrElse("Not provided"),
           label,
           url,
           idSuffix
         )
       }
     }
+
+
 
 }

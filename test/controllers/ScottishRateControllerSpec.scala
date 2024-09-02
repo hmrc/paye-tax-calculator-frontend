@@ -165,17 +165,7 @@ class ScottishRateControllerSpec
 
         val result = route(application, request).get
 
-        status(result) mustEqual BAD_REQUEST
-
-        val parseHtml = Jsoup.parse(contentAsString(result))
-
-        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
-        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
-
-        errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedInvalidScottishRateAnswer) mustEqual true
-        errorMessage.contains(expectedInvalidScottishRateAnswer) mustEqual true
+        status(result) mustEqual SEE_OTHER
       }
     }
 
@@ -219,7 +209,7 @@ class ScottishRateControllerSpec
     ) in {
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
-          savedScottishRate = Some(ScottishRate(gaveUsScottishRate = false, payScottishRate = false)),
+          savedScottishRate = Some(ScottishRate(payScottishRate = Some(false))),
           savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("1185L")))
         )
 
@@ -265,7 +255,7 @@ class ScottishRateControllerSpec
     ) in {
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
-          savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, payScottishRate = true)),
+          savedScottishRate = Some(ScottishRate(payScottishRate = Some(true))),
           savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("S1185L")))
         )
 
@@ -311,7 +301,7 @@ class ScottishRateControllerSpec
     ) in {
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
-          savedScottishRate = Some(ScottishRate(gaveUsScottishRate = false, payScottishRate = false)),
+          savedScottishRate = Some(ScottishRate(payScottishRate = Some(false))),
           savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("1250L")))
         )
 
@@ -357,7 +347,7 @@ class ScottishRateControllerSpec
     ) in {
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
-          savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, payScottishRate = true)),
+          savedScottishRate = Some(ScottishRate(payScottishRate = Some(true))),
           savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("S1250L")))
         )
 
@@ -403,7 +393,7 @@ class ScottishRateControllerSpec
     ) in {
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
-          savedScottishRate = Some(ScottishRate(gaveUsScottishRate = false, payScottishRate = false)),
+          savedScottishRate = Some(ScottishRate(payScottishRate = Some(false))),
           savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("1250L")))
         )
 
@@ -447,7 +437,7 @@ class ScottishRateControllerSpec
     "set the user's tax code to the 2020-21 default Scottish tax code if the user pays the Scottish rate" in {
       val expectedAggregate: QuickCalcAggregateInput =
         cacheCompleteYearly.get.copy(
-          savedScottishRate = Some(ScottishRate(gaveUsScottishRate = true, payScottishRate = true)),
+          savedScottishRate = Some(ScottishRate(payScottishRate = Some(true))),
           savedTaxCode      = Some(UserTaxCode(gaveUsTaxCode       = false, Some("S1250L")))
         )
 

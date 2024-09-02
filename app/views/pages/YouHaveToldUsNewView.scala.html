@@ -35,7 +35,7 @@
         notification: components.notification
 )
 
-@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean, pensionWarning: Boolean, roundedMonthlySalary: String)(implicit request: Request[_], messages: Messages)
+@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean, pensionWarning: Boolean, roundedMonthlySalary: String, scottishDefined: Boolean)(implicit request: Request[_], messages: Messages)
 
 @rows = @{
     items.map { item =>
@@ -65,8 +65,17 @@
             visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
             attributes = Map("id" -> s"change-${item.label}-link")
         )
+    )
+    }else if(item.label == "scottish_rate" && !scottishDefined) {
+        Seq(
+            ActionItem(
+            href = item.url,
+            content = Text(Messages("quick_calc.you_have_told_us.taxCode.add")),
+            visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
+            attributes = Map("id" -> s"change-${item.label}-link")
+    )
 )
-    } else if(item.label == "about_tax_code" && taxCodeExists){
+        }else if(item.label == "about_tax_code" && taxCodeExists){
             Seq(
                 ActionItem(
                 href = item.url,
@@ -90,7 +99,7 @@
             attributes = Map("id" -> s"change-${item.label}-link")
     )
 )}
-else if(item.label == "about_student_loan_contribution" && studentLoansDefined && item.value == "None"){
+else if(item.label == "about_student_loan_contribution" && studentLoansDefined && item.value == "Not provided"){
         Seq(
             ActionItem(
             href = item.url,

@@ -48,7 +48,7 @@ object TaxResult {
 
   private def extractUserPaysScottishTax(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedScottishRate match {
-      case Some(s) => s.payScottishRate
+      case Some(s) => s.payScottishRate.getOrElse(false)
       case None    => false
     }
 
@@ -120,7 +120,7 @@ object TaxResult {
   private def extractStudentLoanContributions(
     quickCalcAggregateInput: QuickCalcAggregateInput
   ): Option[StudentLoanPlans] =
-    (quickCalcAggregateInput.savedStudentLoanContributions.map(_.studentLoanPlan) match {
+    (quickCalcAggregateInput.savedStudentLoanContributions.map(_.studentLoanPlan.getOrElse("")) match {
       case Some("plan one") =>
         Some(new StudentLoanPlans(true, false, false, extractPostGradLoan(quickCalcAggregateInput)))
       case Some("plan two") =>
@@ -132,9 +132,9 @@ object TaxResult {
     })
 
   private def extractPostGradLoan(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
-    quickCalcAggregateInput.savedPostGraduateLoanContributions.map(_.hasPostgraduatePlan) match {
-      case Some(true) => true
-      case _          => false
+    quickCalcAggregateInput.savedPostGraduateLoanContributions match {
+      case Some(s) => s.hasPostgraduatePlan.getOrElse(false)
+      case None          => false
     }
 
   def convertWagesToMonthly(wages: BigDecimal): BigDecimal =
@@ -152,7 +152,7 @@ object TaxResult {
     quickCalcAggregateInput: QuickCalcAggregateInput,
     defaultTaxCodeProvider:  DefaultTaxCodeProvider
   ): String =
-    if (quickCalcAggregateInput.savedScottishRate.exists(_.payScottishRate)) {
+    if (quickCalcAggregateInput.savedScottishRate.exists(_.payScottishRate.getOrElse(false))) {
       defaultTaxCodeProvider.defaultScottishTaxCode
     } else {
       defaultTaxCodeProvider.defaultUkTaxCode
@@ -247,5 +247,4 @@ object TaxResult {
     val formattedValue = formatter.format(roundedValue)
     formattedValue
   }
-
 }

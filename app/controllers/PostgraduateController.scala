@@ -18,25 +18,26 @@ package controllers
 
 import config.AppConfig
 import forms.PostGraduateLoanFormProvider
-import models.{PostgraduateLoanContributions, QuickCalcAggregateInput}
+
+import javax.inject.{Inject, Singleton}
+import models.{PostgraduateLoanContributions, QuickCalcAggregateInput, ScottishRate}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
-import services.{Navigator, QuickCalcCache}
+import play.api.mvc._
+import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.{ActionWithSessionId, SalaryRequired}
 import views.html.pages.PostGraduatePlanContributionView
 
-import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
+@Singleton
 class PostgraduateController @Inject() (
   override val messagesApi:      MessagesApi,
   cache:                         QuickCalcCache,
   val controllerComponents:      MessagesControllerComponents,
-  navigator:                     Navigator,
   postGraduateView:              PostGraduatePlanContributionView,
   postGraduationFromProvider:    PostGraduateLoanFormProvider
 )(implicit val appConfig:        AppConfig,
@@ -51,17 +52,18 @@ class PostgraduateController @Inject() (
   val form: Form[PostgraduateLoanContributions] = postGraduationFromProvider()
 
   def showPostgraduateForm(): Action[AnyContent] =
-    salaryRequired(cache, showPostgraduateContributionFormTestable)
-
-  private[controllers] def showPostgraduateContributionFormTestable: ShowForm = { implicit request => agg =>
-    val filledForm = agg.savedPostGraduateLoanContributions
-      .map { s =>
-        form.fill(s)
-      }
-      .getOrElse(form)
-
-    Ok(postGraduateView(filledForm))
-  }
+    salaryRequired(
+      cache,
+      implicit request =>
+        agg => {
+          val filledForm = agg.savedPostGraduateLoanContributions
+            .map { s =>
+              form.fill(s)
+            }
+            .getOrElse(form)
+          Ok(postGraduateView(filledForm))
+        }
+    )
 
   def submitPostgradLoanForm(): Action[AnyContent] =
     validateAcceptWithSessionId().async { implicit request =>
@@ -71,40 +73,33 @@ class PostgraduateController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors =>
-            cache.fetchAndGetEntry().map {
-              case Some(aggregate) =>
-                BadRequest(
-                  postGraduateView(formWithErrors)
-                )
-              case None =>
-                BadRequest(
-                  postGraduateView(formWithErrors)
-                )
-            },
-          postgradLoan =>
-            cache.fetchAndGetEntry().flatMap {
-              case Some(aggregate) =>
-                val updatedAggregate = aggregate.copy(savedPostGraduateLoanContributions = Some(postgradLoan))
-                cache.save(updatedAggregate).map { _ =>
-                  Redirect(
-                    navigator.nextPageOrSummaryIfAllQuestionsAnswered(
-                      updatedAggregate
-                    ) {
-                      routes.YouHaveToldUsNewController.summary
-                    }()
+            cache
+              .fetchAndGetEntry()
+              .map {
+                case Some(aggregate) => aggregate.additionalQuestionItems()
+                case None            => Nil
+              }
+              .map(itemList => BadRequest(postGraduateView(formWithErrors))),
+          postGrad => {
+            val updatedAggregate =
+              cache
+                .fetchAndGetEntry()
+                .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+                .map(
+                  _.copy(
+                    savedPostGraduateLoanContributions = if(postGrad.hasPostgraduatePlan.isDefined) {
+                      Some(PostgraduateLoanContributions(postGrad.hasPostgraduatePlan))
+                    } else {
+                      None
+                    }
                   )
-                }
-              case None =>
-                cache
-                  .save(
-                    QuickCalcAggregateInput.newInstance
-                      .copy(savedPostGraduateLoanContributions = Some(postgradLoan))
-                  )
-                  .map { _ =>
-                    Redirect(routes.YouHaveToldUsNewController.summary)
-                  }
-            }
+                )
+            updatedAggregate
+              .map(cache.save)
+              .map(_ =>
+                Redirect(routes.YouHaveToldUsNewController.summary)
+              )
+          }
         )
-
     }
 }

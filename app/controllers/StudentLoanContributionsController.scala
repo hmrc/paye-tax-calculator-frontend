@@ -72,25 +72,26 @@ class StudentLoanContributionsController @Inject() (
       .bindFromRequest()
       .fold(
         formWithErrors =>
-          cache.fetchAndGetEntry().map {
-            case Some(aggregate) =>
-              BadRequest(
-                studentLoansView(formWithErrors)
-              )
-            case None =>
-              BadRequest(
-                studentLoansView(formWithErrors)
-              )
-          },
+          cache
+            .fetchAndGetEntry()
+            .map {
+              case Some(aggregate) => aggregate.additionalQuestionItems()
+              case None            => Nil
+            }
+            .map(itemList => BadRequest(studentLoansView(formWithErrors))),
         (newStudentLoanContribution: StudentLoanContributions) => {
           val updatedAggregate = cache
             .fetchAndGetEntry()
             .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
             .map(agg =>
               agg.copy(
-                savedStudentLoanContributions = Some(
-                  StudentLoanContributions(newStudentLoanContribution.studentLoanPlan)
-                )
+                savedStudentLoanContributions = if(newStudentLoanContribution.studentLoanPlan.isDefined) {
+                  Some(
+                    StudentLoanContributions(newStudentLoanContribution.studentLoanPlan)
+                  )
+                } else {
+                  None
+                }
               )
             )
           updatedAggregate.flatMap(updatedAgg =>
