@@ -18,7 +18,7 @@ package controllers
 
 import config.AppConfig
 import forms.TaxResult
-import forms.TaxResult.moneyFormatter
+import forms.TaxResult.{extractTaxCode, kCodeLabel, moneyFormatter}
 
 import javax.inject.{Inject, Singleton}
 import models.QuickCalcAggregateInput
@@ -53,13 +53,14 @@ class ShowResultsController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   private def over100KDisclaimerCheck(aggregateInput: QuickCalcAggregateInput): Boolean = {
     val listOfClarifications = getClarifications(aggregateInput, defaultTaxCodeProvider)
-      listOfClarifications.contains(Clarification.INCOME_OVER_100K)
+    listOfClarifications.contains(Clarification.INCOME_OVER_100K)
   }
 
   private def getTaxCalculation(
@@ -86,12 +87,12 @@ class ShowResultsController @Inject() (
       ),
       Clarification.HAVE_STATE_PENSION -> Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age"))),
       Clarification.HAVE_NO_STATE_PENSION -> Some(
-                Html(
-                  Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
-                  + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
-                                 Messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
-                )
-              ),
+        Html(
+          Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
+          + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
+                         Messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
+        )
+      ),
       Clarification.SCOTTISH_INCOME_APPLIED -> Some(
         Html(Messages("quick_calc.result.sidebar.appliedScottishIncomeTaxRates"))
       ),
@@ -110,7 +111,31 @@ class ShowResultsController @Inject() (
       ),
       Clarification.K_CODE -> Some(
         Html(
-          Messages("quick_calc.result.sidebar.kcode_a")
+          Messages("quick_calc.result.sidebar.kcode_a", "K")
+          + linkInNewTab(
+            "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
+            Messages("quick_calc.result.sidebar.kcode_b")
+          ) + Messages("quick_calc.result.sidebar.kcode_c") + linkInNewTab(
+            "https://www.gov.uk/tax-company-benefits",
+            Messages("quick_calc.result.sidebar.kcode_d")
+          )
+        )
+      ),
+      Clarification.CK_CODE -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.kcode_a", "CK")
+          + linkInNewTab(
+            "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
+            Messages("quick_calc.result.sidebar.kcode_b")
+          ) + Messages("quick_calc.result.sidebar.kcode_c") + linkInNewTab(
+            "https://www.gov.uk/tax-company-benefits",
+            Messages("quick_calc.result.sidebar.kcode_d")
+          )
+        )
+      ),
+      Clarification.SK_CODE -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.kcode_a", "SK")
           + linkInNewTab(
             "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
             Messages("quick_calc.result.sidebar.kcode_b")
@@ -128,18 +153,18 @@ class ShowResultsController @Inject() (
       Clarification.INCOME_BELOW_STUDENT_LOAN -> Some(
         Html(
           Messages("quick_calc.result.sidebar.income_below_student_loan")
-        ),
+        )
       ),
-        Clarification.INCOME_BELOW_POSTGRAD_LOAN -> Some(
-          Html(
-            Messages("quick_calc.result.sidebar.income_below_postgrad_loan")
-          )
-        ),
-        Clarification.INCOME_BELOW_STUDENT_BUT_ABOVE_POSTGRAD_LOAN -> Some(
-          Html(
-            Messages("quick_calc.result.sidebar.income_below_student_loan_but_above_postgrad")
-          )
-        ),
+      Clarification.INCOME_BELOW_POSTGRAD_LOAN -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.income_below_postgrad_loan")
+        )
+      ),
+      Clarification.INCOME_BELOW_STUDENT_BUT_ABOVE_POSTGRAD_LOAN -> Some(
+        Html(
+          Messages("quick_calc.result.sidebar.income_below_student_loan_but_above_postgrad")
+        )
+      ),
       Clarification.PENSION_BELOW_ANNUAL_ALLOWANCE -> Some(
         Html(
           Messages("quick_calc.result.sidebar.pension_below_annual_allowance")
@@ -148,7 +173,8 @@ class ShowResultsController @Inject() (
       Clarification.PENSION_EXCEED_ANNUAL_ALLOWANCE -> Some(
         Html(
           Messages("quick_calc.result.sidebar.pension_exceed_annual_allowance_a") +
-            linkInNewTab("https://www.gov.uk/tax-on-your-private-pension/annual-allowance","quick_calc.result.sidebar.pension_exceed_annual_allowance_b")
+          linkInNewTab("https://www.gov.uk/tax-on-your-private-pension/annual-allowance",
+                       "quick_calc.result.sidebar.pension_exceed_annual_allowance_b")
         )
       )
     )
@@ -186,7 +212,8 @@ class ShowResultsController @Inject() (
                   getCurrentTaxYear,
                   sideBarBullets(aggregate),
                   aggregateConditions.isPensionContributionsDefined(aggregate),
-                  aggregateConditions.isFourWeekly(aggregate)
+                  aggregateConditions.isFourWeekly(aggregate),
+                  kCodeLabel(aggregate.savedTaxCode.flatMap(_.taxCode).getOrElse(""))
                 )
               )
             } catch {

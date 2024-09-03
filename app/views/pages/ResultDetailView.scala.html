@@ -34,7 +34,7 @@
         features: config.features.Features,
 )
 
-@(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean, isScottish: Boolean, headerFrequency: String, pensionCheck: Boolean)(implicit messages: Messages)
+@(calculatorResponse: CalculatorResponsePayPeriod, taxYear: Int, label: String, isKCode: Boolean, isScottish: Boolean, headerFrequency: String, pensionCheck: Boolean, kCodeLabel: String)(implicit messages: Messages)
 
 @formattedAmount = @{
     moneyFormatter(calculatorResponse.getTakeHome)
@@ -73,7 +73,7 @@
 (if (isKCode) {
     Seq(
         SummaryListRow(
-            key = Key(content = Text(Messages("quick_calc.result.k_code.new")),
+            key = Key(content = Text(kCodeLabel),
             classes = "govuk-!-font-weight-regular"),
             value = Value(content = Text(s"£${moneyFormatterResult(calculatorResponse.getKCodeAdjustment.doubleValue())}"), classes = "govuk-!-text-align-right")
         )

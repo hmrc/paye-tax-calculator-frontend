@@ -17,6 +17,7 @@
 package forms
 
 import models.QuickCalcAggregateInput
+import play.api.i18n.Messages
 import uk.gov.hmrc.calculator.Calculator
 import uk.gov.hmrc.calculator.Calculator.{PensionContribution, StudentLoanPlans}
 import uk.gov.hmrc.calculator.model.pension.PensionMethod
@@ -247,4 +248,16 @@ object TaxResult {
     val formattedValue = formatter.format(roundedValue)
     formattedValue
   }
+
+  def kCodeLabel(
+                  key: String
+                )(implicit messages: Messages
+                ): String =
+    key match {
+
+      case str if str.startsWith("CK") => Messages("quick_calc.result.k_code.new", str.take(2))
+      case str if str.startsWith("SK") => Messages("quick_calc.result.k_code.new", str.take(2))
+      case str if str.startsWith("K") => Messages("quick_calc.result.k_code.new", str.take(1))
+      case _ => ""
+    }
 }
