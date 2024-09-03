@@ -207,6 +207,22 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
     }
   }
 
+  "Calling the kCodeLabelfunction" should {
+
+    "return K Code Pay Adjustment when taxCode is K124" in {
+      kCodeLabel("K124") mustBe "K code pay adjustment"
+    }
+    "return SK Code Pay Adjustment when tax code is SK124" in {
+      kCodeLabel("SK124") mustBe "SK code pay adjustment"
+    }
+    "return CK Code Pay Adjustment when tax code is SK124" in {
+      kCodeLabel("CK124") mustBe "CK code pay adjustment"
+    }
+    "return an empty string if there is no prefix" in {
+      kCodeLabel("1257L") mustBe ""
+    }
+  }
+
   //"Extracting income tax" should {
 
 //    "return the maxTaxAmount if the tax is over 50% of the gross income" in {

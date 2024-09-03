@@ -18,6 +18,7 @@ package controllers
 
 import config.features.Features
 import forms.TaxResult
+import models.UserTaxCode
 import org.jsoup.Jsoup
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.ArgumentMatchers.any
@@ -86,7 +87,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         val parseHtml    = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = false)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = false, kCodeLabel = "")(
             request,
             messagesThing(application)
           ).toString
@@ -129,7 +130,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         val parseHtml    = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = true)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = true, kCodeLabel = "")(
             request,
             messagesThing(application)
           ).toString
@@ -174,7 +175,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         val parseHtml    = Jsoup.parse(responseBody)
 
         removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = false)(
+          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = false, kCodeLabel = "")(
             request,
             messagesThing(application)
           ).toString
