@@ -215,7 +215,7 @@ s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warning
 }
 
 @backButtonUrl = @{
-    s"${getGoBackLink(items)}"
+        controllers.routes.StatePensionController.showStatePensionForm.url
 }
 
 @govukTemplate(Some(titleNoForm(Messages("quick_calc.you_have_told_us.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
