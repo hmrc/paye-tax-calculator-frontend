@@ -17,7 +17,7 @@
 package controllers
 
 import config.AppConfig
-import forms.{Daily, SalaryInDaysFormProvider, SalaryPeriod, TaxResult}
+import forms.{Daily, SalaryInDaysFormProvider, TaxResult}
 
 import javax.inject.{Inject, Singleton}
 import models.{Days, PayPeriodDetail, QuickCalcAggregateInput, Salary}

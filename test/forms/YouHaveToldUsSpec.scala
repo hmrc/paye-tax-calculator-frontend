@@ -30,31 +30,31 @@ class YouHaveToldUsSpec extends BaseSpec with AnyWordSpecLike {
     val idSuffix  = "income"
 
     val yearlyLabel = "a_year"
-    YouHaveToldUs(Salary(2, None, None, "a year", None, None)) mustBe YouHaveToldUsItem("£2 a year",
+    YouHaveToldUs(Salary(2, None, None, Yearly, None, None)) mustBe YouHaveToldUsItem("£2 a year",
                                                                                   yearlyLabel,
                                                                                   salaryUrl,
                                                                                   idSuffix)
 
     val monthlyLabel = "a_month"
-    YouHaveToldUs(Salary(3, None, None, "a month", None, None)) mustBe YouHaveToldUsItem("£3 a month",
+    YouHaveToldUs(Salary(3, None, None, Monthly, None, None)) mustBe YouHaveToldUsItem("£3 a month",
                                                                                    monthlyLabel,
                                                                                    salaryUrl,
                                                                                    idSuffix)
 
     val weeklyLabel = "a_week"
-    YouHaveToldUs(Salary(1, None, None, "a week", None, None)) mustBe YouHaveToldUsItem("£1 a week",
+    YouHaveToldUs(Salary(1, None, None, Weekly, None, None)) mustBe YouHaveToldUsItem("£1 a week",
                                                                                   weeklyLabel,
                                                                                   salaryUrl,
                                                                                   idSuffix)
 
     val dailyLabel = "a_day"
-    YouHaveToldUs(Salary(1, None, None, "a day", None, None)) mustBe YouHaveToldUsItem("£1 a day",
+    YouHaveToldUs(Salary(1, None, None, Daily, None, None)) mustBe YouHaveToldUsItem("£1 a day",
                                                                                  dailyLabel,
                                                                                  salaryUrl,
                                                                                  idSuffix)
 
     val hourlyLabel = "an_hour"
-    YouHaveToldUs(Salary(2, None, None, "an hour", None, None)) mustBe YouHaveToldUsItem("£2 an hour",
+    YouHaveToldUs(Salary(2, None, None, Hourly, None, None)) mustBe YouHaveToldUsItem("£2 an hour",
                                                                                    hourlyLabel,
                                                                                    salaryUrl,
                                                                                    idSuffix)

@@ -19,15 +19,13 @@ package forms
 import play.api.data.Form
 import play.api.libs.json._
 
-sealed trait SalaryPeriod {
+trait SalaryPeriod {
   val value: String
 }
 
 object SalaryPeriod {
 
   val id = "period"
-//  val form: Form[models.Salary]
-// val name: Option[Boolean] = form.value.map(_.period.value.map)
 
   implicit val writes: Writes[SalaryPeriod] = Writes {
     reason => Json.obj(id -> reason.value)

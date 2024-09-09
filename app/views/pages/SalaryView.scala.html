@@ -37,10 +37,6 @@
 
 @(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
 
-@periodLabels = @{
-if(features.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "weekly", "daily", "hourly") else Seq("hourly", "daily", "weekly", "monthly", "yearly")
-}
-
 @radioFieldPeriod = @{
     salaryForm("period")
 }
@@ -83,7 +79,7 @@ if(features.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "we
             checked = radioFieldPeriod.value.contains(SalaryPeriodForm.hourly)
         )
     )
-    }
+}
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = true) {
 

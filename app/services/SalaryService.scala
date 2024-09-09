@@ -16,7 +16,7 @@
 
 package services
 
-import forms.{Daily, Hourly, TaxResult}
+import forms.{Daily, Hourly, TaxResult, YouHaveToldUsItem}
 
 import javax.inject.Inject
 import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary}

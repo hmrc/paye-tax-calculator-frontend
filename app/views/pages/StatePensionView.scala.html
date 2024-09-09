@@ -34,12 +34,7 @@
 @(overStatePensionAgeForm: Form[StatePension], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: Request[_], messages: Messages)
 
 @labels = @{
-    List(Messages("quick_calc.salary.yearly.sub_label"),
-        Messages("quick_calc.salary.monthly.sub_label"),
-        Messages("quick_calc.salary.weekly.sub_label"),
-        Messages("quick_calc.salary.daily.sub_label"),
-        Messages("quick_calc.salary.hourly.sub_label"),
-        Messages("quick_calc.salary.fourWeeks.sub_label"))
+    List("a_year","a_month","every_4_weeks","a_week","a_day","an_hour")
 }
 
 @radioFieldStatePension = @{

@@ -16,18 +16,20 @@
 
 package models
 
+import forms.{Monthly, SalaryPeriod, SalaryPeriodForm, Weekly, Yearly}
 import org.scalatest.Assertion
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.libs.json.{Json, Writes}
 
-class SalarySerializationSpec extends AnyWordSpecLike with Matchers {
+class SalarySerializationSpec extends AnyWordSpecLike with Matchers{
 
   "Salary marshalling" should {
     "work for all salary types" in {
-      jsonOf(Salary(1, None, None, "yearly", None, None))  shouldBe yearlyJson
-      jsonOf(Salary(1, None, None, "monthly", None, None)) shouldBe monthlyJson
-      jsonOf(Salary(1, None, None, "weekly", None, None))  shouldBe weeklyJson
+      println(jsonOf(Salary(1, None, None, Yearly, None, None)) )
+      jsonOf(Salary(1, None, None, Yearly, None, None))  shouldBe yearlyJson
+      jsonOf(Salary(1, None, None, Monthly, None, None)) shouldBe monthlyJson
+      jsonOf(Salary(1, None, None, Weekly, None, None))  shouldBe weeklyJson
       jsonOf(Days(1, 2))                             shouldBe dailyJson
       jsonOf(Hours(1, 2))                            shouldBe hourlyJson
     }
@@ -43,9 +45,9 @@ class SalarySerializationSpec extends AnyWordSpecLike with Matchers {
     }
   }
 
-  def yearlyJson  = s"""{"amount":1,"period":"yearly"}"""
-  def monthlyJson = s"""{"amount":1,"period":"monthly"}"""
-  def weeklyJson  = s"""{"amount":1,"period":"weekly"}"""
+  def yearlyJson  = s"""{"amount":1,"period":{"period":"a year"}}"""
+  def monthlyJson = s"""{"amount":1,"period":{"period":"a month"}}"""
+  def weeklyJson  = s"""{"amount":1,"period":{"period":"a week"}}"""
   def dailyJson   = s"""{"amount":1,"how-many-a-week":2}"""
   def hourlyJson  = s"""{"amount":1,"how-many-a-week":2}"""
 

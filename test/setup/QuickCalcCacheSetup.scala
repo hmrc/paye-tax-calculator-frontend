@@ -16,8 +16,8 @@
 
 package setup
 
-import forms.YouHaveToldUsItem
-import models.{PayPeriodDetail, PensionContributions, PostgraduateLoanContributions, QuickCalcAggregateInput, Salary, ScottishRate, StatePension, StudentLoanContributions, UserTaxCode}
+import forms._
+import models._
 import org.apache.pekko.Done
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
@@ -93,11 +93,11 @@ object QuickCalcCacheSetup {
   val cacheTestScottishYES:                     Option[ScottishRate]    = Some(ScottishRate(payScottishRate = Some(true)))
   val cacheTestStatePensionYES:                 Option[StatePension]    = Some(StatePension(true))
   val cacheTestStatusPensionNO:                 Option[StatePension]    = Some(StatePension(false))
-  val cacheTestYearlySalary:                    Option[Salary]          = Some(Salary(20000, None, None, "a year", None, None))
-  val cacheTestFourWeeklySalary:                Option[Salary]          = Some(Salary(20000, None, None, "every 4 weeks", None, None))
-  val cacheTestYearlyOverHundredThoudandSalary: Option[Salary]          = Some(Salary(100003, None, None, "a year", None, None))
-  val cacheTestDailySalary:                     Option[Salary]          = Some(Salary(40, None, None, "a day", None, None))
-  val cacheTestHourlySalary:                    Option[Salary]          = Some(Salary(8.5, None, None, "an hour", None, None))
+  val cacheTestYearlySalary:                    Option[Salary]          = Some(Salary(20000, None, None, Yearly, None, None))
+  val cacheTestFourWeeklySalary:                Option[Salary]          = Some(Salary(20000, None, None, FourWeekly, None, None))
+  val cacheTestYearlyOverHundredThoudandSalary: Option[Salary]          = Some(Salary(100003, None, None, Yearly, None, None))
+  val cacheTestDailySalary:                     Option[Salary]          = Some(Salary(40, None, None, Daily, None, None))
+  val cacheTestHourlySalary:                    Option[Salary]          = Some(Salary(8.5, None, None, Hourly, None, None))
   val cacheTestSalaryPeriodDaily:               Option[PayPeriodDetail] = Some(PayPeriodDetail(1, 5, "a day", ""))
 
   val cacheTestPensionFixedContributions: Option[PensionContributions] = Some(
