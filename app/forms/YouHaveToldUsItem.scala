@@ -103,8 +103,8 @@ object YouHaveToldUs {
         def asPounds(v: String) = "£" + v
 
         YouHaveToldUsItem(
-          s"${asPounds(TaxResult.moneyFormatter(s.amount))} ${s.period}",
-          s.period.replace(" ", "_"),
+          s"${asPounds(TaxResult.moneyFormatter(s.amount))}" + " " + Messages(s"label.${s.period.value.replace(" ", "_")}.value"),
+          s.period.value.replace(" ", "_"),
           url,
           idSuffix
         )

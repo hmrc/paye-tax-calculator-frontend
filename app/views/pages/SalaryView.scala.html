@@ -17,6 +17,7 @@
 @import play.api.i18n._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
 @import views.html.components.beforeContent
+@import forms.SalaryPeriodForm
 
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
@@ -44,15 +45,45 @@ if(features.newScreenContentFeature()) Seq("yearly", "monthly", "fourWeeks", "we
     salaryForm("period")
 }
 @periodRadioButtons = @{
-    periodLabels.map { label =>
+    Seq(
         RadioItem(
-            content = Text(Messages(s"quick_calc.salary.$label.text")),
-            label = Some(Label(content = Text(Messages(s"quick_calc.salary.$label.label")))),
-            value = Some(Messages(s"quick_calc.salary.$label.label")),
-            checked = radioFieldPeriod.value.contains(Messages(s"quick_calc.salary.$label.label"))
+            content = Text(Messages(s"quick_calc.salary.yearly.text")),
+            label = Some(Label(content = Text(Messages(s"quick_calc.salary.yearly.label")))),
+            value = Some(SalaryPeriodForm.yearly),
+            checked = radioFieldPeriod.value.contains(SalaryPeriodForm.yearly)
+        ),
+        RadioItem(
+            content = Text(Messages(s"quick_calc.salary.monthly.text")),
+            label = Some(Label(content = Text(Messages(s"quick_calc.salary.monthly.label")))),
+            value = Some(SalaryPeriodForm.monthly),
+            checked = radioFieldPeriod.value.contains(SalaryPeriodForm.monthly)
+        ),
+        RadioItem(
+            content = Text(Messages(s"quick_calc.salary.fourWeeks.text")),
+            label = Some(Label(content = Text(Messages(s"quick_calc.salary.fourWeeks.label")))),
+            value = Some(SalaryPeriodForm.fourWeekly),
+            checked = radioFieldPeriod.value.contains(SalaryPeriodForm.fourWeekly)
+        ),
+        RadioItem(
+            content = Text(Messages(s"quick_calc.salary.weekly.text")),
+            label = Some(Label(content = Text(Messages(s"quick_calc.salary.weekly.label")))),
+            value = Some(SalaryPeriodForm.weekly),
+            checked = radioFieldPeriod.value.contains(SalaryPeriodForm.weekly)
+        ),
+        RadioItem(
+            content = Text(Messages(s"quick_calc.salary.daily.text")),
+            label = Some(Label(content = Text(Messages(s"quick_calc.salary.daily.label")))),
+            value = Some(SalaryPeriodForm.daily),
+            checked = radioFieldPeriod.value.contains(SalaryPeriodForm.daily)
+        ),
+        RadioItem(
+            content = Text(Messages(s"quick_calc.salary.hourly.text")),
+            label = Some(Label(content = Text(Messages(s"quick_calc.salary.hourly.label")))),
+            value = Some(SalaryPeriodForm.hourly),
+            checked = radioFieldPeriod.value.contains(SalaryPeriodForm.hourly)
         )
+    )
     }
-}
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = true) {
 

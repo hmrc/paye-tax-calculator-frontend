@@ -237,10 +237,10 @@ quick_calc.remove_pensions_contributions_error= Select yes if you want to remove
 quick_calc.remove_student_loans_contributions_error= Select yes if you want to remove your student loan
 quick_calc.remove_postgraduate_loans_contributions_error= Select yes if you want to remove your postgraduate loan
 
-quick_calc.salary.yearly.sub_label=a_year
-quick_calc.salary.monthly.sub_label=a_month
-quick_calc.salary.weekly.sub_label=a_week
-quick_calc.salary.fourWeeks.sub_label=every_4_weeks
+quick_calc.salary.yearly.sub_label=a year
+quick_calc.salary.monthly.sub_label=a month
+quick_calc.salary.weekly.sub_label=a week
+quick_calc.salary.fourWeeks.sub_label=every 4 weeks
 quick_calc.salary.daily.sub_label=a_day_sub
 quick_calc.salary.hourly.sub_label=an_hour_sub
 
@@ -414,6 +414,14 @@ label.FOUR_WEEKLY = every 4 weeks
 label.WEEKLY = a Week
 label.MONTHLY = a Month
 label.YEARLY = a Year
+
+label.a_year.value = a year
+label.a_month.value = a month
+label.every_4_weeks.value = every 4 weeks
+label.a_week.value = a week
+label.a_day.value = a day
+label.an_hour.value = an hour
+
 
 
 #######################################################

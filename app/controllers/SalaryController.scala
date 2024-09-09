@@ -17,7 +17,7 @@
 package controllers
 
 import config.AppConfig
-import forms.SalaryFormProvider
+import forms.{Daily, Hourly, SalaryFormProvider}
 
 import javax.inject.{Inject, Singleton}
 import models.Salary
@@ -68,8 +68,7 @@ class SalaryController @Inject() (
     implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
     val url = request.uri
-    val day:  String = Messages("quick_calc.salary.daily.label")
-    val hour: String = Messages("quick_calc.salary.hourly.label")
+
     form
       .bindFromRequest()
       .fold(
@@ -78,15 +77,14 @@ class SalaryController @Inject() (
         },
         success = salaryAmount => {
           val updatedAggregate = salaryService.updateSalaryAmount(cache, salaryAmount, url)
-
           updatedAggregate.flatMap(agg =>
             cache
               .save(agg)
               .map { _ =>
                 salaryAmount.period match {
-                  case `day` =>
+                  case Daily =>
                     Redirect(routes.DaysPerWeekController.showDaysAWeek((salaryAmount.amount * 100.0).toInt))
-                  case `hour` =>
+                  case Hourly =>
                     Redirect(routes.HoursPerWeekController.showHoursAWeek((salaryAmount.amount * 100.0).toInt))
                   case _ => Redirect(navigator.tryGetShowStatePension(agg)())
                 }

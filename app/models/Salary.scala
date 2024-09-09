@@ -16,15 +16,19 @@
 
 package models
 
+import forms.SalaryPeriod
 import play.api.libs.json._
+
+
 
 case class Salary(
   amount:               BigDecimal,
   amountYearly:         Option[BigDecimal],
   previousAmountYearly: Option[BigDecimal],
-  period:               String,
+  period:               SalaryPeriod,
   howManyAWeek:         Option[BigDecimal],
   monthlyAmount:        Option[BigDecimal])
+
 
 object Salary {
 
@@ -34,7 +38,7 @@ object Salary {
     (__ \ "amount").read[BigDecimal] and
     (__ \ "amountYearly").readNullable[BigDecimal] and
     (__ \ "previousAmountYearly").readNullable[BigDecimal] and
-    (__ \ "period").read[String] and
+    (__ \ "period").read[SalaryPeriod] and
     (__ \ "how-many-a-week").readNullable[BigDecimal] and
     (__ \ "monthlyAmount").readNullable[BigDecimal]
   )(Salary(_, _, _, _, _, _))
@@ -44,7 +48,7 @@ object Salary {
       (__ \ "amount").write[BigDecimal] and
       (__ \ "amountYearly").writeNullable[BigDecimal] and
       (__ \ "previousAmountYearly").writeNullable[BigDecimal] and
-      (__ \ "period").write[String] and
+      (__ \ "period").write[SalaryPeriod] and
       (__ \ "how-many-a-week").writeNullable[BigDecimal] and
       (__ \ "monthlyAmount").writeNullable[BigDecimal]
     )(a => (if(a.amount.isWhole) a.amount.setScale(0) else a.amount, a.amountYearly, a.previousAmountYearly, a.period, a.howManyAWeek, a.monthlyAmount))

@@ -81,25 +81,25 @@ object TaxResult {
 
   def convertWagesToYearly(
     wages:             BigDecimal,
-    period:            String,
+    period:            SalaryPeriod,
     hoursOrDaysWorked: Option[BigDecimal] = None
   ): BigDecimal = {
 
     val result = period match {
-      case "a year"  => wages.toDouble
-      case "a month" => WageConverterUtils.INSTANCE.convertMonthlyWageToYearly(wages.toDouble)
-      case "a day" =>
+      case Yearly  => wages.toDouble
+      case Monthly => WageConverterUtils.INSTANCE.convertMonthlyWageToYearly(wages.toDouble)
+      case Daily =>
         WageConverterUtils.INSTANCE.convertDailyWageToYearly(
           wages.toDouble,
           hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied days"))
         )
-      case "an hour" =>
+      case Hourly =>
         WageConverterUtils.INSTANCE.convertHourlyWageToYearly(
           wages.toDouble,
           hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied hours"))
         )
-      case "a week"        => WageConverterUtils.INSTANCE.convertWeeklyWageToYearly(wages.toDouble)
-      case "every 4 weeks" => WageConverterUtils.INSTANCE.convertFourWeeklyWageToYearly(wages.toDouble)
+      case Weekly        => WageConverterUtils.INSTANCE.convertWeeklyWageToYearly(wages.toDouble)
+      case FourWeekly => WageConverterUtils.INSTANCE.convertFourWeeklyWageToYearly(wages.toDouble)
     }
 
     BigDecimal(result)
@@ -184,12 +184,12 @@ object TaxResult {
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
         s.period match {
-          case "a year"        => s.amount
-          case "a month"       => s.amount
-          case "a week"        => s.amount
-          case "a day"         => s.amount
-          case "an hour"       => s.amount
-          case "every 4 weeks" => s.amount
+          case Yearly        => s.amount
+          case Monthly       => s.amount
+          case Weekly        => s.amount
+          case Daily         => s.amount
+          case Hourly       => s.amount
+          case FourWeekly => s.amount
           case _               => throw new Exception("No Salary has been provided.")
         }
       case None => throw new Exception("No Salary has been provided.")
@@ -199,12 +199,12 @@ object TaxResult {
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
         s.period match {
-          case "a year"        => PayPeriod.YEARLY
-          case "a month"       => PayPeriod.MONTHLY
-          case "a week"        => PayPeriod.WEEKLY
-          case "a day"         => PayPeriod.DAILY
-          case "an hour"       => PayPeriod.HOURLY
-          case "every 4 weeks" => PayPeriod.FOUR_WEEKLY
+          case Yearly        => PayPeriod.YEARLY
+          case Monthly       => PayPeriod.MONTHLY
+          case Weekly        => PayPeriod.WEEKLY
+          case Daily         => PayPeriod.DAILY
+          case Hourly       => PayPeriod.HOURLY
+          case FourWeekly => PayPeriod.FOUR_WEEKLY
           case e               => throw new BadRequestException(s"$e is not a valid PayPeriod")
         }
       case _ => throw new BadRequestException(s"Invalid PayPeriod")
@@ -219,8 +219,8 @@ object TaxResult {
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
         (s.period, s.howManyAWeek) match {
-          case ("a day", Some(manyAWeek))   => Some(manyAWeek)
-          case ("an hour", Some(manyAWeek)) => Some(manyAWeek)
+          case (Daily, Some(manyAWeek))   => Some(manyAWeek)
+          case (Hourly, Some(manyAWeek)) => Some(manyAWeek)
           case _                            => None
         }
       case _ => None

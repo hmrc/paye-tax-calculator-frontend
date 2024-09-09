@@ -16,7 +16,7 @@
 
 package services
 
-import forms.TaxResult
+import forms.{Daily, Hourly, TaxResult}
 
 import javax.inject.Inject
 import models.{PayPeriodDetail, QuickCalcAggregateInput, Salary}
@@ -41,7 +41,7 @@ class SalaryService @Inject() (
       .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
       .map { oldAggregate =>
         val newAggregate = salaryAmount.period match {
-          case "an hour" | "a day" =>
+          case Hourly | Daily =>
             oldAggregate.copy(savedSalary = Some(
               salaryAmount.copy(
                 amountYearly         = oldAggregate.savedSalary.flatMap(_.amountYearly),
