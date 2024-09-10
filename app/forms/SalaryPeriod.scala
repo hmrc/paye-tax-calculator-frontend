@@ -16,7 +16,6 @@
 
 package forms
 
-import play.api.data.Form
 import play.api.libs.json._
 
 trait SalaryPeriod {

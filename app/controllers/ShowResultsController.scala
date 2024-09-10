@@ -18,7 +18,7 @@ package controllers
 
 import config.AppConfig
 import forms.TaxResult
-import forms.TaxResult.{extractTaxCode, kCodeLabel, moneyFormatter}
+import forms.TaxResult.{kCodeLabel, moneyFormatter}
 
 import javax.inject.{Inject, Singleton}
 import models.QuickCalcAggregateInput

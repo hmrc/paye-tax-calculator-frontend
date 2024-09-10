@@ -17,7 +17,7 @@
 package forms
 
 import controllers.routes
-import models.{PayPeriodDetail, PensionContributions, PostgraduateLoanContributions, ScottishRate, StudentLoanContributions, UserTaxCode}
+import models._
 import play.api.i18n.Messages
 
 case class AdditionalQuestionItem(

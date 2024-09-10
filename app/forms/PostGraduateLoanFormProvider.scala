@@ -19,7 +19,6 @@ package forms
 import models.PostgraduateLoanContributions
 import play.api.data.Form
 import play.api.data.Forms._
-import mappings.CustomFormatters._
 import play.api.data.format.Formats.booleanFormat
 
 import javax.inject.Inject

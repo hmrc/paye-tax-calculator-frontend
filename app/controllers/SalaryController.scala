@@ -22,7 +22,7 @@ import forms.{Daily, Hourly, SalaryFormProvider}
 import javax.inject.{Inject, Singleton}
 import models.Salary
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
 import services.{Navigator, QuickCalcCache, SalaryService}
 import uk.gov.hmrc.http.HeaderCarrier

@@ -16,8 +16,7 @@
 
 package forms
 
-import play.api.data.Forms.{of, single}
-import play.api.data.{Form, FormError}
+import play.api.data.FormError
 import play.api.data.format.Formatter
 
 object SalaryPeriodForm {
