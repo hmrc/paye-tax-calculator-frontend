@@ -221,6 +221,9 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
     "return SK Code Pay Adjustment when tax code is K124 and user pays scottish rate" in {
       kCodeLabel("K124", payScottishRate = true) mustBe "SK code pay adjustment"
     }
+    "return SK Code Pay Adjustment when tax code is CK124 and user pays scottish rate" in {
+      kCodeLabel("CK124", payScottishRate = true) mustBe "SK code pay adjustment"
+    }
     "return an empty string if there is no prefix" in {
       kCodeLabel("1257L", payScottishRate = false) mustBe ""
     }
