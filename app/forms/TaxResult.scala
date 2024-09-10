@@ -250,14 +250,15 @@ object TaxResult {
   }
 
   def kCodeLabel(
-                  key: String
+                  key: String,
+                  payScottishRate: Boolean
                 )(implicit messages: Messages
                 ): String =
     key match {
-
-      case str if str.startsWith("CK") => Messages("quick_calc.result.k_code.new", str.take(2))
-      case str if str.startsWith("SK") => Messages("quick_calc.result.k_code.new", str.take(2))
-      case str if str.startsWith("K") => Messages("quick_calc.result.k_code.new", str.take(1))
+      case str if str.startsWith("K") && !payScottishRate => Messages("quick_calc.result.k_code.new", str.take(1))
+      case str if str.startsWith("CK") && !payScottishRate => Messages("quick_calc.result.k_code.new", str.take(2))
+      case str if str.startsWith("SK") && !payScottishRate => Messages("quick_calc.result.k_code.new", str.take(2))
+      case str if str.startsWith("K") | str.startsWith("CK") | str.startsWith("SK") && payScottishRate => Messages("quick_calc.result.k_code.new","SK")
       case _ => ""
     }
 }
