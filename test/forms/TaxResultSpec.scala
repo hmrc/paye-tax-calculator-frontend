@@ -210,16 +210,22 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
   "Calling the kCodeLabelfunction" should {
 
     "return K Code Pay Adjustment when taxCode is K124" in {
-      kCodeLabel("K124") mustBe "K code pay adjustment"
+      kCodeLabel("K124", payScottishRate = false) mustBe "K code pay adjustment"
     }
     "return SK Code Pay Adjustment when tax code is SK124" in {
-      kCodeLabel("SK124") mustBe "SK code pay adjustment"
+      kCodeLabel("SK124", payScottishRate = false) mustBe "SK code pay adjustment"
     }
     "return CK Code Pay Adjustment when tax code is SK124" in {
-      kCodeLabel("CK124") mustBe "CK code pay adjustment"
+      kCodeLabel("CK124", payScottishRate = false) mustBe "CK code pay adjustment"
+    }
+    "return SK Code Pay Adjustment when tax code is K124 and user pays scottish rate" in {
+      kCodeLabel("K124", payScottishRate = true) mustBe "SK code pay adjustment"
+    }
+    "return SK Code Pay Adjustment when tax code is CK124 and user pays scottish rate" in {
+      kCodeLabel("CK124", payScottishRate = true) mustBe "SK code pay adjustment"
     }
     "return an empty string if there is no prefix" in {
-      kCodeLabel("1257L") mustBe ""
+      kCodeLabel("1257L", payScottishRate = false) mustBe ""
     }
   }
 

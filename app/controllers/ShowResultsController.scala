@@ -213,7 +213,8 @@ class ShowResultsController @Inject() (
                   sideBarBullets(aggregate),
                   aggregateConditions.isPensionContributionsDefined(aggregate),
                   aggregateConditions.isFourWeekly(aggregate),
-                  kCodeLabel(aggregate.savedTaxCode.flatMap(_.taxCode).getOrElse(""))
+                  kCodeLabel(aggregate.savedTaxCode.flatMap(_.taxCode).getOrElse(""),
+                             aggregate.savedScottishRate.flatMap(_.payScottishRate).getOrElse(false))
                 )
               )
             } catch {
