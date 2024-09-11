@@ -120,17 +120,18 @@ object TaxResult {
 
   private def extractStudentLoanContributions(
     quickCalcAggregateInput: QuickCalcAggregateInput
-  ): Option[StudentLoanPlans] =
+  ): Option[StudentLoanPlans] = {
     (quickCalcAggregateInput.savedStudentLoanContributions.map(_.studentLoanPlan.getOrElse("")) match {
-      case Some("plan one") =>
+      case Some(PlanOne) =>
         Some(new StudentLoanPlans(true, false, false, extractPostGradLoan(quickCalcAggregateInput)))
-      case Some("plan two") =>
+      case Some(PlanTwo) =>
         Some(new StudentLoanPlans(false, true, false, extractPostGradLoan(quickCalcAggregateInput)))
-      case Some("plan four") =>
+      case Some(PlanFour) =>
         Some(new StudentLoanPlans(false, false, true, extractPostGradLoan(quickCalcAggregateInput)))
       case _ => Some(new StudentLoanPlans(false, false, false, extractPostGradLoan(quickCalcAggregateInput)))
 
     })
+  }
 
   private def extractPostGradLoan(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedPostGraduateLoanContributions match {

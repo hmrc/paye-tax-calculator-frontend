@@ -105,7 +105,7 @@ object QuickCalcCacheSetup {
   )
 
   val cacheStudentLoanContributions: Option[StudentLoanContributions] = Some(
-    StudentLoanContributions(Some("Plan 1"))
+    StudentLoanContributions(Some(PlanOne))
   )
 
   val cachePostGradLoanContributions: Option[PostgraduateLoanContributions] = Some(

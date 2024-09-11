@@ -26,7 +26,7 @@ class StudentLoansFormProvider @Inject()() {
 
   def apply(): Form[StudentLoanContributions] = Form(
     mapping(
-      "studentLoanPlan" -> optional(of[String])
+      "studentLoanPlan" -> of(StudentLoanPlanForm.studentLoanPlanFormatter)
     )(StudentLoanContributions.apply)(StudentLoanContributions.unapply)
   )
 

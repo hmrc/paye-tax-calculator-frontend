@@ -85,7 +85,6 @@ quick_calc.you_have_told_us.subheading=Your Income
 quick_calc.you_have_told_us.subheading.additional=Additional questions (Optional)
 quick_calc.you_have_told_us.body.additional=Your results may be more accurate if you answer additional questions.
 
-
 quick_calc.you_have_told_us.a_year.label=How much do you get paid?
 quick_calc.you_have_told_us.a_month.label=How much do you get paid?
 quick_calc.you_have_told_us.a_week.label=How much do you get paid?
@@ -164,7 +163,6 @@ quick_calc.result.sidebar.income_below_student_loan_but_above_postgrad=Your inco
 quick_calc.result.sidebar.pension_below_annual_allowance=We took your pension contributions off your gross income, the amount before deductions and not including contributions from your employer
 quick_calc.result.sidebar.pension_exceed_annual_allowance_a=We took your pension contributions off your gross income, the amount before deductions and not including contributions from your employer. Find out about the
 quick_calc.result.sidebar.pension_exceed_annual_allowance_b=annual allowance for your private pension (opens in a new tab)
-
 
 quick_calc.result.disclaimer.reducedPersonal_allowance_a.new=You used a tax code which is not usually for those on more than £100,000 a year. If you do not know your tax code, you can leave it blank and we will  calculate your
 quick_calc.result.disclaimer.reducedPersonal_allowance_b.new=reduced Personal Allowance (opens in a new tab).
@@ -260,8 +258,8 @@ quick_calc.salary.question.scottish_income_info.new=You usually pay Scottish Inc
 quick_calc.salary.question.scottish_income_url_a=You can check if you pay
 quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a new tab)
 quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
-quick_calc.scottish_rate_error=Select yes if you pay Scottish Income Tax
 
+quick_calc.scottish_rate_error=Select yes if you pay Scottish Income Tax
 quick_calc.salary.question.tax_code_info=Your tax code will tell us if you owe tax from a previous year or have any allowances, such as Blind Person’s Allowance.
 quick_calc.salary.question.tax_code_info_a=If you do not enter a tax code we will use the default tax code
 quick_calc.salary.question.tax_code_info_b=to calculate your take-home pay.
@@ -432,4 +430,3 @@ timeout.keepAlive.notSignedIn= Return to the service
 timeout.deleteAnswers = Delete your answers
 
 reset.h1=Your answers have been deleted
-

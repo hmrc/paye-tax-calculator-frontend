@@ -16,9 +16,11 @@
 
 package models
 
+import forms.StudentLoanPlan
 import play.api.libs.json._
 
-case class StudentLoanContributions(studentLoanPlan: Option[String])
+
+case class StudentLoanContributions(studentLoanPlan: Option[StudentLoanPlan])
 
 object StudentLoanContributions {
 
