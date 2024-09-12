@@ -21,40 +21,45 @@ import play.api.data.format.Formatter
 
 object SalaryPeriodForm {
 
-  val period: String = "period"
-  val yearly: String = "a year"
-  val monthly: String = "a month"
+  val period:     String = "period"
+  val yearly:     String = "a year"
+  val monthly:    String = "a month"
   val fourWeekly: String = "every 4 weeks"
-  val weekly: String = "a week"
-  val daily: String = "a day"
-  val hourly: String = "an hour"
+  val weekly:     String = "a week"
+  val daily:      String = "a day"
+  val hourly:     String = "an hour"
 
   val error: String = "quick_calc.salary.option_error"
 
   val salaryPeriodFormatter: Formatter[SalaryPeriod] = new Formatter[SalaryPeriod] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], SalaryPeriod] = {
-      data.get(key) match {
-        case Some(`yearly`) => Right(Yearly)
-        case Some(`monthly`) => Right(Monthly)
-        case Some(`fourWeekly`) => Right(FourWeekly)
-        case Some(`weekly`) => Right(Weekly)
-        case Some(`daily`) => Right(Daily)
-        case Some(`hourly`) => Right(Hourly)
-        case _ => Left(Seq(FormError(key, error)))
-      }
-    }
 
-    override def unbind(key: String, value: SalaryPeriod): Map[String, String] = {
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], SalaryPeriod] =
+      data.get(key) match {
+        case Some(`yearly`)     => Right(Yearly)
+        case Some(`monthly`)    => Right(Monthly)
+        case Some(`fourWeekly`) => Right(FourWeekly)
+        case Some(`weekly`)     => Right(Weekly)
+        case Some(`daily`)      => Right(Daily)
+        case Some(`hourly`)     => Right(Hourly)
+        case _                  => Left(Seq(FormError(key, error)))
+      }
+
+    override def unbind(
+      key:   String,
+      value: SalaryPeriod
+    ): Map[String, String] = {
       val stringValue = value match {
-        case Yearly => yearly
-        case Monthly => monthly
+        case Yearly     => yearly
+        case Monthly    => monthly
         case FourWeekly => fourWeekly
-        case Weekly => weekly
-        case Daily => daily
-        case Hourly => hourly
+        case Weekly     => weekly
+        case Daily      => daily
+        case Hourly     => hourly
       }
       Map(key -> stringValue)
     }
   }
-
 }

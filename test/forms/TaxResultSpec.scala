@@ -106,13 +106,6 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
       extractSalary(QuickCalcAggregateInput(Some(Salary(2, None, None, Hourly, None, None)), None, None, None, None, None, None, None)) mustBe 2
     }
 
-//    """return an error with message "No Salary has been provided" if incorrect salary duration""" in {
-//      val thrown = intercept[Exception] {
-//        extractSalary(QuickCalcAggregateInput(Some(Salary(2, None, None, "a decade", None, None)), None, None, None, None, None, None, None))
-//      }
-//      thrown.getMessage mustBe "No Salary has been provided."
-//    }
-
     """return an error with message "No Salary has been provided" if no response""" in {
       val thrown = intercept[Exception] {
         extractSalary(QuickCalcAggregateInput(None, None, None, None, None, None, None, None))
@@ -148,21 +141,6 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
         QuickCalcAggregateInput(Some(Salary(0, None, None, FourWeekly, None, None)), None, None, None, None, None, None, None)
       ) mustBe PayPeriod.FOUR_WEEKLY
     }
-
-//    """return an error with message "a decade is not a valid PayPeriod" if incorrect salary duration""" in {
-//      val thrown = intercept[BadRequestException] {
-//        extractPayPeriod(QuickCalcAggregateInput(Some(Salary(2, None, None, SalaryPeriod.writ, None, None)), None, None, None, None, None, None, None))
-//      }
-//      thrown.getMessage mustBe "a decade is not a valid PayPeriod"
-//    }
-//
-//    """return an error with message "Invalid PayPeriod""" in {
-//      val thrown = intercept[BadRequestException] {
-//        extractPayPeriod(QuickCalcAggregateInput(None, None, None, None, None, None, None, None))
-//      }
-//      thrown.getMessage mustBe "Invalid PayPeriod"
-//    }
-
   }
 
   "Extracting Hours from user response" should {

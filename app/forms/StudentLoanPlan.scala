@@ -26,18 +26,18 @@ object StudentLoanPlan {
 
   val id = "studentLoanPlan"
 
-  implicit val writes: Writes[StudentLoanPlan] = Writes {
-    reason => Json.obj(id -> reason.value)
+  implicit val writes: Writes[StudentLoanPlan] = Writes { plan =>
+    Json.obj(id -> plan.value)
   }
 
-  val submissionWrites: Writes[StudentLoanPlan] = Writes {
-    reason => JsString(reason.value)
+  val submissionWrites: Writes[StudentLoanPlan] = Writes { plan =>
+    JsString(plan.value)
   }
 
   implicit val reads: Reads[StudentLoanPlan] = (__ \ id).read[String].map {
-    case PlanOne.value => PlanOne
-    case PlanTwo.value => PlanTwo
-    case PlanFour.value => PlanFour
+    case PlanOne.value     => PlanOne
+    case PlanTwo.value     => PlanTwo
+    case PlanFour.value    => PlanFour
     case NoneOfThese.value => NoneOfThese
   }
 
@@ -45,28 +45,48 @@ object StudentLoanPlan {
 
 object PlanOne extends StudentLoanPlan {
   override val value: String = "plan one"
-  implicit val writes: Writes[PlanOne.type ] = Writes { _ => Json.obj("studentLoanPlan" -> value)}
-  val submissionWrites: Writes[PlanOne.type ] = Writes { _ => JsString(value)}
+
+  implicit val writes: Writes[PlanOne.type] = Writes { _ =>
+    Json.obj("studentLoanPlan" -> value)
+  }
+
+  val submissionWrites: Writes[PlanOne.type] = Writes { _ =>
+    JsString(value)
+  }
 }
 
 object PlanTwo extends StudentLoanPlan {
   override val value: String = "plan two"
-  implicit val writes: Writes[PlanTwo.type ] = Writes { _ => Json.obj("studentLoanPlan" -> value)}
-  val submissionWrites: Writes[PlanTwo.type ] = Writes { _ => JsString(value)}
+
+  implicit val writes: Writes[PlanTwo.type] = Writes { _ =>
+    Json.obj("studentLoanPlan" -> value)
+  }
+
+  val submissionWrites: Writes[PlanTwo.type] = Writes { _ =>
+    JsString(value)
+  }
 }
 
 object PlanFour extends StudentLoanPlan {
   override val value: String = "plan four"
-  implicit val writes: Writes[PlanFour.type ] = Writes { _ => Json.obj("studentLoanPlan" -> value)}
-  val submissionWrites: Writes[PlanFour.type ] = Writes { _ => JsString(value)}
+
+  implicit val writes: Writes[PlanFour.type] = Writes { _ =>
+    Json.obj("studentLoanPlan" -> value)
+  }
+
+  val submissionWrites: Writes[PlanFour.type] = Writes { _ =>
+    JsString(value)
+  }
 }
 
 object NoneOfThese extends StudentLoanPlan {
   override val value: String = "none of these"
-  implicit val writes: Writes[NoneOfThese.type ] = Writes { _ => Json.obj("studentLoanPlan" -> value)}
-  val submissionWrites: Writes[NoneOfThese.type ] = Writes { _ => JsString(value)}
+
+  implicit val writes: Writes[NoneOfThese.type] = Writes { _ =>
+    Json.obj("studentLoanPlan" -> value)
+  }
+
+  val submissionWrites: Writes[NoneOfThese.type] = Writes { _ =>
+    JsString(value)
+  }
 }
-
-
-
-

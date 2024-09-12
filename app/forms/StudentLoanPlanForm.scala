@@ -22,34 +22,36 @@ import play.api.data.format.Formatter
 object StudentLoanPlanForm {
 
   val studentLoanPlan = "studentLoanPlan"
-   val planOne: String = "plan one"
-   val planTwo: String = "plan two"
-   val planFour: String = "plan four"
-   val noneOfThese: String = "none of these"
+  val planOne:     String = "plan one"
+  val planTwo:     String = "plan two"
+  val planFour:    String = "plan four"
+  val noneOfThese: String = "none of these"
 
   val studentLoanPlanFormatter: Formatter[Option[StudentLoanPlan]] = new Formatter[Option[StudentLoanPlan]] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[StudentLoanPlan]] = {
-      data.get(key) match {
-        case Some(`planOne`) => Right(Some(PlanOne))
-        case Some(`planTwo`) => Right(Some(PlanFour))
-        case Some(`planFour`) => Right(Some(PlanFour))
-        case Some(`noneOfThese`) => Right(Some(NoneOfThese))
-        case None => Right(None)// Return Right(None) for unrecognized input
-      }
-    }
 
-    override def unbind(key: String, value: Option[StudentLoanPlan]): Map[String, String] = {
+    override def bind(
+      key:  String,
+      data: Map[String, String]
+    ): Either[Seq[FormError], Option[StudentLoanPlan]] =
+      data.get(key) match {
+        case Some(`planOne`)     => Right(Some(PlanOne))
+        case Some(`planTwo`)     => Right(Some(PlanFour))
+        case Some(`planFour`)    => Right(Some(PlanFour))
+        case Some(`noneOfThese`) => Right(Some(NoneOfThese))
+        case None                => Right(None) // Return Right(None) for unrecognized input
+      }
+
+    override def unbind(
+      key:   String,
+      value: Option[StudentLoanPlan]
+    ): Map[String, String] = {
       val stringValue = value match {
-        case Some(PlanOne) => planOne
-        case Some(PlanTwo) => planTwo
-        case Some(PlanFour) => planFour
+        case Some(PlanOne)     => planOne
+        case Some(PlanTwo)     => planTwo
+        case Some(PlanFour)    => planFour
         case Some(NoneOfThese) => noneOfThese
       }
       Map(key -> stringValue)
     }
   }
-
-
-
-
 }
