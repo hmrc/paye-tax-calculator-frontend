@@ -16,14 +16,14 @@
 
 package utils
 
-import forms.TaxResult
+import forms.{FourWeekly, TaxResult}
 import forms.TaxResult.moneyFormatter
 import models.QuickCalcAggregateInput
 import uk.gov.hmrc.calculator.utils.validation.PensionValidator
 import uk.gov.hmrc.calculator.utils.validation.PensionValidator.PensionError
 import utils.GetCurrentTaxYear.getTaxYear
-import scala.jdk.CollectionConverters._
 
+import scala.jdk.CollectionConverters._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -66,8 +66,15 @@ class AggregateConditionsUtil @Inject() {
   }
 
   def isFourWeekly(aggregateInput: QuickCalcAggregateInput): Boolean = {
-    aggregateInput.savedSalary.exists(_.period.contains("every 4 weeks"))
+    aggregateInput.savedSalary.exists { salary =>
+      salary.period match {
+        case fourWeekly: FourWeekly.type => true
+        case _ => false
+      }
+    }
   }
+
+
 
   def isScottishRateDefined(aggregateInput: QuickCalcAggregateInput) : Boolean = {
     aggregateInput.savedScottishRate.isDefined

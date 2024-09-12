@@ -101,10 +101,9 @@ object YouHaveToldUs {
         val url      = routes.SalaryController.showSalaryForm.url
         val idSuffix = "income"
         def asPounds(v: String) = "£" + v
-
         YouHaveToldUsItem(
-          s"${asPounds(TaxResult.moneyFormatter(s.amount))} ${s.period}",
-          s.period.replace(" ", "_"),
+          s"${asPounds(TaxResult.moneyFormatter(s.amount))}" + " " + Messages(s"label.${s.period.value.replace(" ", "_")}.value"),
+          s.period.value.replace(" ", "_"),
           url,
           idSuffix
         )
@@ -121,13 +120,13 @@ object YouHaveToldUs {
         val idSuffix = "salary-period"
         val url = {
           detail.period match {
-            case `day` =>
+            case Daily.value =>
               routes.DaysPerWeekController
                 .showDaysAWeek(
                   (detail.amount * 100.0).toInt
                 )
                 .url
-            case `hour` =>
+            case Hourly.value =>
               routes.HoursPerWeekController
                 .showHoursAWeek(
                   (detail.amount * 100.0).toInt

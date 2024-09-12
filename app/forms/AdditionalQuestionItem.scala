@@ -17,7 +17,7 @@
 package forms
 
 import controllers.routes
-import models.{PayPeriodDetail, PensionContributions, PostgraduateLoanContributions, ScottishRate, StudentLoanContributions, UserTaxCode}
+import models._
 import play.api.i18n.Messages
 
 case class AdditionalQuestionItem(
@@ -73,7 +73,7 @@ object AdditionalQuestionItem {
               case Some(false) => Messages("quick_calc.you_have_told_us.scottish_rate.no")
               case _                   => Messages("not_provided")
             }
-          }.getOrElse("Not provided"),
+          }.getOrElse(Messages("not_provided")),
           label,
           url,
           idSuffix
@@ -123,13 +123,13 @@ object AdditionalQuestionItem {
         val idSuffix = "student-loan-contributions"
         val url      = routes.StudentLoanContributionsController.showStudentLoansForm.url
 
-        val labelText = t.map(_.studentLoanPlan.getOrElse("")) match {
+        val labelText = t.map(_.studentLoanPlan) match {
           case Some(studentLoanPlan) =>
             studentLoanPlan match {
-              case "plan one"      => Messages("Plan 1")
-              case "plan two"      => Messages("Plan 2")
-              case "plan four"     => Messages("Plan 4")
-              case "none of these" => Messages("not_provided")
+              case Some(PlanOne)      => Messages("quick_calc.salary.studentLoan.plan1.text")
+              case Some(PlanTwo)      => Messages("quick_calc.salary.studentLoan.plan2.text")
+              case Some(PlanFour)     => Messages("quick_calc.salary.studentLoan.plan4.text")
+              case Some(NoneOfThese) => Messages("not_provided")
               case _               => Messages("not_provided")
             }
           case None => Messages("not_provided")

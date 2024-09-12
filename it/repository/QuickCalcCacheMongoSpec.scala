@@ -1,6 +1,7 @@
 package repository
 
 import config.AppConfig
+import forms.Daily
 import models.{PayPeriodDetail, QuickCalcAggregateInput, QuickCalcMongoCache, Salary}
 import org.apache.pekko.Done
 import org.scalatest.OptionValues
@@ -30,7 +31,7 @@ class QuickCalcCacheMongoSpec
   private val quickCalcMongoCache = QuickCalcMongoCache(
     "id",
     Instant.ofEpochSecond(1),
-    quickCalcAggregateInput = QuickCalcAggregateInput(Some(Salary(12.00, None, None, "5", Some(12.00), None)),
+    quickCalcAggregateInput = QuickCalcAggregateInput(Some(Salary(12.00, None, None, Daily, Some(12.00), None)),
                                                       Some(PayPeriodDetail(12.00, 5.00, "period", "url")),
                                                       None,
                                                       None,

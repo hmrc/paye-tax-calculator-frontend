@@ -39,9 +39,7 @@ class YouHaveToldUsNewController @Inject() (
   val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
   yourHaveToldUsView:            YouHaveToldUsNewView,
-  aggregateConditionsUtil:       AggregateConditionsUtil,
-  defaultTaxCodeProvider: DefaultTaxCodeProvider,
-  notification: notification
+  aggregateConditionsUtil:       AggregateConditionsUtil
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController

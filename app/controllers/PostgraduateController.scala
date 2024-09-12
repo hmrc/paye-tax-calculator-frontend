@@ -19,7 +19,7 @@ package controllers
 import config.AppConfig
 import forms.PostGraduateLoanFormProvider
 import javax.inject.{Inject, Singleton}
-import models.{PostgraduateLoanContributions, QuickCalcAggregateInput, ScottishRate}
+import models.{PostgraduateLoanContributions, QuickCalcAggregateInput}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._

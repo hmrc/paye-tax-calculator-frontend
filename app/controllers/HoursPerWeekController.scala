@@ -17,7 +17,7 @@
 package controllers
 
 import config.AppConfig
-import forms.{SalaryInHoursFormProvider, TaxResult}
+import forms.{Hourly, SalaryInHoursFormProvider, TaxResult}
 
 import javax.inject.{Inject, Singleton}
 import models.{Hours, PayPeriodDetail, QuickCalcAggregateInput, Salary}
@@ -62,7 +62,7 @@ class HoursPerWeekController @Inject() (
       .fold(
         formWithErrors => Future(BadRequest(hoursAWeekView(formWithErrors, value))),
         hours => {
-          val currentYearlyAmount: BigDecimal = TaxResult.convertWagesToYearly(value, Messages("quick_calc.salary.hourly.label"), Some(hours.howManyAWeek))
+          val currentYearlyAmount: BigDecimal = TaxResult.convertWagesToYearly(value, Hourly, Some(hours.howManyAWeek))
           val currentMonthlyAmount: BigDecimal = TaxResult.convertWagesToMonthly(currentYearlyAmount)
           val updatedAggregate = cache
             .fetchAndGetEntry()
@@ -73,7 +73,7 @@ class HoursPerWeekController @Inject() (
                   Salary(value,
                          Some(currentYearlyAmount),
                          oldAggregate.savedSalary.flatMap(_.amountYearly),
-                         Messages("quick_calc.salary.hourly.label"),
+                         Hourly,
                          Some(hours.howManyAWeek),
                          Some(currentMonthlyAmount))
                 ),

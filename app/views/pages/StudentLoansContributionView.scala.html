@@ -17,6 +17,7 @@
 @import play.api.i18n._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
 @import views.html.components.beforeContent
+@import forms.StudentLoanPlanForm
 
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
@@ -45,14 +46,32 @@
 }
 
 @studentLoanRadioButtons = @{
-        studentLoansLabels .map { label =>
+            Seq(
                 RadioItem(
-                    content = Text(Messages(s"quick_calc.salary.studentLoan.$label.text")),
-                    label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.$label.label")))),
-                    value = Some(Messages(s"quick_calc.salary.studentLoan.$label.label")),
-                    checked = radioFieldStudentLoan.value.contains(Messages(s"quick_calc.salary.studentLoan.$label.label"))
-                )
-        }
+                    content = Text(Messages(s"quick_calc.salary.studentLoan.plan1.text")),
+                    label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.plan1.label")))),
+                    value = Some(Messages(s"quick_calc.salary.studentLoan.plan1.label")),
+                    checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.planOne)
+                ),
+                RadioItem(
+                    content = Text(Messages(s"quick_calc.salary.studentLoan.plan2.text")),
+                    label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.plan2.label")))),
+                    value = Some(Messages(s"quick_calc.salary.studentLoan.plan2.label")),
+                    checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.planTwo)
+                ),
+                RadioItem(
+                    content = Text(Messages(s"quick_calc.salary.studentLoan.plan4.text")),
+                    label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.plan4.label")))),
+                    value = Some(Messages(s"quick_calc.salary.studentLoan.plan4.label")),
+                    checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.planFour)
+                ),
+                RadioItem(
+                    content = Text(Messages(s"quick_calc.salary.studentLoan.noneOfThese.text")),
+                    label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.noneOfThese.label")))),
+                    value = Some(Messages(s"quick_calc.salary.studentLoan.noneOfThese.label")),
+                    checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.noneOfThese)
+                ),
+            )
 }
 
 @govuk_wrapper(Some(title(studentLoansForm, Messages("quick_calc.salary.studentLoan.header"))), beforeContentBlock= beforeContent(controllers.routes.YouHaveToldUsNewController.summary.url), showAppBanner = true) {
