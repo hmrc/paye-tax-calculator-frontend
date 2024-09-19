@@ -40,12 +40,13 @@ class StatePensionController @Inject() (
   val controllerComponents:      MessagesControllerComponents,
   navigator:                     Navigator,
   statePensionView:              StatePensionView,
-  statePensionFormProvider:      StatePensionFormProvider,
+  statePensionFormProvider:      StatePensionFormProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired {
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -84,23 +85,14 @@ class StatePensionController @Inject() (
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
                 val updatedAggregate = {
-                  if (appConfig.features.newScreenContentFeature()) {
-                    aggregate.copy(
-                      savedIsOverStatePensionAge = Some(userAge))
-                  } else {
-                    aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
-                  }
+                  aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
                 }
                 cache.save(updatedAggregate).map { _ =>
                   Redirect(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(
                       updatedAggregate
                     ) {
-                      if (appConfig.features.newScreenContentFeature()) {
-                        routes.YouHaveToldUsNewController.summary
-                      } else {
-                        routes.TaxCodeController.showTaxCodeForm
-                      }
+                      routes.YouHaveToldUsNewController.summary
                     }()
                   )
                 }
@@ -111,11 +103,7 @@ class StatePensionController @Inject() (
                       .copy(savedIsOverStatePensionAge = Some(userAge))
                   )
                   .map { _ =>
-                    if (appConfig.features.newScreenContentFeature()) {
-                      Redirect(routes.YouHaveToldUsNewController.summary)
-                    } else {
-                      Redirect(routes.TaxCodeController.showTaxCodeForm)
-                    }
+                    Redirect(routes.YouHaveToldUsNewController.summary)
                   }
             }
         )

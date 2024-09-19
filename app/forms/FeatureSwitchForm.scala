@@ -25,7 +25,6 @@ object FeatureSwitchForm {
 
   val form: Form[FeatureSwitchModel] = Form(
     mapping(
-      FeatureConfigKey.enableNewScreenContent -> boolean,
       FeatureConfigKey.enableWelshContent -> boolean
     )(FeatureSwitchModel.apply)(FeatureSwitchModel.unapply)
   )

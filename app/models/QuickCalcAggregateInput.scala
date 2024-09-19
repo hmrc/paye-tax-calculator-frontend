@@ -33,45 +33,26 @@ case class QuickCalcAggregateInput(
   savedPostGraduateLoanContributions: Option[PostgraduateLoanContributions]) {
 
   def allQuestionsAnswered()(implicit appConfig: AppConfig): Boolean =
-    if (appConfig.features.newScreenContentFeature()) {
       List(
         savedSalary,
         savedIsOverStatePensionAge,
       ).forall(_.isDefined)
-    } else {
-      List(
-        savedSalary,
-        savedIsOverStatePensionAge,
-        savedTaxCode
-      ).forall(_.isDefined)
-    }
 
 
   def youHaveToldUsItems(
   )(implicit m: Messages,
     appConfig:  AppConfig
   ): List[YouHaveToldUsItem] =
-    if (appConfig.features.newScreenContentFeature()) {
       List(
         savedSalary.map { YouHaveToldUs(_) },
         savedPeriod.map { YouHaveToldUs(_) },
         savedIsOverStatePensionAge.map { YouHaveToldUs(_) }
       ).flatten
-    } else {
-      List(
-        savedSalary.map { YouHaveToldUs(_) },
-        savedPeriod.map { YouHaveToldUs(_) },
-        savedIsOverStatePensionAge.map { YouHaveToldUs(_) },
-        savedTaxCode.map { YouHaveToldUs(_) },
-        savedScottishRate.map { YouHaveToldUs(_) }
-      ).flatten
-    }
 
   def additionalQuestionItems(
   )(implicit m: Messages,
     appConfig:  AppConfig
   ): List[AdditionalQuestionItem] =
-    if (appConfig.features.newScreenContentFeature()) {
       List(
         AdditionalQuestionItem(savedTaxCode),
         AdditionalQuestionItem(savedScottishRate),
@@ -79,9 +60,6 @@ case class QuickCalcAggregateInput(
         AdditionalQuestionItem(savedStudentLoanContributions),
         AdditionalQuestionItem(savedPostGraduateLoanContributions)
       )
-    } else {
-      List.empty
-    }
 
   def isEmpty: Boolean =
     List(

@@ -76,11 +76,9 @@
         )
 
         @details(
-            summaryText = if(features.newScreenContentFeature()) Messages("label.state-pension-details") else Messages("label.state-pension-details.old")
+            summaryText = Messages("label.state-pension-details")
         ) {
-            @if(features.newScreenContentFeature()) {
                 <p>@Messages("quick_calc.salary.question.state_pension_info")</p>
-            }
             <p>@Messages("quick_calc.salary.question.state_pension_url_a") @link(appConfig.checkStatePensionAge,
             "quick_calc.salary.question.state_pension_url_b") @Messages("quick_calc.salary.question.state_pension_url_c")
             </p>

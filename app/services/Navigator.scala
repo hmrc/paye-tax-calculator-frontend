@@ -30,11 +30,7 @@ class Navigator @Inject() (implicit appConfig: AppConfig) {
   )(next:             Call
   )(): Call =
     if (aggregate.allQuestionsAnswered) {
-      if (appConfig.features.newScreenContentFeature()) {
         routes.YouHaveToldUsNewController.summary
-      } else {
-        routes.YouHaveToldUsController.summary
-      }
     } else next
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(): Call =

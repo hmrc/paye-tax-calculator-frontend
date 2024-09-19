@@ -18,7 +18,6 @@ package config.features
 
 object FeatureConfigKey {
 
-  val enableNewScreenContent: String = "features.newScreenContent"
   val enableWelshContent: String = "features.welshTranslation"
 
 }

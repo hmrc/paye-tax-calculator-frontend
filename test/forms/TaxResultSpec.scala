@@ -24,7 +24,6 @@ import TaxResult._
 import org.scalatest.wordspec.AnyWordSpecLike
 import setup.BaseSpec
 import uk.gov.hmrc.calculator.model.PayPeriod
-import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
 
 class TaxResultSpec extends BaseSpec with AnyWordSpecLike {

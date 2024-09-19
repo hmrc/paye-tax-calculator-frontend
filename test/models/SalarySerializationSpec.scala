@@ -16,7 +16,7 @@
 
 package models
 
-import forms.{Monthly, SalaryPeriod, SalaryPeriodForm, Weekly, Yearly}
+import forms.{Monthly, Weekly, Yearly}
 import org.scalatest.Assertion
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike

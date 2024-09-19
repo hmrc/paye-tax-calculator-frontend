@@ -251,7 +251,7 @@ class PensionContributionsPercentageControllerSpec
         val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary.url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
       }
     }
   }
