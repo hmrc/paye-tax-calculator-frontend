@@ -45,11 +45,7 @@
 }
 
 @headerText = @{
-    if(features.newScreenContentFeature()) {
-        Messages("quick_calc.about_tax_code.header.new")
-    } else {
-        Messages("quick_calc.about_tax_code.header")
-    }
+        Messages("quick_calc.you_have_told_us.about_pension_contributions.label")
 }
 
 @govUkWrapper(Some(title(pensionContributionsForm, headerText)), beforeContentBlock = beforeContent(backButtonUrl)) {

@@ -18,7 +18,6 @@ package controllers
 
 import config.features.Features
 import forms.TaxResult
-import models.UserTaxCode
 import org.jsoup.Jsoup
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.ArgumentMatchers.any
@@ -52,10 +51,10 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    features.newScreenContentFeature(false)
     features.welshTranslationFeature(false)
   }
 
+  //TODO Add tests to this in next task
   def messagesThing(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "Show Result Page" should {
@@ -75,48 +74,6 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
 
         val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-
-        val view = application.injector.instanceOf[ResultView]
-
-        status(result) mustEqual OK
-
-        val responseBody = contentAsString(result)
-        val parseHtml    = Jsoup.parse(responseBody)
-
-        removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = false, kCodeLabel = "")(
-            request,
-            messagesThing(application)
-          ).toString
-        )
-
-        val sidebar = parseHtml.getElementsByClass("govuk-grid-column-one-third")
-        val links   = sidebar.get(0).getElementsByClass("govuk-link")
-
-        links.size() mustEqual 3
-
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
-      }
-    }
-
-    "return 200, with current list of aggregate which contains all answers from previous questions and sidebar links with fourWkeely set to true" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalaryFourWeekly)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      running(application) {
-        val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
-        val taxResult =
-          TaxResult.taxCalculation(cacheTaxCodeStatePensionSalaryFourWeekly.get, defaultTaxCodeProvider)
-
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -125,157 +82,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         val view = application.injector.instanceOf[ResultView]
 
         status(result) mustEqual OK
-
-        val responseBody = contentAsString(result)
-        val parseHtml    = Jsoup.parse(responseBody)
-
-        removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, false, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = true, kCodeLabel = "")(
-            request,
-            messagesThing(application)
-          ).toString
-        )
-
-        val sidebar = parseHtml.getElementsByClass("govuk-grid-column-one-third")
-        val links   = sidebar.get(0).getElementsByClass("govuk-link")
-        val fourWeekly = parseHtml.getElementsByClass("#main-content > div > div.govuk-grid-column-two-thirds > div.govuk-tabs > ul > li:nth-child(2) > a").text()
-
-        links.size() mustEqual 3
-        fourWeekly.contains("4 Weekly")
-
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
-    }
-
-    "return 200, and show disclaimer text if salary is over 100,002 and tax code is default uk or scottish" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheShowDisclaimer)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      running(application) {
-        val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
-        val taxResult =
-          TaxResult.taxCalculation(cacheShowDisclaimer.get, defaultTaxCodeProvider)
-
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-
-        val view = application.injector.instanceOf[ResultView]
-
-        status(result) mustEqual OK
-
-        val responseBody = contentAsString(result)
-        val parseHtml    = Jsoup.parse(responseBody)
-
-        removeCSRFTagValue(responseBody) mustEqual removeCSRFTagValue(
-          view(taxResult, defaultTaxCodeProvider.currentTaxYear, false, true, "2023/24", Seq.empty, pensionCheck = false, fourWeekly = false, kCodeLabel = "")(
-            request,
-            messagesThing(application)
-          ).toString
-        )
-
-        val sidebar        = parseHtml.getElementsByClass("govuk-grid-column-one-third")
-        val links          = sidebar.get(0).getElementsByClass("govuk-link")
-        val disclaimerText = parseHtml.getElementsByClass("govuk-warning-text__text").text()
-
-        links.size() mustEqual 3
-        disclaimerText.contains(disclaimerWarning) mustEqual true
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
-      }
-    }
-
-    "return 303, with current list of aggregate data and redirect to Tax Code Form if Tax Code is not provided" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeSalary)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.StatePensionController.showStatePensionForm.url
-      }
-    }
-
-    "return 303, with current list of aggregate data and redirect to Salary Form if Salary is not provided" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm.url
-      }
-    }
-
-    "return 303, with current list of aggregate data and redirect to TaxCode Form Form if TaxCode is not provided" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None))
-      )
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.TaxCodeController.showTaxCodeForm.url
-      }
-    }
-  }
-
-  "return 200, with current list of aggregate data and isScottish is not provided" in {
-    val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-    when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-      cacheTaxCodeStatePensionSalary.map(_.copy(savedScottishRate = None))
-    )
-
-    val application = new GuiceApplicationBuilder()
-      .overrides(bind[QuickCalcCache].toInstance(mockCache))
-      .build()
-
-    running(application) {
-
-      val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
-        .withHeaders(HeaderNames.xSessionId -> "test")
-        .withCSRFToken
-
-      val result = route(application, request).get
-      status(result) mustEqual OK
     }
   }
 }

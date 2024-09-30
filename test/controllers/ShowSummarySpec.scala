@@ -47,7 +47,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary.url)
+        val request = FakeRequest(GET, routes.YouHaveToldUsNewController.summary.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -59,7 +59,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         val parseHtml    = Jsoup.parse(responseBody)
 
         val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
-        actualTable.size() mustBe 4
+        actualTable.size() mustBe 7
 
         actualTable
           .get(0)
@@ -71,7 +71,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
           .get(2)
           .getElementsByClass("govuk-summary-list__value")
           .get(0)
-          .text() mustBe expectedTaxCodeAnswerScottish
+          .text() mustBe "S1250L"
         actualTable
           .get(3)
           .getElementsByClass("govuk-summary-list__value")
@@ -89,7 +89,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary.url)
+        val request = FakeRequest(GET, routes.YouHaveToldUsNewController.summary.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -101,7 +101,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         val parseHtml    = Jsoup.parse(responseBody)
 
         val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
-        actualTable.size() mustBe 5
+        actualTable.size() mustBe 8
 
         actualTable
           .get(0)
@@ -114,7 +114,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
           .get(0)
           .text() mustBe expectedDailyPeriodAnswer
         actualTable.get(2).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
-        actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedTaxCodeAnswer
+        actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe "1250L"
         actualTable.get(4).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedScottishAnswer
       }
     }
@@ -127,7 +127,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.YouHaveToldUsController.summary.url)
+        val request = FakeRequest(GET, routes.YouHaveToldUsNewController.summary.url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -139,7 +139,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         val parseHtml    = Jsoup.parse(responseBody)
 
         val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
-        actualTable.size() mustBe 5
+        actualTable.size() mustBe 8
 
         actualTable
           .get(0)
@@ -152,7 +152,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
           .get(0)
           .text() mustBe expectedHourlyPeriodAnswer
         actualTable.get(2).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
-        actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedTaxCodeAnswer
+        actualTable.get(3).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe "1250L"
         actualTable.get(4).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedScottishAnswer
       }
     }

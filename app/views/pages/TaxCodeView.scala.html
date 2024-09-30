@@ -42,11 +42,7 @@
 }
 
 @headerText = @{
-    if(features.newScreenContentFeature()) {
         Messages("quick_calc.about_tax_code.header.new")
-    } else {
-        Messages("quick_calc.about_tax_code.header")
-    }
 }
 
 @govUkWrapper(Some(title(userTaxCodeForm, headerText)), beforeContentBlock = beforeContent(backButtonUrl)) {
@@ -54,27 +50,22 @@
     @formHelper(action = routes.TaxCodeController.submitTaxCodeForm) {
         @errorSummary(userTaxCodeForm.errors)
 
-        @if(features.newScreenContentFeature()) {
             @h1(messages("quick_calc.you_have_told_us.about_tax_code.label.newTitle"))
-        }
 
-        @if(features.newScreenContentFeature()) {
             @p(Html(messages("quick_calc.salary.question.tax_code_info")))
-        }
+
 
         @inputText(form = userTaxCodeForm,
             id = "taxCode",
             name = "taxCode",
-            hint = if(features.newScreenContentFeature()) None else Some(Hint(content = Text(messages("quick_calc.salary.question.tax_code_info_a") + s" $defaultTaxCode " + messages("quick_calc.salary.question.tax_code_info_b")))),
-            label = if(features.newScreenContentFeature()) Messages("quick_calc.about_tax_code.subheading") else Messages("quick_calc.you_have_told_us.about_tax_code.label"),
-            isPageHeading = if(features.newScreenContentFeature()) false else true,
-            classes = if(features.newScreenContentFeature()) Some("govuk-input--width-10") else None
+            label =  Messages("quick_calc.about_tax_code.subheading"),
+            isPageHeading = false,
+            classes = Some("govuk-input--width-10")
         )
 
         @details(
-            summaryText = if(features.newScreenContentFeature()) Messages("label.tax-code.new") else Messages("label.tax-code"),
+            summaryText = Messages("label.tax-code.new"),
         ) {
-            @if(features.newScreenContentFeature()) {
                 <p>@Messages("quick_calc.about_tax_code.details.start")</p>
                 @bullets(Seq(Some(Html(Messages("quick_calc.about_tax_code.details.firstBullet_a") + link("https://www.gov.uk/guidance/download-the-hmrc-app", "quick_calc.about_tax_code.details.firstBullet_b", endWithFullStop = false))),Some(Html(Messages("quick_calc.about_tax_code.details.secondBullet"))),Some(Html(Messages("quick_calc.about_tax_code.details.thirdBullet"))),Some(Html(Messages("quick_calc.about_tax_code.details.fourthBullet")))))
             @if(salaryCheck) {
@@ -82,9 +73,6 @@
             } else {
                 <p>@Messages("quick_calc.about_tax_code.details.firstInfoPara")</p>
             }
-        } else {
-            <p>@Messages("quick_calc.salary.question.tax_code_info_url_a") @link("https://www.gov.uk/tax-codes/overview", "quick_calc.salary.question.tax_code_info_url_b", endWithFullStop = true)</p>
-        }
     }
 
         @button("continue", Some("button-continue"))

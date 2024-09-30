@@ -100,32 +100,20 @@
 }
 
 @backButton = @{
-    if(features.newScreenContentFeature()){
         s"${prodRoutes.YouHaveToldUsNewController.summary}"
-    } else {
-        s"${prodRoutes.YouHaveToldUsController.summary}"
-    }
 }
 
 @disclaimer = {
     @if(salaryCheck) {
-        @if(features.newScreenContentFeature()) {
             @disclaimerWarningText() {
                 @Messages("quick_calc.result.disclaimer.reducedPersonal_allowance_a.new") @linkNewTab("https://www.gov.uk/income-tax-rates/income-over-100000", "quick_calc.result.disclaimer.reducedPersonal_allowance_b.new")
             }
-        } else {
-             @warningText(Messages("quick_calc.results.disclaimer"))
-        }
     }
 }
 
 @govuk_wrapper(pageTitle = Some(titleNoForm(Messages("quick_calc.result.header"))), showDeskproLink = false, beforeContentBlock = beforeContent(s"${backButton}"), bodyClassess = Some("govuk-grid-row govuk-!-padding-left-2 govuk-!-padding-right-2"), showAppBanner = true) {
 
-    @if(features.newScreenContentFeature()) {
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">@Messages("quick_calc.result.header.new") @currentTaxYear</h1>
-    } else {
-        @h1(Messages("quick_calc.result.header"))
-    }
 
     @disclaimer
 
@@ -134,29 +122,15 @@
             items = tabsItems)
     )
 
-    @if(features.newScreenContentFeature()) {
          @p {
             @Messages("quick_calc.result.info.new")
         }
-    } else {
-         @p {
-            @Messages("quick_calc.result.info_a") @linkNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters", "quick_calc.result.info_b") @Messages("quick_calc.result.info_e")
-        }
-    }
 
-
-    @if(features.newScreenContentFeature()){
     @formHelper(action = controllers.routes.YouHaveToldUsNewController.summary) {
         @button("update_answers", Some("update-button"))
     }
     @p{
         @link(controllers.routes.QuickCalcController.restartQuickCalc.url, "clear_results")
-    }
-    } else {
-    @formHelper(action = controllers.routes.QuickCalcController.restartQuickCalc) {
-        @button("restart", Some("restart-button")
-        )
-    }
     }
 
     @sectionBreakVisible("m")
@@ -182,16 +156,7 @@
     <br>
     <br>
     <br>
-    @if(features.newScreenContentFeature()) {
         @sidebarNew(header = Messages("quick_calc.result.sidebar.header")) {
           @bullets(sideBarBullets)
         }
-    } else {
-        @sidebar {
-            @h2(Messages("quick_calc.result.info_url_list"))
-            @p(link("https://www.gov.uk/check-income-tax-last-year", Messages("quick_calc.result.info_url_a")))
-            @p(link("https://www.gov.uk/tax-overpayments-and-underpayments", Messages("quick_calc.result.info_url_b")))
-            @p(link("https://www.gov.uk/claim-tax-refund", Messages("quick_calc.result.info_url_c")))
-        }
-    }
 }

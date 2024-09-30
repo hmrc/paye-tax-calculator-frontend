@@ -30,43 +30,44 @@ import utils.{ActionWithSessionId, SalaryRequired}
 import views.html.pages.PensionContributionsFixedView
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
-class PensionContributionsFixedController @Inject()(
-  override val messagesApi:           MessagesApi,
-  cache:                              QuickCalcCache,
-  val controllerComponents:           MessagesControllerComponents,
-  navigator:                          Navigator,
-  pensionContributionsFixedView:      PensionContributionsFixedView,
-  pensionsContributionFormProvider:   PensionContributionFormProvider
-)(implicit val appConfig:             AppConfig,
-  implicit val executionContext:      ExecutionContext)
+class PensionContributionsFixedController @Inject() (
+  override val messagesApi:         MessagesApi,
+  cache:                            QuickCalcCache,
+  val controllerComponents:         MessagesControllerComponents,
+  navigator:                        Navigator,
+  pensionContributionsFixedView:    PensionContributionsFixedView,
+  pensionsContributionFormProvider: PensionContributionFormProvider
+)(implicit val appConfig:           AppConfig,
+  implicit val executionContext:    ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[PensionContributions] = pensionsContributionFormProvider()
-    def showPensionContributionForm(): Action[AnyContent] = {
-      salaryRequired(
-        cache, { implicit fromRequestAndSession => agg =>
-          val filledForm = agg.savedPensionContributions.map(_.gaveUsPercentageAmount) match {
-            case Some(true) => form
-            case _ => {
-              agg.savedPensionContributions
-                .map { s =>
-                  form.fill(s)
-                }.getOrElse(form)
-            }
+
+  def showPensionContributionForm(): Action[AnyContent] =
+    salaryRequired(
+      cache, { implicit fromRequestAndSession => agg =>
+        val filledForm = agg.savedPensionContributions.map(_.gaveUsPercentageAmount) match {
+          case Some(true) => form
+          case _ => {
+            agg.savedPensionContributions
+              .map { s =>
+                form.fill(s)
+              }
+              .getOrElse(form)
           }
-          Ok(
-            pensionContributionsFixedView(filledForm,
-              agg.additionalQuestionItems())
-          )
         }
-      )
-    }
+        Ok(
+          pensionContributionsFixedView(filledForm, agg.additionalQuestionItems())
+        )
+      }
+    )
 
   def submitPensionContribution(): Action[AnyContent] =
     validateAcceptWithSessionId().async { implicit request =>
@@ -74,36 +75,31 @@ class PensionContributionsFixedController @Inject()(
       form
         .bindFromRequest()
         .fold(
-          formWithErrors =>
-            cache.fetchAndGetEntry().map {
-              case Some(aggregate) =>
-                BadRequest(
-                  pensionContributionsFixedView(formWithErrors, aggregate.additionalQuestionItems())
-                )
-              case None =>
-                BadRequest(
-                  pensionContributionsFixedView(formWithErrors, Nil)
-                )
-            },
+          formWithErrors => Future.successful(BadRequest(pensionContributionsFixedView(formWithErrors, Nil))),
           (newPensionContributions: PensionContributions) => {
-            val updateAggregate = cache.fetchAndGetEntry().map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+            val updateAggregate = cache
+              .fetchAndGetEntry()
+              .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
               .map(agg =>
                 agg.copy(
                   savedPensionContributions = Some(
                     newPensionContributions.copy(
                       gaveUsPercentageAmount = false,
-                      yearlyContributionAmount = newPensionContributions.monthlyContributionAmount.map(amount => amount * 12)
-                    ),
+                      yearlyContributionAmount =
+                        newPensionContributions.monthlyContributionAmount.map(amount => amount * 12)
+                    )
                   )
                 )
               )
 
             updateAggregate.flatMap { updatedAgg =>
-              cache.save(updatedAgg).map(_ =>
-                Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
-                  routes.YouHaveToldUsNewController.summary
-                }())
-              )
+              cache
+                .save(updatedAgg)
+                .map(_ =>
+                  Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
+                    routes.YouHaveToldUsNewController.summary
+                  }())
+                )
             }
           }
         )

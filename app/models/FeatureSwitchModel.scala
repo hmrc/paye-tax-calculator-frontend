@@ -16,4 +16,4 @@
 
 package models
 
-case class FeatureSwitchModel(newScreenContentEnabled: Boolean, welshTranslationEnabled: Boolean)
+case class FeatureSwitchModel(welshTranslationEnabled: Boolean)

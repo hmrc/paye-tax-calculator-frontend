@@ -38,7 +38,6 @@ class FeatureSwitchController @Inject() (
       featureSwitch(
         FeatureSwitchForm.form.fill(
           FeatureSwitchModel(
-            newScreenContentEnabled = appConfig.features.newScreenContentFeature(),
             welshTranslationEnabled = appConfig.features.welshTranslationFeature()
           )
         )
@@ -55,8 +54,7 @@ class FeatureSwitchController @Inject() (
       )
   }
 
-  def handleSuccess(model: FeatureSwitchModel): Result = {
-    appConfig.features.newScreenContentFeature(model.newScreenContentEnabled)
+  private def handleSuccess(model: FeatureSwitchModel): Result = {
     appConfig.features.welshTranslationFeature(model.welshTranslationEnabled)
     Redirect(routes.FeatureSwitchController.featureSwitch)
   }

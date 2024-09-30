@@ -55,11 +55,7 @@
 }
 
 @backButtonUrl = @{
-    if(features.newScreenContentFeature()){
         controllers.routes.YouHaveToldUsNewController.summary.url
-    } else {
-        s"${youHaveToldUsItems.flatMap(y => if(y.label == "about_tax_code") y.url else "").mkString}"
-    }
 }
 
 @govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income"))), beforeContentBlock = beforeContent(backButtonUrl)) {
@@ -70,8 +66,7 @@
 
         @inputRadio(
             form = scottishRateForm,
-            legendKey = if(features.newScreenContentFeature()) "quick_calc.salary.question.scottish_income.new" else "quick_calc.salary.question.scottish_income",
-            hintKey = if(!features.newScreenContentFeature()) Some(Messages("quick_calc.salary.question.scottish_income_info")) else None,
+            legendKey = "quick_calc.salary.question.scottish_income.new",
             name = "payScottishRate",
             items = scottishRateRadios,
             inline = true
@@ -80,16 +75,9 @@
         @details(
             summaryText = Messages("label.scottish-rate-details")
         ) {
-            @if(features.newScreenContentFeature()) {
             <p>@Messages("quick_calc.salary.question.scottish_income_info.new") @Messages("quick_calc.salary.question.scottish_income_url_a") @link("https://www.gov.uk/scottish-income-tax",
                 "quick_calc.salary.question.scottish_income_url_b") @Messages("quick_calc.salary.question.scottish_income_url_c")</p>
-
-        } else {
-            <p>@Messages("quick_calc.salary.question.scottish_income_url_a") @link("https://www.gov.uk/scottish-rate-income-tax",
-                "quick_calc.salary.question.scottish_income_url_b") @Messages("quick_calc.salary.question.scottish_income_url_c")</p>
             }
-        }
-
         @button("continue", Some("button-continue"))
 
     }

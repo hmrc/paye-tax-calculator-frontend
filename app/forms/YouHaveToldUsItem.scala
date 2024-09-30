@@ -37,26 +37,6 @@ object YouHaveToldUs {
   def apply[A: YouHaveToldUs](a: A): YouHaveToldUsItem =
     implicitly[YouHaveToldUs[A]].toYouHaveToldUsItem(a)
 
-  implicit def taxCodeFormat(implicit messages: Messages): YouHaveToldUs[UserTaxCode] = new YouHaveToldUs[UserTaxCode] {
-
-    def toYouHaveToldUsItem(t: UserTaxCode): YouHaveToldUsItem = {
-      val label    = "about_tax_code"
-      val idSuffix = "tax-code"
-      val url      = routes.TaxCodeController.showTaxCodeForm.url
-      YouHaveToldUsItem(
-        if (t.gaveUsTaxCode)
-          s"${t.taxCode.getOrElse("")}"
-        else
-          s"${Messages("quick_calc.you_have_told_us.about_tax_code.default_a")} " +
-          s" ${t.taxCode.getOrElse("")}" +
-          s" ${Messages("quick_calc.you_have_told_us.about_tax_code.default_b")}",
-        label,
-        url,
-        idSuffix
-      )
-    }
-  }
-
   implicit def overStatePensionAgeFormat(implicit messages: Messages): YouHaveToldUs[StatePension] =
     new YouHaveToldUs[StatePension] {
 
@@ -76,24 +56,6 @@ object YouHaveToldUs {
       }
     }
 
-  implicit def scottishIncomeFormat(implicit messages: Messages) =
-    new YouHaveToldUs[ScottishRate] {
-
-      def toYouHaveToldUsItem(scottish: ScottishRate): YouHaveToldUsItem = {
-        val label    = SCOTTISH_RATE
-        val idSuffix = SCOTTISH_RATE
-        val url      = routes.ScottishRateController.showScottishRateForm.url
-        YouHaveToldUsItem(
-          if (scottish.payScottishRate.getOrElse(false))
-            Messages("quick_calc.you_have_told_us.scottish_rate.yes")
-          else Messages("quick_calc.you_have_told_us.scottish_rate.no"),
-          label,
-          url,
-          idSuffix
-        )
-      }
-    }
-
   implicit def salaryFormat(implicit messages: Messages) =
     new YouHaveToldUs[Salary] {
 
@@ -102,7 +64,9 @@ object YouHaveToldUs {
         val idSuffix = "income"
         def asPounds(v: String) = "£" + v
         YouHaveToldUsItem(
-          s"${asPounds(TaxResult.moneyFormatter(s.amount))}" + " " + Messages(s"label.${s.period.value.replace(" ", "_")}.value"),
+          s"${asPounds(TaxResult.moneyFormatter(s.amount))}" + " " + Messages(
+            s"label.${s.period.value.replace(" ", "_")}.value"
+          ),
           s.period.value.replace(" ", "_"),
           url,
           idSuffix

@@ -16,7 +16,6 @@
 
 package controllers
 
-
 import forms.SalaryInDaysFormProvider
 import models.Days
 import org.apache.pekko.Done
@@ -382,7 +381,7 @@ class DaysPerWeekControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.YouHaveToldUsController.summary.url
+        redirectLocation(result).value mustEqual routes.YouHaveToldUsNewController.summary.url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
         verify(mockCache, times(1)).save(any())(any())
       }

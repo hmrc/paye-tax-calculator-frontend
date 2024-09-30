@@ -345,7 +345,7 @@ class TaxCodeControllerSpec
       }
     }
 
-    "return 303, with current aggregate data and redirect to Is Over State Pension Page" in {
+    "return 303, with current aggregate data and redirect to the You Have Told Us page" in {
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
@@ -367,11 +367,11 @@ class TaxCodeControllerSpec
         val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary.url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
       }
     }
 
-    "return 303, with no aggregate data and redirect to Is Over State Pension Page" in {
+    "return 303, with no aggregate data and redirect to you have told us page" in {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
@@ -392,7 +392,7 @@ class TaxCodeControllerSpec
         val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary.url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
       }
     }
 
@@ -417,12 +417,12 @@ class TaxCodeControllerSpec
         val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsController.summary.url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
 
       }
     }
 
-    "return 303, with to scottish page if No to tax code" in {
+    "return 303, to check your answer page if No to tax code" in {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
@@ -445,7 +445,7 @@ class TaxCodeControllerSpec
         val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.ScottishRateController.showScottishRateForm.url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
       }
     }
   }

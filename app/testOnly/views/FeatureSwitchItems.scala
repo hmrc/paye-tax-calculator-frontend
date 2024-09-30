@@ -39,9 +39,6 @@ class FeatureSwitchItems @Inject() () {
 
   def items(form: Form[FeatureSwitchModel]): Seq[CheckboxItem] =
     Seq(
-      formCheckBoxItem(form,
-                       FeatureConfigKey.enableNewScreenContent,
-                       "Enable new screen content for Paye Tax Calculator"),
       formCheckBoxItem(form, FeatureConfigKey.enableWelshContent, "Enable welsh content for Paye Tax Calculator")
     )
 

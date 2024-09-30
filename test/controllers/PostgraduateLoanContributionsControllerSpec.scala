@@ -16,9 +16,9 @@
 
 package controllers
 
-import forms.{PostGraduateLoanFormProvider, StudentLoansFormProvider}
+import forms.PostGraduateLoanFormProvider
 import models.PostgraduateLoanContributions
-import org.jsoup.Jsoup
+import org.apache.pekko.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.TryValues
@@ -41,7 +41,6 @@ import uk.gov.hmrc.http.HeaderNames
 import views.html.pages.PostGraduatePlanContributionView
 
 import scala.concurrent.Future
-
 
 class PostgraduateLoanContributionsControllerSpec extends BaseSpec
   with AnyWordSpecLike
@@ -89,7 +88,43 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
       }
 
     }
-    "return 200, with existing list of aggregate data" in {
+
+    "return 200, with existing list of aggregate data containing Tax Code, pension and student loan contributions" in {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheTaxCodeStatePensionSalaryStudentLoanPostGrad.map(_.copy(savedPostGraduateLoanContributions = None))
+      )
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      implicit val messages: Messages = messagesThing(application)
+
+      running(application) {
+
+        val request = FakeRequest(
+          GET,
+          routes.PostgraduateController.showPostgraduateForm.url
+        ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
+
+        val result = route(application, request).get
+
+        val view = application.injector.instanceOf[PostGraduatePlanContributionView]
+
+        status(result) mustEqual OK
+
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(
+            form
+          )(request, messagesThing(application)).toString
+        )
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+
+      }
+    }
+    "return 200, with existing list of aggregate data containing Tax Code, pension and student loan contributions and postrgrad question answered" in {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
@@ -100,9 +135,9 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
         .build()
 
-      val formFilled = form.fill(
-        cacheTaxCodeStatePensionSalaryStudentLoanPostGrad.get.savedPostGraduateLoanContributions.get
-      )
+            val formFilled = form.fill(
+              cacheTaxCodeStatePensionSalaryStudentLoanPostGrad.get.savedPostGraduateLoanContributions.get
+            )
 
       implicit val messages: Messages = messagesThing(application)
 
@@ -131,7 +166,7 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
   }
 
   "Submit Postgraduate Loans Form" should {
-    "return 400, with aggregate data and an error message if no option is picked" in {
+    "return 303, and redirect to the you have told us page if no option is picked" in {
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
@@ -144,7 +179,7 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
 
       running(application) {
 
-        val formData = Map("havePostGraduatePlan" -> "")
+        val formData = Map("havePostGraduatePlan" -> "false")
 
         val request = FakeRequest(POST, routes.PostgraduateController.submitPostgradLoanForm.url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
@@ -155,9 +190,30 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
 
         status(result) mustEqual SEE_OTHER
       }
+    }
+    "return 303, with no aggregate data and redirect to You have told us page" in {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+        val formData = Map("hasPostgraduatePlan" -> "false")
 
+        val request = FakeRequest(POST, routes.PostgraduateController.submitPostgradLoanForm.url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).get
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
+      }
     }
   }
 

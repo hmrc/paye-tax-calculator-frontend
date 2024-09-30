@@ -46,7 +46,8 @@ class TaxCodeController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -106,46 +107,21 @@ class TaxCodeController @Inject() (
                   )
                 )
               )
-            updatedAggregate.flatMap {
-              updatedAgg =>
-                val agg = {
-                  if (appConfig.features.newScreenContentFeature()) {
-                    updatedAgg
+            updatedAggregate.flatMap { updatedAgg =>
+              cache
+                .save(updatedAgg)
+                .map(_ =>
+                  if (newTaxCode.taxCode.isEmpty) {
+                    Redirect(routes.YouHaveToldUsNewController.summary)
                   } else {
-                    if (newTaxCode.taxCode.isDefined)
-                      updatedAgg.copy(savedScottishRate = None)
-                    else updatedAgg
+                    Redirect(
+                      navigator
+                        .nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
+                          routes.YouHaveToldUsNewController.summary
+                        }()
+                    )
                   }
-                }
-                cache
-                  .save(agg)
-                  .map(_ =>
-                    if (appConfig.features.newScreenContentFeature()) {
-                      if (newTaxCode.taxCode.isEmpty) {
-                        Redirect(routes.YouHaveToldUsNewController.summary)
-                      } else {
-                        Redirect(
-                          navigator
-                            .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                              routes.YouHaveToldUsController.summary
-                            }()
-                        )
-                      }
-                    } else {
-                      if (newTaxCode.taxCode.isEmpty) {
-                        Redirect(
-                          routes.ScottishRateController.showScottishRateForm
-                        )
-                      } else {
-                        Redirect(
-                          navigator
-                            .nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-                              routes.YouHaveToldUsController.summary
-                            }()
-                        )
-                      }
-                    }
-                  )
+                )
             }
           }
         )
