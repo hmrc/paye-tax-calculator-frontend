@@ -17,8 +17,12 @@
 package controllers
 
 import com.codahale.metrics.SharedMetricRegistries
+import forms.PlanOne
 import forms.forms.RemoveItemFormProvider
+import models.{PensionContributions, PostgraduateLoanContributions, QuickCalcAggregateInput, ScottishRate, StudentLoanContributions, UserTaxCode}
+import org.apache.pekko.Done
 import org.jsoup.Jsoup
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.TryValues
@@ -37,20 +41,24 @@ import play.api.test.Helpers._
 import services.QuickCalcCache
 import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
-import uk.gov.hmrc.http.HeaderNames
-import views.html.pages.RemoveItemView
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import views.html.pages.{RemoveItemView, ScottishRateView}
 
 import scala.concurrent.Future
 
-class RemoveTaxCodeControllerSpec
+class RemoveItemControllerSpec
     extends BaseSpec
     with TryValues
     with ScalaFutures
     with IntegrationPatience
     with CSRFTestHelper {
 
-  val taxCodeQueryParam = "taxcode"
-  val formProvider      = new RemoveItemFormProvider()
+  val taxCodeQueryParam      = "taxcode"
+  val studentLoansQueryParam = "student-loans"
+  val postgraduateLoansQueryParam = "postgraduate-loans"
+  val pensionContributionQueryParam = "pension-contributions"
+  val formProvider           = new RemoveItemFormProvider()
   val form: Form[Boolean] = formProvider(taxCodeQueryParam)
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
@@ -117,6 +125,148 @@ class RemoveTaxCodeControllerSpec
   }
 
   "Submit Remove Tax Code Controller" should {
+
+    "return 303 See Other and redirect to the Check Your Answers Page if they remove there tax code" in {
+      SharedMetricRegistries.clear()
+
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      val expectedAggregate: QuickCalcAggregateInput =
+        cacheCompleteYearly.get.copy(savedTaxCode = Some(UserTaxCode(taxCode = None)))
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheCompleteYearly.map(_.copy(savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = true, taxCode = Some("1257L")))))
+      )
+
+      when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())) thenReturn Future
+        .successful(Done)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val formData = Map("removeItem" -> "true")
+        val request = FakeRequest(
+          POST,
+          routes.RemoveItemController.submitRemoveItemForm(taxCodeQueryParam).url
+        ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+        val result = route(application, request).get
+        status(result) mustEqual SEE_OTHER
+      }
+    }
+
+    "return 303 See Other and redirect to the Check Your Answers Page if they remove there pensionContributions" in {
+      SharedMetricRegistries.clear()
+
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(savedPensionContributions = None)
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheCompleteYearly.map(
+          _.copy(savedPensionContributions = Some(
+            PensionContributions(gaveUsPercentageAmount    = true,
+                                 monthlyContributionAmount = Some(BigDecimal(12)),
+                                 yearlyContributionAmount  = Some(BigDecimal(144)))
+          )
+          )
+        )
+      )
+
+      when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())) thenReturn Future
+        .successful(Done)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val formData = Map("removeItem" -> "true")
+        val request = FakeRequest(
+          POST,
+          routes.RemoveItemController.submitRemoveItemForm(pensionContributionQueryParam).url
+        ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+        val result = route(application, request).get
+        status(result) mustEqual SEE_OTHER
+      }
+    }
+
+    "return 303 See Other and redirect to the Check Your Answers Page if they remove there studentLoanContributions" in {
+      SharedMetricRegistries.clear()
+
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(savedStudentLoanContributions = None)
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheCompleteYearly.map(
+          _.copy(savedStudentLoanContributions = Some(
+            StudentLoanContributions(studentLoanPlan = Some(PlanOne))
+          )
+          )
+        )
+      )
+
+      when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())) thenReturn Future
+        .successful(Done)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val formData = Map("removeItem" -> "true")
+        val request = FakeRequest(
+          POST,
+          routes.RemoveItemController.submitRemoveItemForm(studentLoansQueryParam).url
+        ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+        val result = route(application, request).get
+        status(result) mustEqual SEE_OTHER
+      }
+    }
+
+    "return 303 See Other and redirect to the Check Your Answers Page if they remove there postgraduate loan contributions" in {
+      SharedMetricRegistries.clear()
+
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(savedPostGraduateLoanContributions = None)
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheCompleteYearly.map(
+          _.copy(savedPostGraduateLoanContributions = Some(
+            PostgraduateLoanContributions(hasPostgraduatePlan = Some(true))
+          )
+          )
+        )
+      )
+
+      when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())) thenReturn Future
+        .successful(Done)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val formData = Map("removeItem" -> "true")
+        val request = FakeRequest(
+          POST,
+          routes.RemoveItemController.submitRemoveItemForm(postgraduateLoansQueryParam).url
+        ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+        val result = route(application, request).get
+        status(result) mustEqual SEE_OTHER
+      }
+    }
 
     "return 400 for invalid form answer and current list of aggregate data" in {
       SharedMetricRegistries.clear()

@@ -212,7 +212,10 @@ object QuickCalcCacheSetup {
       savedSalary                = cacheTestYearlySalary,
       savedTaxCode               = cacheTestTaxCode,
       savedIsOverStatePensionAge = cacheTestStatusPensionNO,
-      savedScottishRate          = cacheTestScottishNO
+      savedScottishRate          = cacheTestScottishNO,
+      savedPensionContributions  = cacheTestPensionPecentageContributions,
+      savedStudentLoanContributions = cacheStudentLoanContributions,
+      savedPostGraduateLoanContributions = cachePostGradLoanContributions
     )
   )
 

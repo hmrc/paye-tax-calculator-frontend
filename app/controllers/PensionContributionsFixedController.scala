@@ -30,7 +30,7 @@ import utils.{ActionWithSessionId, SalaryRequired}
 import views.html.pages.PensionContributionsFixedView
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class PensionContributionsFixedController @Inject()(
   override val messagesApi:           MessagesApi,
@@ -75,16 +75,8 @@ class PensionContributionsFixedController @Inject()(
         .bindFromRequest()
         .fold(
           formWithErrors =>
-            cache.fetchAndGetEntry().map {
-              case Some(aggregate) =>
-                BadRequest(
-                  pensionContributionsFixedView(formWithErrors, aggregate.additionalQuestionItems())
-                )
-              case None =>
-                BadRequest(
-                  pensionContributionsFixedView(formWithErrors, Nil)
-                )
-            },
+                Future.successful(BadRequest(
+                  pensionContributionsFixedView(formWithErrors, Nil))),
           (newPensionContributions: PensionContributions) => {
             val updateAggregate = cache.fetchAndGetEntry().map(_.getOrElse(QuickCalcAggregateInput.newInstance))
               .map(agg =>

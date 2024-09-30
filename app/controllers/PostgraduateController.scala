@@ -18,6 +18,7 @@ package controllers
 
 import config.AppConfig
 import forms.PostGraduateLoanFormProvider
+
 import javax.inject.{Inject, Singleton}
 import models.{PostgraduateLoanContributions, QuickCalcAggregateInput}
 import play.api.data.Form
@@ -30,7 +31,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.{ActionWithSessionId, SalaryRequired}
 import views.html.pages.PostGraduatePlanContributionView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PostgraduateController @Inject() (
@@ -72,13 +73,7 @@ class PostgraduateController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors =>
-            cache
-              .fetchAndGetEntry()
-              .map {
-                case Some(aggregate) => aggregate.additionalQuestionItems()
-                case None            => Nil
-              }
-              .map(itemList => BadRequest(postGraduateView(formWithErrors))),
+             Future.successful(BadRequest(postGraduateView(formWithErrors))),
           postGrad => {
             val updatedAggregate =
               cache

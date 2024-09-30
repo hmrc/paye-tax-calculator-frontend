@@ -30,7 +30,7 @@ import views.html.pages.PensionContributionsPercentageView
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class PensionContributionsPercentageController @Inject()(
   override val messagesApi:           MessagesApi,
@@ -76,16 +76,9 @@ class PensionContributionsPercentageController @Inject()(
         .bindFromRequest()
         .fold(
           formWithErrors =>
-            cache.fetchAndGetEntry().map {
-              case Some(aggregate) =>
-                BadRequest(
-                  pensionContributionsPercentageView(formWithErrors, aggregate.additionalQuestionItems())
-                )
-              case None =>
-                BadRequest(
+                Future.successful(BadRequest(
                   pensionContributionsPercentageView(formWithErrors, Nil)
-                )
-            },
+                )),
           (newPensionContributions: PensionContributions) => {
             val updateAggregate = cache.fetchAndGetEntry().map(_.getOrElse(QuickCalcAggregateInput.newInstance))
               .map(agg =>
@@ -101,7 +94,6 @@ class PensionContributionsPercentageController @Inject()(
                   }
                 )
               )
-
             updateAggregate.flatMap { updatedAgg =>
               cache.save(updatedAgg).map(_ =>
                 Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {

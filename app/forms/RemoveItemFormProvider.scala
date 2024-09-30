@@ -47,12 +47,15 @@ class RemoveItemFormProvider @Inject() {
   private val studentLoanContributionsValidations: Form[Boolean] = Form(single("removeItem" -> of(removeStudentLoanContributions())))
   private val postGradLoanContributionsValidations: Form[Boolean] = Form(single("removeItem" -> of(removePostGradLoanContributions())))
 
-  def apply(queryParam: String): Form[Boolean] =
-    queryParam match {
+  def apply(queryParam: String): Form[Boolean] = {
+    val result = queryParam match {
       case "taxcode" => taxCodeValidation
       case "pension-contributions" => pensionContributionsValidations
       case "student-loans" => studentLoanContributionsValidations
       case "postgraduate-loans" => postGradLoanContributionsValidations
     }
+    println(result)
+    result
+  }
 
 }
