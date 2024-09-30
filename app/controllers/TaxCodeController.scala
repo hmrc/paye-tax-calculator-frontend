@@ -46,7 +46,8 @@ class TaxCodeController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -106,22 +107,21 @@ class TaxCodeController @Inject() (
                   )
                 )
               )
-            updatedAggregate.flatMap {
-              updatedAgg =>
-                cache
-                  .save(updatedAgg)
-                  .map(_ =>
-                      if (newTaxCode.taxCode.isEmpty) {
-                        Redirect(routes.YouHaveToldUsNewController.summary)
-                      } else {
-                        Redirect(
-                          navigator
-                            .nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
-                              routes.YouHaveToldUsNewController.summary
-                            }()
-                        )
-                      }
-                  )
+            updatedAggregate.flatMap { updatedAgg =>
+              cache
+                .save(updatedAgg)
+                .map(_ =>
+                  if (newTaxCode.taxCode.isEmpty) {
+                    Redirect(routes.YouHaveToldUsNewController.summary)
+                  } else {
+                    Redirect(
+                      navigator
+                        .nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
+                          routes.YouHaveToldUsNewController.summary
+                        }()
+                    )
+                  }
+                )
             }
           }
         )

@@ -16,10 +16,9 @@
 
 package controllers
 
-import forms.{PostGraduateLoanFormProvider, StudentLoansFormProvider}
+import forms.PostGraduateLoanFormProvider
 import models.PostgraduateLoanContributions
 import org.apache.pekko.Done
-import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.TryValues
@@ -42,7 +41,6 @@ import uk.gov.hmrc.http.HeaderNames
 import views.html.pages.PostGraduatePlanContributionView
 
 import scala.concurrent.Future
-
 
 class PostgraduateLoanContributionsControllerSpec extends BaseSpec
   with AnyWordSpecLike

@@ -64,7 +64,9 @@ object YouHaveToldUs {
         val idSuffix = "income"
         def asPounds(v: String) = "£" + v
         YouHaveToldUsItem(
-          s"${asPounds(TaxResult.moneyFormatter(s.amount))}" + " " + Messages(s"label.${s.period.value.replace(" ", "_")}.value"),
+          s"${asPounds(TaxResult.moneyFormatter(s.amount))}" + " " + Messages(
+            s"label.${s.period.value.replace(" ", "_")}.value"
+          ),
           s.period.value.replace(" ", "_"),
           url,
           idSuffix

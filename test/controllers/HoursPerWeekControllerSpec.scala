@@ -32,19 +32,17 @@
 
 package controllers
 
-import config.features.Features
 import forms.SalaryInHoursFormProvider
 import models.Hours
 import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.mockito.Mockito._
 import org.mockito.ArgumentMatchers.any
-import org.scalatest.{BeforeAndAfterEach, TryValues}
+import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{Application, Configuration}
+import play.api.Application
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
@@ -57,8 +55,6 @@ import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
 import views.html.pages.HoursAWeekView
 import play.api.test.CSRFTokenHelper._
-import setup.BaseSpec
-
 import scala.concurrent.Future
 
 class HoursPerWeekControllerSpec

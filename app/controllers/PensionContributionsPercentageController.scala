@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class PensionContributionsPercentageController @Inject()(
+class PensionContributionsPercentageController @Inject() (
   override val messagesApi:           MessagesApi,
   cache:                              QuickCalcCache,
   val controllerComponents:           MessagesControllerComponents,
@@ -43,13 +43,14 @@ class PensionContributionsPercentageController @Inject()(
   implicit val executionContext:      ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[PensionContributions] = pensionsContributionFormProvider()
 
-  def showPensionContributionForm(): Action[AnyContent] = {
+  def showPensionContributionForm(): Action[AnyContent] =
     salaryRequired(
       cache, { implicit fromRequestAndSession => agg =>
         val filledForm = agg.savedPensionContributions.map(_.gaveUsPercentageAmount) match {
@@ -58,16 +59,15 @@ class PensionContributionsPercentageController @Inject()(
             agg.savedPensionContributions
               .map { s =>
                 form.fill(s)
-              }.getOrElse(form)
+              }
+              .getOrElse(form)
           }
         }
         Ok(
-          pensionContributionsPercentageView(filledForm,
-            agg.additionalQuestionItems())
+          pensionContributionsPercentageView(filledForm, agg.additionalQuestionItems())
         )
       }
     )
-  }
 
   def submitPensionContribution(): Action[AnyContent] =
     validateAcceptWithSessionId().async { implicit request =>
@@ -76,18 +76,22 @@ class PensionContributionsPercentageController @Inject()(
         .bindFromRequest()
         .fold(
           formWithErrors =>
-                Future.successful(BadRequest(
-                  pensionContributionsPercentageView(formWithErrors, Nil)
-                )),
+            Future.successful(
+              BadRequest(
+                pensionContributionsPercentageView(formWithErrors, Nil)
+              )
+            ),
           (newPensionContributions: PensionContributions) => {
-            val updateAggregate = cache.fetchAndGetEntry().map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+            val updateAggregate = cache
+              .fetchAndGetEntry()
+              .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
               .map(agg =>
                 agg.copy(
-                  savedPensionContributions = if (newPensionContributions.monthlyContributionAmount.isDefined)  {
+                  savedPensionContributions = if (newPensionContributions.monthlyContributionAmount.isDefined) {
                     Some(
                       newPensionContributions.copy(
                         gaveUsPercentageAmount = true
-                      ),
+                      )
                     )
                   } else {
                     None
@@ -95,11 +99,13 @@ class PensionContributionsPercentageController @Inject()(
                 )
               )
             updateAggregate.flatMap { updatedAgg =>
-              cache.save(updatedAgg).map(_ =>
-                Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
-                  routes.YouHaveToldUsNewController.summary
-                }())
-              )
+              cache
+                .save(updatedAgg)
+                .map(_ =>
+                  Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
+                    routes.YouHaveToldUsNewController.summary
+                  }())
+                )
             }
           }
         )

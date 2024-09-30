@@ -35,7 +35,7 @@ POST        /student-loans  controllers.StudentLoanContributionsController.submi
 GET         /postgraduate-loans controllers.PostgraduateController.showPostgraduateForm
 POST        /postgraduate-loans controllers.PostgraduateController.submitPostgradLoanForm
 
-GET         /check-your-answers    controllers.YouHaveToldUsNewController.summary
+GET         /your-answers          controllers.YouHaveToldUsNewController.summary
 
 GET         /your-results          controllers.ShowResultsController.showResult
 

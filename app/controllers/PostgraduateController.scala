@@ -72,8 +72,7 @@ class PostgraduateController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors =>
-             Future.successful(BadRequest(postGraduateView(formWithErrors))),
+          formWithErrors => Future.successful(BadRequest(postGraduateView(formWithErrors))),
           postGrad => {
             val updatedAggregate =
               cache
@@ -81,7 +80,7 @@ class PostgraduateController @Inject() (
                 .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
                 .map(
                   _.copy(
-                    savedPostGraduateLoanContributions = if(postGrad.hasPostgraduatePlan.isDefined) {
+                    savedPostGraduateLoanContributions = if (postGrad.hasPostgraduatePlan.isDefined) {
                       Some(PostgraduateLoanContributions(postGrad.hasPostgraduatePlan))
                     } else {
                       None
@@ -90,9 +89,7 @@ class PostgraduateController @Inject() (
                 )
             updatedAggregate
               .map(cache.save)
-              .map(_ =>
-                Redirect(routes.YouHaveToldUsNewController.summary)
-              )
+              .map(_ => Redirect(routes.YouHaveToldUsNewController.summary))
           }
         )
     }

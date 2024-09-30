@@ -16,7 +16,6 @@
 
 package controllers
 
-
 import forms.SalaryInDaysFormProvider
 import models.Days
 import org.apache.pekko.Done
@@ -211,9 +210,9 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual "There is a problem"
         errorMessageLink.contains(expectedEmptyDaysErrorMessage) mustEqual true
@@ -222,200 +221,200 @@ class DaysPerWeekControllerSpec
       }
     }
 
-        "return 400 and error message when Days in a Week is 0" in {
-          val mockCache = mock[QuickCalcCache]
+    "return 400 and error message when Days in a Week is 0" in {
+      val mockCache = mock[QuickCalcCache]
 
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
 
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
-          implicit val messages: Messages = messagesForApp(application)
-          running(application) {
-            val formData = Map("amount" -> "1", "how-many-a-week" -> "0")
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "0")
 
-            val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
-              .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test-salary")
-              .withCSRFToken
+        val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
 
-            val result = route(application, request).value
+        val result = route(application, request).value
 
-            status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual BAD_REQUEST
 
-            val parseHtml = Jsoup.parse(contentAsString(result))
+        val parseHtml = Jsoup.parse(contentAsString(result))
 
-            val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
-            val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-            val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
-            errorHeader mustEqual "There is a problem"
-            errorMessageLink.contains(expectedMinDaysAWeekErrorMessage) mustEqual true
-            errorMessage.contains(expectedMinDaysAWeekErrorMessage) mustEqual true
-            verify(mockCache, times(0)).fetchAndGetEntry()(any())
-          }
-        }
+        errorHeader mustEqual "There is a problem"
+        errorMessageLink.contains(expectedMinDaysAWeekErrorMessage) mustEqual true
+        errorMessage.contains(expectedMinDaysAWeekErrorMessage) mustEqual true
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+      }
+    }
 
-        "return 400 and error message when Days in a Week is 8" in {
+    "return 400 and error message when Days in a Week is 8" in {
 
-          val mockCache = mock[QuickCalcCache]
+      val mockCache = mock[QuickCalcCache]
 
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
 
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
-          implicit val messages: Messages = messagesForApp(application)
-          running(application) {
-            val formData = Map("amount" -> "1", "how-many-a-week" -> "8")
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "8")
 
-            val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
-              .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test-salary")
-              .withCSRFToken
+        val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
 
-            val result = route(application, request).value
+        val result = route(application, request).value
 
-            status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual BAD_REQUEST
 
-            val parseHtml = Jsoup.parse(contentAsString(result))
+        val parseHtml = Jsoup.parse(contentAsString(result))
 
-            val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
-            val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-            val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
-            errorHeader mustEqual "There is a problem"
-            errorMessageLink.contains(expectedMaxDaysAWeekErrorMessage) mustEqual true
-            errorMessage.contains(expectedMaxDaysAWeekErrorMessage) mustEqual true
-            verify(mockCache, times(0)).fetchAndGetEntry()(any())
-          }
-        }
+        errorHeader mustEqual "There is a problem"
+        errorMessageLink.contains(expectedMaxDaysAWeekErrorMessage) mustEqual true
+        errorMessage.contains(expectedMaxDaysAWeekErrorMessage) mustEqual true
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+      }
+    }
 
-        "return 400 and error message when Days in a Week has more than 2 decimal places" in {
+    "return 400 and error message when Days in a Week has more than 2 decimal places" in {
 
-          val mockCache = mock[QuickCalcCache]
+      val mockCache = mock[QuickCalcCache]
 
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
 
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
-          implicit val messages: Messages = messagesForApp(application)
-          running(application) {
-            val formData = Map("amount" -> "1", "how-many-a-week" -> "3.555")
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "3.555")
 
-            val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
-              .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test-salary")
-              .withCSRFToken
+        val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
 
-            val result = route(application, request).value
+        val result = route(application, request).value
 
-            status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual BAD_REQUEST
 
-            val parseHtml = Jsoup.parse(contentAsString(result))
+        val parseHtml = Jsoup.parse(contentAsString(result))
 
-            val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
-            val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-            val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
-            errorHeader mustEqual "There is a problem"
-            errorMessageLink.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
-            errorMessage.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
-            verify(mockCache, times(0)).fetchAndGetEntry()(any())
-          }
-        }
+        errorHeader mustEqual "There is a problem"
+        errorMessageLink.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
+        errorMessage.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+      }
+    }
 
-        "return 400 and error message when Days in a Week is not numeric" in {
+    "return 400 and error message when Days in a Week is not numeric" in {
 
-          val mockCache = mock[QuickCalcCache]
+      val mockCache = mock[QuickCalcCache]
 
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePension)
 
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
-          implicit val messages: Messages = messagesForApp(application)
-          running(application) {
-            val formData = Map("amount" -> "1", "how-many-a-week" -> "test")
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "test")
 
-            val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
-              .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test-salary")
-              .withCSRFToken
+        val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
 
-            val result = route(application, request).value
+        val result = route(application, request).value
 
-            status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual BAD_REQUEST
 
-            val parseHtml = Jsoup.parse(contentAsString(result))
+        val parseHtml = Jsoup.parse(contentAsString(result))
 
-            val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
-            val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-            val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
-            errorHeader mustEqual "There is a problem"
-            errorMessageLink.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
-            errorMessage.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
-            verify(mockCache, times(0)).fetchAndGetEntry()(any())
-          }
-        }
+        errorHeader mustEqual "There is a problem"
+        errorMessageLink.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
+        errorMessage.contains(expectedWholeNumberDailyErrorMessage) mustEqual true
+        verify(mockCache, times(0)).fetchAndGetEntry()(any())
+      }
+    }
 
-        "return 303, with new Days worked, 5 and complete aggregate" in {
-          val mockCache = mock[QuickCalcCache]
+    "return 303, with new Days worked, 5 and complete aggregate" in {
+      val mockCache = mock[QuickCalcCache]
 
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteDaily)
-          when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteDaily)
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
-          implicit val messages: Messages = messagesForApp(application)
-          running(application) {
-            val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
 
-            val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
-              .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test-salary")
-              .withCSRFToken
+        val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
 
-            val result = route(application, request).value
+        val result = route(application, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.YouHaveToldUsNewController.summary.url
-            verify(mockCache, times(1)).fetchAndGetEntry()(any())
-            verify(mockCache, times(1)).save(any())(any())
-          }
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.YouHaveToldUsNewController.summary.url
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(1)).save(any())(any())
+      }
+    }
 
-        "return 303, with new Days worked, 5 and incomplete aggregate" in {
-          val mockCache = mock[QuickCalcCache]
+    "return 303, with new Days worked, 5 and incomplete aggregate" in {
+      val mockCache = mock[QuickCalcCache]
 
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-            cacheTaxCodeStatePension
-              .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None))
-          )
-          when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheTaxCodeStatePension
+          .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None))
+      )
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
 
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
-          implicit val messages: Messages = messagesForApp(application)
-          running(application) {
-            val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesForApp(application)
+      running(application) {
+        val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
 
-            val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
-              .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test-salary")
-              .withCSRFToken
+        val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCSRFToken
 
-            val result = route(application, request).value
+        val result = route(application, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm.url
-            verify(mockCache, times(1)).fetchAndGetEntry()(any())
-            verify(mockCache, times(1)).save(any())(any())
-          }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm.url
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        verify(mockCache, times(1)).save(any())(any())
+      }
     }
   }
 }

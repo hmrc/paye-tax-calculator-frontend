@@ -179,21 +179,21 @@ object QuickCalcCacheSetup {
 
   val cacheTaxCodeStatePensionSalaryStudentLoan: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
-      savedSalary                = cacheTestYearlySalary,
-      savedTaxCode               = cacheTestTaxCode,
-      savedIsOverStatePensionAge = cacheTestStatePensionYES,
-      savedScottishRate          = cacheTestScottishNO,
+      savedSalary                   = cacheTestYearlySalary,
+      savedTaxCode                  = cacheTestTaxCode,
+      savedIsOverStatePensionAge    = cacheTestStatePensionYES,
+      savedScottishRate             = cacheTestScottishNO,
       savedStudentLoanContributions = cacheStudentLoanContributions
     )
   )
 
   val cacheTaxCodeStatePensionSalaryStudentLoanPostGrad: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
-      savedSalary                = cacheTestYearlySalary,
-      savedTaxCode               = cacheTestTaxCode,
-      savedIsOverStatePensionAge = cacheTestStatePensionYES,
-      savedScottishRate          = cacheTestScottishNO,
-      savedStudentLoanContributions = cacheStudentLoanContributions,
+      savedSalary                        = cacheTestYearlySalary,
+      savedTaxCode                       = cacheTestTaxCode,
+      savedIsOverStatePensionAge         = cacheTestStatePensionYES,
+      savedScottishRate                  = cacheTestScottishNO,
+      savedStudentLoanContributions      = cacheStudentLoanContributions,
       savedPostGraduateLoanContributions = cachePostGradLoanContributions
     )
   )
@@ -209,12 +209,12 @@ object QuickCalcCacheSetup {
 
   val cacheCompleteYearly: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
-      savedSalary                = cacheTestYearlySalary,
-      savedTaxCode               = cacheTestTaxCode,
-      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
-      savedScottishRate          = cacheTestScottishNO,
-      savedPensionContributions  = cacheTestPensionPecentageContributions,
-      savedStudentLoanContributions = cacheStudentLoanContributions,
+      savedSalary                        = cacheTestYearlySalary,
+      savedTaxCode                       = cacheTestTaxCode,
+      savedIsOverStatePensionAge         = cacheTestStatusPensionNO,
+      savedScottishRate                  = cacheTestScottishNO,
+      savedPensionContributions          = cacheTestPensionPecentageContributions,
+      savedStudentLoanContributions      = cacheStudentLoanContributions,
       savedPostGraduateLoanContributions = cachePostGradLoanContributions
     )
   )
@@ -330,7 +330,7 @@ object QuickCalcCacheSetup {
     "Select which student loan you are currently repaying"
 
   val expectedInvalidPostgraduateLoanErrorMessage =
-  "Select yes if you repay a postgraduate loan"
+    "Select yes if you repay a postgraduate loan"
 
   val expectedInvalidPensionTwoDecimalPlaces =
     "Your monthly pension contributions can only include pounds and pence"

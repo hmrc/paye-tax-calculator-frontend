@@ -39,13 +39,14 @@ class ScottishRateController @Inject() (
   cache:                         QuickCalcCache,
   val controllerComponents:      MessagesControllerComponents,
   scottishRateView:              ScottishRateView,
-  scottishRateFormProvider:       ScottishRateFormProvider,
+  scottishRateFormProvider:      ScottishRateFormProvider,
   defaultTaxCodeProvider:        DefaultTaxCodeProvider
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -93,7 +94,7 @@ class ScottishRateController @Inject() (
                 .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
                 .map(
                   _.copy(
-                    savedScottishRate = if(scottish.payScottishRate.isDefined) {
+                    savedScottishRate = if (scottish.payScottishRate.isDefined) {
                       Some(ScottishRate(scottish.payScottishRate))
                     } else {
                       None
@@ -102,9 +103,7 @@ class ScottishRateController @Inject() (
                 )
             updatedAggregate
               .map(cache.save)
-              .map(_ =>
-                  Redirect(routes.YouHaveToldUsNewController.summary)
-              )
+              .map(_ => Redirect(routes.YouHaveToldUsNewController.summary))
           }
         )
     }

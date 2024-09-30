@@ -24,8 +24,6 @@ import play.api.mvc.{Result, _}
 import java.time.{ZoneId, ZonedDateTime}
 import scala.concurrent.Future
 
-
-// $COVERAGE-OFF$
 class CsrfBypassFilter @Inject() (implicit val mat: Materializer) extends Filter {
 
   def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] =
@@ -38,4 +36,3 @@ class CsrfBypassFilter @Inject() (implicit val mat: Materializer) extends Filter
     rh.withHeaders(rh.headers.add("Csrf-Token" -> "nocheck"))
 
 }
-// $COVERAGE-ON$
