@@ -32,7 +32,8 @@
         details: components.details,
         bullets: components.bullets,
         features: config.features.Features,
-        beforeContent: components.beforeContent
+        beforeContent: components.beforeContent,
+        hintText: components.hintText
 )
 
 @(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem], defaultTaxCode: String, salaryCheck: Boolean)(implicit request: Request[_], messages: Messages)
@@ -52,13 +53,13 @@
 
             @h1(messages("quick_calc.you_have_told_us.about_tax_code.label.newTitle"))
 
-            @p(Html(messages("quick_calc.salary.question.tax_code_info")))
+            @hintText(Html(messages("quick_calc.about_tax_code.details.firstInfoPara")))
 
 
         @inputText(form = userTaxCodeForm,
             id = "taxCode",
             name = "taxCode",
-            label =  Messages("quick_calc.about_tax_code.subheading"),
+            label =  "",
             isPageHeading = false,
             classes = Some("govuk-input--width-10")
         )
@@ -70,9 +71,7 @@
                 @bullets(Seq(Some(Html(Messages("quick_calc.about_tax_code.details.firstBullet_a") + link("https://www.gov.uk/guidance/download-the-hmrc-app", "quick_calc.about_tax_code.details.firstBullet_b", endWithFullStop = false))),Some(Html(Messages("quick_calc.about_tax_code.details.secondBullet"))),Some(Html(Messages("quick_calc.about_tax_code.details.thirdBullet"))),Some(Html(Messages("quick_calc.about_tax_code.details.fourthBullet")))))
             @if(salaryCheck) {
                 <p>@Messages("quick_calc.about_tax_code.details.secondInfoPara_a") @link("https://www.gov.uk/income-tax-rates/income-over-100000", "quick_calc.about_tax_code.details.secondInfoPara_b", endWithFullStop = true)</p>
-            } else {
-                <p>@Messages("quick_calc.about_tax_code.details.firstInfoPara")</p>
-            }
+          }
     }
 
         @button("continue", Some("button-continue"))
