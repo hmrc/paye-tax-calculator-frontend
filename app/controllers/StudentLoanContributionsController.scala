@@ -71,14 +71,7 @@ class StudentLoanContributionsController @Inject() (
     form
       .bindFromRequest()
       .fold(
-        formWithErrors =>
-          cache
-            .fetchAndGetEntry()
-            .map {
-              case Some(aggregate) => aggregate.additionalQuestionItems()
-              case None            => Nil
-            }
-            .map(itemList => BadRequest(studentLoansView(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(studentLoansView(formWithErrors))),
         (newStudentLoanContribution: StudentLoanContributions) => {
           val updatedAggregate = cache
             .fetchAndGetEntry()

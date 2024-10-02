@@ -31,7 +31,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.{ActionWithSessionId, DefaultTaxCodeProvider, SalaryRequired}
 import views.html.pages.ScottishRateView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ScottishRateController @Inject() (
@@ -73,21 +73,8 @@ class ScottishRateController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors =>
-            cache
-              .fetchAndGetEntry()
-              .map {
-                case Some(aggregate) => aggregate.youHaveToldUsItems()
-                case None            => Nil
-              }
-              .map(itemList => BadRequest(scottishRateView(formWithErrors, itemList))),
+          formWithErrors => Future.successful(BadRequest(scottishRateView(formWithErrors, Nil))),
           scottish => {
-            val taxCode =
-              if (scottish.payScottishRate.getOrElse(false))
-                defaultTaxCodeProvider.defaultScottishTaxCode
-              else
-                defaultTaxCodeProvider.defaultUkTaxCode
-
             val updatedAggregate =
               cache
                 .fetchAndGetEntry()
