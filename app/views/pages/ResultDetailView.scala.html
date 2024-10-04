@@ -133,3 +133,12 @@ incomeTaxBands(calculatorResponse).map { case (percentage, amount) =>
         )
     )
 )
+
+@if(calculatorResponse.getMaxTaxAmountExceeded) {
+@h3(Messages("quick_calc.result.adjusted.head"))
+@p {
+@Messages("quick_calc.result.adjusted.info")
+}
+}
+
+
