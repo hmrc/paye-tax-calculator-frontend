@@ -29,7 +29,6 @@ trait BaseResourceStreamResolver extends Logging {
 
   def resolvePath(filePath: String): StreamSource = {
 
-    println(" file path is :"+filePath)
     environment.resourceAsStream(filePath) match {
       case None =>
         logger.error("[ResourceStreamResolver] No resolver stream available")

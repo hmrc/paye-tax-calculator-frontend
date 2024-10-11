@@ -34,7 +34,6 @@ trait FopURIResolver extends ResourceResolver with BaseResourceStreamResolver {
   override def getResource(uri: URI): Resource = {
     logger.info("[FopURIResolver] URI to convert to resource " + uri.toASCIIString)
     val resourcePath: String = uri.getPath.substring(uri.getPath.lastIndexOf("/pdf") + 1)
-    println(" respource path is ::" + resourcePath)
 
     new Resource(resolvePath(resourcePath).getInputStream)
   }
