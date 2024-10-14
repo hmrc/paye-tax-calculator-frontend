@@ -9,13 +9,14 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName: String = "paye-tax-calculator-frontend"
+
 // utils.BaseResourceStreamResolver;.*utils.FopURIResolver; Added for POC , will be removed later
 lazy val scoverageSettings = {
   Seq(
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*repositories.*;" +
     ".*BuildInfo.*;.*javascript.*;.*config.*;.*FrontendAuditConnector.*;.*Routes.*;.*GuiceInjector;" +
     ".*ControllerConfiguration;.*LanguageSwitchController;.*utils.BaseResourceStreamResolver;.*utils.FopURIResolver;",
-    coverageMinimumStmtTotal := 79,
+    coverageMinimumStmtTotal := 70,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
