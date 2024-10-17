@@ -629,26 +629,26 @@
             </fo:block>
             <!-- end about NINO information -->
 
-<!--            <fo:block text-align="center">-->
-<!--                <fo:instream-foreign-object>-->
-<!--                    <svg width="150" height="150" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">-->
-<!--                        &lt;!&ndash; Background circle &ndash;&gt;-->
-<!--                        <circle cx="21" cy="21" r="16" fill="transparent" stroke="grey" stroke-width="4"></circle>-->
+            <fo:block text-align="center">
+                <fo:instream-foreign-object>
+                    <svg width="150" height="150" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                        <!-- Background circle -->
+                        <circle cx="21" cy="21" r="16" fill="transparent" stroke="grey" stroke-width="4"></circle>
 
-<!--                        &lt;!&ndash; Donut chart segments &ndash;&gt;-->
-<!--                        <circle cx="21" cy="21" r="16" fill="transparent" stroke="blue" stroke-width="4" stroke-dasharray="67.3 32.7"-->
-<!--                                stroke-dashoffset="0"></circle>-->
-<!--                        <circle cx="21" cy="21" r="16" fill="transparent" stroke="black" stroke-width="4" stroke-dasharray="20.3 79.7"-->
-<!--                                stroke-dashoffset="-67.3"></circle>-->
+                        <!-- Donut chart segments -->
+                        <circle cx="21" cy="21" r="16" fill="transparent" stroke="blue" stroke-width="4" stroke-dasharray="67.3 32.7"
+                                stroke-dashoffset="0"></circle>
+                        <circle cx="21" cy="21" r="16" fill="transparent" stroke="black" stroke-width="4" stroke-dasharray="20.3 79.7"
+                                stroke-dashoffset="-67.3"></circle>
 
 
-<!--                        &lt;!&ndash; Inner circle for the donut hole &ndash;&gt;-->
-<!--                        <circle cx="21" cy="21" r="16" fill="white"></circle>-->
+                        <!-- Inner circle for the donut hole -->
+                        <circle cx="21" cy="21" r="16" fill="white"></circle>
 
-<!--                        &lt;!&ndash; Label inside the donut chart &ndash;&gt;-->
-<!--                    </svg>-->
-<!--                </fo:instream-foreign-object>-->
-<!--            </fo:block>-->
+                        <!-- Label inside the donut chart -->
+                    </svg>
+                </fo:instream-foreign-object>
+            </fo:block>
 
             <!-- end text -->
             <fo:block role="Div" font-family="OpenSans" font-weight="normal">
