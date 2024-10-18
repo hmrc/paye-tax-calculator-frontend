@@ -25,7 +25,7 @@
 @this(
         govukTemplate: templates.GovukLayoutWrapper,
         h1: components.h1,
-        h3: components.h3,
+        h2: components.h2,
         warningText: components.warning,
         govukBackLink: GovukBackLink,
         formHelper: FormWithCSRF,
@@ -224,13 +224,13 @@ s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warning
         @notification(Messages("quick_calc.pensionContributionsFixed.warning",roundedMonthlySalary))
     }
 
-    @h1("quick_calc.you_have_told_us.header")
+    @h1("quick_calc.you_have_told_us.header","govuk-heading-xl")
     <br><br>
-    @h3("quick_calc.you_have_told_us.subheading")
+    @h2("quick_calc.you_have_told_us.subheading","govuk-heading-l")
 
     @govukSummaryList(SummaryList(rows = rows))
 
-    @h3("quick_calc.you_have_told_us.subheading.additional")
+    @h2("quick_calc.you_have_told_us.subheading.additional", "govuk-heading-l")
 
     <p class="govuk-body">@messages("quick_calc.you_have_told_us.body.additional")</p>
 
