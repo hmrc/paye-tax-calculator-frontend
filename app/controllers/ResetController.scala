@@ -17,33 +17,27 @@
 package controllers
 
 import config.AppConfig
-import org.apache.xmlgraphics.util.MimeConstants
 
 import javax.inject.Inject
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents, Request}
-import services.{FopService, QuickCalcCache}
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
+import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
-import utils.{ActionWithSessionId, XSLScalaBridge}
+import utils.ActionWithSessionId
 import views.html.pages.ResetView
-import views.xml.NinoPdf
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import scala.concurrent.{ExecutionContext, Future}
-//Added as a part of POC , will be removed later
+
 class ResetController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  resetView:                     ResetView,
-  fopService:                    FopService,
-  pdfTemplate:                   NinoPdf
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
-    extends FrontendBaseController
+                                  override val messagesApi:      MessagesApi,
+                                  cache:                         QuickCalcCache,
+                                  val controllerComponents:      MessagesControllerComponents,
+                                  resetView:                     ResetView
+                                )(implicit val appConfig:        AppConfig,
+                                  implicit val executionContext: ExecutionContext)
+  extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId {
   override def parser: BodyParser[AnyContent] = parse.anyContent
@@ -59,26 +53,4 @@ class ResetController @Inject() (
         Future.successful(Ok(resetView()))
     }
   }
-  //Added as a part of POC , will be removed later
-  def saveAsPdf(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
-    val filename = messagesApi.preferred(request).messages("label.your_national_insurance_number_letter")
-
-    createPDF(request).flatMap(pdf =>
-      Future.successful(
-        Ok(pdf)
-          .as(MimeConstants.MIME_PDF)
-          .withHeaders(CONTENT_TYPE        -> "application/x-download",
-                       CONTENT_DISPOSITION -> s"attachment; filename=${filename.replaceAll(" ", "-")}.pdf")
-      )
-    )
-  }
-
-  private def createPDF(request: Request[AnyContent]): Future[Array[Byte]] = {
-    implicit val messages: Messages = controllerComponents.messagesApi.preferred(request)
-    val date:              String   = LocalDate.now.format(DateTimeFormatter.ofPattern("MM/YY"))
-
-    fopService.render(pdfTemplate(date, XSLScalaBridge(messages).getLang()).body)
-  }
-
 }

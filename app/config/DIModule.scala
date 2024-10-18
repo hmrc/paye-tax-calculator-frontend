@@ -16,19 +16,11 @@
 
 package config
 
-//Changes done as a part of POC , will be removed later
 import com.google.inject.AbstractModule
-import org.apache.fop.apps.FopFactory
-import utils.{BaseResourceStreamResolver, DefaultFopURIResolver, DefaultResourceStreamResolver, FopURIResolver}
 
 class DIModule extends AbstractModule {
 
-  override def configure(): Unit = {
+  override def configure(): Unit =
     bind(classOf[AppConfig]).to(classOf[FrontendAppConfig]).asEagerSingleton()
-    bind(classOf[FopFactory]).toProvider(classOf[FopFactoryProvider]).asEagerSingleton()
-
-    bind(classOf[FopURIResolver]).to(classOf[DefaultFopURIResolver]).asEagerSingleton()
-    bind(classOf[BaseResourceStreamResolver]).to(classOf[DefaultResourceStreamResolver]).asEagerSingleton()
-  }
 
 }
