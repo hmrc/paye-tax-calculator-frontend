@@ -29,13 +29,13 @@ class YouHaveToldUsNewViewSpec extends BaseSpec {
 
     object Selectors {
       val pageHeading            = "#main-content > div > div > h1"
-      val firstSectionSubHeading = "#main-content > div > div > h3:nth-child(4)"
+      val firstSectionSubHeading = "#main-content > div > div > h2:nth-child(4)"
       val grossIncome            = "#main-content > div > div > dl:nth-child(5) > div:nth-child(1) > dt"
       val salary                 = "#main-content > div > div > dl:nth-child(5) > div:nth-child(1) > dd.govuk-summary-list__value"
       val overStatePensionAge    = "#main-content > div > div > dl:nth-child(5) > div:nth-child(2) > dt"
       val overStatePensionAgeValue =
         "#main-content > div > div > dl:nth-child(5) > div:nth-child(2) > dd.govuk-summary-list__value"
-      val additionalQuestionsSubHeading = "#main-content > div > div > h3:nth-child(6)"
+      val additionalQuestionsSubHeading = "#main-content > div > div > h2:nth-child(6)"
       val additionalQuestionsParagraph  = "#main-content > div > div > p"
       val taxCodeSubheading             = "#main-content > div > div > dl:nth-child(8) > div:nth-child(1) > dt"
       val taxCodeValue                  = "#main-content > div > div > dl:nth-child(8) > div:nth-child(1) > dd.govuk-summary-list__value"
