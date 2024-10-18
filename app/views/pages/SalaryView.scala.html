@@ -95,6 +95,10 @@
             id = "amount",
             name = "amount",
             hint = Some(Hint(content = Text(Messages("hint.salary")))),
+            label = Label(
+                content = Text(messages("Income amount")),
+                classes = "govuk-visually-hidden"
+            ),
             value = salaryForm("amount").value,
             classes = "govuk-input--width-10",
             autocomplete = Some("off"),

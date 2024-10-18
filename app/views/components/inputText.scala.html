@@ -37,7 +37,7 @@
     label = Label(
         content = Text(messages(label, headingMessageArgs: _*)),
         isPageHeading = isPageHeading,
-        classes = if(isPageHeading) "govuk-label--xl" else "govuk-label govuk-label--m"
+        classes = if(isPageHeading) "govuk-label--xl" else "govuk-visually-hidden"
     ),
     hint = hint,
     value = if(populateField) form(name).value else None,
