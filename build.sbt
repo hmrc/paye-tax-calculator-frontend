@@ -13,11 +13,11 @@ val appName: String = "paye-tax-calculator-frontend"
 lazy val scoverageSettings = {
   Seq(
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*repositories.*;" +
-      ".*BuildInfo.*;.*javascript.*;.*config.*;.*FrontendAuditConnector.*;.*Routes.*;.*GuiceInjector;" +
-      ".*ControllerConfiguration;.*LanguageSwitchController",
+    ".*BuildInfo.*;.*javascript.*;.*config.*;.*FrontendAuditConnector.*;.*Routes.*;.*GuiceInjector;" +
+    ".*ControllerConfiguration;.*LanguageSwitchController",
     coverageMinimumStmtTotal := 79,
     ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true,
+    ScoverageKeys.coverageHighlighting := true
   )
 }
 
@@ -35,7 +35,6 @@ lazy val microservice = Project(appName, file("."))
     RoutesKeys.routesImport ++= Seq(
       "models._"
     ),
-
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
       "uk.gov.hmrc.govukfrontend.views.html.components._",
@@ -45,18 +44,17 @@ lazy val microservice = Project(appName, file("."))
       "controllers.routes._",
       "config.AppConfig"
     ),
-    resolvers += Resolver.jcenterRepo,
+    resolvers += Resolver.jcenterRepo
   )
   .settings(
     scalaVersion := "2.13.12",
-    libraryDependencies ++= AppDependencies(),
+    libraryDependencies ++= AppDependencies()
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
     IntegrationTest / Keys.fork := false,
-    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory) (base => Seq(base / "it")).value,
-    IntegrationTest / testGrouping := oneForkedJvmPerTest((IntegrationTest / definedTests).value),
+    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory)(base => Seq(base / "it")).value,
     IntegrationTest / parallelExecution := false,
     addTestReportOption(IntegrationTest, "int-test-reports")
   )

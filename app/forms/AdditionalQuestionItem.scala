@@ -67,13 +67,15 @@ object AdditionalQuestionItem {
         val idSuffix = SCOTTISH_RATE
         val url      = routes.ScottishRateController.showScottishRateForm.url
         AdditionalQuestionItem(
-          scottish.map{ scottishValue =>
-            scottishValue.payScottishRate match {
-              case Some(true)  => Messages("quick_calc.you_have_told_us.scottish_rate.yes")
-              case Some(false) => Messages("quick_calc.you_have_told_us.scottish_rate.no")
-              case _                   => Messages("not_provided")
+          scottish
+            .map { scottishValue =>
+              scottishValue.payScottishRate match {
+                case Some(true)  => Messages("quick_calc.you_have_told_us.scottish_rate.yes")
+                case Some(false) => Messages("quick_calc.you_have_told_us.scottish_rate.no")
+                case _           => Messages("not_provided")
+              }
             }
-          }.getOrElse(Messages("not_provided")),
+            .getOrElse(Messages("not_provided")),
           label,
           url,
           idSuffix
@@ -103,9 +105,9 @@ object AdditionalQuestionItem {
           Messages("not_provided")
         } else {
           if (pensions.exists(_.gaveUsPercentageAmount)) {
-            s"$formattedContribution% a month"
+            s"$formattedContribution% ${Messages("quick_calc.salary.monthly.label")}"
           } else {
-            s"£$formattedContribution a month"
+            s"£$formattedContribution ${Messages("quick_calc.salary.monthly.label")}"
           }
         }
 
@@ -126,11 +128,11 @@ object AdditionalQuestionItem {
         val labelText = t.map(_.studentLoanPlan) match {
           case Some(studentLoanPlan) =>
             studentLoanPlan match {
-              case Some(PlanOne)      => Messages("quick_calc.salary.studentLoan.plan1.text")
-              case Some(PlanTwo)      => Messages("quick_calc.salary.studentLoan.plan2.text")
-              case Some(PlanFour)     => Messages("quick_calc.salary.studentLoan.plan4.text")
+              case Some(PlanOne)     => Messages("quick_calc.salary.studentLoan.plan1.text")
+              case Some(PlanTwo)     => Messages("quick_calc.salary.studentLoan.plan2.text")
+              case Some(PlanFour)    => Messages("quick_calc.salary.studentLoan.plan4.text")
               case Some(NoneOfThese) => Messages("not_provided")
-              case _               => Messages("not_provided")
+              case _                 => Messages("not_provided")
             }
           case None => Messages("not_provided")
         }
@@ -153,13 +155,15 @@ object AdditionalQuestionItem {
         val idSuffix = "post_graduate_loan_contribution"
         val url      = routes.PostgraduateController.showPostgraduateForm.url
         AdditionalQuestionItem(
-          postGrad.map{ postGradValue =>
-            postGradValue.hasPostgraduatePlan match {
-              case Some(true) => Messages("yes")
-              case Some(false) => Messages("no")
-              case _ => Messages("not_provided")
+          postGrad
+            .map { postGradValue =>
+              postGradValue.hasPostgraduatePlan match {
+                case Some(true)  => Messages("yes")
+                case Some(false) => Messages("no")
+                case _           => Messages("not_provided")
+              }
             }
-          }.getOrElse(Messages("not_provided")),
+            .getOrElse(Messages("not_provided")),
           label,
           url,
           idSuffix
