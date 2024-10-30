@@ -102,7 +102,7 @@
   @if(showDeskproLink) {
       <div class="govuk-!-margin-top-5">
       @hmrcReportTechnicalIssue(
-          ReportTechnicalIssue(appConfig.appName, messages.lang.language)
+          ReportTechnicalIssue(appConfig.appName, messages.lang.language, language = if(messages.lang.code == "cy") Cy else En)
       )
       </div>
   }
