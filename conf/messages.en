@@ -104,6 +104,13 @@ quick_calc.you_have_told_us.a_day_sub.label.new=Days worked a week
 quick_calc.you_have_told_us.an_hour_sub.label.new=Hours worked a week
 quick_calc.you_have_told_us.an_hour_sub.label=How many hours a week do you usually work?
 
+quick_calc.you_have_told_us.additional_questions.about_tax_code.label = Tax Code
+quick_calc.you_have_told_us.additional_questions.scottish_rate.label = Scottish Income Tax
+quick_calc.you_have_told_us.additional_questions.about_pensions_contributions.label = Pension Contributions
+quick_calc.you_have_told_us.additional_questions.about_student_loan_contribution.label = Student Loan
+quick_calc.you_have_told_us.additional_questions.about_post_graduate_loan_contribution.label = Postgraduate Loan
+
+
 quick_calc.result.header=Your estimated take-home pay
 quick_calc.result.header.new=Your estimated take-home pay for
 quick_calc.result.you_take_home=Your estimated take-home pay for
@@ -312,7 +319,7 @@ quick_calc.about_tax_code.details.firstBullet_b=HMRC app (opens in a new tab)
 quick_calc.about_tax_code.details.secondBullet=on a recent payslip
 quick_calc.about_tax_code.details.thirdBullet=on a P45
 quick_calc.about_tax_code.details.fourthBullet=on a ‘Tax Code Notice’ letter from HMRC if you get one
-quick_calc.about_tax_code.details.firstInfoPara=If you leave it blank we will use 1257L, which is the most common tax code.
+quick_calc.about_tax_code.details.firstInfoPara=If you leave it blank we will use {0}, which is the most common tax code.
 quick_calc.about_tax_code.details.secondInfoPara_a=If you do not know it and you earn over £100,000 a year, we will still calculate your
 quick_calc.about_tax_code.details.secondInfoPara_b=reduced Personal Allowance (opens in a new tab)
 
@@ -430,4 +437,8 @@ timeout.keepAlive.notSignedIn= Return to the service
 timeout.deleteAnswers = Delete your answers
 
 reset.h1=Your answers have been deleted
+
+
+label.incomeAmount.visuallyHidden = Income amount
+label.taxCode.visuallyHidden = Tax Code
 

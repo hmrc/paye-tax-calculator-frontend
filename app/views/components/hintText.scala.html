@@ -16,6 +16,6 @@
 
 @this()
 
-@(content: Html)
+@(content: Html, hiddenText: Option[String]= None, hidden: Boolean = false)
 
-<p class="govuk-hint">@content</p>
+<p class="govuk-hint" aria-label="@hiddenText" aria-hidden="@hidden">@content</p>
