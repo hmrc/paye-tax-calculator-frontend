@@ -104,6 +104,12 @@ quick_calc.you_have_told_us.a_day_sub.label.new=Diwrnodau a weithir bob wythnos
 quick_calc.you_have_told_us.an_hour_sub.label.new=Oriau a weithir bob wythnos
 quick_calc.you_have_told_us.an_hour_sub.label=Sawl awr yr wythnos ydych yn ei gweithio fel arfer?
 
+quick_calc.you_have_told_us.additional_questions.about_tax_code.label = Translation needed
+quick_calc.you_have_told_us.additional_questions.scottish_rate.label = Translation needed
+quick_calc.you_have_told_us.additional_questions.about_pensions_contributions.label = Translation needed
+quick_calc.you_have_told_us.additional_questions.about_student_loan_contribution.label = Translation needed
+quick_calc.you_have_told_us.additional_questions.about_post_graduate_loan_contribution.label = Translation needed
+
 quick_calc.result.header=Eich cyflog clir amcangyfrifedig
 quick_calc.result.header.new=Eich cyflog clir amcangyfrifedig ar gyfer
 quick_calc.result.you_take_home=Eich cyflog clir amcangyfrifedig ar gyfer
@@ -430,3 +436,6 @@ timeout.keepAlive.notSignedIn=Dychwelyd i’r gwasanaeth
 timeout.deleteAnswers =Dileu’ch atebion
 
 reset.h1=Mae’ch atebion wedi’u dileu
+
+label.incomeAmount.visuallyHidden = translation needed
+label.taxCode.visuallyHidden = translation needed

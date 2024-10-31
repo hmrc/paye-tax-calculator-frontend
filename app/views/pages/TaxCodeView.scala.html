@@ -54,8 +54,8 @@
             @h1(messages("quick_calc.you_have_told_us.about_tax_code.label.newTitle"))
 
         <p class="govuk-hint">
-            <span class="govuk-visually-hidden">If you leave it blank we will use 1,2,5,7,L, which is the most common tax code.</span>
-            <span aria-hidden="true">If you leave it blank we will use 1257L, which is the most common tax code.</span>
+            <span class="govuk-visually-hidden">@messages("quick_calc.about_tax_code.details.firstInfoPara","1,2,5,7,L")</span>
+            <span aria-hidden="true">@messages("quick_calc.about_tax_code.details.firstInfoPara","1257L")</span>
         </p>
 
 
