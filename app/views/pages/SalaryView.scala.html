@@ -23,7 +23,7 @@
         govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         hmrcCurrencyInput: HmrcCurrencyInput,
-        h1: components.h1,
+        h2: components.h2,
         errorSummary: components.errorSummary,
         inputNumber: components.inputNumber,
         p: components.p,
@@ -87,7 +87,7 @@
 
         @errorSummary(salaryForm.errors)
 
-            @h1(messages("quick_calc.salary.header"))
+            @h2(messages("quick_calc.salary.header"))
 
             @label(messages("quick_calc.salary.grossAmount.label"))
 
@@ -96,7 +96,7 @@
             name = "amount",
             hint = Some(Hint(content = Text(Messages("hint.salary")))),
             label = Label(
-                content = Text(messages("Income amount")),
+                content = Text(messages("label.incomeAmount.visuallyHidden")),
                 classes = "govuk-visually-hidden"
             ),
             value = salaryForm("amount").value,

@@ -53,13 +53,16 @@
 
             @h1(messages("quick_calc.you_have_told_us.about_tax_code.label.newTitle"))
 
-            @hintText(Html(messages("quick_calc.about_tax_code.details.firstInfoPara")))
+        <p class="govuk-hint">
+            <span class="govuk-visually-hidden">@messages("quick_calc.about_tax_code.details.firstInfoPara","1,2,5,7,L")</span>
+            <span aria-hidden="true">@messages("quick_calc.about_tax_code.details.firstInfoPara","1257L")</span>
+        </p>
 
 
         @inputText(form = userTaxCodeForm,
             id = "taxCode",
             name = "taxCode",
-            label = "tax code",
+            label = messages("label.taxCode.visuallyHidden"),
             isPageHeading = false,
             classes = Some("govuk-input--width-10")
         )

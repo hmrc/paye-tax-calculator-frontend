@@ -45,13 +45,11 @@
     Seq(
         RadioItem(
             content = Text(Messages("quick_calc.over_state_pension_age.yes")),
-            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.yes")))),
             value = Some("true"),
             checked = radioFieldStatePension.value.contains("true")
         ),
         RadioItem(
             content = Text(Messages("quick_calc.over_state_pension_age.no")),
-            label = Some(Label(content = Text(Messages("quick_calc.over_state_pension_age.no")))),
             value = Some("false"),
             checked = radioFieldStatePension.value.contains("false"))
     )
