@@ -63,7 +63,7 @@
             ),
             label = Messages("quick_calc.result.tabLabels.yearly"),
             panel = TabPanel(
-                content = HtmlContent(resultDetailView(calculatorResponse.getYearly, taxYear, Messages("label.YEARLY"), calculatorResponse.isKCode, isScottish, Messages("quick_calc.result.tabLabels.yearly"), pensionCheck,kCodeLabel))
+                content = HtmlContent(resultDetailView(calculatorResponse.getYearly, taxYear, Messages("label.a_year.value"), calculatorResponse.isKCode, isScottish, Messages("quick_calc.result.tabLabels.yearly"), pensionCheck,kCodeLabel))
             )
         ),
         if(!fourWeekly) {
