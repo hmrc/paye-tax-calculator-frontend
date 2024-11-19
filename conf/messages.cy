@@ -98,7 +98,7 @@ quick_calc.result.taxable_income=Incwm trethadwy
 quick_calc.result.adjusted.taxable_income=Incwm Trethadwy wedi’i addasu
 quick_calc.result.take_home_pay=Cyflog clir
 quick_calc.result.incomeTaxPercentage=Treth Incwm ar
-quick_calc.result.sidebar.header=ar gyfer y cyfrifiad hwn:
+quick_calc.result.sidebar.header=Ar gyfer y cyfrifiad hwn:
 
 quick_calc.result.sidebar.one_job=mae gennych 1 swydd.
 quick_calc.result.sidebar.appliedScottishIncomeTaxRates=rydym wedi cymhwyso cyfraddau Treth Incwm yr Alban.

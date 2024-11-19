@@ -98,7 +98,7 @@ quick_calc.result.taxable_income= Taxable Income
 quick_calc.result.adjusted.taxable_income= Adjusted Taxable Income
 quick_calc.result.take_home_pay= Take-home pay
 quick_calc.result.incomeTaxPercentage= Income Tax at
-quick_calc.result.sidebar.header=for this calculation:
+quick_calc.result.sidebar.header=For this calculation:
 
 quick_calc.result.sidebar.one_job=you have 1 job
 quick_calc.result.sidebar.appliedScottishIncomeTaxRates=we have applied Scottish Income Tax rates
