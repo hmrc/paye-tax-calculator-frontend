@@ -46,6 +46,6 @@
       "url": "https://play.google.com/store/apps/details?id=uk.gov.hmrc.ptcalc"
     }
   ],
-  "start_url": ".",
+  "start_url": "/estimate-paye-take-home-pay/your-pay",
   "display": "standalone"
 }
