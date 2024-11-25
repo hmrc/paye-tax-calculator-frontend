@@ -56,9 +56,9 @@
       <!--[if gt IE 8]><!--> <link href='@routes.Assets.versioned("stylesheets/application.css")' rel="stylesheet" type="text/css" />
           <!--<![endif]-->
   @if(showAppBanner) {
+      <link rel="manifest" href="@{routes.Assets.versioned("manifest.json")}"/>
       <meta name="apple-itunes-app" content="app-id=514561561, app-argument=hmrcapp://tax-calculator">
       <meta name="google-play-app" content="app-id=uk.gov.hmrc.ptcalc">
-      <link rel="manifest" href="@{routes.Assets.versioned("manifest.json")}"
   }
   @if(timeout) {
       <meta
