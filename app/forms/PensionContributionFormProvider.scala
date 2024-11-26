@@ -16,7 +16,6 @@
 
 package forms
 
-
 import mappings.CustomFormatters
 
 import javax.inject.Inject
@@ -30,9 +29,9 @@ class PensionContributionFormProvider @Inject() () {
 
   def apply(): Form[PensionContributions] = Form(
     mapping(
-      gaveUsPensionPercentage -> of[Boolean],
+      gaveUsPensionPercentage    -> of[Boolean],
       monthlyPensionContribution -> of(CustomFormatters.pensionContributionFormatter()),
-      yearlyContributionAmount -> optional(of[BigDecimal])
+      yearlyContributionAmount   -> optional(of[BigDecimal])
     )(PensionContributions.apply)(PensionContributions.unapply)
   )
 

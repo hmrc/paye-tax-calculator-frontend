@@ -45,60 +45,62 @@ class DaysPerWeekController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   val form: Form[Days] = salaryInDaysFormProvider()
 
-  def submitDaysAWeek(valueInPence: Int): Action[AnyContent] = validateAcceptWithSessionId().async { implicit request =>
-    implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
+  def submitDaysAWeek(valueInPence: Int): Action[AnyContent] =
+    validateAcceptWithSessionId().async { implicit request =>
+      implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
-    val url   = routes.SalaryController.showSalaryForm.url
-    val value = BigDecimal(valueInPence / 100.0)
+      val url   = routes.SalaryController.showSalaryForm.url
+      val value = BigDecimal(valueInPence / 100.0)
 
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future(BadRequest(daysPerWeekView(formWithErrors, value))),
-        days => {
-          val currentYearlyAmount: BigDecimal =
-            TaxResult.convertWagesToYearly(value, Daily, Some(days.howManyAWeek))
-          val monthlyAmount: BigDecimal = TaxResult.convertWagesToMonthly(currentYearlyAmount)
-          val updatedAggregate = cache
-            .fetchAndGetEntry()
-            .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
-            .map(oldAggregate =>
-              oldAggregate.copy(
-                savedSalary = Some(
-                  Salary(
-                    value,
-                    Some(currentYearlyAmount),
-                    oldAggregate.savedSalary.flatMap(_.amountYearly),
-                    Daily,
-                    Some(days.howManyAWeek),
-                    Some(monthlyAmount)
-                  )
-                ),
-                savedPeriod =
-                  Some(PayPeriodDetail(value, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
-              )
-            )
-
-          updatedAggregate.flatMap { agg =>
-            cache
-              .save(agg)
-              .map(_ =>
-                Redirect(
-                  navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
-                    routes.StatePensionController.showStatePensionForm
-                  )()
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future(BadRequest(daysPerWeekView(formWithErrors, value))),
+          days => {
+            val currentYearlyAmount: BigDecimal =
+              TaxResult.convertWagesToYearly(value, Daily, Some(days.howManyAWeek))
+            val monthlyAmount: BigDecimal = TaxResult.convertWagesToMonthly(currentYearlyAmount)
+            val updatedAggregate = cache
+              .fetchAndGetEntry()
+              .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
+              .map(oldAggregate =>
+                oldAggregate.copy(
+                  savedSalary = Some(
+                    Salary(
+                      value,
+                      Some(currentYearlyAmount),
+                      oldAggregate.savedSalary.flatMap(_.amountYearly),
+                      Daily,
+                      Some(days.howManyAWeek),
+                      Some(monthlyAmount)
+                    )
+                  ),
+                  savedPeriod =
+                    Some(PayPeriodDetail(value, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
                 )
               )
+
+            updatedAggregate.flatMap { agg =>
+              cache
+                .save(agg)
+                .map(_ =>
+                  Redirect(
+                    navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
+                      routes.StatePensionController.showStatePensionForm
+                    )()
+                  )
+                )
+            }
           }
-        }
-      )
-  }()
+        )
+    }()
 
   def showDaysAWeek(valueInPence: Int): Action[AnyContent] =
     salaryRequired(

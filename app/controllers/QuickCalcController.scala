@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class QuickCalcController @Inject() (
   override val messagesApi:      MessagesApi,
   cache:                         QuickCalcCache,
-  val controllerComponents:      ControllerComponents,
+  val controllerComponents:      ControllerComponents
 )(implicit val appConfig:        AppConfig,
   implicit val executionContext: ExecutionContext)
     extends BackendBaseController
@@ -51,7 +51,7 @@ class QuickCalcController @Inject() (
 
     cache.fetchAndGetEntry().flatMap {
       case Some(aggregate) =>
-        val updatedAggregate = aggregate.copy(None, None, None, None, None, None, None, None  )
+        val updatedAggregate = aggregate.copy(None, None, None, None, None, None, None, None)
         cache.save(updatedAggregate).map(_ => Redirect(routes.SalaryController.showSalaryForm))
       case None =>
         Future.successful(Redirect(routes.SalaryController.showSalaryForm))

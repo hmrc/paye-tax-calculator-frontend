@@ -19,8 +19,6 @@ package models
 import forms.SalaryPeriod
 import play.api.libs.json._
 
-
-
 case class Salary(
   amount:               BigDecimal,
   amountYearly:         Option[BigDecimal],
@@ -28,7 +26,6 @@ case class Salary(
   period:               SalaryPeriod,
   howManyAWeek:         Option[BigDecimal],
   monthlyAmount:        Option[BigDecimal])
-
 
 object Salary {
 
@@ -51,6 +48,13 @@ object Salary {
       (__ \ "period").write[SalaryPeriod] and
       (__ \ "how-many-a-week").writeNullable[BigDecimal] and
       (__ \ "monthlyAmount").writeNullable[BigDecimal]
-    )(a => (if(a.amount.isWhole) a.amount.setScale(0) else a.amount, a.amountYearly, a.previousAmountYearly, a.period, a.howManyAWeek, a.monthlyAmount))
+    )(a =>
+      (if (a.amount.isWhole) a.amount.setScale(0) else a.amount,
+       a.amountYearly,
+       a.previousAmountYearly,
+       a.period,
+       a.howManyAWeek,
+       a.monthlyAmount)
+    )
 
 }

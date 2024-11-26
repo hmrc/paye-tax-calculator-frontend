@@ -83,7 +83,7 @@ class YouHaveToldUsNewController @Inject() (
   ): List[(String, String)] = {
     val payScottishRate = aggregateInput.savedScottishRate.exists(_.payScottishRate.getOrElse(false))
     val taxCode         = aggregateInput.savedTaxCode.flatMap(_.taxCode).getOrElse("")
-    val result = Option(TaxCodeValidator.INSTANCE.validateTaxCodeMatchingRate(taxCode, payScottishRate))
+    val result          = Option(TaxCodeValidator.INSTANCE.validateTaxCodeMatchingRate(taxCode, payScottishRate))
     result.map(_.getErrorType) match {
       case Some(ValidationError.ScottishCodeButOtherRate) =>
         List(taxCodeLabel -> Messages("quick_calc.tax_code.scottish_rate.warning"))

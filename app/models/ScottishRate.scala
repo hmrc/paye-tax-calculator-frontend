@@ -18,8 +18,7 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class ScottishRate(
-  payScottishRate:    Option[Boolean])
+case class ScottishRate(payScottishRate: Option[Boolean])
 
 object ScottishRate {
 

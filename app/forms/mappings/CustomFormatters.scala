@@ -487,7 +487,7 @@ object CustomFormatters {
                     case PensionError.INVALID_AMOUNT_DECIMAL =>
                       Left(Seq(FormError(key, "quick_calc.pensionContributionError.poundAndPence")))
                     case PensionError.AMOUNT_REACHED_TEN_MILLIONS =>
-                      Left(Seq(FormError(key,"quick_calc.pensionContributionError.aboveTenMill")))
+                      Left(Seq(FormError(key, "quick_calc.pensionContributionError.aboveTenMill")))
                     case _ =>
                       Left(Seq(FormError(key, "quick_calc.pensionContributionError.invalidFormat")))
                   }

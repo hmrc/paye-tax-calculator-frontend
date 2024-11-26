@@ -43,7 +43,8 @@ class RemoveItemController @Inject() (
   implicit val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ActionWithSessionId with SalaryRequired{
+    with ActionWithSessionId
+    with SalaryRequired {
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
@@ -75,16 +76,16 @@ class RemoveItemController @Inject() (
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
                 val updatedAggregate = if (removeItemBoolean) {
-                  if(option == "taxcode"){
+                  if (option == "taxcode") {
                     aggregate
                       .copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
-                  } else if(option == "student-loans"){
+                  } else if (option == "student-loans") {
                     aggregate
                       .copy(savedStudentLoanContributions = None)
-                  } else if(option == "postgraduate-loans"){
-                  aggregate
-                    .copy(savedPostGraduateLoanContributions = None)
-                } else {
+                  } else if (option == "postgraduate-loans") {
+                    aggregate
+                      .copy(savedPostGraduateLoanContributions = None)
+                  } else {
                     aggregate
                       .copy(savedPensionContributions = None)
                   }

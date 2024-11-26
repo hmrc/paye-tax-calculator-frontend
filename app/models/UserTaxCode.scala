@@ -28,11 +28,11 @@ case class UserTaxCode(
 object UserTaxCode {
 
   implicit val format: OFormat[UserTaxCode] = Json.format[UserTaxCode]
-  val HasTaxCode                     = "hasTaxCode"
-  val TaxCode                        = "taxCode"
-  private val WrongTaxCodePrefixKey          = "quick_calc.about_tax_code.wrong_tax_code_prefix"
-  private val WrongTaxCodeSuffixKey          = "quick_calc.about_tax_code.wrong_tax_code_suffix"
-  private val WrongTaxCodeKey                = "quick_calc.about_tax_code.wrong_tax_code"
+  val HasTaxCode                    = "hasTaxCode"
+  val TaxCode                       = "taxCode"
+  private val WrongTaxCodePrefixKey = "quick_calc.about_tax_code.wrong_tax_code_prefix"
+  private val WrongTaxCodeSuffixKey = "quick_calc.about_tax_code.wrong_tax_code_suffix"
+  private val WrongTaxCodeKey       = "quick_calc.about_tax_code.wrong_tax_code"
 
   def wrongTaxCode(taxCode: String): Seq[FormError] = {
     val res = TaxCodeValidator.INSTANCE.isValidTaxCode(taxCode)

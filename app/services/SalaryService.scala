@@ -26,8 +26,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SalaryService @Inject() (
-  implicit val executionContext: ExecutionContext) {
+class SalaryService @Inject() (implicit val executionContext: ExecutionContext) {
 
   def updateSalaryAmount(
     cache:            QuickCalcCache,
@@ -61,11 +60,13 @@ class SalaryService @Inject() (
               oldAggregate.copy(savedSalary = Some(
                 salaryAmount.copy(amountYearly         = Some(currentYearlyAmount),
                                   previousAmountYearly = oldAggregate.savedSalary.flatMap(_.amountYearly),
-                                  monthlyAmount = Some(monthlyAmount))
+                                  monthlyAmount        = Some(monthlyAmount))
               )
               )
             } else {
-              oldAggregate.copy(savedSalary = Some(salaryAmount.copy(amountYearly = Some(currentYearlyAmount), monthlyAmount = Some(monthlyAmount))))
+              oldAggregate.copy(savedSalary =
+                Some(salaryAmount.copy(amountYearly = Some(currentYearlyAmount), monthlyAmount = Some(monthlyAmount)))
+              )
             }
         }
         (newAggregate.savedSalary, newAggregate.savedPeriod) match {

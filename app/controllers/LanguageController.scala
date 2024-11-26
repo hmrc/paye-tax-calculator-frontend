@@ -22,10 +22,11 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-
-class LanguageController @Inject()(val appConfig: AppConfig,
-                                   val mcc: MessagesControllerComponents
-                                  ) extends FrontendController(mcc) with I18nSupport {
+class LanguageController @Inject() (
+  val appConfig: AppConfig,
+  val mcc:       MessagesControllerComponents)
+    extends FrontendController(mcc)
+    with I18nSupport {
 
   def langToCall: String => Call = appConfig.routeToSwitchLanguage
 
@@ -34,10 +35,8 @@ class LanguageController @Inject()(val appConfig: AppConfig,
   def languageMap: Map[String, Lang] = appConfig.languageMap
 
   def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
-    val lang = languageMap.getOrElse(language, Lang("en"))
+    val lang        = languageMap.getOrElse(language, Lang("en"))
     val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
     Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(Flash(Map("switching-language" -> "true")))
   }
 }
-
-
