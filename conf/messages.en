@@ -1,35 +1,7 @@
-legacy.title=HMRC Estimate your take-home pay calculator
-legacy.introduction=Estimate how much Income Tax and National Insurance contributions you can expect to pay on your income – and find out how this money gets spent by the Government. The calculator is aimed at people who pay tax through Pay As You Earn (the system used by employers and pension providers to deduct tax from your wages or pension). It’s free and easy to use.
-legacy.scottish_taxpayer_intro=If you are a Scottish taxpayer you will need to enter your Scottish tax code, fo example "S1100L". For further information on the Scottish rate of Income Tax go to  
-legacy.scottish_income_tax=Scottish Income Tax
-index.use_the_detailed_calc_if=Notes for employees under the age of 21 and apprentices under the age of 25:
-index.use_the_detailed_calc_NI_select=You will need to select the National Insurance category letter:
-index.use_the_detailed_calc_NI_select_A=‘A’ if your category letter is either ‘H’ or ‘M’
-index.use_the_detailed_calc_NI_select_D=‘D’ if your category letter is ‘I’
-index.use_the_detailed_calc_NI_select_Other=Selecting the alternative letter will not affect the amount of ’National Insurance’ estimated.
-index.use_the_detailed_calc_ENI=The ’Employer National Insurance’ estimate will not be correct. If you want to know the correct amount please use the
-index.use_the_detailed_calc_NIC_link=National Insurance Contributions calculator
-
-index.detailed_calc_under_age=you are under the age of 21 or you are an apprentice under the age of 25
-index.title=How much is your income, tax and National Insurance?
-index.introduction=The calculator is aimed at people who pay tax through Pay As You Earn (the system used by employers and pension providers to deduct tax from your wages or pension). It’s free and easy to use.
-index.quick_calculation=Quick calculation
-index.detailed_calculation=Detailed calculation
-index.welsh_version=Welsh version
-index.welsh_version_description=Follow the link below to use the Welsh language version of the online calculator.
-index.welsh_version_link=Cyfrifiannell Treth CThEM
-index.use_the_quick_calc_if=Use the quick calculation if you can answer ‘yes’ to the following:
-index.employment_only=you have employment income only
-index.dont_contribute_pension=you don’t contribute to a workplace or personal pension through your employer.
-index.language_version.header=Welsh version
-index.language_version.click_here=Click here
-index.language_version.paragraph=to use the Welsh language version of the online calculator.
-index.language_version.target_language=welsh
-
 continue=Continue
 back = Back
 restart = Start again
-get_results=Get results
+
 update_answers=Update answers
 calculate_take_home_pay=Calculate take-home pay
 a=a
@@ -40,16 +12,13 @@ no = No
 
 feedback=Tell us what you think of this calculator (opens in a new tab)
 #TODO Allow formatting for quote marks
-select_one=Answer ‘Yes’ or ‘No’
 
-quick_calc.title=HMRC Estimate your take-home pay calculator
 quick_calc.header.title=PAYE Tax Calculator
 site.govuk=GOV.UK
 
 quick_calc.you_have_told_us.header=Check your answers
-quick_calc.you_have_told_us.header_question=We asked
-quick_calc.you_have_told_us.header_answers=You answered
-quick_calc.you_have_told_us.header_change_link=You can
+
+
 quick_calc.you_have_told_us.edit=Change
 
 quick_calc.you_have_told_us.about_tax_code.label=What is your tax code? (Optional)
@@ -57,10 +26,8 @@ quick_calc.you_have_told_us.about_tax_code.label.newTitle=What is your tax code?
 quick_calc.you_have_told_us.about_pension_contributions.label=How much are your monthly pension contributions? (Optional)
 quick_calc.you_have_told_us.about_pensions_contributions.label.new= Pension contributions
 quick_calc.you_have_told_us.about_tax_code.label.new=Tax Code
-quick_calc.you_have_told_us.about_tax_code.no=No
-quick_calc.you_have_told_us.about_tax_code.yes=Yes
-quick_calc.you_have_told_us.about_tax_code.default_a=We have used the default tax code
-quick_calc.you_have_told_us.about_tax_code.default_b=because you did not enter one.
+
+
 quick_calc.you_have_told_us.about_tax_code.default.not.provided=Not provided
 quick_calc.you_have_told_us.taxCode.add=Add
 quick_calc.you_have_told_us.taxCode.remove=Remove
@@ -114,27 +81,12 @@ quick_calc.you_have_told_us.additional_questions.about_post_graduate_loan_contri
 quick_calc.result.header=Your estimated take-home pay
 quick_calc.result.header.new=Your estimated take-home pay for
 quick_calc.result.you_take_home=Your estimated take-home pay for
-quick_calc.result.total_deductions.info_a=Based on your answers we estimate your
-quick_calc.result.total_deductions.info_b=take-home pay to be:
 quick_calc.result.total_deductions.info.new= How we calculated this
 quick_calc.result.income=Income
-quick_calc.result.tax_free_allowance=Your tax-free allowance is
-quick_calc.result.tax_free_allowance_scottish=Your Scottish tax-free allowance is
-quick_calc.result.k_code=Your ’K code’ pay adjustment
+
 quick_calc.result.k_code.new={0} code pay adjustment
 quick_calc.result.sk_code=Your ’SK code’ pay adjustment
-quick_calc.result.adjusted_taxable_pay=Your adjusted taxable pay is
-quick_calc.result.taxable_pay=Your taxable pay is
-quick_calc.result.deductions=Total tax to pay
-quick_calc.result.income_tax=Income Tax
-quick_calc.result.income_tax_scottish=Scottish Income Tax
-quick_calc.result.income_tax_adjusted=Adjusted Income Tax
-quick_calc.result.income_tax_scottish_adjusted=Adjusted Scottish Income Tax
 quick_calc.result.your_national_insurance=National Insurance
-quick_calc.result.how_we_calculate_a=How we calculate your
-quick_calc.result.how_we_calculate_b=results:
-quick_calc.result.how_we_calculated.you_earn_a=Your pay
-quick_calc.result.how_we_calculated.you_earn_b=(you told us this)
 quick_calc.result.adjusted.head=What is adjusted Income Tax?
 quick_calc.result.adjusted.info=HMRC can’t take more than 50% of your total pay to cover Income Tax. Your estimated Income Tax is more than 50% in this case, so we’ve adjusted it to reflect this limit.
 quick_calc.result.gross.income= Gross income
@@ -175,20 +127,11 @@ quick_calc.result.disclaimer.reducedPersonal_allowance_a.new=You used a tax code
 quick_calc.result.disclaimer.reducedPersonal_allowance_b.new=reduced Personal Allowance (opens in a new tab).
 
 quick_calc.result.tabLabels.yearly=Yearly
-quick_calc.result.tabLabels.annually=Annually
 quick_calc.result.tabLabels.monthly=Monthly
 quick_calc.result.tabLabels.weekly=Weekly
 quick_calc.result.tabLabels.fourWeekly = 4 weekly
 quick_calc.result.info.new=Our calculation does not account for any other deductions your employer might make before they pay you. We will not keep a record of your data for security reasons.
-quick_calc.result.info_a=We have estimated your National Insurance contribution based on the most common
-quick_calc.result.info_b=Class 1 options: Categories A, H and M (opens in a new tab)
-quick_calc.result.info_e=HMRC will not keep a record of your data for security reasons.
-quick_calc.result.info_print=Print my calculation
 
-quick_calc.result.info_url_list=What to do now
-quick_calc.result.info_url_a=Check how much Income Tax you paid last year
-quick_calc.result.info_url_b=Check if you have paid the right amount of tax
-quick_calc.result.info_url_c=Claim a tax refund
 
 quick_calc.result.23_24.disclaimer.yearly=As a result, your actual take-home pay will be less than the estimate shown.
 quick_calc.result.23_24.disclaimer.monthly=As a result, your take-home pay for any month from 6 April 2023 to 6 January 2024 will be lower than the estimate shown.
@@ -230,8 +173,6 @@ quick_calc.salary.studentLoan.plan4.label=plan four
 quick_calc.salary.studentLoan.noneOfThese.label=none of these
 quick_calc.error.postgraduate-loans=Select yes if you repay a postgraduate loan
 quick_calc.error.student-loans=Select which student loan you are currently repaying
-quick_calc.remove.student-loans= Are you sure you want to remove your student loan?
-quick_calc.remove.postgraduate-loans= Are you sure you want to remove your Postgraduate loan?
 quick_calc.postgraduateLoan.header=Do you have a postgraduate loan? (Optional)
 quick_calc.postgraduateLoan.subheading=Tell us if you have a postgraduate loan that you need to repay.
 
@@ -242,12 +183,6 @@ quick_calc.remove_pensions_contributions_error= Select yes if you want to remove
 quick_calc.remove_student_loans_contributions_error= Select yes if you want to remove your student loan
 quick_calc.remove_postgraduate_loans_contributions_error= Select yes if you want to remove your postgraduate loan
 
-quick_calc.salary.yearly.sub_label=a year
-quick_calc.salary.monthly.sub_label=a month
-quick_calc.salary.weekly.sub_label=a week
-quick_calc.salary.fourWeeks.sub_label=every 4 weeks
-quick_calc.salary.daily.sub_label=a_day_sub
-quick_calc.salary.hourly.sub_label=an_hour_sub
 
 quick_calc.salary.question.approximate=If you don’t know, an approximate number is fine.
 quick_calc.salary.question.days_a_week=How many days a week do you usually work?
@@ -266,16 +201,7 @@ quick_calc.salary.question.scottish_income_url_a=You can check if you pay
 quick_calc.salary.question.scottish_income_url_b=Scottish Income Tax (opens in a new tab)
 quick_calc.salary.question.scottish_income_url_c=if you’re not sure.
 
-quick_calc.scottish_rate_error=Select yes if you pay Scottish Income Tax
-quick_calc.salary.question.tax_code_info=Your tax code will tell us if you owe tax from a previous year or have any allowances, such as Blind Person’s Allowance.
-quick_calc.salary.question.tax_code_info_a=If you do not enter a tax code we will use the default tax code
-quick_calc.salary.question.tax_code_info_b=to calculate your take-home pay.
-quick_calc.salary.question.tax_code_info_url_a=You can usually find your tax code on a
-quick_calc.salary.question.tax_code_info_url_b=recent payslip or P45 (opens in a new tab)
 
-quick_calc.salary.period_error_link_a = There’s a problem with the amount you’ve entered
-quick_calc.salary.period_error_link_b = You haven’t entered how many days you work
-quick_calc.salary.period_error_link_c = You haven’t entered how many hours you work
 
 quick_calc.salary.question.error.number_of_days.invalid_hours=Enter a number between 1 and 7
 
@@ -297,11 +223,6 @@ quick_calc.salary.question.error.minimum_salary_input=Enter a payment amount tha
 
 quick_calc.salary.question.error.empty_salary_input=Enter the amount you are paid
 
-quick_calc.salary.question.error.empty_daily_salary_input=Please enter your daily rate
-quick_calc.salary.question.error.empty_hourly_salary_input=Please enter your hourly rate
-
-quick_calc.salary.question.error.minimum_hourly_salary_input=Hourly rate must be at least 0.01
-quick_calc.salary.question.error.minimum_daily_salary_input=Daily rate must be at least 0.01
 
 quick_calc.over_state_pension_age.header=Are you over the State Pension age?
 quick_calc.over_state_pension_age.yes=Yes
@@ -312,7 +233,6 @@ quick_calc.about_tax_code.header=What is your tax code? (Optional)
 quick_calc.about_tax_code.header.new=What is your tax code? (Optional)
 quick_calc.about_tax_code.has_tax_code=Enter your tax code
 
-quick_calc.about_tax_code.subheading=Tax code
 quick_calc.about_tax_code.details.start=You can usually find your tax code:
 quick_calc.about_tax_code.details.firstBullet_a=in the
 quick_calc.about_tax_code.details.firstBullet_b=HMRC app (opens in a new tab)
@@ -327,17 +247,11 @@ quick_calc.about_tax_code.wrong_tax_code_prefix=Enter a tax code that starts wit
 
 quick_calc.about_tax_code.wrong_tax_code=Enter a tax code in the correct format, for example 1117L, K497, S1117L or SK497
 
-quick_calc.about_tax_code.has_tax_code_yes=Yes
-quick_calc.about_tax_code.has_tax_code_no=No
 
 quick_calc.about_tax_code.wrong_tax_code_suffix=Enter a tax code that ends with with the letter L, M, N or T
 
 quick_calc.about_tax_code_empty_error = Enter your current tax code or change your answer to ‘No’
 
-quick_calc.about_k_code_a = Your adjusted Income Tax is an estimate including any increase indicated by
-quick_calc.about_k_code_b_k = the K in your tax code (opens in a new tab)
-quick_calc.about_k_code_b_sk = the SK in your tax code (opens in a new tab)
-quick_calc.about_k_code_c = The K code is used across the UK and usually indicates you owe tax from a previous year.
 
 quick_calc.tax_code.over_hundred_thousand.warning = This tax code is not usually for those on more than £100,000 a year.
 quick_calc.tax_code.scottish_rate.warning = You’ve used a Scottish tax code so we will apply Scottish Income Tax rates.
@@ -441,4 +355,5 @@ reset.h1=Your answers have been deleted
 
 label.incomeAmount.visuallyHidden = Income amount
 label.taxCode.visuallyHidden = Tax Code
+
 
