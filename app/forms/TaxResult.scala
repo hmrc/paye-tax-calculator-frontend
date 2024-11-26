@@ -40,7 +40,8 @@ object TaxResult {
       case Some(breakdownList) if !breakdownList.isEmpty =>
         breakdownList.asScala
           .map(band => (band.getPercentage * 100, band.getAmount))
-          .sortBy(_._1).toSeq
+          .sortBy(_._1)
+          .toSeq
       case _ =>
         Seq.empty
     }
@@ -98,7 +99,7 @@ object TaxResult {
           wages.toDouble,
           hoursOrDaysWorked.map(_.toDouble).getOrElse(throw new Exception("Not supplied hours"))
         )
-      case Weekly        => WageConverterUtils.INSTANCE.convertWeeklyWageToYearly(wages.toDouble)
+      case Weekly     => WageConverterUtils.INSTANCE.convertWeeklyWageToYearly(wages.toDouble)
       case FourWeekly => WageConverterUtils.INSTANCE.convertFourWeeklyWageToYearly(wages.toDouble)
     }
 
@@ -110,17 +111,16 @@ object TaxResult {
   ): Option[PensionContribution] =
     (quickCalcAggregateInput.savedPensionContributions.map(_.gaveUsPercentageAmount),
      quickCalcAggregateInput.savedPensionContributions
-       .flatMap(_.monthlyContributionAmount))match {
+       .flatMap(_.monthlyContributionAmount)) match {
       case (Some(true), Some(amount)) => Some(new PensionContribution(PensionMethod.PERCENTAGE, amount.toDouble))
       case (Some(false), Some(amount)) =>
         Some(new PensionContribution(PensionMethod.MONTHLY_AMOUNT_IN_POUNDS, amount.toDouble))
       case _ => None
     }
 
-
   private def extractStudentLoanContributions(
     quickCalcAggregateInput: QuickCalcAggregateInput
-  ): Option[StudentLoanPlans] = {
+  ): Option[StudentLoanPlans] =
     (quickCalcAggregateInput.savedStudentLoanContributions.map(_.studentLoanPlan.getOrElse("")) match {
       case Some(PlanOne) =>
         Some(new StudentLoanPlans(true, false, false, extractPostGradLoan(quickCalcAggregateInput)))
@@ -131,12 +131,11 @@ object TaxResult {
       case _ => Some(new StudentLoanPlans(false, false, false, extractPostGradLoan(quickCalcAggregateInput)))
 
     })
-  }
 
   private def extractPostGradLoan(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedPostGraduateLoanContributions match {
       case Some(s) => s.hasPostgraduatePlan.getOrElse(false)
-      case None          => false
+      case None    => false
     }
 
   def convertWagesToMonthly(wages: BigDecimal): BigDecimal =
@@ -185,13 +184,13 @@ object TaxResult {
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
         s.period match {
-          case Yearly        => s.amount
-          case Monthly       => s.amount
-          case Weekly        => s.amount
-          case Daily         => s.amount
-          case Hourly       => s.amount
+          case Yearly     => s.amount
+          case Monthly    => s.amount
+          case Weekly     => s.amount
+          case Daily      => s.amount
+          case Hourly     => s.amount
           case FourWeekly => s.amount
-          case _               => throw new Exception("No Salary has been provided.")
+          case _          => throw new Exception("No Salary has been provided.")
         }
       case None => throw new Exception("No Salary has been provided.")
     }
@@ -200,13 +199,13 @@ object TaxResult {
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
         s.period match {
-          case Yearly        => PayPeriod.YEARLY
-          case Monthly       => PayPeriod.MONTHLY
-          case Weekly        => PayPeriod.WEEKLY
-          case Daily         => PayPeriod.DAILY
-          case Hourly       => PayPeriod.HOURLY
+          case Yearly     => PayPeriod.YEARLY
+          case Monthly    => PayPeriod.MONTHLY
+          case Weekly     => PayPeriod.WEEKLY
+          case Daily      => PayPeriod.DAILY
+          case Hourly     => PayPeriod.HOURLY
           case FourWeekly => PayPeriod.FOUR_WEEKLY
-          case e               => throw new BadRequestException(s"$e is not a valid PayPeriod")
+          case e          => throw new BadRequestException(s"$e is not a valid PayPeriod")
         }
       case _ => throw new BadRequestException(s"Invalid PayPeriod")
     }
@@ -220,9 +219,9 @@ object TaxResult {
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
         (s.period, s.howManyAWeek) match {
-          case (Daily, Some(manyAWeek))   => Some(manyAWeek)
+          case (Daily, Some(manyAWeek))  => Some(manyAWeek)
           case (Hourly, Some(manyAWeek)) => Some(manyAWeek)
-          case _                            => None
+          case _                         => None
         }
       case _ => None
     }
@@ -243,7 +242,7 @@ object TaxResult {
 
   def moneyFormatterResult(value2: BigDecimal): String = {
     val roundedValue = value2.setScale(2, RoundingMode.HALF_UP)
-    val formatter = java.text.NumberFormat.getInstance
+    val formatter    = java.text.NumberFormat.getInstance
     formatter.setMaximumFractionDigits(2)
     formatter.setMinimumFractionDigits(2)
     val formattedValue = formatter.format(roundedValue)
@@ -251,15 +250,16 @@ object TaxResult {
   }
 
   def kCodeLabel(
-                  key: String,
-                  payScottishRate: Boolean
-                )(implicit messages: Messages
-                ): String =
+    key:               String,
+    payScottishRate:   Boolean
+  )(implicit messages: Messages
+  ): String =
     key match {
-      case str if str.startsWith("K") && !payScottishRate => Messages("quick_calc.result.k_code.new", str.take(1))
+      case str if str.startsWith("K") && !payScottishRate  => Messages("quick_calc.result.k_code.new", str.take(1))
       case str if str.startsWith("CK") && !payScottishRate => Messages("quick_calc.result.k_code.new", str.take(2))
       case str if str.startsWith("SK") && !payScottishRate => Messages("quick_calc.result.k_code.new", str.take(2))
-      case str if str.startsWith("K") | str.startsWith("CK") | str.startsWith("SK") && payScottishRate => Messages("quick_calc.result.k_code.new","SK")
+      case str if str.startsWith("K") | str.startsWith("CK") | str.startsWith("SK") && payScottishRate =>
+        Messages("quick_calc.result.k_code.new", "SK")
       case _ => ""
     }
 }

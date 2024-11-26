@@ -22,7 +22,7 @@ import javax.inject.Inject
 import play.api.data.Forms.{mapping, of, optional}
 import play.api.data.format.Formats.stringFormat
 
-class StudentLoansFormProvider @Inject()() {
+class StudentLoansFormProvider @Inject() () {
 
   def apply(): Form[StudentLoanContributions] = Form(
     mapping(

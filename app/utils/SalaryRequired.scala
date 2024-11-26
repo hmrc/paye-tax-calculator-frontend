@@ -26,12 +26,13 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 
 import scala.concurrent.ExecutionContext
 
-trait SalaryRequired extends ActionWithSessionId{
+trait SalaryRequired extends ActionWithSessionId {
 
   def salaryRequired[T](
-                                 cache:         QuickCalcCache,
-                                 furtherAction: Request[AnyContent] => QuickCalcAggregateInput => Result
-                               )(implicit executionContext: ExecutionContext): Action[AnyContent] =
+    cache:                     QuickCalcCache,
+    furtherAction:             Request[AnyContent] => QuickCalcAggregateInput => Result
+  )(implicit executionContext: ExecutionContext
+  ): Action[AnyContent] =
     validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 

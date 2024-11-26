@@ -21,8 +21,7 @@ import play.api.libs.json._
 case class PensionContributions(
   gaveUsPercentageAmount:    Boolean = false,
   monthlyContributionAmount: Option[BigDecimal],
-  yearlyContributionAmount:  Option[BigDecimal]) {
-}
+  yearlyContributionAmount:  Option[BigDecimal]) {}
 
 object PensionContributions {
 

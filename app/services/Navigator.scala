@@ -25,12 +25,9 @@ import play.api.mvc.Call
 
 class Navigator @Inject() (implicit appConfig: AppConfig) {
 
-  def nextPageOrSummaryIfAllQuestionsAnswered(
-    aggregate:        QuickCalcAggregateInput
-  )(next:             Call
-  )(): Call =
+  def nextPageOrSummaryIfAllQuestionsAnswered(aggregate: QuickCalcAggregateInput)(next: Call)(): Call =
     if (aggregate.allQuestionsAnswered) {
-        routes.YouHaveToldUsNewController.summary
+      routes.YouHaveToldUsNewController.summary
     } else next
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(): Call =

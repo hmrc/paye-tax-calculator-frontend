@@ -44,9 +44,7 @@ class AggregateConditionsUtil @Inject() {
   def givenPostGradLoanContribution(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedPostGraduateLoanContributions.isDefined
 
-  def roundedMonthlySalary(
-                                    aggregateInput: QuickCalcAggregateInput
-                                  ): String = {
+  def roundedMonthlySalary(aggregateInput: QuickCalcAggregateInput): String = {
 
     val monthlySalary: BigDecimal = aggregateInput.savedSalary.flatMap(_.monthlyAmount).getOrElse(BigDecimal(0))
     moneyFormatter(monthlySalary.setScale(2, BigDecimal.RoundingMode.HALF_UP))
@@ -58,27 +56,22 @@ class AggregateConditionsUtil @Inject() {
     val monthlySalary: BigDecimal = aggregateInput.savedSalary.flatMap(_.monthlyAmount).getOrElse(BigDecimal(0))
     val listOfPensionError = PensionValidator.INSTANCE
       .isValidMonthlyPension(monthlyContributions.toDouble,
-        monthlySalary.toDouble,
-        TaxResult.extractTaxYear(getTaxYear))
+                             monthlySalary.toDouble,
+                             TaxResult.extractTaxYear(getTaxYear))
       .asScala
       .toList
     listOfPensionError.contains(PensionError.ABOVE_WAGE)
   }
 
-  def isFourWeekly(aggregateInput: QuickCalcAggregateInput): Boolean = {
+  def isFourWeekly(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedSalary.exists { salary =>
       salary.period match {
         case fourWeekly: FourWeekly.type => true
         case _ => false
       }
     }
-  }
 
-
-
-  def isScottishRateDefined(aggregateInput: QuickCalcAggregateInput) : Boolean = {
+  def isScottishRateDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedScottishRate.isDefined
-  }
-
 
 }

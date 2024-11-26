@@ -78,7 +78,7 @@ class StudentLoanContributionsController @Inject() (
             .map(_.getOrElse(QuickCalcAggregateInput.newInstance))
             .map(agg =>
               agg.copy(
-                savedStudentLoanContributions = if(newStudentLoanContribution.studentLoanPlan.isDefined) {
+                savedStudentLoanContributions = if (newStudentLoanContribution.studentLoanPlan.isDefined) {
                   Some(
                     StudentLoanContributions(newStudentLoanContribution.studentLoanPlan)
                   )

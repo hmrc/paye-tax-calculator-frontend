@@ -33,33 +33,32 @@ case class QuickCalcAggregateInput(
   savedPostGraduateLoanContributions: Option[PostgraduateLoanContributions]) {
 
   def allQuestionsAnswered()(implicit appConfig: AppConfig): Boolean =
-      List(
-        savedSalary,
-        savedIsOverStatePensionAge,
-      ).forall(_.isDefined)
-
+    List(
+      savedSalary,
+      savedIsOverStatePensionAge
+    ).forall(_.isDefined)
 
   def youHaveToldUsItems(
   )(implicit m: Messages,
     appConfig:  AppConfig
   ): List[YouHaveToldUsItem] =
-      List(
-        savedSalary.map { YouHaveToldUs(_) },
-        savedPeriod.map { YouHaveToldUs(_) },
-        savedIsOverStatePensionAge.map { YouHaveToldUs(_) }
-      ).flatten
+    List(
+      savedSalary.map { YouHaveToldUs(_) },
+      savedPeriod.map { YouHaveToldUs(_) },
+      savedIsOverStatePensionAge.map { YouHaveToldUs(_) }
+    ).flatten
 
   def additionalQuestionItems(
   )(implicit m: Messages,
     appConfig:  AppConfig
   ): List[AdditionalQuestionItem] =
-      List(
-        AdditionalQuestionItem(savedTaxCode),
-        AdditionalQuestionItem(savedScottishRate),
-        AdditionalQuestionItem(savedPensionContributions),
-        AdditionalQuestionItem(savedStudentLoanContributions),
-        AdditionalQuestionItem(savedPostGraduateLoanContributions)
-      )
+    List(
+      AdditionalQuestionItem(savedTaxCode),
+      AdditionalQuestionItem(savedScottishRate),
+      AdditionalQuestionItem(savedPensionContributions),
+      AdditionalQuestionItem(savedStudentLoanContributions),
+      AdditionalQuestionItem(savedPostGraduateLoanContributions)
+    )
 
   def isEmpty: Boolean =
     List(

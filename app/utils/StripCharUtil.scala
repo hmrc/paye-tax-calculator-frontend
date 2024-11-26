@@ -21,12 +21,10 @@ object StripCharUtil {
   def stripAll(text: String): String =
     text.trim.stripPrefix("£").replaceAll(",", "")
 
-  def stripPercentage(text: String): String = {
+  def stripPercentage(text: String): String =
     text.trim.replace("%", "")
-  }
-  def stripPound(text: String): String = {
-    text.trim.replace("£", "")
-  }
 
+  def stripPound(text: String): String =
+    text.trim.replace("£", "")
 
 }
