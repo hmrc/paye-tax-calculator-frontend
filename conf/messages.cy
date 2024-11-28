@@ -330,8 +330,8 @@ label.breakdown_per =Dadansoddiad fesul:
 label.DAILY =Bob dydd
 label.HOURLY =Fesul awr
 label.FOUR_WEEKLY =Bob pedair wythnos
-label.WEEKLY =Wythnos
-label.MONTHLY =Mis
+label.WEEKLY =yr wythnos
+label.MONTHLY =y mis
 label.YEARLY =Blwyddyn
 
 label.a_year.value = y flwyddyn
