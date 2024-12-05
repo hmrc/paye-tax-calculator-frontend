@@ -194,7 +194,7 @@ class ShowResultsController @Inject() (
       cache,
       implicit request =>
         aggregate =>
-          if (aggregate.allQuestionsAnswered) {
+          if (aggregate.allQuestionsAnswered()) {
             val isScottish = if (aggregate.savedTaxCode.exists(_.taxCode.exists(_.contains("S")))) {
               true
             } else if (aggregate.savedScottishRate.exists(_.payScottishRate.getOrElse(false))) {

@@ -35,7 +35,7 @@
         notification: components.notification
 )
 
-@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean, pensionWarning: Boolean, roundedMonthlySalary: String, scottishDefined: Boolean)(implicit request: Request[_], messages: Messages)
+@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean, pensionWarning: Boolean, roundedMonthlySalary: String, scottishDefined: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @rows = @{
     items.map { item =>

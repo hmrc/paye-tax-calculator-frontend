@@ -22,7 +22,7 @@ govukButton: GovukButton,
 govukCheckboxes: GovukCheckboxes,
 featureSwitchItems: FeatureSwitchItems)
 
-@(form: Form[FeatureSwitchModel])(implicit request: Request[_], messages: Messages)
+@(form: Form[FeatureSwitchModel])(implicit request: RequestHeader, messages: Messages)
 
 @govuk_wrapper(pageTitle = Some(title(form, "FeatureSwitchItems"))) {
 

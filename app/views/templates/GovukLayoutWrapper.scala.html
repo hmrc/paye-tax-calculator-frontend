@@ -49,7 +49,7 @@
       bodyClassess: Option[String] = None,
       beforeContentBlock: Html = Html(""),
       showAppBanner: Boolean = false
-)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
   @head = {
   @hmrcTrackingConsentSnippet()
       <!--[if lte IE 8]><link href=' @routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->

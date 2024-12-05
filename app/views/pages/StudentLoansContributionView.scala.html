@@ -35,7 +35,7 @@
         link: components.linkNewTab
 )
 
-@(studentLoansForm: Form[StudentLoanContributions])(implicit request: Request[_], messages: Messages)
+@(studentLoansForm: Form[StudentLoanContributions])(implicit request: RequestHeader, messages: Messages)
 
 @studentLoansLabels = @{
         Seq("plan1", "plan2","plan4", "noneOfThese")

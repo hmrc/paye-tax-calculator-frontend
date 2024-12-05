@@ -27,7 +27,7 @@
        beforeContent: components.beforeContent
 )
 
-@(userTaxCodeForm: Form[Boolean], additionalQuestionItems: List[AdditionalQuestionItem], item: String)(implicit request: Request[_], messages: Messages)
+@(userTaxCodeForm: Form[Boolean], additionalQuestionItems: List[AdditionalQuestionItem], item: String)(implicit request: RequestHeader, messages: Messages)
 
 @radioRemoveTaxCode = @{
     userTaxCodeForm("removeTaxCode")

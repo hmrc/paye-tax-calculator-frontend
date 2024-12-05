@@ -20,7 +20,7 @@ import config.AppConfig
 import forms.ScottishRateFormProvider
 
 import javax.inject.{Inject, Singleton}
-import models.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
+import models.{QuickCalcAggregateInput, ScottishRate}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._

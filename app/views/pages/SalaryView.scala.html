@@ -35,7 +35,7 @@
 )
 
 
-@(salaryForm: Form[Salary])(implicit request: Request[_], messages: Messages)
+@(salaryForm: Form[Salary])(implicit request: RequestHeader, messages: Messages)
 
 @radioFieldPeriod = @{
     salaryForm("period")

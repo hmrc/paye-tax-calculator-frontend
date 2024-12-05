@@ -31,7 +31,7 @@
      h1: components.h1
 ) 
 
-@(postGradForm: Form[PostgraduateLoanContributions])(implicit request: Request[_], messages: Messages)
+@(postGradForm: Form[PostgraduateLoanContributions])(implicit request: RequestHeader, messages: Messages)
 
 @radioFieldPostGradLoan = @{
      postGradForm("havePostgraduatePlan")

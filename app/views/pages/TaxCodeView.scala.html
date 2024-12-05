@@ -36,7 +36,7 @@
         hintText: components.hintText
 )
 
-@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem], defaultTaxCode: String, salaryCheck: Boolean)(implicit request: Request[_], messages: Messages)
+@(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem], defaultTaxCode: String, salaryCheck: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @backButtonUrl = @{
     controllers.routes.YouHaveToldUsNewController.summary.url
