@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -194,7 +194,7 @@ class ShowResultsController @Inject() (
       cache,
       implicit request =>
         aggregate =>
-          if (aggregate.allQuestionsAnswered) {
+          if (aggregate.allQuestionsAnswered()) {
             val isScottish = if (aggregate.savedTaxCode.exists(_.taxCode.exists(_.contains("S")))) {
               true
             } else if (aggregate.savedScottishRate.exists(_.payScottishRate.getOrElse(false))) {

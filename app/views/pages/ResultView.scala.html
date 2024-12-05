@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@
         disclaimerWarningText: components.disclaimerWarningText
 )
 
-@(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean, salaryCheck: Boolean, currentTaxYear: String, sideBarBullets: Seq[Option[Html]], pensionCheck: Boolean, fourWeekly: Boolean, kCodeLabel : String)(implicit request: Request[_], messages: Messages)
+@(calculatorResponse: CalculatorResponse, taxYear: Int, isScottish: Boolean, salaryCheck: Boolean, currentTaxYear: String, sideBarBullets: Seq[Option[Html]], pensionCheck: Boolean, fourWeekly: Boolean, kCodeLabel : String)(implicit request: RequestHeader, messages: Messages)
 
 @tabsItems = @{
     Seq(
