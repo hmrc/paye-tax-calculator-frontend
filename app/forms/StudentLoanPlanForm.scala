@@ -35,7 +35,7 @@ object StudentLoanPlanForm {
     ): Either[Seq[FormError], Option[StudentLoanPlan]] =
       data.get(key) match {
         case Some(`planOne`)     => Right(Some(PlanOne))
-        case Some(`planTwo`)     => Right(Some(PlanFour))
+        case Some(`planTwo`)     => Right(Some(PlanTwo))
         case Some(`planFour`)    => Right(Some(PlanFour))
         case Some(`noneOfThese`) => Right(Some(NoneOfThese))
         case None                => Right(None) // Return Right(None) for unrecognized input

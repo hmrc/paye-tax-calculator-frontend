@@ -229,6 +229,9 @@ quick_calc.over_state_pension_age.yes=Iawn
 quick_calc.over_state_pension_age.no=Na
 quick_calc.over_state_pension_age_error=Dewiswch ‘Iawn’ os ydych dros oedran Pensiwn y Wladwriaeth
 
+quick_calc.remove.student-loans= A ydych yn siŵr eich bod am dynnu’ch benthyciad myfyriwr?
+quick_calc.remove.postgraduate-loans= A ydych yn siŵr eich bod am dynnu’ch benthyciad ôl-raddedig?
+
 quick_calc.about_tax_code.header=Beth yw eich cod treth? (dewisol)
 quick_calc.about_tax_code.header.new=Beth yw eich cod treth?
 quick_calc.about_tax_code.has_tax_code=Nodwch eich cod treth
