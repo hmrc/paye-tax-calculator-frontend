@@ -229,6 +229,9 @@ quick_calc.over_state_pension_age.yes=Yes
 quick_calc.over_state_pension_age.no=No
 quick_calc.over_state_pension_age_error=Select yes if you are over the State Pension age
 
+quick_calc.remove.student-loans= Are you sure you want to remove your student loan?
+quick_calc.remove.postgraduate-loans= Are you sure you want to remove your Postgraduate loan?
+
 quick_calc.about_tax_code.header=What is your tax code? (Optional)
 quick_calc.about_tax_code.header.new=What is your tax code? (Optional)
 quick_calc.about_tax_code.has_tax_code=Enter your tax code
