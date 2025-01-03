@@ -26,6 +26,10 @@ object StudentLoanPlanForm {
   val planTwo:     String = "plan two"
   val planFour:    String = "plan four"
   val noneOfThese: String = "none of these"
+  val planOnecy:     String = "cynllun un"
+  val planTwocy:     String = "cynllun dau"
+  val planFourcy:    String = "cynllun pedwar"
+  val noneOfThesecy: String = "dim un o’r rhain"
 
   val studentLoanPlanFormatter: Formatter[Option[StudentLoanPlan]] = new Formatter[Option[StudentLoanPlan]] {
 
@@ -34,13 +38,16 @@ object StudentLoanPlanForm {
       data: Map[String, String]
     ): Either[Seq[FormError], Option[StudentLoanPlan]] =
       data.get(key) match {
-        case Some(`planOne`)     => Right(Some(PlanOne))
-        case Some(`planTwo`)     => Right(Some(PlanTwo))
-        case Some(`planFour`)    => Right(Some(PlanFour))
+        case Some(`planOne`) => Right(Some(PlanOne))
+        case Some(`planTwo`) => Right(Some(PlanTwo))
+        case Some(`planFour`) => Right(Some(PlanFour))
         case Some(`noneOfThese`) => Right(Some(NoneOfThese))
-        case None                => Right(None) // Return Right(None) for unrecognized input
+        case Some(`planOnecy`) => Right(Some(PlanOne))
+        case Some(`planTwocy`) => Right(Some(PlanTwo))
+        case Some(`planFourcy`) => Right(Some(PlanFour))
+        case Some(`noneOfThesecy`) => Right(Some(NoneOfThese))
+        case None => Right(None) // Return Right(None) for unrecognized input
       }
-
     override def unbind(
       key:   String,
       value: Option[StudentLoanPlan]
