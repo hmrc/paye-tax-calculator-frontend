@@ -50,25 +50,25 @@
                 RadioItem(
                     content = Text(Messages(s"quick_calc.salary.studentLoan.plan1.text")),
                     label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.plan1.label")))),
-                    value = Some(Messages(s"quick_calc.salary.studentLoan.plan1.label")),
+                    value = Some(StudentLoanPlanForm.planOne),
                     checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.planOne)
                 ),
                 RadioItem(
                     content = Text(Messages(s"quick_calc.salary.studentLoan.plan2.text")),
                     label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.plan2.label")))),
-                    value = Some(Messages(s"quick_calc.salary.studentLoan.plan2.label")),
+                    value = Some(StudentLoanPlanForm.planTwo),
                     checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.planTwo)
                 ),
                 RadioItem(
                     content = Text(Messages(s"quick_calc.salary.studentLoan.plan4.text")),
                     label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.plan4.label")))),
-                    value = Some(Messages(s"quick_calc.salary.studentLoan.plan4.label")),
+                    value = Some(StudentLoanPlanForm.planFour),
                     checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.planFour)
                 ),
                 RadioItem(
                     content = Text(Messages(s"quick_calc.salary.studentLoan.noneOfThese.text")),
                     label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.noneOfThese.label")))),
-                    value = Some(Messages(s"quick_calc.salary.studentLoan.noneOfThese.label")),
+                    value = Some(StudentLoanPlanForm.noneOfThese),
                     checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.noneOfThese)
                 ),
             )
