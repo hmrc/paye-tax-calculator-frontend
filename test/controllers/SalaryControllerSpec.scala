@@ -422,6 +422,35 @@ class SalaryControllerSpec
       }
     }
 
+    """return 303, with new Yearly Salary data "£20000" and pound signs and commas included saved on a new list of aggregate data and redirect to State Pension Page in Welsh""" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application)
+      running(application) {
+
+        val formData = Map("amount" -> "£200,00", "period" -> messages("quick_calc.salary.yearly.label"))
+
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", "cy"))
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.StatePensionController.showStatePensionForm.url
+
+        verify(mockCache, times(1)).save(any())(any())
+      }
+    }
+
     """return 303, with new Yearly Salary data "£20000" saved on the complete list of aggregate data and redirect to State Pension Page""" in {
       val mockCache = mock[QuickCalcCache]
 
@@ -562,7 +591,6 @@ class SalaryControllerSpec
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
         .build()
 
-      val formFilled = form.fill(cacheTaxCodeStatePensionSalary.value.savedSalary.get)
       running(application) {
 
         val request = FakeRequest(GET, routes.SalaryController.showSalaryForm.url)
