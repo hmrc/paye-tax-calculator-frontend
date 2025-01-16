@@ -19,6 +19,7 @@ package controllers
 import forms.SalaryFormProvider
 import org.apache.pekko.Done
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.TryValues
@@ -29,7 +30,7 @@ import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Cookie, RequestHeader, Result}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -38,7 +39,9 @@ import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
 import views.html.pages.SalaryView
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 class SalaryControllerSpec
     extends PlaySpec
@@ -550,7 +553,34 @@ class SalaryControllerSpec
 
     }
 
-    "return 200, with empty list of aggregate data" in {
+    "return 200, with current list of aggregate data containing Tax Code: 1150L, \"YES\" for is not Over65, 20000 a Year for Salary for welsh" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalary)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      val formFilled = form.fill(cacheTaxCodeStatePensionSalary.value.savedSalary.get)
+      running(application) {
+
+        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", "cy"))
+          .withCSRFToken
+
+        val result = route(application, request).value
+        val doc: Document = Jsoup.parse(contentAsString(result))
+        val radios = doc.select(".govuk-radios__input[checked]")
+        radios.attr("value") mustEqual ("a year")
+        status(result) mustEqual OK
+
+      }
+
+    }
+
+    "return 200, with empty list of aggregate data in english" in {
       val mockCache = mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
@@ -576,6 +606,51 @@ class SalaryControllerSpec
         removeCSRFTagValue(contentAsString(result)) mustEqual
         removeCSRFTagValue(view(form)(request, messagesThing(application)).toString)
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
+      }
+    }
+
+    "return 200, with empty list of aggregate data in Welsh" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", "cy"))
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        val doc: Document = Jsoup.parse(contentAsString(result))
+        val title   = doc.select("title").text
+        val label   = doc.select(".govuk-label").text
+        val hint    = doc.select(".govuk-hint").text
+        val heading = doc.select(".govuk-fieldset__heading").text
+        val radios  = doc.select(".govuk-radios__item")
+        val button  = doc.select(".govuk-button").text
+        val deskpro = doc.select(".govuk-link")
+
+        title must include("Faint ydych yn cael eich talu?")
+        label must include("Swm gros, mewn punnoedd")
+        hint mustEqual ("Dyma’r swm a delir i chi cyn i unrhyw ddidyniadau gael eu gwneud.")
+        heading mustEqual ("Pa mor aml y mae’r swm hwn yn cael ei dalu i chi?")
+        button mustEqual ("Yn eich blaen")
+        radios.get(0).text mustEqual ("Bob blwyddyn")
+        radios.get(1).text mustEqual ("Bob mis")
+        radios.get(2).text mustEqual ("Bob 4 wythnos")
+        radios.get(3).text mustEqual ("Bob wythnos")
+        radios.get(4).text mustEqual ("Bob dydd")
+        radios.get(5).text mustEqual ("Fesul awr")
+        deskpro.text() must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+
+        status(result) mustEqual (OK)
+
       }
     }
   }
