@@ -19,6 +19,8 @@ package controllers
 import forms.ScottishRateFormProvider
 import models.{QuickCalcAggregateInput, ScottishRate, UserTaxCode}
 import org.apache.pekko.Done
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -30,7 +32,7 @@ import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Cookie}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -61,8 +63,14 @@ class ScottishRateControllerSpec
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def messagesThing(app: Application): Messages =
-    app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+  def messagesThing(
+    app:  Application,
+    lang: String = "en"
+  ): Messages =
+    if (lang == "cy")
+      app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
+    else
+      app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "The show Scottish rate page" should {
     "return 200 - OK with existing aggregate data" in {
@@ -104,6 +112,55 @@ class ScottishRateControllerSpec
       }
     }
 
+    "return 200 - OK with existing aggregate data in welsh" in {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheCompleteYearly
+      )
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      implicit val messages: Messages = messagesThing(application, "cy")
+
+      running(application) {
+
+        val request = FakeRequest(
+          GET,
+          routes.ScottishRateController.showScottishRateForm.url
+        ).withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", "cy"))
+          .withCSRFToken
+
+        val result = route(application, request).get
+        val doc: Document = Jsoup.parse(contentAsString(result))
+        val title   = doc.select(".govuk-fieldset__heading").text
+        val radios  = doc.select(".govuk-radios__item")
+        val summary = doc.select(".govuk-details__summary").text
+        val details = doc.select(".govuk-details__text").text
+        val button  = doc.select(".govuk-button").text
+        val deskpro = doc.select(".govuk-link").text
+        val backLink = doc.select(".govuk-back-link").text
+
+        status(result) mustEqual OK
+        title mustEqual messages("quick_calc.salary.question.scottish_income.new")
+        radios.get(0).text mustEqual (messages("quick_calc.you_have_told_us.scottish_rate.yes"))
+        radios.get(1).text mustEqual (messages("quick_calc.you_have_told_us.scottish_rate.no"))
+        summary mustEqual (messages("label.scottish-rate-details"))
+        details must include(messages("quick_calc.salary.question.scottish_income_info.new"))
+        details must include(messages("quick_calc.salary.question.scottish_income_url_a"))
+        details must include(messages("quick_calc.salary.question.scottish_income_url_b"))
+        details must include(messages("quick_calc.salary.question.scottish_income_url_c"))
+        button mustEqual (messages("continue"))
+        deskpro must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+        backLink mustEqual (messages("back"))
+
+
+      }
+    }
+
     "return 303 See Other and redirect to the salary page with no aggregate data" in {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
@@ -139,7 +196,7 @@ class ScottishRateControllerSpec
   }
 
   "The submit Scottish rate page" should {
-    "return 400 Bad Request if the user does not select whether they pay the Scottish rate or not" in {
+    "return 303  if the user does not select whether they pay the Scottish rate or not" in {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
