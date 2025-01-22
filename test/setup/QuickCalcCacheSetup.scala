@@ -391,7 +391,6 @@ object QuickCalcCacheSetup {
   val expectedEmptyDaysErrorMessage = "Enter the number of days a week you work"
 
   val expectedInvalidStatePensionAnswer = "Select yes if you are over the State Pension age"
-  val expectedInvalidStatePensionAnswercy = "Dewiswch ‘Iawn’ os ydych dros oedran Pensiwn y Wladwriaeth"
 
   val expectedInvalidRemoveTaxCodeAnswer = "Select yes if you want to remove your tax code"
   //Hours
