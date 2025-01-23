@@ -95,99 +95,73 @@ class PensionContributionsPercentageControllerSpec
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
-    "return 200 and a list of current aggregate data containing Tax Code and pension and tax code answered" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheSalaryTaxCodeSavedPensionContributionsPercentage
-      )
+    "return 200" when {
+      def test200(lang: String = "en") = {
+        val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      implicit val messages: Messages = messagesThing(application)
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.PensionContributionsPercentageController.showPensionContributionForm.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-
-        val view = application.injector.instanceOf[PensionContributionsPercentageView]
-
-        val formFilled =
-          form.fill(cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.savedPensionContributions.get)
-
-        status(result) mustEqual OK
-
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(formFilled,
-               cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.additionalQuestionItems()(messages,
-                                                                                                   mockAppConfig))(
-            request,
-            messagesThing(application)
-          ).toString
+        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+          cacheSalaryTaxCodeSavedPensionContributionsPercentage
         )
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+
+        val application = new GuiceApplicationBuilder()
+          .overrides(bind[QuickCalcCache].toInstance(mockCache))
+          .build()
+
+        implicit val messages: Messages = messagesThing(application, lang)
+
+        running(application) {
+
+          val request =
+            FakeRequest(GET, routes.PensionContributionsPercentageController.showPensionContributionForm.url)
+              .withHeaders(HeaderNames.xSessionId -> "test")
+              .withCookies(Cookie("PLAY_LANG", lang))
+              .withCSRFToken
+
+          val result = route(application, request).get
+
+          val view = application.injector.instanceOf[PensionContributionsPercentageView]
+
+          val formFilled =
+            form.fill(cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.savedPensionContributions.get)
+          val doc: Document = Jsoup.parse(contentAsString(result))
+          val title   = doc.select(".govuk-heading-xl").text
+          val para    = doc.select(".govuk-body").text()
+          val label   = doc.select(".govuk-label").text()
+          val hint    = doc.select(".govuk-hint").text()
+          val button  = doc.select(".govuk-button").text
+          val deskpro = doc.select(".govuk-link")
+
+          status(result) mustEqual OK
+          title must include(messages("quick_calc.you_have_told_us.about_pension_contributions.label"))
+          para  must include(messages("quick_calc.pensionContributionsPercentage.subheading"))
+          label mustEqual (messages("quick_calc.pensionContributionsPercentage.input.heading"))
+          hint mustEqual (messages("quick_calc.pensionContributionsPercentage.hint"))
+          para must include(messages("quick_calc.pensionContributionsPercentage.link"))
+          button mustEqual (messages("continue"))
+          if (lang == "cy")
+            deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+          else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
+          removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+            view(formFilled,
+                 cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.additionalQuestionItems()(messages,
+                                                                                                     mockAppConfig))(
+              request,
+              messagesThing(application, lang)
+            ).toString
+          )
+          verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        }
+      }
+
+      " list of current aggregate data containing Tax Code and pension and tax code answered in English" in {
+        test200()
+      }
+      " list of current aggregate data containing Tax Code and pension and tax code answered in Welsh" in {
+        test200("cy")
       }
     }
-    "return 200 and a list of current aggregate data containing Tax Code and pension and tax code answered in Welsh" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheSalaryTaxCodeSavedPensionContributionsPercentage
-      )
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      implicit val messages: Messages = messagesThing(application, "cy")
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.PensionContributionsPercentageController.showPensionContributionForm.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCookies(Cookie("PLAY_LANG", "cy"))
-          .withCSRFToken
-
-        val result = route(application, request).get
-        val doc: Document = Jsoup.parse(contentAsString(result))
-        val title   = doc.select(".govuk-heading-xl").text
-        val para    = doc.select(".govuk-body").text()
-        val label   = doc.select(".govuk-label").text()
-        val hint    = doc.select(".govuk-hint").text()
-        val button  = doc.select(".govuk-button").text
-        val deskpro = doc.select(".govuk-link")
-
-        val view = application.injector.instanceOf[PensionContributionsPercentageView]
-
-        val formFilled =
-          form.fill(cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.savedPensionContributions.get)
-
-        status(result) mustEqual OK
-        title must include(messages("quick_calc.you_have_told_us.about_pension_contributions.label"))
-        para  must include(messages("quick_calc.pensionContributionsPercentage.subheading"))
-        label mustEqual (messages("quick_calc.pensionContributionsPercentage.input.heading"))
-        hint mustEqual (messages("quick_calc.pensionContributionsPercentage.hint"))
-        para must include(messages("quick_calc.pensionContributionsPercentage.link"))
-        button mustEqual (messages("continue"))
-        deskpro.text() must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
-
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(formFilled,
-               cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.additionalQuestionItems()(messages,
-                                                                                                   mockAppConfig))(
-            request,
-            messagesThing(application, "cy")
-          ).toString
-        )
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
-      }
-    }
   }
 
   "Submit Pension Contributions Form" should {
