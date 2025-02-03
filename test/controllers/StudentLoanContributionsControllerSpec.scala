@@ -18,6 +18,7 @@ package controllers
 
 import forms.StudentLoansFormProvider
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.TryValues
@@ -29,7 +30,7 @@ import play.api.test.Helpers.{status, _}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Cookie}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import services.QuickCalcCache
@@ -56,7 +57,10 @@ class StudentLoanContributionsControllerSpec extends BaseSpec
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def messagesThing(app: Application): Messages =
+  def messagesThing(app: Application, lang: String = "en"): Messages =
+    if(lang == "cy")
+      app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
+  else
     app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "Show Student Loans form" should {
@@ -124,6 +128,50 @@ class StudentLoanContributionsControllerSpec extends BaseSpec
         )
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
+      }
+    }
+    "return 200 with correct welsh translation" in {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalaryStudentLoan)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      implicit val messages: Messages = messagesThing(application, "cy")
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.StudentLoanContributionsController.showStudentLoansForm.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", "cy"))
+          .withCSRFToken
+
+        val result = route(application, request).get
+        val doc: Document = Jsoup.parse(contentAsString(result))
+        val header = doc.select(".govuk-header").text
+        val betaBanner = doc.select(".govuk-phase-banner").text
+        val heading = doc.select(".govuk-heading-xl").text
+        val subHeading = doc.select(".govuk-fieldset__legend").text
+        val radios = doc.select(".govuk-radios__item")
+        val button  = doc.select(".govuk-button").text
+        val deskproLink = doc.select(".govuk-link")
+        println("deskpro = "+deskproLink.text)
+
+        header must include(messages("quick_calc.header.title"))
+        betaBanner must include(messages("feedback.before"))
+        betaBanner must include(messages("feedback.link"))
+        betaBanner must include(messages("feedback.after"))
+        heading mustEqual (messages("quick_calc.salary.studentLoan.header"))
+        subHeading mustEqual (messages("quick_calc.salary.studentLoan.subheading"))
+        radios.get(0).text mustEqual (messages("quick_calc.salary.studentLoan.plan1.text"))
+        radios.get(1).text mustEqual (messages("quick_calc.salary.studentLoan.plan2.text"))
+        radios.get(2).text mustEqual (messages("quick_calc.salary.studentLoan.plan4.text"))
+        radios.get(3).text mustEqual (messages("quick_calc.salary.studentLoan.noneOfThese.text"))
+        button mustEqual (messages("continue"))
+        deskproLink.text must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+        status(result) mustEqual (OK)
       }
     }
   }
