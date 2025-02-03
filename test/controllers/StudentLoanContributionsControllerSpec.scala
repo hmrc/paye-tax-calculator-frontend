@@ -157,7 +157,8 @@ class StudentLoanContributionsControllerSpec extends BaseSpec
         val radios = doc.select(".govuk-radios__item")
         val button  = doc.select(".govuk-button").text
         val deskproLink = doc.select(".govuk-link")
-        println("deskpro = "+deskproLink.text)
+        val checkedRadios = doc.select(".govuk-radios__input[checked]")
+        checkedRadios.attr("value") mustEqual ("plan one")
 
         header must include(messages("quick_calc.header.title"))
         betaBanner must include(messages("feedback.before"))
