@@ -353,6 +353,9 @@ class StatePensionControllerSpec
           val heading = doc.select(".govuk-fieldset__heading").text
           val radios  = doc.select(".govuk-radios__item")
           val details = doc.select(".govuk-details__summary-text").text()
+          val detailComponent = doc.select(".govuk-details__text")
+          val checkedRadios = doc.select(".govuk-radios__input[checked]")
+          checkedRadios.attr("value") mustEqual ("true")
           val button  = doc.select(".govuk-button").text
           val deskpro = doc.select(".govuk-link")
 
@@ -365,6 +368,10 @@ class StatePensionControllerSpec
           radios.get(0).text mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.yes"))
           radios.get(1).text mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.no"))
           details mustEqual (messages("label.state-pension-details"))
+          detailComponent.text must include (messages("quick_calc.salary.question.state_pension_info"))
+          detailComponent.text must include (messages("quick_calc.salary.question.state_pension_url_a"))
+          detailComponent.text must include (messages("quick_calc.salary.question.state_pension_url_b"))
+          detailComponent.text must include (messages("quick_calc.salary.question.state_pension_url_c"))
           deskpro.text() must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
 
           status(result) mustEqual (OK)
