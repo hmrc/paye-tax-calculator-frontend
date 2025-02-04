@@ -17,8 +17,10 @@
 package controllers
 
 import forms.PostGraduateLoanFormProvider
-import models.PostgraduateLoanContributions
+import models.{PostgraduateLoanContributions, QuickCalcAggregateInput}
 import org.apache.pekko.Done
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.TryValues
@@ -30,7 +32,7 @@ import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Cookie}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{status, _}
@@ -42,13 +44,14 @@ import views.html.pages.PostGraduatePlanContributionView
 
 import scala.concurrent.Future
 
-class PostgraduateLoanContributionsControllerSpec extends BaseSpec
-  with AnyWordSpecLike
-  with TryValues
-  with ScalaFutures
-  with IntegrationPatience
-  with MockitoSugar
-  with CSRFTestHelper {
+class PostgraduateLoanContributionsControllerSpec
+    extends BaseSpec
+    with AnyWordSpecLike
+    with TryValues
+    with ScalaFutures
+    with IntegrationPatience
+    with MockitoSugar
+    with CSRFTestHelper {
 
   val formProvider = new PostGraduateLoanFormProvider()
   val form: Form[PostgraduateLoanContributions] = formProvider()
@@ -57,11 +60,17 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def messagesThing(app: Application): Messages =
-    app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+  def messagesThing(
+    app:  Application,
+    lang: String = "en"
+  ): Messages =
+    if (lang == "cy")
+      app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
+    else
+      app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "Show Postgraduate Loans form" should {
-    "return 200 with an empty list of aggregate data" in {
+    "return 303 with an empty list of aggregate data" in {
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
@@ -89,80 +98,99 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
 
     }
 
-    "return 200, with existing list of aggregate data containing Tax Code, pension and student loan contributions" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
+    "return 200" when {
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheTaxCodeStatePensionSalaryStudentLoanPostGrad.map(_.copy(savedPostGraduateLoanContributions = None))
-      )
+      def return200(
+        fetchResponse: Option[QuickCalcAggregateInput],
+        lang:          String = "en",
+        isFormFilled:  Boolean = false
+      ) = {
+        val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
+        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
 
-      implicit val messages: Messages = messagesThing(application)
+        val application = new GuiceApplicationBuilder()
+          .overrides(bind[QuickCalcCache].toInstance(mockCache))
+          .build()
 
-      running(application) {
-
-        val request = FakeRequest(
-          GET,
-          routes.PostgraduateController.showPostgraduateForm.url
-        ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
-
-        val result = route(application, request).get
-
-        val view = application.injector.instanceOf[PostGraduatePlanContributionView]
-
-        status(result) mustEqual OK
-
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(
-            form
-          )(request, messagesThing(application)).toString
-        )
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
-
-      }
-    }
-    "return 200, with existing list of aggregate data containing Tax Code, pension and student loan contributions and postrgrad question answered" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheTaxCodeStatePensionSalaryStudentLoanPostGrad
-      )
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-            val formFilled = form.fill(
+        val formFilled =
+          if (isFormFilled)
+            form.fill(
               cacheTaxCodeStatePensionSalaryStudentLoanPostGrad.get.savedPostGraduateLoanContributions.get
             )
+          else form
 
-      implicit val messages: Messages = messagesThing(application)
+        implicit val messages: Messages = messagesThing(application, lang)
 
-      running(application) {
+        running(application) {
 
-        val request = FakeRequest(
-          GET,
-          routes.PostgraduateController.showPostgraduateForm.url
-        ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
+          val request = FakeRequest(
+            GET,
+            routes.PostgraduateController.showPostgraduateForm.url
+          ).withHeaders(HeaderNames.xSessionId -> "test")
+            .withCookies(Cookie("PLAY_LANG", lang))
+            .withCSRFToken
 
-        val result = route(application, request).get
+          val result = route(application, request).get
 
-        val view = application.injector.instanceOf[PostGraduatePlanContributionView]
+          val view = application.injector.instanceOf[PostGraduatePlanContributionView]
 
-        status(result) mustEqual OK
+          val doc: Document = Jsoup.parse(contentAsString(result))
+          val title         = doc.select(".govuk-heading-xl").text
+          val subheading    = doc.select(".govuk-fieldset__heading").text
+          val radiosChecked = doc.select(".govuk-radios__input[checked]")
+          val radios        = doc.select(".govuk-radios__item")
+          val button        = doc.select(".govuk-button").text
+          val deskpro       = doc.select(".govuk-link")
 
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(
-            formFilled
-          )(request, messagesThing(application)).toString
-        )
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+          status(result) mustEqual OK
+          title must include(messages("quick_calc.postgraduateLoan.header"))
+          subheading mustEqual (messages("quick_calc.postgraduateLoan.subheading"))
+          radios.get(0).text() mustEqual (messages("quick_calc.over_state_pension_age.yes"))
+          radios.get(1).text() mustEqual (messages("quick_calc.over_state_pension_age.no"))
+          button mustEqual (messages("continue"))
+          if (lang == "cy")
+            deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+          else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
+          if (isFormFilled) radiosChecked.attr("value") mustEqual ("true")
 
+          removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+            view(
+              formFilled
+            )(request, messagesThing(application, lang)).toString
+          )
+          verify(mockCache, times(1)).fetchAndGetEntry()(any())
+
+        }
+      }
+      "existing list of aggregate data containing Tax Code, pension and student loan contributions but no postgraduate " when {
+        "form is in English" in {
+          return200(
+            cacheTaxCodeStatePensionSalaryStudentLoanPostGrad.map(_.copy(savedPostGraduateLoanContributions = None))
+          )
+        }
+        "form is in Welsh" in {
+          return200(
+            cacheTaxCodeStatePensionSalaryStudentLoanPostGrad.map(_.copy(savedPostGraduateLoanContributions = None)),
+            "cy"
+          )
+        }
+      }
+
+      "existing list of aggregate data containing Tax Code, pension and student loan contributions and postrgrad question answered " when {
+        "form is in English" in {
+          return200(cacheTaxCodeStatePensionSalaryStudentLoanPostGrad, isFormFilled = true)
+        }
+        "form is in Welsh" in {
+          return200(
+            cacheTaxCodeStatePensionSalaryStudentLoanPostGrad,
+            "cy",
+            true
+          )
+        }
       }
     }
+
   }
 
   "Submit Postgraduate Loans Form" should {
@@ -170,7 +198,9 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalaryStudentLoanPostGrad)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+        cacheTaxCodeStatePensionSalaryStudentLoanPostGrad
+      )
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -216,6 +246,5 @@ class PostgraduateLoanContributionsControllerSpec extends BaseSpec
       }
     }
   }
-
 
 }
