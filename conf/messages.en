@@ -123,7 +123,7 @@ quick_calc.result.sidebar.pension_below_annual_allowance=we took your pension co
 quick_calc.result.sidebar.pension_exceed_annual_allowance_a=we took your pension contributions off your gross income, the amount before deductions and not including contributions from your employer. Find out about the
 quick_calc.result.sidebar.pension_exceed_annual_allowance_b=annual allowance for your private pension (opens in a new tab)
 
-quick_calc.result.disclaimer.reducedPersonal_allowance_a.new=You used a tax code which is not usually for those on more than £100,000 a year. If you do not know your tax code, you can leave it blank and we will  calculate your
+quick_calc.result.disclaimer.reducedPersonal_allowance_a.new=You used a tax code which is not usually for those on more than £100,000 a year. If you do not know your tax code, you can leave it blank and we will calculate your
 quick_calc.result.disclaimer.reducedPersonal_allowance_b.new=reduced Personal Allowance (opens in a new tab).
 
 quick_calc.result.tabLabels.yearly=Yearly

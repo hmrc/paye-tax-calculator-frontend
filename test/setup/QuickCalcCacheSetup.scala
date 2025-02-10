@@ -94,6 +94,7 @@ object QuickCalcCacheSetup {
   val cacheTestStatePensionYES:                 Option[StatePension]    = Some(StatePension(true))
   val cacheTestStatusPensionNO:                 Option[StatePension]    = Some(StatePension(false))
   val cacheTestYearlySalary:                    Option[Salary]          = Some(Salary(20000, None, None, Yearly, None, None))
+  val cacheTestYearlySalaryLessThan100k:        Option[Salary]          = Some(Salary(90000, None, None, Yearly, None, None))
   val cacheTestFourWeeklySalary:                Option[Salary]          = Some(Salary(20000, None, None, FourWeekly, None, None))
   val cacheTestYearlyOverHundredThoudandSalary: Option[Salary]          = Some(Salary(100003, None, None, Yearly, None, None))
   val cacheTestDailySalary:                     Option[Salary]          = Some(Salary(40, None, None, Daily, None, None))
@@ -165,6 +166,51 @@ object QuickCalcCacheSetup {
       savedTaxCode               = cacheTestTaxCode,
       savedIsOverStatePensionAge = cacheTestStatePensionYES,
       savedScottishRate          = cacheTestScottishNO
+    )
+  )
+
+  val cacheTaxCodeStatePensionSalaryLessThan100k: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlySalaryLessThan100k,
+      savedTaxCode               = cacheDefaultTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate          = cacheTestScottishNO
+    )
+  )
+  val cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlySalaryLessThan100k,
+      savedTaxCode               = cacheDefaultTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate          = cacheTestScottishYES
+    )
+  )
+
+  val cacheTaxCodeStatePensionSalaryMoreThan100k: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlyOverHundredThoudandSalary,
+      savedTaxCode               = cacheDefaultTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate          = cacheTestScottishNO
+    )
+  )
+
+  val cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCode: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlyOverHundredThoudandSalary,
+      savedTaxCode               = None,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate          = cacheTestScottishNO
+    )
+  )
+
+  val cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCodeWithPension: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlyOverHundredThoudandSalary,
+      savedTaxCode               = None,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate          = cacheTestScottishNO,
+      savedPensionContributions  = cacheTestPensionPecentageContributions
     )
   )
 
