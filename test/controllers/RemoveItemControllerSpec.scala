@@ -373,7 +373,6 @@ class RemoveItemControllerSpec
         .withCSRFToken
       val result = route(application, request).get
       val doc: Document = Jsoup.parse(contentAsString(result))
-      println("document :: " + doc)
 
       val header = doc.select(".govuk-header").text
       val betaBanner = doc.select(".govuk-phase-banner").text
