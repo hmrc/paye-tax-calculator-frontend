@@ -122,7 +122,9 @@ class ShowResultSpec
 
         val hasTaxCode = fetchResponse.get.savedTaxCode.isDefined
 
-        val isScottishIncomeTax = fetchResponse.flatMap(_.savedScottishRate.flatMap(_.payScottishRate)).getOrElse(false)
+        val hasPensionContri = fetchResponse.get.savedPensionContributions.isDefined
+
+        val isScottishTaxRate = fetchResponse.flatMap(_.savedScottishRate.flatMap(_.payScottishRate)).getOrElse(false)
 
         status(result) mustEqual OK
         title must include(messages("quick_calc.result.you_take_home"))
@@ -148,10 +150,16 @@ class ShowResultSpec
         else sidebarBullets must include(messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
         if (isOverThreshold && hasTaxCode)
           warningText must include(messages("quick_calc.result.disclaimer.reducedPersonal_allowance_a.new"))
-        else if(isOverThreshold && !hasTaxCode) {
-          if(lang == "en") sidebarBullets must include("(because you did not provide a tax code)")
-          else sidebarBullets must include("(oherwydd nad ydych wedi rhoi cod treth)")
+        else if (isOverThreshold && !hasTaxCode) {
+          if (lang == "en") sidebarBullets must include("(because you did not provide a tax code)")
+          else sidebarBullets              must include("(oherwydd nad ydych wedi rhoi cod treth)")
         }
+
+        if (isScottishTaxRate)
+          sidebarBullets must include(messages("quick_calc.result.sidebar.pay_scottish_income_tax"))
+
+        if (hasPensionContri)
+          sidebarBullets must include(messages("quick_calc.result.sidebar.pension_exceed_annual_allowance_a"))
 
       }
     }
@@ -182,6 +190,19 @@ class ShowResultSpec
 
     }
 
+    "return 200, with estimated income tax when user's income is 90k and using scottish tax rate" when {
+      " form is in English" in {
+
+        return200(cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax, "£59,915.14", "£4,992.93", "£1,152.22")
+      }
+
+      "form is in Welsh" in {
+
+        return200(cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax, "£59,915.14", "£4,992.93", "£1,152.22", "cy")
+      }
+
+    }
+
     "return 200, with estimated income tax when user's income is more than 100k and is not over state pension" when {
       " form is in English" in {
 
@@ -204,6 +225,22 @@ class ShowResultSpec
       "form is in Welsh" in {
 
         return200(cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCode, "£68,562.14", "£5,713.51", "£1,318.50", "cy")
+      }
+
+    }
+    "return 200, with estimated income tax when user's income has some pension contribution " when {
+      " form is in English" in {
+
+        return200(cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCodeWithPension, "£38,506.34", "£3,208.86", "£740.50")
+      }
+
+      "form is in Welsh" in {
+
+        return200(cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCodeWithPension,
+                  "£38,506.34",
+                  "£3,208.86",
+                  "£740.50",
+                  "cy")
       }
 
     }

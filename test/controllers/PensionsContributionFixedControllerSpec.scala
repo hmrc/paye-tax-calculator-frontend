@@ -200,9 +200,6 @@ class PensionsContributionFixedControllerSpec
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
-        println(" error message is ::" + errorMessage)
-        println(" error messages  is ::" + messages(errorMessages))
-
         errorHeader mustEqual messages("error.summary.title")
         errorMessageLink.contains(messages(errorMessages)) mustEqual true
         errorMessage.contains(messages(errorMessages)) mustEqual true
