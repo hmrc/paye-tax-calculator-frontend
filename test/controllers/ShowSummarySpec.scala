@@ -16,8 +16,11 @@
 
 package controllers
 
+import models.{QuickCalcAggregateInput, ScottishRate}
+import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.TryValues
@@ -236,5 +239,55 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         status(result) mustEqual (OK)
       }
     }
+
+    "return 200 when the form with values populated have correct welsh translation" in {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      val expectedAggregate : QuickCalcAggregateInput = cacheCompleteYearly.get.copy(savedScottishRate = None)
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteYearly
+      .map(
+        _.copy(savedScottishRate = Some(ScottishRate(payScottishRate = Some(true))))
+      ))
+
+      when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())) thenReturn Future.successful(Done)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      implicit val messages: Messages = messagesThing(application, "cy")
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.YouHaveToldUsNewController.summary.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", "cy"))
+          .withCSRFToken
+
+        val result = route(application, request).get
+        val doc: Document = Jsoup.parse(contentAsString(result))
+
+        val rows = doc.select(".govuk-summary-list__row").iterator().asScala.toList
+        rows(3).select(".govuk-summary-list__value").text() must include (messages("quick_calc.you_have_told_us.scottish_rate.yes"))
+        rows(3).select(".govuk-summary-list__value").text() must include (messages("quick_calc.scottish_rate.payScottishRate.warning"))
+        rows(4).select(".govuk-summary-list__value").text() must include (messages("label.a_month.value"))
+        rows(5).select(".govuk-summary-list__value").text() mustEqual (messages("quick_calc.salary.studentLoan.plan1.text"))
+        rows(6).select(".govuk-summary-list__value").text() mustEqual (messages("yes"))
+
+        def redirectUrl(row: Element) = row.select(".govuk-link").attr("href")
+
+        redirectUrl(rows(0))  mustEqual (routes.SalaryController.showSalaryForm).toString
+        redirectUrl(rows(1))  mustEqual (routes.StatePensionController.showStatePensionForm).toString
+        redirectUrl(rows(2))  mustEqual (routes.TaxCodeController.showTaxCodeForm).toString
+        redirectUrl(rows(3))  mustEqual (routes.ScottishRateController.showScottishRateForm).toString
+        redirectUrl(rows(4))  mustEqual (routes.PensionContributionsPercentageController.showPensionContributionForm).toString
+        redirectUrl(rows(5))  mustEqual (routes.StudentLoanContributionsController.showStudentLoansForm).toString
+        redirectUrl(rows(6))  mustEqual (routes.PostgraduateController.showPostgraduateForm).toString
+
+        status(result) mustEqual (OK)
+      }
+    }
+
   }
 }
