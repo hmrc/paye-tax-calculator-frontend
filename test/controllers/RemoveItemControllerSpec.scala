@@ -22,6 +22,7 @@ import forms.forms.RemoveItemFormProvider
 import models.{PensionContributions, PostgraduateLoanContributions, QuickCalcAggregateInput, StudentLoanContributions, UserTaxCode}
 import org.apache.pekko.Done
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
@@ -33,7 +34,7 @@ import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Cookie}
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -62,8 +63,10 @@ class RemoveItemControllerSpec
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def messagesThing(app: Application): Messages =
+  def messagesThing(app: Application, lang: String = "en"): Messages = if (lang == "en")
     app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+  else
+    app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
 
   "The remove item page with taxcode set as the query param" should {
     "return 200 - Ok with an empty form" in {
@@ -342,6 +345,68 @@ class RemoveItemControllerSpec
         errorMessageLink.contains(expectedInvalidRemoveTaxCodeAnswer) mustEqual true
         errorMessage.contains(expectedInvalidRemoveTaxCodeAnswer) mustEqual true
       }
+    }
+
+  }
+  "Submit removeItemForm in welsh should" when {
+  def return200(removeItem : String, item : String) {
+    SharedMetricRegistries.clear()
+
+    val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+    when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteYearly)
+
+
+    val application = new GuiceApplicationBuilder()
+      .overrides(bind[QuickCalcCache].toInstance(mockCache))
+      .build()
+
+    implicit val messages: Messages = messagesThing(application, "cy")
+
+    running(application) {
+      val request = FakeRequest(
+        GET,
+        routes.RemoveItemController.showRemoveItemForm(removeItem).url
+      )
+        .withHeaders(HeaderNames.xSessionId -> "test")
+        .withCookies(Cookie("PLAY_LANG", "cy"))
+        .withCSRFToken
+      val result = route(application, request).get
+      val doc: Document = Jsoup.parse(contentAsString(result))
+
+      val header = doc.select(".govuk-header").text
+      val betaBanner = doc.select(".govuk-phase-banner").text
+      val heading = doc.select(".govuk-fieldset__heading").text
+      val button = doc.select(".govuk-button").text
+      val deskproLink = doc.select(".govuk-link")
+
+      header must include(messages("quick_calc.header.title"))
+      betaBanner must include(messages("feedback.before"))
+      betaBanner must include(messages("feedback.link"))
+      betaBanner must include(messages("feedback.after"))
+      heading mustEqual (messages(s"quick_calc.remove.$item"))
+
+      button mustEqual (messages("continue"))
+      deskproLink.text must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+
+      status(result) mustEqual OK
+
+    }
+  }
+    "return 200 when remove tax code page load correct welsh translation" in {
+      return200(taxCodeQueryParam, "taxcode")
+      }
+
+    "return 200 when remove student loan page load correct welsh translation" in {
+      return200(studentLoansQueryParam, "student-loans")
+    }
+
+    "return 200 when remove post graduate student loan page load correct welsh translation" in {
+      return200(postgraduateLoansQueryParam, "postgraduate-loans")
+    }
+
+    "return 200 when remove pesnion contribution page load correct welsh translation" in {
+      return200(pensionContributionQueryParam, "pension-contributions")
     }
 
   }
