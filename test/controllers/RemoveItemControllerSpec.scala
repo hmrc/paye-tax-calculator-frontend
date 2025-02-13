@@ -393,19 +393,19 @@ class RemoveItemControllerSpec
 
     }
   }
-    "return 200 when remove tax code page correct welsh translation" in {
+    "return 200 when remove tax code page load correct welsh translation" in {
       return200(taxCodeQueryParam, "taxcode")
       }
 
-    "return 200 when remove student loan page correct welsh translation" in {
+    "return 200 when remove student loan page load correct welsh translation" in {
       return200(studentLoansQueryParam, "student-loans")
     }
 
-    "return 200 when remove post graduate student loan page correct welsh translation" in {
+    "return 200 when remove post graduate student loan page load correct welsh translation" in {
       return200(postgraduateLoansQueryParam, "postgraduate-loans")
     }
 
-    "return 200 when remove pesnion contribution page correct welsh translation" in {
+    "return 200 when remove pesnion contribution page load correct welsh translation" in {
       return200(pensionContributionQueryParam, "pension-contributions")
     }
 
