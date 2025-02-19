@@ -73,18 +73,17 @@ class ScottishRateControllerSpec
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "The show Scottish rate page" should {
-    "return 200 - OK with existing aggregate data" in {
+
+    def return200(lang: String = "en") = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheCompleteYearly
-      )
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteYearly)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
         .build()
 
-      implicit val messages: Messages = messagesThing(application)
+      implicit val messages: Messages = messagesThing(application, lang)
 
       val formFilled =
         form.fill(cacheCompleteYearly.get.savedScottishRate.get)
@@ -93,56 +92,21 @@ class ScottishRateControllerSpec
         val request = FakeRequest(
           GET,
           routes.ScottishRateController.showScottishRateForm.url
-        ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
-
-        val result = route(application, request).get
-
-        val view = application.injector.instanceOf[ScottishRateView]
-
-        status(result) mustEqual OK
-
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(
-            formFilled,
-            cacheCompleteYearly.get.youHaveToldUsItems()(messagesImplicit, mockAppConfig)
-          )(request, messagesThing(application)).toString
-        )
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
-
-      }
-    }
-
-    "return 200 - OK with existing aggregate data in welsh" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheCompleteYearly
-      )
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      implicit val messages: Messages = messagesThing(application, "cy")
-
-      running(application) {
-
-        val request = FakeRequest(
-          GET,
-          routes.ScottishRateController.showScottishRateForm.url
         ).withHeaders(HeaderNames.xSessionId -> "test")
-          .withCookies(Cookie("PLAY_LANG", "cy"))
+          .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
 
         val result = route(application, request).get
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val title   = doc.select(".govuk-fieldset__heading").text
-        val radios  = doc.select(".govuk-radios__item")
-        val summary = doc.select(".govuk-details__summary").text
-        val details = doc.select(".govuk-details__text").text
-        val button  = doc.select(".govuk-button").text
-        val deskpro = doc.select(".govuk-link").text
+        val title    = doc.select(".govuk-fieldset__heading").text
+        val radios   = doc.select(".govuk-radios__item")
+        val summary  = doc.select(".govuk-details__summary").text
+        val details  = doc.select(".govuk-details__text").text
+        val button   = doc.select(".govuk-button").text
+        val deskpro  = doc.select(".govuk-link").text
         val backLink = doc.select(".govuk-back-link").text
+
+        val view = application.injector.instanceOf[ScottishRateView]
 
         status(result) mustEqual OK
         title mustEqual messages("quick_calc.salary.question.scottish_income.new")
@@ -154,10 +118,29 @@ class ScottishRateControllerSpec
         details must include(messages("quick_calc.salary.question.scottish_income_url_b"))
         details must include(messages("quick_calc.salary.question.scottish_income_url_c"))
         button mustEqual (messages("continue"))
-        deskpro must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+        if (lang == "cy")
+          deskpro    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+        else deskpro must include("Is this page not working properly? (opens in new tab)")
         backLink mustEqual (messages("back"))
 
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(
+            formFilled,
+            cacheCompleteYearly.get.youHaveToldUsItems()(messages, mockAppConfig)
+          )(request, messagesThing(application, lang)).toString
+        )
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
+      }
+    }
+
+    "return 200 with existing aggregate data" when {
+      "form is submitted in English" in {
+        return200()
+      }
+
+      "form is submitted in Welsh" in {
+        return200("cy")
       }
     }
 
@@ -196,6 +179,7 @@ class ScottishRateControllerSpec
   }
 
   "The submit Scottish rate page" should {
+
     "return 303  if the user does not select whether they pay the Scottish rate or not" in {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 

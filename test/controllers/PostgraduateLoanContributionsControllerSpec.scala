@@ -194,13 +194,11 @@ class PostgraduateLoanContributionsControllerSpec
   }
 
   "Submit Postgraduate Loans Form" should {
-    "return 303, and redirect to the you have told us page if no option is picked" in {
 
+    def return303(fetchResponse: Option[QuickCalcAggregateInput]) = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheTaxCodeStatePensionSalaryStudentLoanPostGrad
-      )
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -219,30 +217,16 @@ class PostgraduateLoanContributionsControllerSpec
         val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
       }
     }
-    "return 303, with no aggregate data and redirect to You have told us page" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
-      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-      implicit val messages: Messages = messagesThing(application)
-      running(application) {
-        val formData = Map("hasPostgraduatePlan" -> "false")
-
-        val request = FakeRequest(POST, routes.PostgraduateController.submitPostgradLoanForm.url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
+    "return 303" when {
+      "No option is picked and redirect to the you have told us page " in {
+        return303(cacheTaxCodeStatePensionSalaryStudentLoanPostGrad)
+      }
+      "no aggregate data and redirect to You have told us page" in {
+        return303(None)
       }
     }
   }

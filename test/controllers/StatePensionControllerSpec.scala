@@ -16,7 +16,6 @@
 
 package controllers
 
-
 import forms.StatePensionFormProvider
 import models.QuickCalcAggregateInput
 import org.apache.pekko.Done
@@ -58,19 +57,21 @@ class StatePensionControllerSpec
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def messagesThing(app: Application, lang:String = "en"): Messages =
-    if(lang == "cy")
+  def messagesThing(
+    app:  Application,
+    lang: String = "en"
+  ): Messages =
+    if (lang == "cy")
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
     else
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "Show State Pension Form" should {
-    "return 200, with existing list of aggregate data" in {
+
+    def return200(lang: String = "en") = {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheTaxCodeStatePensionSalary
-      )
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheSalaryStatePensionTaxCode)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -79,29 +80,69 @@ class StatePensionControllerSpec
       val formFilled = form.fill(
         cacheTaxCodeStatePensionSalary.value.savedIsOverStatePensionAge.get
       )
+
+      implicit val messages: Messages = messagesThing(application, lang)
       running(application) {
 
-        val request = FakeRequest(
-          GET,
-          routes.StatePensionController.showStatePensionForm.url
-        ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
-
+        val request = FakeRequest(GET, routes.StatePensionController.showStatePensionForm.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", lang))
+          .withCSRFToken
+        val view   = application.injector.instanceOf[StatePensionView]
         val result = route(application, request).value
+        val doc: Document = Jsoup.parse(contentAsString(result))
+        val header          = doc.select(".govuk-header").text
+        val betaBanner      = doc.select(".govuk-phase-banner").text
+        val heading         = doc.select(".govuk-fieldset__heading").text
+        val radios          = doc.select(".govuk-radios__item")
+        val details         = doc.select(".govuk-details__summary-text").text()
+        val detailComponent = doc.select(".govuk-details__text")
+        val checkedRadios   = doc.select(".govuk-radios__input[checked]")
+        checkedRadios.attr("value") mustEqual ("true")
+        val button  = doc.select(".govuk-button").text
+        val deskpro = doc.select(".govuk-link")
 
-        val view = application.injector.instanceOf[StatePensionView]
-
-        status(result) mustEqual OK
-
+        status(result) mustEqual (OK)
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
           view(
             formFilled,
             aggregateCompleteListYearly
-          )(request, messagesThing(application)).toString
+          )(request, messagesThing(application, lang)).toString
         )
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
+        header     must include(messages("quick_calc.header.title"))
+        betaBanner must include(messages("feedback.before"))
+        betaBanner must include(messages("feedback.link"))
+        betaBanner must include(messages("feedback.after"))
+        heading mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.label"))
+        button mustEqual (messages("continue"))
+        radios.get(0).text mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.yes"))
+        radios.get(1).text mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.no"))
+        details mustEqual (messages("label.state-pension-details"))
+        detailComponent.text must include(messages("quick_calc.salary.question.state_pension_info"))
+        detailComponent.text must include(messages("quick_calc.salary.question.state_pension_url_a"))
+        detailComponent.text must include(messages("quick_calc.salary.question.state_pension_url_b"))
+        detailComponent.text must include(messages("quick_calc.salary.question.state_pension_url_c"))
+        if (lang == "cy")
+          deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+        else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
+
       }
     }
+
+    "return 200" when {
+      "existing aggregate data in form" when {
+        "submitted in english" in {
+          return200()
+        }
+
+        "submitted in welsh" in {
+          return200("cy")
+        }
+      }
+    }
+
     "return 303 and redirect to Salary page, with empty list of aggregate data" in {
 
       val mockCache = mock[QuickCalcCache]
@@ -133,252 +174,121 @@ class StatePensionControllerSpec
       }
 
     }
+  }
 
-    "Submit State Pension Form" should {
+  "Submit State Pension Form" should {
 
-      "return 400 for data in English" when {
-        def test400ErrorEnglish( cacheFetchData: Option[QuickCalcAggregateInput] = None
-                                       ) = {
+    def return400(
+      fetchResponse: Option[QuickCalcAggregateInput] = None,
+      lang:          String                          = "en"
+    ) = {
+      val mockCache = mock[QuickCalcCache]
 
-          val mockCache = mock[QuickCalcCache]
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
 
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheFetchData)
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
 
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
+      implicit val messages: Messages = messagesThing(application, lang)
 
-          implicit val messages: Messages = messagesThing(application)
+      running(application) {
 
-          running(application) {
+        val request = FakeRequest(
+          POST,
+          routes.StatePensionController.submitStatePensionForm.url
+        ).withFormUrlEncodedBody(form.data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", lang))
+          .withCSRFToken
 
-            val request = FakeRequest(
-              POST,
-              routes.StatePensionController.submitStatePensionForm.url
-            ).withFormUrlEncodedBody(form.data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test")
-              .withCSRFToken
+        val result = route(application, request).value
 
-            val result = route(application, request).value
+        status(result) mustEqual BAD_REQUEST
 
-            status(result) mustEqual BAD_REQUEST
+        val parseHtml = Jsoup.parse(contentAsString(result))
 
-            val parseHtml = Jsoup.parse(contentAsString(result))
+        val errorHeader =
+          parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
+        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
-            val errorHeader =
-              parseHtml.getElementsByClass("govuk-error-summary__title").text()
-            val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-            val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+        errorHeader mustEqual messages("error.summary.title")
+        errorMessageLink.contains(messages("quick_calc.over_state_pension_age_error")) mustEqual true
+        errorMessage.contains(messages("quick_calc.over_state_pension_age_error")) mustEqual true
+      }
+    }
 
-            errorHeader mustEqual messages("error.summary.title")
-            errorMessageLink.contains(messages("quick_calc.over_state_pension_age_error")) mustEqual true
-            errorMessage.contains(messages("quick_calc.over_state_pension_age_error")) mustEqual true
-          }
+    "return 400 with invalid form answer" when {
+      "empty list of aggregate data is there" when {
+        "form submitted in english" in {
+          return400()
         }
-        "with invalid form answer and current list of aggregate date" in {
-          test400ErrorEnglish(cacheTaxCodeStatePension)
-        }
-        "with invalid form answer and empty list of aggregate data" in {
-          test400ErrorEnglish(None)
+        "form submitted in welsh" in {
+          return400(lang = "cy")
         }
       }
 
-      "return 400 for data in Welsh" when {
-        def test400ErrorWelsh( cacheFetchData: Option[QuickCalcAggregateInput] = None
-                               ) = {
-          val mockCache = mock[QuickCalcCache]
-
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheFetchData)
-
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
-
-          implicit val messages: Messages = messagesThing(application, "cy")
-
-          running(application) {
-
-            val request = FakeRequest(
-              POST,
-              routes.StatePensionController.submitStatePensionForm.url
-            ).withFormUrlEncodedBody(form.data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test")
-              .withCookies(Cookie("PLAY_LANG", "cy"))
-              .withCSRFToken
-
-            val result = route(application, request).value
-
-            status(result) mustEqual BAD_REQUEST
-
-            val parseHtml = Jsoup.parse(contentAsString(result))
-
-            val errorHeader =
-              parseHtml.getElementsByClass("govuk-error-summary__title").text()
-            val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-            val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
-
-            errorHeader mustEqual messages("error.summary.title")
-            errorMessageLink.contains(messages("quick_calc.over_state_pension_age_error")) mustEqual true
-            errorMessage.contains(messages("quick_calc.over_state_pension_age_error")) mustEqual true
-          }
+      "list of aggregate data is there" when {
+        "form submitted in english" in {
+          return400(cacheTaxCodeStatePension)
         }
-        "with invalid form answer and current list of aggregate date" in {
-          test400ErrorWelsh(cacheTaxCodeStatePension)
-        }
-        "with invalid form answer and empty list of aggregate data" in {
-          test400ErrorWelsh(None)
+        "form submitted in welsh" in {
+          return400(cacheTaxCodeStatePension, lang = "cy")
         }
       }
+    }
 
+    "return 303 in English" when {
 
-      "return 303 in English" when {
-
-        def test300English(cacheFetchData: Option[QuickCalcAggregateInput] = None,
-                           checkStatePensionAge: String): Unit = {
-          val mockCache = mock[QuickCalcCache]
-
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-            cacheFetchData
-          )
-          when(mockCache.save(any())(any())) thenReturn Future.successful(
-            Done
-          )
-
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
-
-          implicit val messages: Messages = messagesThing(application)
-
-          running(application) {
-
-            val formData = Map("overStatePensionAge" -> checkStatePensionAge)
-
-            val request = FakeRequest(
-              GET,
-              routes.StatePensionController.showStatePensionForm.url
-            ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test")
-              .withCSRFToken
-
-            val result = route(application, request).value
-
-            val view = application.injector.instanceOf[StatePensionView]
-
-            status(result) mustEqual SEE_OTHER
-
-            redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
-            verify(mockCache, times(1)).fetchAndGetEntry()(any())
-          }
-        }
-        "When answer \"No\" saved on existing list of aggregate data without Salary and redirect to Salary Page" in {
-          test300English(cacheTaxCode, "false")
-        }
-        "When answer \"Yes\" for being Over 65 saved on a new list of aggregate data and redirect Salary Page" in {
-          test300English(cacheTaxCode, "true")
-        }
-      }
-
-      "return 303 in Welsh" when {
-
-        def test300Welsh(cacheFetchData: Option[QuickCalcAggregateInput] = None,
-                           checkStatePensionAge: String): Unit = {
-          val mockCache = mock[QuickCalcCache]
-
-          when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-            cacheFetchData
-          )
-          when(mockCache.save(any())(any())) thenReturn Future.successful(
-            Done
-          )
-
-          val application = new GuiceApplicationBuilder()
-            .overrides(bind[QuickCalcCache].toInstance(mockCache))
-            .build()
-
-          implicit val messages: Messages = messagesThing(application, "cy")
-
-          running(application) {
-
-            val formData = Map("overStatePensionAge" -> checkStatePensionAge)
-
-            val request = FakeRequest(
-              GET,
-              routes.StatePensionController.showStatePensionForm.url
-            ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-              .withHeaders(HeaderNames.xSessionId -> "test")
-              .withCookies(Cookie("PLAY_LANG", "cy"))
-              .withCSRFToken
-
-            val result = route(application, request).value
-
-            val view = application.injector.instanceOf[StatePensionView]
-
-            status(result) mustEqual SEE_OTHER
-
-            redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
-            verify(mockCache, times(1)).fetchAndGetEntry()(any())
-          }
-        }
-        "When answer \"No\" saved on existing list of aggregate data without Salary and redirect to Salary Page in Welsh" in {
-          test300Welsh(cacheTaxCode, "false")
-        }
-        "When answer \"Yes\" for being Over 65 saved on a new list of aggregate data and redirect Salary Page in Welsh" in {
-          test300Welsh(cacheTaxCode, "true")
-        }
-      }
-
-
-      "return 200, with list of aggregate data in Welsh" in {
+      def test300English(
+        cacheFetchData:       Option[QuickCalcAggregateInput] = None,
+        checkStatePensionAge: String
+      ): Unit = {
         val mockCache = mock[QuickCalcCache]
 
-        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheSalaryStatePensionTaxCode)
+        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
+          cacheFetchData
+        )
+        when(mockCache.save(any())(any())) thenReturn Future.successful(
+          Done
+        )
 
         val application = new GuiceApplicationBuilder()
           .overrides(bind[QuickCalcCache].toInstance(mockCache))
           .build()
 
-        implicit val messages: Messages = messagesThing(application, "cy")
+        implicit val messages: Messages = messagesThing(application)
+
         running(application) {
 
-          val request = FakeRequest(GET, routes.StatePensionController.showStatePensionForm.url)
+          val formData = Map("overStatePensionAge" -> checkStatePensionAge)
+
+          val request = FakeRequest(
+            GET,
+            routes.StatePensionController.showStatePensionForm.url
+          ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
             .withHeaders(HeaderNames.xSessionId -> "test")
-            .withCookies(Cookie("PLAY_LANG", "cy"))
             .withCSRFToken
 
           val result = route(application, request).value
-          val doc: Document = Jsoup.parse(contentAsString(result))
-          val header = doc.select(".govuk-header").text
-          val betaBanner = doc.select(".govuk-phase-banner").text
-          val heading = doc.select(".govuk-fieldset__heading").text
-          val radios  = doc.select(".govuk-radios__item")
-          val details = doc.select(".govuk-details__summary-text").text()
-          val detailComponent = doc.select(".govuk-details__text")
-          val checkedRadios = doc.select(".govuk-radios__input[checked]")
-          checkedRadios.attr("value") mustEqual ("true")
-          val button  = doc.select(".govuk-button").text
-          val deskpro = doc.select(".govuk-link")
 
-          header must include(messages("quick_calc.header.title"))
-          betaBanner must include(messages("feedback.before"))
-          betaBanner must include(messages("feedback.link"))
-          betaBanner must include(messages("feedback.after"))
-          heading mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.label"))
-          button mustEqual (messages("continue"))
-          radios.get(0).text mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.yes"))
-          radios.get(1).text mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.no"))
-          details mustEqual (messages("label.state-pension-details"))
-          detailComponent.text must include (messages("quick_calc.salary.question.state_pension_info"))
-          detailComponent.text must include (messages("quick_calc.salary.question.state_pension_url_a"))
-          detailComponent.text must include (messages("quick_calc.salary.question.state_pension_url_b"))
-          detailComponent.text must include (messages("quick_calc.salary.question.state_pension_url_c"))
-          deskpro.text() must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+          val view = application.injector.instanceOf[StatePensionView]
 
-          status(result) mustEqual (OK)
+          status(result) mustEqual SEE_OTHER
 
+          redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
+          verify(mockCache, times(1)).fetchAndGetEntry()(any())
         }
-
+      }
+      "When answer \"No\" saved on existing list of aggregate data without Salary and redirect to Salary Page" in {
+        test300English(cacheTaxCode, "false")
+      }
+      "When answer \"Yes\" for being Over 65 saved on a new list of aggregate data and redirect Salary Page" in {
+        test300English(cacheTaxCode, "true")
       }
     }
+
   }
+
 }
