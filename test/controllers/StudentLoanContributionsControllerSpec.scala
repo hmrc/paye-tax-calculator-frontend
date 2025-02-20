@@ -17,6 +17,7 @@
 package controllers
 
 import forms.StudentLoansFormProvider
+import models.QuickCalcAggregateInput
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.any
@@ -41,14 +42,14 @@ import views.html.pages.StudentLoansContributionView
 
 import scala.concurrent.Future
 
-
-class StudentLoanContributionsControllerSpec extends BaseSpec
-  with AnyWordSpecLike
-  with TryValues
-  with ScalaFutures
-  with IntegrationPatience
-  with MockitoSugar
-  with CSRFTestHelper {
+class StudentLoanContributionsControllerSpec
+    extends BaseSpec
+    with AnyWordSpecLike
+    with TryValues
+    with ScalaFutures
+    with IntegrationPatience
+    with MockitoSugar
+    with CSRFTestHelper {
 
   val formProvider = new StudentLoansFormProvider()
   val form         = formProvider()
@@ -57,14 +58,87 @@ class StudentLoanContributionsControllerSpec extends BaseSpec
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def messagesThing(app: Application, lang: String = "en"): Messages =
-    if(lang == "cy")
+  def messagesThing(
+    app:  Application,
+    lang: String = "en"
+  ): Messages =
+    if (lang == "cy")
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
-  else
-    app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+    else
+      app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "Show Student Loans form" should {
-    "return 200 with an empty list of aggregate data" in {
+
+    def return200(lang: String = "en") = {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalaryStudentLoan)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      val formFilled = form.fill(
+        cacheTaxCodeStatePensionSalaryStudentLoan.get.savedStudentLoanContributions.get
+      )
+
+      implicit val messages: Messages = messagesThing(application, lang)
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.StudentLoanContributionsController.showStudentLoansForm.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", lang))
+          .withCSRFToken
+
+        val result = route(application, request).get
+
+        val view = application.injector.instanceOf[StudentLoansContributionView]
+        val doc: Document = Jsoup.parse(contentAsString(result))
+        val header        = doc.select(".govuk-header").text
+        val betaBanner    = doc.select(".govuk-phase-banner").text
+        val heading       = doc.select(".govuk-heading-xl").text
+        val subHeading    = doc.select(".govuk-fieldset__legend").text
+        val radios        = doc.select(".govuk-radios__item")
+        val button        = doc.select(".govuk-button").text
+        val deskpro       = doc.select(".govuk-link")
+        val checkedRadios = doc.select(".govuk-radios__input[checked]").attr("value")
+        checkedRadios mustEqual ("plan one")
+
+        header     must include(messages("quick_calc.header.title"))
+        betaBanner must include(messages("feedback.before"))
+        betaBanner must include(messages("feedback.link"))
+        betaBanner must include(messages("feedback.after"))
+        heading mustEqual (messages("quick_calc.salary.studentLoan.header"))
+        subHeading mustEqual (messages("quick_calc.salary.studentLoan.subheading"))
+        radios.get(0).text mustEqual (messages("quick_calc.salary.studentLoan.plan1.text"))
+        radios.get(1).text mustEqual (messages("quick_calc.salary.studentLoan.plan2.text"))
+        radios.get(2).text mustEqual (messages("quick_calc.salary.studentLoan.plan4.text"))
+        radios.get(3).text mustEqual (messages("quick_calc.salary.studentLoan.noneOfThese.text"))
+        button mustEqual (messages("continue"))
+        if (lang == "cy")
+          deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+        else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
+        status(result) mustEqual (OK)
+
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(
+            formFilled
+          )(request, messagesThing(application, lang)).toString
+        )
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+      }
+    }
+    "return 200 with existing list of aggregate data" when {
+      "form submitted in english" in {
+        return200()
+      }
+      "form submitted in welsh" in {
+        return200("cy")
+      }
+    }
+
+    "return 303 with an empty list of aggregate data" in {
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
@@ -91,89 +165,6 @@ class StudentLoanContributionsControllerSpec extends BaseSpec
       }
 
     }
-    "return 200, with existing list of aggregate data" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheTaxCodeStatePensionSalaryStudentLoan
-      )
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      val formFilled = form.fill(
-        cacheTaxCodeStatePensionSalaryStudentLoan.get.savedStudentLoanContributions.get
-      )
-
-      implicit val messages: Messages = messagesThing(application)
-
-      running(application) {
-
-        val request = FakeRequest(
-          GET,
-          routes.StudentLoanContributionsController.showStudentLoansForm.url
-        ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
-
-        val result = route(application, request).get
-
-        val view = application.injector.instanceOf[StudentLoansContributionView]
-
-        status(result) mustEqual OK
-
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(
-            formFilled
-          )(request, messagesThing(application)).toString
-        )
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
-
-      }
-    }
-    "return 200 with correct welsh translation" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheTaxCodeStatePensionSalaryStudentLoan)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      implicit val messages: Messages = messagesThing(application, "cy")
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.StudentLoanContributionsController.showStudentLoansForm.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCookies(Cookie("PLAY_LANG", "cy"))
-          .withCSRFToken
-
-        val result = route(application, request).get
-        val doc: Document = Jsoup.parse(contentAsString(result))
-        val header = doc.select(".govuk-header").text
-        val betaBanner = doc.select(".govuk-phase-banner").text
-        val heading = doc.select(".govuk-heading-xl").text
-        val subHeading = doc.select(".govuk-fieldset__legend").text
-        val radios = doc.select(".govuk-radios__item")
-        val button  = doc.select(".govuk-button").text
-        val deskproLink = doc.select(".govuk-link")
-        val checkedRadios = doc.select(".govuk-radios__input[checked]")
-        checkedRadios.attr("value") mustEqual ("plan one")
-
-        header must include(messages("quick_calc.header.title"))
-        betaBanner must include(messages("feedback.before"))
-        betaBanner must include(messages("feedback.link"))
-        betaBanner must include(messages("feedback.after"))
-        heading mustEqual (messages("quick_calc.salary.studentLoan.header"))
-        subHeading mustEqual (messages("quick_calc.salary.studentLoan.subheading"))
-        radios.get(0).text mustEqual (messages("quick_calc.salary.studentLoan.plan1.text"))
-        radios.get(1).text mustEqual (messages("quick_calc.salary.studentLoan.plan2.text"))
-        radios.get(2).text mustEqual (messages("quick_calc.salary.studentLoan.plan4.text"))
-        radios.get(3).text mustEqual (messages("quick_calc.salary.studentLoan.noneOfThese.text"))
-        button mustEqual (messages("continue"))
-        deskproLink.text must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
-        status(result) mustEqual (OK)
-      }
-    }
   }
 }

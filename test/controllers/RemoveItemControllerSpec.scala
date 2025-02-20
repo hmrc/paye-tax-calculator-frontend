@@ -52,21 +52,25 @@ class RemoveItemControllerSpec
     with IntegrationPatience
     with CSRFTestHelper {
 
-  val taxCodeQueryParam      = "taxcode"
-  val studentLoansQueryParam = "student-loans"
-  val postgraduateLoansQueryParam = "postgraduate-loans"
+  val taxCodeQueryParam             = "taxcode"
+  val studentLoansQueryParam        = "student-loans"
+  val postgraduateLoansQueryParam   = "postgraduate-loans"
   val pensionContributionQueryParam = "pension-contributions"
-  val formProvider           = new RemoveItemFormProvider()
+  val formProvider                  = new RemoveItemFormProvider()
   val form: Form[Boolean] = formProvider(taxCodeQueryParam)
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def messagesThing(app: Application, lang: String = "en"): Messages = if (lang == "en")
-    app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
-  else
-    app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
+  def messagesThing(
+    app:  Application,
+    lang: String = "en"
+  ): Messages =
+    if (lang == "en")
+      app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+    else
+      app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
 
   "The remove item page with taxcode set as the query param" should {
     "return 200 - Ok with an empty form" in {
@@ -126,17 +130,14 @@ class RemoveItemControllerSpec
 
   "Submit Remove Tax Code Controller" should {
 
-    "return 303 See Other and redirect to the Check Your Answers Page if they remove there tax code" in {
+    def return303(
+      expectedAggregate: QuickCalcAggregateInput,
+      fetchResponse:     Option[QuickCalcAggregateInput],
+      removeItem:        String
+    ) = {
       SharedMetricRegistries.clear()
-
       val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      val expectedAggregate: QuickCalcAggregateInput =
-        cacheCompleteYearly.get.copy(savedTaxCode = Some(UserTaxCode(taxCode = None)))
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheCompleteYearly.map(_.copy(savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = true, taxCode = Some("1257L")))))
-      )
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
 
       when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())) thenReturn Future
         .successful(Done)
@@ -149,7 +150,7 @@ class RemoveItemControllerSpec
         val formData = Map("removeItem" -> "true")
         val request = FakeRequest(
           POST,
-          routes.RemoveItemController.submitRemoveItemForm(taxCodeQueryParam).url
+          routes.RemoveItemController.submitRemoveItemForm(removeItem).url
         ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -158,127 +159,72 @@ class RemoveItemControllerSpec
       }
     }
 
-    "return 303 See Other and redirect to the Check Your Answers Page if they remove there pensionContributions" in {
-      SharedMetricRegistries.clear()
-
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(savedPensionContributions = None)
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheCompleteYearly.map(
-          _.copy(savedPensionContributions = Some(
-            PensionContributions(gaveUsPercentageAmount    = true,
-                                 monthlyContributionAmount = Some(BigDecimal(12)),
-                                 yearlyContributionAmount  = Some(BigDecimal(144)))
-          )
-          )
+    "return 303 and redirect to the Check Your Answers Page" when {
+      "users removes their tax code" in {
+        return303(
+          cacheCompleteYearly.get.copy(savedTaxCode = Some(UserTaxCode(taxCode = None))),
+          cacheCompleteYearly.map(
+            _.copy(savedTaxCode = Some(UserTaxCode(gaveUsTaxCode = true, taxCode = Some("1257L"))))
+          ),
+          taxCodeQueryParam
         )
-      )
-
-      when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())) thenReturn Future
-        .successful(Done)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      running(application) {
-        val formData = Map("removeItem" -> "true")
-        val request = FakeRequest(
-          POST,
-          routes.RemoveItemController.submitRemoveItemForm(pensionContributionQueryParam).url
-        ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-        val result = route(application, request).get
-        status(result) mustEqual SEE_OTHER
       }
-    }
 
-    "return 303 See Other and redirect to the Check Your Answers Page if they remove there studentLoanContributions" in {
-      SharedMetricRegistries.clear()
-
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(savedStudentLoanContributions = None)
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheCompleteYearly.map(
-          _.copy(savedStudentLoanContributions = Some(
-            StudentLoanContributions(studentLoanPlan = Some(PlanOne))
-          )
-          )
+      "users removes their pensionContributions" in {
+        return303(
+          cacheCompleteYearly.get.copy(savedPensionContributions = None),
+          cacheCompleteYearly.map(
+            _.copy(savedPensionContributions = Some(
+              PensionContributions(gaveUsPercentageAmount    = true,
+                                   monthlyContributionAmount = Some(BigDecimal(12)),
+                                   yearlyContributionAmount  = Some(BigDecimal(144)))
+            )
+            )
+          ),
+          pensionContributionQueryParam
         )
-      )
-
-      when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())) thenReturn Future
-        .successful(Done)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      running(application) {
-        val formData = Map("removeItem" -> "true")
-        val request = FakeRequest(
-          POST,
-          routes.RemoveItemController.submitRemoveItemForm(studentLoansQueryParam).url
-        ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-        val result = route(application, request).get
-        status(result) mustEqual SEE_OTHER
       }
-    }
 
-    "return 303 See Other and redirect to the Check Your Answers Page if they remove there postgraduate loan contributions" in {
-      SharedMetricRegistries.clear()
-
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(savedPostGraduateLoanContributions = None)
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheCompleteYearly.map(
-          _.copy(savedPostGraduateLoanContributions = Some(
-            PostgraduateLoanContributions(hasPostgraduatePlan = Some(true))
-          )
-          )
+      "users removes their studentLoanContributions" in {
+        return303(
+          cacheCompleteYearly.get.copy(savedStudentLoanContributions = None),
+          cacheCompleteYearly.map(
+            _.copy(savedStudentLoanContributions = Some(
+              StudentLoanContributions(studentLoanPlan = Some(PlanOne))
+            )
+            )
+          ),
+          studentLoansQueryParam
         )
-      )
+      }
 
-      when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())) thenReturn Future
-        .successful(Done)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      running(application) {
-        val formData = Map("removeItem" -> "true")
-        val request = FakeRequest(
-          POST,
-          routes.RemoveItemController.submitRemoveItemForm(postgraduateLoansQueryParam).url
-        ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-        val result = route(application, request).get
-        status(result) mustEqual SEE_OTHER
+      "users removes their postgraduate Loan Contributions" in {
+        return303(
+          cacheCompleteYearly.get.copy(savedPostGraduateLoanContributions = None),
+          cacheCompleteYearly.map(
+            _.copy(savedPostGraduateLoanContributions = Some(
+              PostgraduateLoanContributions(hasPostgraduatePlan = Some(true))
+            )
+            )
+          ),
+          postgraduateLoansQueryParam
+        )
       }
     }
 
-    "return 400 for invalid form answer and current list of aggregate data" in {
+    def return400(
+      fetchResponse: Option[QuickCalcAggregateInput],
+      lang:          String = "en"
+    ) = {
       SharedMetricRegistries.clear()
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheCompleteYearly
-      )
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
         .build()
+      implicit val messages: Messages = messagesThing(application, lang)
 
       running(application) {
 
@@ -287,6 +233,7 @@ class RemoveItemControllerSpec
           routes.RemoveItemController.submitRemoveItemForm(taxCodeQueryParam).url
         ).withFormUrlEncodedBody(form.data.toSeq: _*)
           .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
 
         val result = route(application, request).get
@@ -300,102 +247,83 @@ class RemoveItemControllerSpec
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
         val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
 
-        errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedInvalidRemoveTaxCodeAnswer) mustEqual true
-        errorMessage.contains(expectedInvalidRemoveTaxCodeAnswer) mustEqual true
+        errorHeader mustEqual messages("error.summary.title")
+        errorMessageLink.contains(messages("quick_calc.remove_tax_code_error")) mustEqual true
+        errorMessage.contains(messages("quick_calc.remove_tax_code_error")) mustEqual true
 
       }
-
     }
 
-    "return 400 for invalid form answer and empty list of aggregate data" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
+    "return 400 for invalid form answer" when {
+      "current list of aggregate data" when {
+        "form submitted in English" in {
+          return400(cacheCompleteYearly)
+        }
+        "form submitted in Welsh" in {
+          return400(cacheCompleteYearly, "cy")
+        }
+      }
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        None
-      )
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      implicit val messages: Messages = messagesThing(application)
-
-      running(application) {
-
-        val request = FakeRequest(
-          POST,
-          routes.RemoveItemController.submitRemoveItemForm(taxCodeQueryParam).url
-        ).withFormUrlEncodedBody(form.data.toSeq: _*)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-
-        status(result) mustEqual BAD_REQUEST
-
-        val parseHtml = Jsoup.parse(contentAsString(result))
-
-        val errorHeader =
-          parseHtml.getElementsByClass("govuk-error-summary__title").text()
-        val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
-
-        errorHeader mustEqual "There is a problem"
-        errorMessageLink.contains(expectedInvalidRemoveTaxCodeAnswer) mustEqual true
-        errorMessage.contains(expectedInvalidRemoveTaxCodeAnswer) mustEqual true
+      "empty list of aggregate data" when {
+        "form submitted in English" in {
+          return400(None)
+        }
+        "form submitted in Welsh" in {
+          return400(None, "cy")
+        }
       }
     }
 
   }
   "Submit removeItemForm in welsh should" when {
-  def return200(removeItem : String, item : String) {
-    SharedMetricRegistries.clear()
+    def return200(
+      removeItem: String,
+      item:       String
+    ) {
+      SharedMetricRegistries.clear()
 
-    val mockCache = MockitoSugar.mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-    when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteYearly)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteYearly)
 
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
 
-    val application = new GuiceApplicationBuilder()
-      .overrides(bind[QuickCalcCache].toInstance(mockCache))
-      .build()
+      implicit val messages: Messages = messagesThing(application, "cy")
 
-    implicit val messages: Messages = messagesThing(application, "cy")
+      running(application) {
+        val request = FakeRequest(
+          GET,
+          routes.RemoveItemController.showRemoveItemForm(removeItem).url
+        ).withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", "cy"))
+          .withCSRFToken
+        val result = route(application, request).get
+        val doc: Document = Jsoup.parse(contentAsString(result))
 
-    running(application) {
-      val request = FakeRequest(
-        GET,
-        routes.RemoveItemController.showRemoveItemForm(removeItem).url
-      )
-        .withHeaders(HeaderNames.xSessionId -> "test")
-        .withCookies(Cookie("PLAY_LANG", "cy"))
-        .withCSRFToken
-      val result = route(application, request).get
-      val doc: Document = Jsoup.parse(contentAsString(result))
+        val header      = doc.select(".govuk-header").text
+        val betaBanner  = doc.select(".govuk-phase-banner").text
+        val heading     = doc.select(".govuk-fieldset__heading").text
+        val button      = doc.select(".govuk-button").text
+        val deskproLink = doc.select(".govuk-link")
 
-      val header = doc.select(".govuk-header").text
-      val betaBanner = doc.select(".govuk-phase-banner").text
-      val heading = doc.select(".govuk-fieldset__heading").text
-      val button = doc.select(".govuk-button").text
-      val deskproLink = doc.select(".govuk-link")
+        header     must include(messages("quick_calc.header.title"))
+        betaBanner must include(messages("feedback.before"))
+        betaBanner must include(messages("feedback.link"))
+        betaBanner must include(messages("feedback.after"))
+        heading mustEqual (messages(s"quick_calc.remove.$item"))
 
-      header must include(messages("quick_calc.header.title"))
-      betaBanner must include(messages("feedback.before"))
-      betaBanner must include(messages("feedback.link"))
-      betaBanner must include(messages("feedback.after"))
-      heading mustEqual (messages(s"quick_calc.remove.$item"))
+        button mustEqual (messages("continue"))
+        deskproLink.text must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
 
-      button mustEqual (messages("continue"))
-      deskproLink.text must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+        status(result) mustEqual OK
 
-      status(result) mustEqual OK
-
+      }
     }
-  }
     "return 200 when remove tax code page load correct welsh translation" in {
       return200(taxCodeQueryParam, "taxcode")
-      }
+    }
 
     "return 200 when remove student loan page load correct welsh translation" in {
       return200(studentLoansQueryParam, "student-loans")

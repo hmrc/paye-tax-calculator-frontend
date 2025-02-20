@@ -16,8 +16,8 @@
 
 package controllers
 
-import forms.UserTaxCodeFormProvider
-import models.QuickCalcAggregateInput
+import forms.{UserTaxCodeFormProvider, YouHaveToldUsItem}
+import models.{QuickCalcAggregateInput, UserTaxCode}
 import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -28,6 +28,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
+import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -70,7 +71,74 @@ class TaxCodeControllerSpec
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   "Show Tax Code Form" should {
-    "return 200 and an empty list of aggregate data" in {
+
+    def return200(
+      fetchResponse:  Option[QuickCalcAggregateInput],
+      formFilled:     Form[UserTaxCode],
+      aggregateInput: QuickCalcAggregateInput,
+      lang:           String = "en"
+    ) = {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      implicit val messages: Messages = messagesThing(application, lang)
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", lang))
+          .withCSRFToken
+
+        val result = route(application, request).get
+        val doc: Document = Jsoup.parse(contentAsString(result))
+        val title   = doc.select(".govuk-heading-xl").text
+        val hint    = doc.select(".govuk-hint").text
+        val summary = doc.select(".govuk-details__summary-text").text
+        val text1   = doc.select(".govuk-details__text").text
+        val bullets = doc.select(".govuk-list--bullet")
+        val button  = doc.select(".govuk-button").text
+        val deskpro = doc.select(".govuk-link")
+
+        val view = application.injector.instanceOf[TaxCodeView]
+
+        status(result) mustEqual OK
+
+        title must include(messages("quick_calc.about_tax_code.header"))
+        hint  must include(messages("quick_calc.about_tax_code.details.firstInfoPara", "1257L"))
+        summary mustEqual (messages("label.tax-code.new"))
+        text1        must include(messages("quick_calc.about_tax_code.details.start"))
+        bullets.html must include(messages("quick_calc.about_tax_code.details.firstBullet_b"))
+        bullets.html must include(messages("quick_calc.about_tax_code.details.secondBullet"))
+        bullets.html must include(messages("quick_calc.about_tax_code.details.thirdBullet"))
+        bullets.html must include(messages("quick_calc.about_tax_code.details.fourthBullet"))
+        button mustEqual (messages("continue"))
+        if (lang == "cy")
+          deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
+        else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
+
+        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
+          view(
+            formFilled,
+            aggregateInput
+              .youHaveToldUsItems()(messages, mockAppConfig),
+            defaultTaxCodeProvider.defaultUkTaxCode,
+            false
+          )(
+            request,
+            messagesThing(application, lang)
+          ).toString
+        )
+        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+      }
+    }
+
+    "return 303 and an empty list of aggregate data" in {
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
@@ -97,283 +165,132 @@ class TaxCodeControllerSpec
       }
     }
 
-    "return 200 and a list of current aggregate data containing Tax Code and pension" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
+    "return 200" when {
+      "list of current aggregate data containing tax code and  pension" when {
+        "form submitted in english" in {
+          return200(cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)),
+                    form,
+                    cacheTaxCodeStatePensionSalary
+                      .map(_.copy(savedTaxCode = None))
+                      .get)
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None))
-      )
+        }
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
+        "form submitted in welsh" in {
+          return200(cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None)),
+                    form,
+                    cacheTaxCodeStatePensionSalary
+                      .map(_.copy(savedTaxCode = None))
+                      .get,
+                    "cy")
 
-      implicit val messages: Messages = messagesThing(application)
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-
-        val view = application.injector.instanceOf[TaxCodeView]
-
-        status(result) mustEqual OK
-
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(
-            form,
-            cacheTaxCodeStatePensionSalary
-              .map(_.copy(savedTaxCode = None))
-              .get
-              .youHaveToldUsItems()(messages, mockAppConfig),
-            defaultTaxCodeProvider.defaultUkTaxCode,
-            false
-          )(
-            request,
-            messagesThing(application)
-          ).toString
-        )
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
+        }
       }
-    }
 
-    "return 200 and a list of current aggregate data containing Tax Code and pension in Welsh" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
+      "list of current aggregate data containing tax code and pension and tax code answered" when {
+        "form submitted in english" in {
+          return200(cacheSalaryStatePensionTaxCode,
+                    form.fill(cacheSalaryStatePensionTaxCode.get.savedTaxCode.get),
+                    cacheSalaryStatePensionTaxCode.get)
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheTaxCodeStatePensionSalary.map(_.copy(savedTaxCode = None))
-      )
+        }
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
+        "form submitted in welsh" in {
+          return200(cacheSalaryStatePensionTaxCode,
+                    form.fill(cacheSalaryStatePensionTaxCode.get.savedTaxCode.get),
+                    cacheSalaryStatePensionTaxCode.get,
+                    "cy")
 
-      implicit val messages: Messages = messagesThing(application, "cy")
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCookies(Cookie("PLAY_LANG", "cy"))
-          .withCSRFToken
-
-        val result = route(application, request).get
-        val doc: Document = Jsoup.parse(contentAsString(result))
-        val title   = doc.select(".govuk-heading-xl").text
-        val hint    = doc.select(".govuk-hint").text
-        val summary = doc.select(".govuk-details__summary-text").text
-        val text1   = doc.select(".govuk-details__text").text
-        val bullets = doc.select(".govuk-list--bullet")
-        val button  = doc.select(".govuk-button").text
-        val deskpro = doc.select(".govuk-link")
-
-        status(result) mustEqual OK
-        title must include(messages("quick_calc.about_tax_code.header"))
-        hint  must include(messages("quick_calc.about_tax_code.details.firstInfoPara"))
-        summary mustEqual (messages("label.tax-code.new"))
-        text1        must include(messages("quick_calc.about_tax_code.details.start"))
-        bullets.html must include(messages("quick_calc.about_tax_code.details.firstBullet_b"))
-        bullets.html must include(messages("quick_calc.about_tax_code.details.secondBullet"))
-        bullets.html must include(messages("quick_calc.about_tax_code.details.thirdBullet"))
-        bullets.html must include(messages("quick_calc.about_tax_code.details.fourthBullet"))
-        button mustEqual (messages("continue"))
-        deskpro.text() must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
-      }
-    }
-
-    "return 200 and a list of current aggregate data containing Tax Code and pension and tax code answered" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheSalaryStatePensionTaxCode)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      implicit val messages: Messages = messagesThing(application)
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCSRFToken
-
-        val result = route(application, request).get
-
-        val view = application.injector.instanceOf[TaxCodeView]
-
-        val formFilled = form.fill(cacheSalaryStatePensionTaxCode.get.savedTaxCode.get)
-
-        status(result) mustEqual OK
-
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(formFilled,
-               cacheSalaryStatePensionTaxCode.get.youHaveToldUsItems()(messages, mockAppConfig),
-               defaultTaxCodeProvider.defaultUkTaxCode,
-               false)(
-            request,
-            messagesThing(application)
-          ).toString
-        )
-        verify(mockCache, times(1)).fetchAndGetEntry()(any())
-      }
-    }
-
-    "return 200 and a list of current aggregate data containing Tax Code and pension and tax code answered in welsh" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheSalaryStatePensionTaxCode)
-
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
-
-      implicit val messages: Messages = messagesThing(application, "cy")
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCookies(Cookie("PLAY_LANG", "cy"))
-          .withCSRFToken
-
-        val result = route(application, request).get
-
-        val view = application.injector.instanceOf[TaxCodeView]
-
-        val formFilled = form.fill(cacheSalaryStatePensionTaxCode.get.savedTaxCode.get)
-
-        status(result) mustEqual OK
-
-        removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-          view(formFilled,
-               cacheSalaryStatePensionTaxCode.get.youHaveToldUsItems()(messages, mockAppConfig),
-               defaultTaxCodeProvider.defaultUkTaxCode,
-               false)(
-            request,
-            messagesThing(application, "cy")
-          ).toString
-        )
-
+        }
       }
     }
   }
 
   "Submit Tax Code Form" should {
 
-    "return 400 with English error message" when {
+    def return400(
+      errorMsg:       String,
+      taxCode:        String,
+      cacheFetchData: Option[QuickCalcAggregateInput] = None,
+      lang:           String = "en"
+    ) = {
 
-      def test400ErrorEnglish(
-        errorMsg:       String,
-        taxCode:        String,
-        cacheFetchData: Option[QuickCalcAggregateInput] = None
-      ) = {
-        val mockCache = MockitoSugar.mock[QuickCalcCache]
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheFetchData)
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheFetchData)
 
-        val application = new GuiceApplicationBuilder()
-          .overrides(bind[QuickCalcCache].toInstance(mockCache))
-          .build()
-        implicit val messages: Messages = messagesThing(application)
-        running(application) {
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+      implicit val messages: Messages = messagesThing(application, lang)
+      running(application) {
 
-          val formData = Map("hasTaxCode" -> "true", "taxCode" -> taxCode)
+        val formData = Map("hasTaxCode" -> "true", "taxCode" -> taxCode)
 
-          val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
-            .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-            .withHeaders(HeaderNames.xSessionId -> "test")
-            .withCSRFToken
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCookies(Cookie("PLAY_LANG", lang))
+          .withCSRFToken
 
-          val result = route(application, request).get
+        val result = route(application, request).get
 
-          status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual BAD_REQUEST
 
-          val parseHtml = Jsoup.parse(contentAsString(result))
+        val parseHtml = Jsoup.parse(contentAsString(result))
 
-          val errorHeader  = parseHtml.getElementsByClass("govuk-error-summary__title").text()
-          val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorHeader  = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
 
-          errorHeader mustEqual messages("error.summary.title")
-          errorMessage must include(messages(errorMsg))
-        }
-      }
-
-      "with aggregate data and an error message for invalid Tax Code" in {
-        test400ErrorEnglish("quick_calc.about_tax_code.wrong_tax_code", "110", cacheTaxCodeStatePension)
-      }
-
-      "with no aggregate data and an error message for invalid Tax Code" in {
-        test400ErrorEnglish("quick_calc.about_tax_code.wrong_tax_code", "110")
-      }
-      "with no aggregate data and an error message for invalid Tax Code Prefix" in {
-        test400ErrorEnglish("quick_calc.about_tax_code.wrong_tax_code_prefix", "X9999")
-      }
-      "with no aggregate data and an error message for invalid Tax Code Suffix" in {
-        test400ErrorEnglish("quick_calc.about_tax_code.wrong_tax_code_suffix", "9999A")
-      }
-      " with no aggregate data and an error message when Tax Code entered is 99999L" in {
-        test400ErrorEnglish("quick_calc.about_tax_code.wrong_tax_code", "99999L")
+        errorHeader mustEqual messages("error.summary.title")
+        errorMessage must include(messages(errorMsg))
       }
     }
 
-    "return 400 with welsh error message" when {
-
-      def test400ErrorWelsh(
-        errorMsg:       String,
-        taxCode:        String,
-        cacheFetchData: Option[QuickCalcAggregateInput] = None
-      ) = {
-        val mockCache = MockitoSugar.mock[QuickCalcCache]
-
-        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheFetchData)
-
-        val application = new GuiceApplicationBuilder()
-          .overrides(bind[QuickCalcCache].toInstance(mockCache))
-          .build()
-        implicit val messages: Messages = messagesThing(application, "cy")
-        running(application) {
-
-          val formData = Map("hasTaxCode" -> "true", "taxCode" -> taxCode)
-
-          val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
-            .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
-            .withHeaders(HeaderNames.xSessionId -> "test")
-            .withCookies(Cookie("PLAY_LANG", "cy"))
-            .withCSRFToken
-
-          val result = route(application, request).get
-
-          status(result) mustEqual BAD_REQUEST
-
-          val parseHtml = Jsoup.parse(contentAsString(result))
-
-          val errorHeader  = parseHtml.getElementsByClass("govuk-error-summary__title").text()
-          val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
-
-          errorHeader mustEqual messages("error.summary.title")
-          errorMessage must include(messages(errorMsg))
+    "return 400 with error message " when {
+      "aggregate data is there and invalid Tax Code is entered" when {
+        " form submitted in english" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code", "110", cacheTaxCodeStatePension)
+        }
+        " form submitted in welsh" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code", "110", cacheTaxCodeStatePension, "cy")
         }
       }
 
-      "with aggregate data and an error message for invalid Tax Code" in {
-        test400ErrorWelsh("quick_calc.about_tax_code.wrong_tax_code", "110", cacheTaxCodeStatePension)
+      "No aggregate data and invalid Tax Code is entered" when {
+        " form submitted in english" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code", "110")
+        }
+        " form submitted in welsh" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code", "110", None, "cy")
+        }
       }
 
-      "with no aggregate data and an error message for invalid Tax Code" in {
-        test400ErrorWelsh("quick_calc.about_tax_code.wrong_tax_code", "110")
+      "No aggregate data and invalid Tax Code Prefix is entered" when {
+        " form submitted in english" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code_prefix", "X9999")
+        }
+        " form submitted in welsh" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code_prefix", "X9999", None, "cy")
+        }
       }
-      "with no aggregate data and an error message for invalid Tax Code Prefix" in {
-        test400ErrorWelsh("quick_calc.about_tax_code.wrong_tax_code_prefix", "X9999")
+
+      "No aggregate data and invalid Tax Code Suffix is entered" when {
+        " form submitted in english" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code_suffix", "9999A")
+        }
+        " form submitted in welsh" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code_suffix", "9999A", None, "cy")
+        }
       }
-      "with no aggregate data and an error message for invalid Tax Code Suffix" in {
-        test400ErrorWelsh("quick_calc.about_tax_code.wrong_tax_code_suffix", "9999A")
-      }
-      " with no aggregate data and an error message when Tax Code entered is 99999L" in {
-        test400ErrorWelsh("quick_calc.about_tax_code.wrong_tax_code", "99999L")
+
+      "No aggregate data and Tax Code entered is 99999L is entered" when {
+        " form submitted in english" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code", "99999L")
+        }
+        " form submitted in welsh" in {
+          return400("quick_calc.about_tax_code.wrong_tax_code", "99999L", None, "cy")
+        }
       }
     }
 
