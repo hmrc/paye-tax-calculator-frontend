@@ -17,8 +17,8 @@
 package controllers
 
 import config.features.Features
-import forms.TaxResult
-import models.QuickCalcAggregateInput
+import forms.{TaxResult, Yearly}
+import models.{QuickCalcAggregateInput, Salary}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.{times, verify, when}
@@ -80,7 +80,8 @@ class ShowResultSpec
       yearlyEstimateAmount:  String,
       monthlyEstimateAmount: String,
       weeklyEstimateAmount:  String,
-      lang:                  String = "en"
+      lang:                  String = "en",
+      taxableIncome:         Option[String] = None
     ) = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
@@ -114,6 +115,14 @@ class ShowResultSpec
         val sidebarHeader  = doc.select(".govuk-grid-column-one-third > .govuk-heading-s").text
         val sidebarBullets = doc.select(".govuk-list--bullet").get(0).text()
         val warningText    = doc.select(".govuk-warning-text").text()
+        val listValues  = doc.select(".govuk-summary-list").iterator().asScala.toList(0)
+          .select(".govuk-summary-list__value").text()
+
+        def getThirdWord(str: String): Option[String] = {
+          val words = str.trim.split("\\s+").filter(_.nonEmpty)
+          if (words.length >= 3) Some(words(2)) else None
+        }
+        val fetchTaxableIncome = getThirdWord(listValues)
 
         val isOverStatePension =
           fetchResponse.flatMap(_.savedIsOverStatePensionAge.map(_.overStatePensionAge)).getOrElse(false)
@@ -161,6 +170,8 @@ class ShowResultSpec
         if (hasPensionContri)
           sidebarBullets must include(messages("quick_calc.result.sidebar.pension_exceed_annual_allowance_a"))
 
+        if(taxableIncome.isDefined)
+          taxableIncome mustEqual fetchTaxableIncome
       }
     }
 
@@ -242,7 +253,30 @@ class ShowResultSpec
                   "£740.50",
                   "cy")
       }
+    }
+    "return 200, Taxable Income calculation is correct" when {
 
+      "person is paid under personal allowance" in {
+        return200(cacheTaxCodeStatePensionSalary.map(
+          _.copy(savedSalary = Some(
+            Salary(7000, None, None, Yearly, None, None)))
+        ), "£7,000", "£583.33", "£134.62", "en", Some("£0.00"))
+      }
+
+      "person is paid equal to the personal allowance" in {
+        return200(cacheTaxCodeStatePensionSalary.map(
+          _.copy(savedSalary = Some(
+            Salary(12570, None, None, Yearly, None, None)))
+        ), "£12,557.80", "£1,046.48", "£241.50", "en", Some("£70.00"))
+      }
+
+      "person is paid under 100k" in {
+        return200(cacheTaxCodeStatePensionSalaryLessThan100k, "£62,761" ,"£5,230.08" ,"£1,206.94" ,"en", Some("£77,430.00"))
+      }
+
+      "person is paid over 100k" in {
+        return200(cacheTaxCodeStatePensionSalaryMoreThan100k, "£68,562.74" ,"£5,713.56" ,"£1,318.51" ,"en", Some("£87,433.00"))
+      }
     }
   }
 }
