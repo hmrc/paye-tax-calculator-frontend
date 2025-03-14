@@ -147,6 +147,7 @@ object TaxResult {
       case 2021 => TaxYear.TWENTY_TWENTY_ONE
       case 2023 => TaxYear.TWENTY_TWENTY_THREE
       case 2024 => TaxYear.TWENTY_TWENTY_FOUR
+      case 2025 => TaxYear.TWENTY_TWENTY_FIVE
     }
 
   def taxCodeCheck(

@@ -115,14 +115,19 @@ class ShowResultSpec
         val sidebarHeader  = doc.select(".govuk-grid-column-one-third > .govuk-heading-s").text
         val sidebarBullets = doc.select(".govuk-list--bullet").get(0).text()
         val warningText    = doc.select(".govuk-warning-text").text()
-        val listValues  = doc.select(".govuk-summary-list").iterator().asScala.toList(0)
-          .select(".govuk-summary-list__value").text()
+        val listValues = doc
+          .select(".govuk-summary-list")
+          .iterator()
+          .asScala
+          .toList(0)
+          .select(".govuk-summary-list__value")
+          .text()
 
-        def getThirdWord(str: String): Option[String] = {
+        def getCalculation(str: String): Option[String] = {
           val words = str.trim.split("\\s+").filter(_.nonEmpty)
           if (words.length >= 3) Some(words(2)) else None
         }
-        val fetchTaxableIncome = getThirdWord(listValues)
+        val fetchTaxableIncome = getCalculation(listValues)
 
         val isOverStatePension =
           fetchResponse.flatMap(_.savedIsOverStatePensionAge.map(_.overStatePensionAge)).getOrElse(false)
@@ -161,42 +166,94 @@ class ShowResultSpec
           warningText must include(messages("quick_calc.result.disclaimer.reducedPersonal_allowance_a.new"))
         else if (isOverThreshold && !hasTaxCode) {
           if (lang == "en") sidebarBullets must include("(because you did not provide a tax code)")
-          else sidebarBullets              must include("(oherwydd nad ydych wedi rhoi cod treth)")
+          else {
+            sidebarBullets must include("(oherwydd nad ydych wedi rhoi cod treth)")
+          }
         }
 
         if (isScottishTaxRate)
-          sidebarBullets must include(messages("quick_calc.result.sidebar.pay_scottish_income_tax"))
+          sidebarBullets must include(messages("quick_calc.result.sidebar.appliedScottishIncomeTaxRates"))
 
         if (hasPensionContri)
           sidebarBullets must include(messages("quick_calc.result.sidebar.pension_exceed_annual_allowance_a"))
 
-        if(taxableIncome.isDefined)
+        if (taxableIncome.isDefined)
           taxableIncome mustEqual fetchTaxableIncome
+
       }
     }
 
     "return 200, with estimated income tax when user's income is 20k and is over state pension " when {
 
-      " form is in English" in {
+      "The income don't have scottish tax code" when {
 
-        return200(cacheTaxCodeStatePensionSalary, "£18,501.80", "£1,541.82", "£355.81")
+        " form is in English" in {
+
+          return200(
+            fetchResponse         = cacheTaxCodeStatePensionSalary,
+            yearlyEstimateAmount  = "£18,501.80",
+            monthlyEstimateAmount = "£1,541.82",
+            weeklyEstimateAmount  = "£355.81"
+          )
+        }
+
+        "form is in Welsh" in {
+
+          return200(
+            fetchResponse         = cacheTaxCodeStatePensionSalary,
+            yearlyEstimateAmount  = "£18,501.80",
+            monthlyEstimateAmount = "£1,541.82",
+            weeklyEstimateAmount  = "£355.81",
+            lang                  = "cy"
+          )
+        }
       }
 
-      "form is in Welsh" in {
+      "The income has scottish tax code" when {
 
-        return200(cacheTaxCodeStatePensionSalary, "£18,501.80", "£1,541.82", "£355.81", "cy")
+        " form is in English" in {
+
+          return200(
+            fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
+            yearlyEstimateAmount  = "£18,538.86",
+            monthlyEstimateAmount = "£1,544.91",
+            weeklyEstimateAmount  = "£356.52"
+          )
+        }
+
+        "form is in Welsh" in {
+
+          return200(
+            fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
+            yearlyEstimateAmount  = "£18,538.86",
+            monthlyEstimateAmount = "£1,544.91",
+            weeklyEstimateAmount  = "£356.52",
+            lang                  = "cy"
+          )
+        }
       }
+
     }
-
     "return 200, with estimated income tax when user's income is 90k and is not over state pension" when {
       " form is in English" in {
 
-        return200(cacheTaxCodeStatePensionSalaryLessThan100k, "£62,761", "£5,230.08", "£1,206.94")
+        return200(
+          fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100k,
+          yearlyEstimateAmount  = "£62,761",
+          monthlyEstimateAmount = "£5,230.08",
+          weeklyEstimateAmount  = "£1,206.94"
+        )
       }
 
       "form is in Welsh" in {
 
-        return200(cacheTaxCodeStatePensionSalaryLessThan100k, "£62,761", "£5,230.08", "£1,206.94", "cy")
+        return200(
+          fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100k,
+          yearlyEstimateAmount  = "£62,761",
+          monthlyEstimateAmount = "£5,230.08",
+          weeklyEstimateAmount  = "£1,206.94",
+          lang                  = "cy"
+        )
       }
 
     }
@@ -204,17 +261,29 @@ class ShowResultSpec
     "return 200, with estimated income tax when user's income is 90k and using scottish tax rate" when {
       " form is in English" in {
 
-        return200(cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax, "£59,915.14", "£4,992.93", "£1,152.22")
+        return200(
+          fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+          yearlyEstimateAmount  = "£59,915.14",
+          monthlyEstimateAmount = "£4,992.93",
+          weeklyEstimateAmount  = "£1,152.22"
+        )
       }
 
       "form is in Welsh" in {
 
-        return200(cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax, "£59,915.14", "£4,992.93", "£1,152.22", "cy")
+        return200(
+          fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+          yearlyEstimateAmount  = "£59,915.14",
+          monthlyEstimateAmount = "£4,992.93",
+          weeklyEstimateAmount  = "£1,152.22",
+          lang                  = "cy"
+        )
       }
 
     }
 
     "return 200, with estimated income tax when user's income is more than 100k and is not over state pension" when {
+
       " form is in English" in {
 
         return200(cacheTaxCodeStatePensionSalaryMoreThan100k, "£68,562.74", "£5,713.56", "£1,318.51")
@@ -223,6 +292,20 @@ class ShowResultSpec
       "form is in Welsh" in {
 
         return200(cacheTaxCodeStatePensionSalaryMoreThan100k, "£68,562.74", "£5,713.56", "£1,318.51", "cy")
+      }
+
+    }
+
+    "return 200, with estimated income tax when user's income is more than £125141 and has scottish tax code" when {
+
+      " form is in English" in {
+
+        return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,308.79", "£7,109.07", "£1,640.56")
+      }
+
+      "form is in Welsh" in {
+
+        return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,308.79", "£7,109.07", "£1,640.56", "cy")
       }
 
     }
@@ -239,10 +322,16 @@ class ShowResultSpec
       }
 
     }
+
     "return 200, with estimated income tax when user's income has some pension contribution " when {
       " form is in English" in {
 
-        return200(cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCodeWithPension, "£38,506.34", "£3,208.86", "£740.50")
+        return200(
+          fetchResponse         = cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCodeWithPension,
+          yearlyEstimateAmount  = "£38,506.34",
+          monthlyEstimateAmount = "£3,208.86",
+          weeklyEstimateAmount  = "£740.50"
+        )
       }
 
       "form is in Welsh" in {
@@ -254,28 +343,49 @@ class ShowResultSpec
                   "cy")
       }
     }
+
     "return 200, Taxable Income calculation is correct" when {
 
       "person is paid under personal allowance" in {
         return200(cacheTaxCodeStatePensionSalary.map(
-          _.copy(savedSalary = Some(
-            Salary(7000, None, None, Yearly, None, None)))
-        ), "£7,000", "£583.33", "£134.62", "en", Some("£0.00"))
+                    _.copy(savedSalary = Some(Salary(7000, None, None, Yearly, None, None)))
+                  ),
+                  "£7,000",
+                  "£583.33",
+                  "£134.62",
+                  "en",
+                  Some("£0.00"))
       }
 
       "person is paid equal to the personal allowance" in {
-        return200(cacheTaxCodeStatePensionSalary.map(
-          _.copy(savedSalary = Some(
-            Salary(12570, None, None, Yearly, None, None)))
-        ), "£12,557.80", "£1,046.48", "£241.50", "en", Some("£70.00"))
+        return200(
+          cacheTaxCodeStatePensionSalary.map(
+            _.copy(savedSalary = Some(Salary(12570, None, None, Yearly, None, None)))
+          ),
+          "£12,557.80",
+          "£1,046.48",
+          "£241.50",
+          "en",
+          Some("£70.00")
+        )
       }
 
       "person is paid under 100k" in {
-        return200(cacheTaxCodeStatePensionSalaryLessThan100k, "£62,761" ,"£5,230.08" ,"£1,206.94" ,"en", Some("£77,430.00"))
+        return200(cacheTaxCodeStatePensionSalaryLessThan100k,
+                  "£62,761",
+                  "£5,230.08",
+                  "£1,206.94",
+                  "en",
+                  Some("£77,430.00"))
       }
 
       "person is paid over 100k" in {
-        return200(cacheTaxCodeStatePensionSalaryMoreThan100k, "£68,562.74" ,"£5,713.56" ,"£1,318.51" ,"en", Some("£87,433.00"))
+        return200(cacheTaxCodeStatePensionSalaryMoreThan100k,
+                  "£68,562.74",
+                  "£5,713.56",
+                  "£1,318.51",
+                  "en",
+                  Some("£87,433.00"))
       }
     }
   }
