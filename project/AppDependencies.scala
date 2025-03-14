@@ -4,11 +4,11 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlay30Version = "9.7.0"
+  private val bootstrapPlay30Version = "9.11.0"
   private val taxYearVersion         = "5.0.0"
-  private val taxKalcVersion         = "2.14.2"
-  private val hmrcFrontend           = "11.11.0"
-  private val mongoVersion           = "2.4.0"
+  private val taxKalcVersion         = "2.15.0"
+  private val hmrcFrontend           = "11.12.0"
+  private val mongoVersion           = "2.6.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,

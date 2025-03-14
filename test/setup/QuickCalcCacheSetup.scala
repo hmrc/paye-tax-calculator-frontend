@@ -177,6 +177,17 @@ object QuickCalcCacheSetup {
       savedScottishRate          = cacheTestScottishNO
     )
   )
+
+  val cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlySalaryLessThan100k,
+      savedTaxCode               = cacheDefaultTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatusPensionNO,
+      savedScottishRate          = cacheTestScottishNO,
+      savedStudentLoanContributions = cacheStudentLoanContributions
+    )
+  )
+
   val cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax: Option[QuickCalcAggregateInput] = Some(
     QuickCalcAggregateInput.newInstance.copy(
       savedSalary                = cacheTestYearlySalaryLessThan100k,
