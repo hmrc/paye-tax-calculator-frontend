@@ -17,8 +17,8 @@
 package controllers
 
 import config.features.Features
-import forms.{TaxResult, Yearly}
-import models.{QuickCalcAggregateInput, Salary}
+import forms.{PlanFour, PlanTwo, TaxResult, Yearly}
+import models.{QuickCalcAggregateInput, Salary, StudentLoanContributions}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.{times, verify, when}
@@ -386,6 +386,61 @@ class ShowResultSpec
                   "£1,318.51",
                   "en",
                   Some("£87,433.00"))
+      }
+    }
+
+    def studentLoanCalc(
+      fetchResponse:  Option[QuickCalcAggregateInput],
+      contributions: Option[String] = None
+                       ) = {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+
+        implicit val messages: Messages = messagesThing(application)
+
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val hasStudentLoan = fetchResponse.flatMap(_.savedStudentLoanContributions.flatMap(_.studentLoanPlan)).getOrElse(false)
+
+        val result = route(application, request).get
+        val doc: Document = Jsoup.parse(contentAsString(result))
+        val listValues  = doc.select(".govuk-summary-list").iterator().asScala.toList(0)
+          .select(".govuk-summary-list__value").text()
+
+        def getCalculation(str: String): Option[String] = {
+          val words = str.trim.split("\\s+").filter(_.nonEmpty)
+          if (words.length >= 3) Some(words(2)) else None
+        }
+        if(hasStudentLoan!=false) {
+          val loanContribution =  getCalculation(listValues)
+          loanContribution mustEqual contributions
+        }
+      }
+    }
+
+    "return 200, with correct student loan contribution having annual salary of 20k" when {
+      "Student has opted for plan 1" in {
+        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,850.00"))
+      }
+      "Student has opted for plan 2" in {
+        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+          _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
+        ), Some("£5,643.00"))
+      }
+      "Student has opted for plan 4" in {
+        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+          _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
+        ), Some("£5,274.00"))
       }
     }
   }
