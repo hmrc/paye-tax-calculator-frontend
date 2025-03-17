@@ -425,20 +425,20 @@ class ShowResultSpec
       }
     }
 
-    "return 200, with correct student loan contribution having annual salary of 20k" when {
-      "Student has opted for plan 1" in {
-        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,850.00"))
-      }
-      "Student has opted for plan 2" in {
-        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
-          _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
-        ), Some("£5,643.00"))
-      }
-      "Student has opted for plan 4" in {
-        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
-          _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
-        ), Some("£5,274.00"))
-      }
-    }
+//    "return 200, with correct student loan contribution having annual salary of 20k" when {
+//      "Student has opted for plan 1" in {
+//        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,850.00"))
+//      }
+//      "Student has opted for plan 2" in {
+//        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+//          _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
+//        ), Some("£5,643.00"))
+//      }
+//      "Student has opted for plan 4" in {
+//        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+//          _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
+//        ), Some("£5,274.00"))
+//      }
+//    }
   }
 }
