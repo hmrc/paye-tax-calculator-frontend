@@ -40,6 +40,7 @@ import setup.BaseSpec
 import setup.QuickCalcCacheSetup._
 import uk.gov.hmrc.http.HeaderNames
 
+import java.time.LocalDate
 import scala.collection.JavaConverters.asScalaIteratorConverter
 import scala.concurrent.Future
 
@@ -69,6 +70,9 @@ class ShowResultSpec
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
     else
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+
+  val disableBeforeDate: LocalDate = LocalDate.of(2025, 4, 6)
+  val currentDate:       LocalDate = LocalDate.now()
 
   "Show Result Page" should {
 
@@ -206,29 +210,55 @@ class ShowResultSpec
         }
       }
 
-//      "The income has scottish tax code" when {
-//
-//        " form is in English" in {
-//
-//          return200(
-//            fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
-//            yearlyEstimateAmount  = "£18,538.86",
-//            monthlyEstimateAmount = "£1,544.91",
-//            weeklyEstimateAmount  = "£356.52"
-//          )
-//        }
-//
-//        "form is in Welsh" in {
-//
-//          return200(
-//            fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
-//            yearlyEstimateAmount  = "£18,538.86",
-//            monthlyEstimateAmount = "£1,544.91",
-//            weeklyEstimateAmount  = "£356.52",
-//            lang                  = "cy"
-//          )
-//        }
-//      }
+      if (currentDate.isBefore(disableBeforeDate)) {
+        "The income has scottish tax code" when {
+
+          " form is in English" in {
+
+            return200(
+              fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
+              yearlyEstimateAmount  = "£18,538.86",
+              monthlyEstimateAmount = "£1,544.91",
+              weeklyEstimateAmount  = "£356.52"
+            )
+          }
+
+          "form is in Welsh" in {
+
+            return200(
+              fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
+              yearlyEstimateAmount  = "£18,538.86",
+              monthlyEstimateAmount = "£1,544.91",
+              weeklyEstimateAmount  = "£356.52",
+              lang                  = "cy"
+            )
+          }
+        }
+      } else {
+        "The income has scottish tax code" when {
+
+          " form is in English" in {
+
+            return200(
+              fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
+              yearlyEstimateAmount  = "£18,544.07",
+              monthlyEstimateAmount = "£1,545.34",
+              weeklyEstimateAmount  = "£356.62"
+            )
+          }
+
+          "form is in Welsh" in {
+
+            return200(
+              fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
+              yearlyEstimateAmount  = "£18,544.07",
+              monthlyEstimateAmount = "£1,545.34",
+              weeklyEstimateAmount  = "£356.62",
+              lang                  = "cy"
+            )
+          }
+        }
+      }
 
     }
     "return 200, with estimated income tax when user's income is 90k and is not over state pension" when {
@@ -255,29 +285,53 @@ class ShowResultSpec
 
     }
 
-//    "return 200, with estimated income tax when user's income is 90k and using scottish tax rate" when {
-//      " form is in English" in {
-//
-//        return200(
-//          fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
-//          yearlyEstimateAmount  = "£59,915.14",
-//          monthlyEstimateAmount = "£4,992.93",
-//          weeklyEstimateAmount  = "£1,152.22"
-//        )
-//      }
-//
-//      "form is in Welsh" in {
-//
-//        return200(
-//          fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
-//          yearlyEstimateAmount  = "£59,915.14",
-//          monthlyEstimateAmount = "£4,992.93",
-//          weeklyEstimateAmount  = "£1,152.22",
-//          lang                  = "cy"
-//        )
-//      }
-//
-//    }
+    "return 200, with estimated income tax when user's income is 90k and using scottish tax rate" when {
+
+      if (currentDate.isBefore(disableBeforeDate)) {
+        "form is in English" in {
+
+          return200(
+            fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+            yearlyEstimateAmount  = "£59,915.14",
+            monthlyEstimateAmount = "£4,992.93",
+            weeklyEstimateAmount  = "£1,152.22"
+          )
+        }
+
+        "form is in Welsh" in {
+
+          return200(
+            fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+            yearlyEstimateAmount  = "£59,915.14",
+            monthlyEstimateAmount = "£4,992.93",
+            weeklyEstimateAmount  = "£1,152.22",
+            lang                  = "cy"
+          )
+        }
+      } else {
+        "form is in English" in {
+
+          return200(
+            fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+            yearlyEstimateAmount  = "£59,929.13",
+            monthlyEstimateAmount = "£4,994.09",
+            weeklyEstimateAmount  = "£1,152.48"
+          )
+        }
+
+        "form is in Welsh" in {
+
+          return200(
+            fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+            yearlyEstimateAmount  = "£59,929.13",
+            monthlyEstimateAmount = "£4,994.09",
+            weeklyEstimateAmount  = "£1,152.48",
+            lang                  = "cy"
+          )
+        }
+      }
+
+    }
 
     "return 200, with estimated income tax when user's income is more than 100k and is not over state pension" when {
 
@@ -293,19 +347,31 @@ class ShowResultSpec
 
     }
 
-//    "return 200, with estimated income tax when user's income is more than £125141 and has scottish tax code" when {
-//
-//      " form is in English" in {
-//
-//        return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,308.79", "£7,109.07", "£1,640.56")
-//      }
-//
-//      "form is in Welsh" in {
-//
-//        return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,308.79", "£7,109.07", "£1,640.56", "cy")
-//      }
-//
-//    }
+    "return 200, with estimated income tax when user's income is more than £125141 and has scottish tax code" when {
+
+      if (currentDate.isBefore(disableBeforeDate)) {
+        " form is in English" in {
+
+          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,308.79", "£7,109.07", "£1,640.56")
+        }
+
+        "form is in Welsh" in {
+
+          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,308.79", "£7,109.07", "£1,640.56", "cy")
+        }
+      } else {
+        " form is in English" in {
+
+          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,322.66", "£7,110.22", "£1,640.82")
+        }
+
+        "form is in Welsh" in {
+
+          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,322.66", "£7,110.22", "£1,640.82", "cy")
+        }
+      }
+
+    }
 
     "return 200, with estimated income tax when user's income is more than 100k and is not over state pension and no tax code" when {
       " form is in English" in {
@@ -387,9 +453,9 @@ class ShowResultSpec
     }
 
     def studentLoanCalc(
-      fetchResponse:  Option[QuickCalcAggregateInput],
+      fetchResponse: Option[QuickCalcAggregateInput],
       contributions: Option[String] = None
-                       ) = {
+    ) = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
@@ -407,38 +473,75 @@ class ShowResultSpec
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val hasStudentLoan = fetchResponse.flatMap(_.savedStudentLoanContributions.flatMap(_.studentLoanPlan)).getOrElse(false)
+        val hasStudentLoan =
+          fetchResponse.flatMap(_.savedStudentLoanContributions.flatMap(_.studentLoanPlan)).getOrElse(false)
 
         val result = route(application, request).get
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val listValues  = doc.select(".govuk-summary-list").iterator().asScala.toList(0)
-          .select(".govuk-summary-list__value").text()
+        val listValues = doc
+          .select(".govuk-summary-list")
+          .iterator()
+          .asScala
+          .toList(0)
+          .select(".govuk-summary-list__value")
+          .text()
 
         def getCalculation(str: String): Option[String] = {
           val words = str.trim.split("\\s+").filter(_.nonEmpty)
           if (words.length >= 3) Some(words(2)) else None
         }
-        if(hasStudentLoan!=false) {
-          val loanContribution =  getCalculation(listValues)
+        if (hasStudentLoan != false) {
+          val loanContribution = getCalculation(listValues)
           loanContribution mustEqual contributions
         }
       }
     }
 
-//    "return 200, with correct student loan contribution having annual salary of 20k" when {
-//      "Student has opted for plan 1" in {
-//        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,850.00"))
-//      }
-//      "Student has opted for plan 2" in {
-//        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
-//          _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
-//        ), Some("£5,643.00"))
-//      }
-//      "Student has opted for plan 4" in {
-//        studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
-//          _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
-//        ), Some("£5,274.00"))
-//      }
-//    }
+    "return 200, with correct student loan contribution having annual salary of 20k" when {
+
+      if (currentDate.isBefore(disableBeforeDate)) {
+        "Student has opted for plan 1" in {
+          studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,850.00"))
+        }
+        "Student has opted for plan 2" in {
+          studentLoanCalc(
+            cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+              _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
+            ),
+            Some("£5,643.00")
+          )
+        }
+        "Student has opted for plan 4" in {
+          studentLoanCalc(
+            cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+              _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
+            ),
+            Some("£5,274.00")
+          )
+        }
+
+      } else {
+        "Student has opted for plan 1" in {
+          studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,754.00"))
+        }
+        "Student has opted for plan 2" in {
+          studentLoanCalc(
+            cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+              _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
+            ),
+            Some("£5,537.00")
+          )
+        }
+        "Student has opted for plan 4" in {
+          studentLoanCalc(
+            cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+              _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
+            ),
+            Some("£5,152.00")
+          )
+        }
+      }
+
+    }
   }
 }
