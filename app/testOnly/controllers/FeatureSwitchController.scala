@@ -26,14 +26,11 @@ import testOnly.views.html.FeatureSwitchView
 
 import javax.inject.Inject
 
-class FeatureSwitchController @Inject() (
-  implicit val appConfig: AppConfig,
-  mcc:                    MessagesControllerComponents,
-  featureSwitch:          FeatureSwitchView)
+class FeatureSwitchController @Inject() (implicit val appConfig: AppConfig, mcc: MessagesControllerComponents, featureSwitch: FeatureSwitchView)
     extends FrontendController(mcc)
     with I18nSupport {
 
-  def featureSwitch: Action[AnyContent] = Action { implicit request =>
+  def featureSwitchView: Action[AnyContent] = Action { implicit request =>
     Ok(
       featureSwitch(
         FeatureSwitchForm.form.fill(
@@ -49,13 +46,13 @@ class FeatureSwitchController @Inject() (
     FeatureSwitchForm.form
       .bindFromRequest()
       .fold(
-        _ => Redirect(routes.FeatureSwitchController.featureSwitch),
+        _ => Redirect(routes.FeatureSwitchController.featureSwitchView),
         success = handleSuccess
       )
   }
 
   private def handleSuccess(model: FeatureSwitchModel): Result = {
     appConfig.features.welshTranslationFeature(model.welshTranslationEnabled)
-    Redirect(routes.FeatureSwitchController.featureSwitch)
+    Redirect(routes.FeatureSwitchController.featureSwitchView)
   }
 }

@@ -23,7 +23,7 @@ import forms.TaxResult.{kCodeLabel, moneyFormatter}
 import javax.inject.{Inject, Singleton}
 import models.QuickCalcAggregateInput
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc._
+import play.api.mvc.*
 import play.twirl.api.Html
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.calculator.exception.InvalidPensionException
@@ -36,21 +36,20 @@ import views.html.components.linkNewTab
 import views.html.pages.ResultView
 
 import scala.collection.mutable.ListBuffer
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class ShowResultsController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  navigator:                     Navigator,
-  resultView:                    ResultView,
-  defaultTaxCodeProvider:        DefaultTaxCodeProvider,
-  aggregateConditions:           AggregateConditionsUtil,
-  linkInNewTab:                  linkNewTab
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  navigator: Navigator,
+  resultView: ResultView,
+  defaultTaxCodeProvider: DefaultTaxCodeProvider,
+  aggregateConditions: AggregateConditionsUtil,
+  linkInNewTab: linkNewTab
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -64,13 +63,13 @@ class ShowResultsController @Inject() (
   }
 
   private def getTaxCalculation(
-    aggregateInput:         QuickCalcAggregateInput,
+    aggregateInput: QuickCalcAggregateInput,
     defaultTaxCodeProvider: DefaultTaxCodeProvider
   ): CalculatorResponse =
     TaxResult.taxCalculation(aggregateInput, defaultTaxCodeProvider)
 
   private def getClarifications(
-    aggregateInput:         QuickCalcAggregateInput,
+    aggregateInput: QuickCalcAggregateInput,
     defaultTaxCodeProvider: DefaultTaxCodeProvider
   ): List[Clarification] =
     getTaxCalculation(aggregateInput, defaultTaxCodeProvider).getListOfClarification.asScala.toList
@@ -82,15 +81,17 @@ class ShowResultsController @Inject() (
       Clarification.NO_TAX_CODE_SUPPLIED -> Some(
         Html(
           Messages("quick_calc.result.sidebar.personal_allowance",
-                   moneyFormatter(getTaxCalculation(aggregateInput, defaultTaxCodeProvider).getYearly.getTaxFree))
+                   moneyFormatter(getTaxCalculation(aggregateInput, defaultTaxCodeProvider).getYearly.getTaxFree)
+                  )
         )
       ),
       Clarification.HAVE_STATE_PENSION -> Some(Html(Messages("quick_calc.result.sidebar.over_state_pension_age"))),
       Clarification.HAVE_NO_STATE_PENSION -> Some(
         Html(
           Messages("quick_calc.result.sidebar.not_over_state_pension_age_a")
-          + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
-                         Messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
+            + linkInNewTab("https://www.gov.uk/national-insurance-rates-letters/category-letters",
+                           Messages("quick_calc.result.sidebar.not_over_state_pension_age_b")
+                          )
         )
       ),
       Clarification.SCOTTISH_INCOME_APPLIED -> Some(
@@ -103,46 +104,47 @@ class ShowResultsController @Inject() (
       Clarification.INCOME_OVER_100K_WITH_TAPERING -> Some(
         Html(
           Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_a")
-          + linkInNewTab("https://www.gov.uk/income-tax-rates/income-over-100000",
-                         Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_b")) + Messages(
-            "quick_calc.result.sidebar.youHaveReducedPersonal_allowance_c"
-          )
+            + linkInNewTab("https://www.gov.uk/income-tax-rates/income-over-100000",
+                           Messages("quick_calc.result.sidebar.youHaveReducedPersonal_allowance_b")
+                          ) + Messages(
+              "quick_calc.result.sidebar.youHaveReducedPersonal_allowance_c"
+            )
         )
       ),
       Clarification.K_CODE -> Some(
         Html(
           Messages("quick_calc.result.sidebar.kcode_a", "K")
-          + linkInNewTab(
-            "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
-            Messages("quick_calc.result.sidebar.kcode_b")
-          ) + Messages("quick_calc.result.sidebar.kcode_c") + linkInNewTab(
-            "https://www.gov.uk/tax-company-benefits",
-            Messages("quick_calc.result.sidebar.kcode_d")
-          )
+            + linkInNewTab(
+              "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
+              Messages("quick_calc.result.sidebar.kcode_b")
+            ) + Messages("quick_calc.result.sidebar.kcode_c") + linkInNewTab(
+              "https://www.gov.uk/tax-company-benefits",
+              Messages("quick_calc.result.sidebar.kcode_d")
+            )
         )
       ),
       Clarification.CK_CODE -> Some(
         Html(
           Messages("quick_calc.result.sidebar.kcode_a", "CK")
-          + linkInNewTab(
-            "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
-            Messages("quick_calc.result.sidebar.kcode_b")
-          ) + Messages("quick_calc.result.sidebar.kcode_c") + linkInNewTab(
-            "https://www.gov.uk/tax-company-benefits",
-            Messages("quick_calc.result.sidebar.kcode_d")
-          )
+            + linkInNewTab(
+              "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
+              Messages("quick_calc.result.sidebar.kcode_b")
+            ) + Messages("quick_calc.result.sidebar.kcode_c") + linkInNewTab(
+              "https://www.gov.uk/tax-company-benefits",
+              Messages("quick_calc.result.sidebar.kcode_d")
+            )
         )
       ),
       Clarification.SK_CODE -> Some(
         Html(
           Messages("quick_calc.result.sidebar.kcode_a", "SK")
-          + linkInNewTab(
-            "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
-            Messages("quick_calc.result.sidebar.kcode_b")
-          ) + Messages("quick_calc.result.sidebar.kcode_c") + linkInNewTab(
-            "https://www.gov.uk/tax-company-benefits",
-            Messages("quick_calc.result.sidebar.kcode_d")
-          )
+            + linkInNewTab(
+              "https://www.gov.uk/income-tax/taxfree-and-taxable-state-benefits",
+              Messages("quick_calc.result.sidebar.kcode_b")
+            ) + Messages("quick_calc.result.sidebar.kcode_c") + linkInNewTab(
+              "https://www.gov.uk/tax-company-benefits",
+              Messages("quick_calc.result.sidebar.kcode_d")
+            )
         )
       ),
       Clarification.INCOME_BELOW_STUDENT_AND_POSTGRAD_LOAN -> Some(
@@ -173,8 +175,9 @@ class ShowResultsController @Inject() (
       Clarification.PENSION_EXCEED_ANNUAL_ALLOWANCE -> Some(
         Html(
           Messages("quick_calc.result.sidebar.pension_exceed_annual_allowance_a") +
-          linkInNewTab("https://www.gov.uk/tax-on-your-private-pension/annual-allowance",
-                       "quick_calc.result.sidebar.pension_exceed_annual_allowance_b")
+            linkInNewTab("https://www.gov.uk/tax-on-your-private-pension/annual-allowance",
+                         "quick_calc.result.sidebar.pension_exceed_annual_allowance_b"
+                        )
         )
       )
     )
@@ -214,12 +217,13 @@ class ShowResultsController @Inject() (
                   aggregateConditions.isPensionContributionsDefined(aggregate),
                   aggregateConditions.isFourWeekly(aggregate),
                   kCodeLabel(aggregate.savedTaxCode.flatMap(_.taxCode).getOrElse(""),
-                             aggregate.savedScottishRate.flatMap(_.payScottishRate).getOrElse(false))
+                             aggregate.savedScottishRate.flatMap(_.payScottishRate).getOrElse(false)
+                            )
                 )
               )
             } catch {
               case _: InvalidPensionException =>
-                Redirect(controllers.routes.YouHaveToldUsNewController.summary)
+                Redirect(controllers.routes.YouHaveToldUsNewController.summary())
             }
           } else Redirect(navigator.redirectToNotYetDonePage(aggregate))
     )

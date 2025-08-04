@@ -57,14 +57,13 @@ class BaseSpec
   implicit val executionContext: ExecutionContext = appInjector.instanceOf[ExecutionContext]
   val mcc: MessagesControllerComponents = appInjector.instanceOf[MessagesControllerComponents]
 
-
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
     .withHeaders(HeaderNames.xSessionId -> "test")
 
-  implicit val mockAppConfig:    AppConfig   = new MockAppConfig(app.configuration)
-  implicit val messagesApi:      MessagesApi = appInjector.instanceOf[MessagesApi]
-  val navigator:                 Navigator   = appInjector.instanceOf[Navigator]
-  implicit val messagesImplicit: Messages    = MessagesImpl(Lang("en-GB"), messagesApi)
+  implicit val mockAppConfig: AppConfig = new MockAppConfig(app.configuration)
+  implicit val messagesApi: MessagesApi = appInjector.instanceOf[MessagesApi]
+  val navigator: Navigator = appInjector.instanceOf[Navigator]
+  implicit val messagesImplicit: Messages = MessagesImpl(Lang("en-GB"), messagesApi)
 
   def element(cssSelector: String)(implicit document: Document): Element = {
     val elements = document.select(cssSelector)
@@ -81,29 +80,31 @@ class BaseSpec
 
   val youHaveToldUsItems: List[YouHaveToldUsItem] =
     List(
-      YouHaveToldUsItem("£2000", "a_year", controllers.routes.SalaryController.showSalaryForm.url, "income"),
-      YouHaveToldUsItem("No",
-                        "over_state_pension_age",
-                        controllers.routes.StatePensionController.showStatePensionForm.url,
-                        "pension-state")
+      YouHaveToldUsItem("£2000", "a_year", controllers.routes.SalaryController.showSalaryForm().url, "income"),
+      YouHaveToldUsItem("No", "over_state_pension_age", controllers.routes.StatePensionController.showStatePensionForm().url, "pension-state")
     )
 
   val additionalQuestionItem: List[AdditionalQuestionItem] =
     List(
-      AdditionalQuestionItem("1257L",
-                             "about_tax_code",
-                             controllers.routes.TaxCodeController.showTaxCodeForm.url,
-                             "tax-code"),
-      AdditionalQuestionItem("No",
-                             "scottish_rate",
-                             controllers.routes.ScottishRateController.showScottishRateForm.url,
-                             "scottish_rate"),
-      AdditionalQuestionItem("43% a month",
+      AdditionalQuestionItem("1257L", "about_tax_code", controllers.routes.TaxCodeController.showTaxCodeForm().url, "tax-code"),
+      AdditionalQuestionItem("No", "scottish_rate", controllers.routes.ScottishRateController.showScottishRateForm().url, "scottish_rate"),
+      AdditionalQuestionItem(
+        "43% a month",
         "about_pensions_contributions",
-        controllers.routes.PensionContributionsPercentageController.showPensionContributionForm.url,
-        "pension-contributions"),
-      AdditionalQuestionItem("Plan 1", "about_student_loan_contribution", controllers.routes.StudentLoanContributionsController.showStudentLoansForm.url,"student_loan_contribution"),
-      AdditionalQuestionItem("Yes", "about_post_graduate_loan_contribution", controllers.routes.PostgraduateController.showPostgraduateForm.url,"post_graduate_loan_contribution")
+        controllers.routes.PensionContributionsPercentageController.showPensionContributionForm().url,
+        "pension-contributions"
+      ),
+      AdditionalQuestionItem(
+        "Plan 1",
+        "about_student_loan_contribution",
+        controllers.routes.StudentLoanContributionsController.showStudentLoansForm().url,
+        "student_loan_contribution"
+      ),
+      AdditionalQuestionItem("Yes",
+                             "about_post_graduate_loan_contribution",
+                             controllers.routes.PostgraduateController.showPostgraduateForm().url,
+                             "post_graduate_loan_contribution"
+                            )
     )
 }
 

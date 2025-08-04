@@ -23,16 +23,17 @@ import models.PensionContributions
 import models.PensionContributions.{gaveUsPensionPercentage, monthlyPensionContribution, yearlyContributionAmount}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, of, optional}
-import play.api.data.format.Formats._
+import play.api.data.format.Formats.*
 
 class PensionContributionFormProvider @Inject() () {
 
-  def apply(): Form[PensionContributions] = Form(
-    mapping(
-      gaveUsPensionPercentage    -> of[Boolean],
-      monthlyPensionContribution -> of(CustomFormatters.pensionContributionFormatter()),
-      yearlyContributionAmount   -> optional(of[BigDecimal])
-    )(PensionContributions.apply)(PensionContributions.unapply)
-  )
+  def apply(): Form[PensionContributions] =
+    Form(
+      mapping(
+        gaveUsPensionPercentage    -> of[Boolean],
+        monthlyPensionContribution -> of(CustomFormatters.pensionContributionFormatter()),
+        yearlyContributionAmount   -> optional(of[BigDecimal])
+      )(PensionContributions.apply)(pc => Some((pc.gaveUsPercentageAmount, pc.monthlyContributionAmount, pc.yearlyContributionAmount)))
+    )
 
 }

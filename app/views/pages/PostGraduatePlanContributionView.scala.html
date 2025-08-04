@@ -53,9 +53,9 @@ Seq(
    )
 }
 
-@govuk_wrapper(Some(title(postGradForm, Messages("quick_calc.postgraduateLoan.header"))), beforeContentBlock = beforeContent(controllers.routes.YouHaveToldUsNewController.summary.url)) {
+@govuk_wrapper(Some(title(postGradForm, Messages("quick_calc.postgraduateLoan.header"))), beforeContentBlock = beforeContent(controllers.routes.YouHaveToldUsNewController.summary().url)) {
 
-@formHelper(action = controllers.routes.PostgraduateController.submitPostgradLoanForm) {
+@formHelper(action = controllers.routes.PostgraduateController.submitPostgradLoanForm()) {
 
 @errorSummary(postGradForm.errors)
 

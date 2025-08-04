@@ -39,7 +39,7 @@
 @(userTaxCodeForm: Form[UserTaxCode], youHaveToldUsItems: List[YouHaveToldUsItem], defaultTaxCode: String, salaryCheck: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @backButtonUrl = @{
-    controllers.routes.YouHaveToldUsNewController.summary.url
+    controllers.routes.YouHaveToldUsNewController.summary().url
 }
 
 @headerText = @{
@@ -48,7 +48,7 @@
 
 @govUkWrapper(Some(title(userTaxCodeForm, headerText)), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-    @formHelper(action = routes.TaxCodeController.submitTaxCodeForm) {
+    @formHelper(action = routes.TaxCodeController.submitTaxCodeForm()) {
         @errorSummary(userTaxCodeForm.errors)
 
             @h1(messages("quick_calc.you_have_told_us.about_tax_code.label.newTitle"))

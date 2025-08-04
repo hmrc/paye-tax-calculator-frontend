@@ -36,7 +36,7 @@ class StudentLoanPlanSpec extends BaseSpec{
       }
     }
 
-  "StudentLoanPlan.PlanTwo" should {
+   "StudentLoanPlan.PlanTwo" should {
 
     "serialize to the correct JSON" in {
       Json.toJson(PlanTwo) mustBe Json.obj(StudentLoanPlan.id -> PlanTwo.value)
@@ -49,9 +49,9 @@ class StudentLoanPlanSpec extends BaseSpec{
     "deserialize from the correct JSON" in {
       Json.obj(StudentLoanPlan.id -> PlanTwo.value).as[StudentLoanPlan] mustBe PlanTwo
     }
-  }
+   }
 
-  "StudentLoanPlan.PlanFour" should {
+   "StudentLoanPlan.PlanFour" should {
 
     "serialize to the correct JSON" in {
       Json.toJson(PlanFour) mustBe Json.obj(StudentLoanPlan.id -> PlanFour.value)
@@ -64,9 +64,9 @@ class StudentLoanPlanSpec extends BaseSpec{
     "deserialize from the correct JSON" in {
       Json.obj(StudentLoanPlan.id -> PlanFour.value).as[StudentLoanPlan] mustBe PlanFour
     }
-  }
+   }
 
-  "StudentLoanPlan.NoneOfThese" should {
+   "StudentLoanPlan.NoneOfThese" should {
 
     "serialize to the correct JSON" in {
       Json.toJson(NoneOfThese) mustBe Json.obj(StudentLoanPlan.id -> NoneOfThese.value)
@@ -79,6 +79,6 @@ class StudentLoanPlanSpec extends BaseSpec{
     "deserialize from the correct JSON" in {
       Json.obj(StudentLoanPlan.id -> NoneOfThese.value).as[StudentLoanPlan] mustBe NoneOfThese
     }
-  }
+   }
 
 }

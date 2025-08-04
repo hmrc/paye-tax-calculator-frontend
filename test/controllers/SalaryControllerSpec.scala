@@ -17,7 +17,7 @@
 package controllers
 
 import forms.SalaryFormProvider
-import models.QuickCalcAggregateInput
+import models.{QuickCalcAggregateInput, Salary}
 import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -28,15 +28,16 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.Application
+import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Cookie, RequestHeader, Result}
-import play.api.test.CSRFTokenHelper._
+import play.api.test.CSRFTokenHelper.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.QuickCalcCache
-import setup.QuickCalcCacheSetup._
+import setup.QuickCalcCacheSetup.*
 import uk.gov.hmrc.http.HeaderNames
 import views.html.pages.SalaryView
 
@@ -44,22 +45,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-class SalaryControllerSpec
-    extends PlaySpec
-    with TryValues
-    with ScalaFutures
-    with IntegrationPatience
-    with MockitoSugar
-    with CSRFTestHelper {
+class SalaryControllerSpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar with CSRFTestHelper {
 
   val formProvider = new SalaryFormProvider()
-  val form         = formProvider()
+  val form: Form[Salary] = formProvider()
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   def messagesThing(
-    app:  Application,
+    app: Application,
     lang: String = "en"
   ): Messages =
     if (lang == "cy")
@@ -71,12 +66,12 @@ class SalaryControllerSpec
 
     def return200(
       fetchResponse: Option[QuickCalcAggregateInput],
-      isFormFill:    Boolean,
-      lang:          String = "en"
+      isFormFill: Boolean,
+      lang: String = "en"
     ) = {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -84,30 +79,29 @@ class SalaryControllerSpec
 
       implicit val messages: Messages = messagesThing(application, lang)
 
-      val formFilled =
+      val formFilled: Form[Salary] =
         if (isFormFill) form.fill(cacheTaxCodeStatePensionSalary.value.savedSalary.get)
         else
           form
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm.url)
+        val request = FakeRequest(GET, routes.SalaryController.showSalaryForm().url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
 
         val result = route(application, request).value
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val title   = doc.select("title").text
-        val label   = doc.select(".govuk-label").text
-        val hint    = doc.select(".govuk-hint").text
+        val title = doc.select("title").text
+        val label = doc.select(".govuk-label").text
+        val hint = doc.select(".govuk-hint").text
         val heading = doc.select(".govuk-fieldset__heading").text
-        val radios  = doc.select(".govuk-radios__item")
-        val button  = doc.select(".govuk-button").text
+        val radios = doc.select(".govuk-radios__item")
+        val button = doc.select(".govuk-button").text
         val deskpro = doc.select(".govuk-link")
-
-        val radioSelected = if (isFormFill) doc.select(".govuk-radios__input[checked]").attr("value")
-
+        val temp: String = doc.select(".govuk-radios__input[checked]").attr("value")
+        val radioSelected: String = if (isFormFill) temp else ""
         val view = application.injector.instanceOf[SalaryView]
 
         status(result) mustEqual OK
@@ -162,14 +156,14 @@ class SalaryControllerSpec
   "Submit Salary Form" should {
 
     def return400(
-      formData:           Map[String, String],
+      formData: Map[String, String],
       errorMessageString: String,
-      fetchResponse:      Option[QuickCalcAggregateInput] = None,
-      lang:               String = "en"
+      fetchResponse: Option[QuickCalcAggregateInput] = None,
+      lang: String = "en"
     ) = {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -179,8 +173,8 @@ class SalaryControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
@@ -190,10 +184,10 @@ class SalaryControllerSpec
         status(result) mustEqual BAD_REQUEST
 
         verify(mockCache, times(0)).fetchAndGetEntry()(any())
-        val parseHtml        = Jsoup.parse(contentAsString(result))
-        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val parseHtml = Jsoup.parse(contentAsString(result))
+        val errorHeader = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual messages("error.summary.title")
         errorMessageLink.contains(messages(errorMessageString)) mustEqual true
@@ -210,10 +204,8 @@ class SalaryControllerSpec
         }
 
         "submitted in welsh" in {
-          return400(Map("amount" -> "", "period" -> ""),
-                    "quick_calc.salary.question.error.empty_salary_input",
-                    lang = "cy")
-          return400(Map("amount" -> "", "period" -> ""), "quick_calc.salary.option_error", lang = "cy")
+          return400(Map("amount" -> "", "period" -> ""), "quick_calc.salary.question.error.empty_salary_input", lang = "cy")
+          return400(Map("amount" -> "", "period" -> ""), "quick_calc.salary.option_error", lang                      = "cy")
         }
       }
 
@@ -234,9 +226,7 @@ class SalaryControllerSpec
         }
 
         "submitted in welsh" in {
-          return400(Map("amount" -> "", "period" -> "a year"),
-                    "quick_calc.salary.question.error.empty_salary_input",
-                    lang = "cy")
+          return400(Map("amount" -> "", "period" -> "a year"), "quick_calc.salary.question.error.empty_salary_input", lang = "cy")
 
         }
       }
@@ -247,51 +237,40 @@ class SalaryControllerSpec
         }
 
         "submitted in welsh" in {
-          return400(Map("amount" -> "0", "period" -> "a year"),
-                    "quick_calc.salary.question.error.minimum_salary_input",
-                    lang = "cy")
+          return400(Map("amount" -> "0", "period" -> "a year"), "quick_calc.salary.question.error.minimum_salary_input", lang = "cy")
 
         }
       }
 
       "No aggregate data and Salary submitted is \"-1\"" when {
         "submitted in english" in {
-          return400(Map("amount" -> "-1", "period" -> "a year"),
-                    "quick_calc.salary.question.error.minimum_salary_input")
+          return400(Map("amount" -> "-1", "period" -> "a year"), "quick_calc.salary.question.error.minimum_salary_input")
         }
 
         "submitted in welsh" in {
-          return400(Map("amount" -> "-1", "period" -> "a year"),
-                    "quick_calc.salary.question.error.minimum_salary_input",
-                    lang = "cy")
+          return400(Map("amount" -> "-1", "period" -> "a year"), "quick_calc.salary.question.error.minimum_salary_input", lang = "cy")
 
         }
       }
 
       "No aggregate data and Salary submitted is more than 2 decimal places" when {
         "submitted in english" in {
-          return400(Map("amount" -> "23.3456547", "period" -> "a year"),
-                    "quick_calc.salary.question.error.invalid_salary")
+          return400(Map("amount" -> "23.3456547", "period" -> "a year"), "quick_calc.salary.question.error.invalid_salary")
         }
 
         "submitted in welsh" in {
-          return400(Map("amount" -> "23.3456547", "period" -> "a year"),
-                    "quick_calc.salary.question.error.invalid_salary",
-                    lang = "cy")
+          return400(Map("amount" -> "23.3456547", "period" -> "a year"), "quick_calc.salary.question.error.invalid_salary", lang = "cy")
 
         }
       }
 
       "No aggregate data and Salary submitted is \"10,000,000.00\"" when {
         "submitted in english" in {
-          return400(Map("amount" -> "100000000", "period" -> "a year"),
-                    "quick_calc.salary.question.error.maximum_salary_input")
+          return400(Map("amount" -> "100000000", "period" -> "a year"), "quick_calc.salary.question.error.maximum_salary_input")
         }
 
         "submitted in welsh" in {
-          return400(Map("amount" -> "100000000", "period" -> "a year"),
-                    "quick_calc.salary.question.error.maximum_salary_input",
-                    lang = "cy")
+          return400(Map("amount" -> "100000000", "period" -> "a year"), "quick_calc.salary.question.error.maximum_salary_input", lang = "cy")
 
         }
       }
@@ -302,9 +281,7 @@ class SalaryControllerSpec
         }
 
         "submitted in welsh" in {
-          return400(Map("amount" -> "test", "period" -> "a year"),
-                    "quick_calc.salary.question.error.invalid_salary",
-                    lang = "cy")
+          return400(Map("amount" -> "test", "period" -> "a year"), "quick_calc.salary.question.error.invalid_salary", lang = "cy")
 
         }
       }
@@ -312,14 +289,14 @@ class SalaryControllerSpec
 
     def return303(
       fetchResponse: Option[QuickCalcAggregateInput],
-      amount:        String,
-      redirectUrl:   String,
-      frequency:     String = "quick_calc.salary.yearly.label"
+      amount: String,
+      redirectUrl: String,
+      frequency: String = "quick_calc.salary.yearly.label"
     ) = {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
-      when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
+      when(mockCache.save(any())(any())).thenReturn(Future.successful(Done))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -329,8 +306,8 @@ class SalaryControllerSpec
 
         val formData = Map("amount" -> amount, "period" -> messages(frequency))
 
-        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount.url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+        val request = FakeRequest(POST, routes.SalaryController.submitSalaryAmount().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -346,19 +323,19 @@ class SalaryControllerSpec
     "return 303" when {
 
       "current list of aggregate data, salary- £20000 without State Pension  and redirect to State Pension Page" in {
-        return303(cacheTaxCode, "20000", routes.StatePensionController.showStatePensionForm.url)
+        return303(cacheTaxCode, "20000", routes.StatePensionController.showStatePensionForm().url)
       }
 
       "current list of aggregate data, salary- £9,999,999.99 without State Pension  and redirect to State Pension Page" in {
-        return303(cacheTaxCode, "9,999,999.99", routes.StatePensionController.showStatePensionForm.url)
+        return303(cacheTaxCode, "9,999,999.99", routes.StatePensionController.showStatePensionForm().url)
       }
 
       "No aggregate data, salary- £20000 with pound sign and commas , redirect to State Pension Page" in {
-        return303(None, "£200,00", routes.StatePensionController.showStatePensionForm.url)
+        return303(None, "£200,00", routes.StatePensionController.showStatePensionForm().url)
       }
 
       "Aggregate data, salary- £20000  redirect to Days per week  Page" in {
-        return303(cacheTaxCodeStatePensionSalary, "20000", routes.YouHaveToldUsNewController.summary.url)
+        return303(cacheTaxCodeStatePensionSalary, "20000", routes.YouHaveToldUsNewController.summary().url)
       }
 
       "Aggregate data, new Daily Salary data £100  redirect to State Pension Page" in {

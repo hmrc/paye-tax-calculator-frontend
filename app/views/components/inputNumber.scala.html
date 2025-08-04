@@ -16,7 +16,7 @@
 
 @this(govukInput: GovukInput)
 
-@(form: Form[_],
+@(form: Form[?],
         id: String,
         name: String,
         label: String,
@@ -41,5 +41,5 @@
     )),
     value = form(name).value,
     autocomplete = Some(autoComplete),
-    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+    errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args*))))
 ))

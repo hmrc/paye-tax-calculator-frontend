@@ -16,17 +16,17 @@
 
 package forms
 
-import mappings.CustomFormatters._
+import mappings.CustomFormatters.*
 import javax.inject.Inject
 import models.StatePension
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.*
 
 class StatePensionFormProvider @Inject() () {
 
   def apply(): Form[StatePension] = Form(
     mapping(
       "overStatePensionAge" -> of(statePensionAgeValidation)
-    )(StatePension.apply)(StatePension.unapply)
+    )(StatePension.apply)(sp => Some(sp.overStatePensionAge))
   )
 }

@@ -41,7 +41,7 @@
 @(pensionContributionsForm: Form[PensionContributions],additionalQuestionItems: List[AdditionalQuestionItem])(implicit request: RequestHeader, messages: Messages)
 
 @backButtonUrl = @{
-    controllers.routes.YouHaveToldUsNewController.summary.url
+    controllers.routes.YouHaveToldUsNewController.summary().url
 }
 
 @headerText = @{
@@ -50,7 +50,7 @@
 
 @govUkWrapper(Some(title(pensionContributionsForm, headerText)), beforeContentBlock = beforeContent(backButtonUrl)) {
 
-    @formHelper(action = controllers.routes.PensionContributionsPercentageController.submitPensionContribution) {
+    @formHelper(action = controllers.routes.PensionContributionsPercentageController.submitPensionContribution()) {
         @errorSummary(pensionContributionsForm.errors)
 
         @h1(messages("quick_calc.you_have_told_us.about_pension_contributions.label"))
@@ -60,7 +60,7 @@
         @percentageInput(pensionContributionsForm, "monthlyPensionContributions","monthlyPensionContributions", messages("quick_calc.pensionContributionsPercentage.hint") , messages("quick_calc.pensionContributionsPercentage.input.heading"),"%")
 
         @p{
-            @link(controllers.routes.PensionContributionsFixedController.showPensionContributionForm.url, messages("quick_calc.pensionContributionsPercentage.link"))
+            @link(controllers.routes.PensionContributionsFixedController.showPensionContributionForm().url, messages("quick_calc.pensionContributionsPercentage.link"))
         }
 
         @inputHidden(pensionContributionsForm, "gaveUsPensionPercentage","gaveUsPensionPercentage","",Some("true"),false)

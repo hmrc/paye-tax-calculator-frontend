@@ -17,14 +17,10 @@
 package forms
 
 import controllers.routes
-import models._
+import models.*
 import play.api.i18n.Messages
 
-case class AdditionalQuestionItem(
-  value:    String,
-  label:    String,
-  url:      String,
-  idSuffix: String)
+case class AdditionalQuestionItem(value: String, label: String, url: String, idSuffix: String)
 
 trait AdditionalQuestion[A] {
   def toAdditionalQuestionItem(t: Option[A]): AdditionalQuestionItem
@@ -41,9 +37,9 @@ object AdditionalQuestionItem {
     new AdditionalQuestion[UserTaxCode] {
 
       def toAdditionalQuestionItem(t: Option[UserTaxCode]): AdditionalQuestionItem = {
-        val label    = "about_tax_code"
+        val label = "about_tax_code"
         val idSuffix = "tax-code"
-        val url      = routes.TaxCodeController.showTaxCodeForm.url
+        val url = routes.TaxCodeController.showTaxCodeForm().url
 
         val labelText = t.flatMap(_.taxCode) match {
           case Some(taxCode) => s"$taxCode"
@@ -59,13 +55,13 @@ object AdditionalQuestionItem {
       }
     }
 
-  implicit def scottishIncomeFormat(implicit messages: Messages) =
+  implicit def scottishIncomeFormat(implicit messages: Messages): AdditionalQuestion[ScottishRate] =
     new AdditionalQuestion[ScottishRate] {
 
       def toAdditionalQuestionItem(scottish: Option[ScottishRate]): AdditionalQuestionItem = {
-        val label    = SCOTTISH_RATE
+        val label = SCOTTISH_RATE
         val idSuffix = SCOTTISH_RATE
-        val url      = routes.ScottishRateController.showScottishRateForm.url
+        val url = routes.ScottishRateController.showScottishRateForm().url
         AdditionalQuestionItem(
           scottish
             .map { scottishValue =>
@@ -87,9 +83,9 @@ object AdditionalQuestionItem {
     new AdditionalQuestion[PensionContributions] {
 
       def toAdditionalQuestionItem(pensions: Option[PensionContributions]): AdditionalQuestionItem = {
-        val label    = "about_pensions_contributions"
+        val label = "about_pensions_contributions"
         val idSuffix = "pension-contributions"
-        val url      = routes.PensionContributionsPercentageController.showPensionContributionForm.url
+        val url = routes.PensionContributionsPercentageController.showPensionContributionForm().url
         val formattedContribution = pensions
           .flatMap(_.monthlyContributionAmount)
           .map { contribution =>
@@ -115,15 +111,15 @@ object AdditionalQuestionItem {
       }
     }
 
-  implicit def studentLoanContributionFormat(
-    implicit messages: Messages
+  implicit def studentLoanContributionFormat(implicit
+    messages: Messages
   ): AdditionalQuestion[StudentLoanContributions] =
     new AdditionalQuestion[StudentLoanContributions] {
 
       def toAdditionalQuestionItem(t: Option[StudentLoanContributions]): AdditionalQuestionItem = {
-        val label    = "about_student_loan_contribution"
+        val label = "about_student_loan_contribution"
         val idSuffix = "student-loan-contributions"
-        val url      = routes.StudentLoanContributionsController.showStudentLoansForm.url
+        val url = routes.StudentLoanContributionsController.showStudentLoansForm().url
 
         val labelText = t.map(_.studentLoanPlan) match {
           case Some(studentLoanPlan) =>
@@ -145,15 +141,15 @@ object AdditionalQuestionItem {
       }
     }
 
-  implicit def postGraduateLoanContributionFormat(
-    implicit messages: Messages
+  implicit def postGraduateLoanContributionFormat(implicit
+    messages: Messages
   ): AdditionalQuestion[PostgraduateLoanContributions] =
     new AdditionalQuestion[PostgraduateLoanContributions] {
 
       def toAdditionalQuestionItem(postGrad: Option[PostgraduateLoanContributions]): AdditionalQuestionItem = {
-        val label    = "about_post_graduate_loan_contribution"
+        val label = "about_post_graduate_loan_contribution"
         val idSuffix = "post_graduate_loan_contribution"
-        val url      = routes.PostgraduateController.showPostgraduateForm.url
+        val url = routes.PostgraduateController.showPostgraduateForm().url
         AdditionalQuestionItem(
           postGrad
             .map { postGradValue =>

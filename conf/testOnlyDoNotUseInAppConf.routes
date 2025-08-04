@@ -10,7 +10,7 @@
 # Failing to follow this rule may result in test routes deployed in production.
 
 # Add all the application routes to the prod.routes file
-GET         /estimate-paye-take-home-pay/test-only/feature-switch                     testOnly.controllers.FeatureSwitchController.featureSwitch
+GET         /estimate-paye-take-home-pay/test-only/feature-switch                     testOnly.controllers.FeatureSwitchController.featureSwitchView
 POST        /estimate-paye-take-home-pay/test-only/feature-switch                     testOnly.controllers.FeatureSwitchController.submitFeatureSwitch
 
 ->          /                                                                         prod.Routes

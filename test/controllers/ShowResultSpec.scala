@@ -32,25 +32,19 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Cookie}
-import play.api.test.CSRFTokenHelper._
+import play.api.test.CSRFTokenHelper.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{status, _}
+import play.api.test.Helpers.{status, *}
 import services.QuickCalcCache
 import setup.BaseSpec
-import setup.QuickCalcCacheSetup._
+import setup.QuickCalcCacheSetup.*
 import uk.gov.hmrc.http.HeaderNames
 
 import java.time.LocalDate
-import scala.collection.JavaConverters.asScalaIteratorConverter
+import scala.jdk.CollectionConverters.*
 import scala.concurrent.Future
 
-class ShowResultSpec
-    extends BaseSpec
-    with TryValues
-    with IntegrationPatience
-    with CSRFTestHelper
-    with GuiceOneAppPerSuite
-    with BeforeAndAfterEach {
+class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience with CSRFTestHelper with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
@@ -63,7 +57,7 @@ class ShowResultSpec
   }
 
   def messagesThing(
-    app:  Application,
+    app: Application,
     lang: String = "en"
   ): Messages =
     if (lang == "cy")
@@ -72,21 +66,21 @@ class ShowResultSpec
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   val disableBeforeDate: LocalDate = LocalDate.of(2025, 4, 6)
-  val currentDate:       LocalDate = LocalDate.now()
+  val currentDate: LocalDate = LocalDate.now()
 
   "Show Result Page" should {
 
     def return200(
-      fetchResponse:         Option[QuickCalcAggregateInput],
-      yearlyEstimateAmount:  String,
+      fetchResponse: Option[QuickCalcAggregateInput],
+      yearlyEstimateAmount: String,
       monthlyEstimateAmount: String,
-      weeklyEstimateAmount:  String,
-      lang:                  String = "en",
-      taxableIncome:         Option[String] = None
+      weeklyEstimateAmount: String,
+      lang: String = "en",
+      taxableIncome: Option[String] = None
     ) = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -96,7 +90,7 @@ class ShowResultSpec
 
         implicit val messages: Messages = messagesThing(application, lang)
 
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCookies(Cookie("PLAY_LANG", lang))
@@ -104,23 +98,24 @@ class ShowResultSpec
 
         val result = route(application, request).get
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val title          = doc.select(".govuk-heading-xl").text
-        val tabList        = doc.select(".govuk-tabs__list").iterator().asScala.toList
-        val list           = doc.select(".govuk-summary-list").iterator().asScala.toList
-        val tab            = tabList(0).select(".govuk-tabs__list-item").text()
-        val selectedTab    = tabList(0).select(".govuk-tabs__list-item--selected").text
-        val panelTitle     = doc.select(".govuk-panel__title").text
-        val list1          = list(0).select(".govuk-summary-list__row").text()
-        val para           = doc.select(".govuk-body").text()
-        val button         = doc.select(".govuk-button").text
-        val sidebarHeader  = doc.select(".govuk-grid-column-one-third > .govuk-heading-s").text
+        val title = doc.select(".govuk-heading-xl").text
+        val tabList = doc.select(".govuk-tabs__list").iterator().asScala.toList
+        val list = doc.select(".govuk-summary-list").iterator().asScala.toList
+        val tab = tabList.head.select(".govuk-tabs__list-item").text()
+        val selectedTab = tabList.head.select(".govuk-tabs__list-item--selected").text
+        val panelTitle = doc.select(".govuk-panel__title").text
+        val list1 = list.head.select(".govuk-summary-list__row").text()
+        val para = doc.select(".govuk-body").text()
+        val button = doc.select(".govuk-button").text
+        val sidebarHeader = doc.select(".govuk-grid-column-one-third > .govuk-heading-s").text
         val sidebarBullets = doc.select(".govuk-list--bullet").get(0).text()
-        val warningText    = doc.select(".govuk-warning-text").text()
+        val warningText = doc.select(".govuk-warning-text").text()
         val listValues = doc
           .select(".govuk-summary-list")
           .iterator()
           .asScala
-          .toList(0)
+          .toList
+          .head
           .select(".govuk-summary-list__value")
           .text()
 
@@ -146,7 +141,7 @@ class ShowResultSpec
         tab   must include(messages("quick_calc.result.tabLabels.yearly"))
         tab   must include(messages("quick_calc.result.tabLabels.monthly"))
         tab   must include(messages("quick_calc.result.tabLabels.weekly"))
-        selectedTab mustEqual (messages("quick_calc.result.tabLabels.yearly"))
+        selectedTab mustEqual messages("quick_calc.result.tabLabels.yearly")
         panelTitle must include(s"$yearlyEstimateAmount ${messages("quick_calc.salary.yearly.label")}")
         panelTitle must include(s"$monthlyEstimateAmount ${messages("quick_calc.salary.monthly.label")}")
         panelTitle must include(s"$weeklyEstimateAmount ${messages("quick_calc.salary.weekly.label")}")
@@ -157,8 +152,8 @@ class ShowResultSpec
         list1      must include(messages("quick_calc.result.take_home_pay"))
         para       must include(messages("quick_calc.result.info.new"))
         para       must include(messages("clear_results"))
-        button mustEqual (messages("update_answers"))
-        sidebarHeader mustEqual (messages("quick_calc.result.sidebar.header"))
+        button mustEqual messages("update_answers")
+        sidebarHeader mustEqual messages("quick_calc.result.sidebar.header")
         sidebarBullets must include(messages("quick_calc.result.sidebar.one_job"))
         if (isOverStatePension)
           sidebarBullets    must include(messages("quick_calc.result.sidebar.over_state_pension_age"))
@@ -399,11 +394,7 @@ class ShowResultSpec
 
       "form is in Welsh" in {
 
-        return200(cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCodeWithPension,
-                  "£38,506.34",
-                  "£3,208.86",
-                  "£740.50",
-                  "cy")
+        return200(cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCodeWithPension, "£38,506.34", "£3,208.86", "£740.50", "cy")
       }
     }
 
@@ -417,7 +408,8 @@ class ShowResultSpec
                   "£583.33",
                   "£134.62",
                   "en",
-                  Some("£0.00"))
+                  Some("£0.00")
+                 )
       }
 
       "person is paid equal to the personal allowance" in {
@@ -434,21 +426,11 @@ class ShowResultSpec
       }
 
       "person is paid under 100k" in {
-        return200(cacheTaxCodeStatePensionSalaryLessThan100k,
-                  "£62,761",
-                  "£5,230.08",
-                  "£1,206.94",
-                  "en",
-                  Some("£77,430.00"))
+        return200(cacheTaxCodeStatePensionSalaryLessThan100k, "£62,761", "£5,230.08", "£1,206.94", "en", Some("£77,430.00"))
       }
 
       "person is paid over 100k" in {
-        return200(cacheTaxCodeStatePensionSalaryMoreThan100k,
-                  "£68,562.74",
-                  "£5,713.56",
-                  "£1,318.51",
-                  "en",
-                  Some("£87,433.00"))
+        return200(cacheTaxCodeStatePensionSalaryMoreThan100k, "£68,562.74", "£5,713.56", "£1,318.51", "en", Some("£87,433.00"))
       }
     }
 
@@ -458,7 +440,7 @@ class ShowResultSpec
     ) = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -468,7 +450,7 @@ class ShowResultSpec
 
         implicit val messages: Messages = messagesThing(application)
 
-        val request = FakeRequest(GET, routes.ShowResultsController.showResult.url)
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
@@ -482,7 +464,8 @@ class ShowResultSpec
           .select(".govuk-summary-list")
           .iterator()
           .asScala
-          .toList(0)
+          .toList
+          .head
           .select(".govuk-summary-list__value")
           .text()
 

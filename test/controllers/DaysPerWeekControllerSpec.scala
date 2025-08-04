@@ -22,7 +22,7 @@ import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -33,24 +33,18 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Cookie}
-import play.api.test.CSRFTokenHelper._
+import play.api.test.CSRFTokenHelper.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.QuickCalcCache
-import setup.QuickCalcCacheSetup._
+import setup.QuickCalcCacheSetup.*
 import uk.gov.hmrc.http.HeaderNames
 import utils.BigDecimalFormatter
 import views.html.pages.DaysAWeekView
 
 import scala.concurrent.Future
 
-class DaysPerWeekControllerSpec
-    extends PlaySpec
-    with TryValues
-    with ScalaFutures
-    with IntegrationPatience
-    with MockitoSugar
-    with CSRFTestHelper {
+class DaysPerWeekControllerSpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar with CSRFTestHelper {
   val formProvider = new SalaryInDaysFormProvider()
   val form: Form[Days] = formProvider()
 
@@ -58,7 +52,7 @@ class DaysPerWeekControllerSpec
     FakeRequest("", "").withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   def messagesForApp(
-    app:  Application,
+    app: Application,
     lang: String = "en"
   ): Messages =
     if (lang == "cy")
@@ -77,14 +71,13 @@ class DaysPerWeekControllerSpec
         )
         .build()
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheCompleteDaily)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(cacheCompleteDaily))
 
-      val amount       = (cacheCompleteHourly.value.savedPeriod.value.amount * 100.0).toInt
+      val amount = (cacheCompleteHourly.value.savedPeriod.value.amount * 100.0).toInt
       val howManyAweek = cacheCompleteDaily.value.savedPeriod.value.howManyAWeek
 
       val formFilled = form.fill(
-        Days(cacheCompleteHourly.value.savedPeriod.value.amount,
-             BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))
+        Days(cacheCompleteHourly.value.savedPeriod.value.amount, BigDecimalFormatter.stripZeros(howManyAweek.bigDecimal))
       )
 
       implicit val messages: Messages = messagesForApp(application, lang)
@@ -100,14 +93,14 @@ class DaysPerWeekControllerSpec
 
         val result = route(application, request).value
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val title   = doc.select(".govuk-label--xl").text
-        val hint    = doc.select(".govuk-hint").text
-        val button  = doc.select(".govuk-button").text
+        val title = doc.select(".govuk-label--xl").text
+        val hint = doc.select(".govuk-hint").text
+        val button = doc.select(".govuk-button").text
         val deskpro = doc.select(".govuk-link")
 
         title must include(messages("quick_calc.salary.question.days_a_week"))
-        hint mustEqual (messages("quick_calc.salary.question.approximate"))
-        button mustEqual (messages("continue"))
+        hint mustEqual messages("quick_calc.salary.question.approximate")
+        button mustEqual messages("continue")
         if (lang == "cy")
           deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
         else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
@@ -145,7 +138,7 @@ class DaysPerWeekControllerSpec
 
       implicit val messages: Messages = messagesForApp(application)
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(None))
 
       running(application) {
 
@@ -157,7 +150,7 @@ class DaysPerWeekControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
       }
     }
 
@@ -170,9 +163,11 @@ class DaysPerWeekControllerSpec
         )
         .build()
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        cacheTaxCodeStatePension
-          .map(_.copy(savedSalary = None))
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(
+        Future.successful(
+          cacheTaxCodeStatePension
+            .map(_.copy(savedSalary = None))
+        )
       )
 
       implicit val messages: Messages = messagesForApp(application)
@@ -187,7 +182,7 @@ class DaysPerWeekControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
       }
     }
 
@@ -200,7 +195,7 @@ class DaysPerWeekControllerSpec
         )
         .build()
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(None))
 
       implicit val messages: Messages = messagesForApp(application)
 
@@ -214,21 +209,21 @@ class DaysPerWeekControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
       }
     }
   }
   "Submit Days Form" should {
 
     def return400(
-      fetchResponse:      Option[QuickCalcAggregateInput],
-      formWeeks:          String,
+      fetchResponse: Option[QuickCalcAggregateInput],
+      formWeeks: String,
       errorMessageString: String,
-      lang:               String = "en"
+      lang: String = "en"
     ) = {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -238,7 +233,7 @@ class DaysPerWeekControllerSpec
         val formData = Map("amount" -> "1", "how-many-a-week" -> formWeeks)
 
         val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test-salary")
           .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
@@ -249,9 +244,9 @@ class DaysPerWeekControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorHeader = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual messages("error.summary.title")
         errorMessageLink.contains(messages(errorMessageString)) mustEqual true
@@ -277,10 +272,7 @@ class DaysPerWeekControllerSpec
         }
 
         "language is in welsh" in {
-          return400(cacheTaxCodeStatePension,
-                    "0",
-                    "quick_calc.salary.question.error.number_of_days.invalid_hours",
-                    "cy")
+          return400(cacheTaxCodeStatePension, "0", "quick_calc.salary.question.error.number_of_days.invalid_hours", "cy")
         }
       }
 
@@ -290,10 +282,7 @@ class DaysPerWeekControllerSpec
         }
 
         "language is in welsh" in {
-          return400(cacheTaxCodeStatePension,
-                    "8",
-                    "quick_calc.salary.question.error.number_of_days.invalid_hours",
-                    "cy")
+          return400(cacheTaxCodeStatePension, "8", "quick_calc.salary.question.error.number_of_days.invalid_hours", "cy")
         }
       }
 
@@ -303,10 +292,7 @@ class DaysPerWeekControllerSpec
         }
 
         "language is in welsh" in {
-          return400(cacheTaxCodeStatePension,
-                    "3.555",
-                    "quick_calc.salary.question.error.number_of_days.invalid_number",
-                    "cy")
+          return400(cacheTaxCodeStatePension, "3.555", "quick_calc.salary.question.error.number_of_days.invalid_number", "cy")
         }
       }
 
@@ -316,10 +302,7 @@ class DaysPerWeekControllerSpec
         }
 
         "language is in welsh" in {
-          return400(cacheTaxCodeStatePension,
-                    "test",
-                    "quick_calc.salary.question.error.number_of_days.invalid_number",
-                    "cy")
+          return400(cacheTaxCodeStatePension, "test", "quick_calc.salary.question.error.number_of_days.invalid_number", "cy")
         }
       }
     }
@@ -327,12 +310,12 @@ class DaysPerWeekControllerSpec
 
       def return303(
         fetchResponse: Option[QuickCalcAggregateInput],
-        redirectUrl:   String
+        redirectUrl: String
       ) = {
         val mockCache = mock[QuickCalcCache]
 
-        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
-        when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
+        when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
+        when(mockCache.save(any())(any())).thenReturn(Future.successful(Done))
 
         val application = new GuiceApplicationBuilder()
           .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -342,7 +325,7 @@ class DaysPerWeekControllerSpec
           val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
 
           val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
-            .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+            .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
             .withHeaders(HeaderNames.xSessionId -> "test-salary")
             .withCSRFToken
 
@@ -355,14 +338,14 @@ class DaysPerWeekControllerSpec
         }
       }
       "new days worked , 5 and complete aggregate" in {
-        return303(cacheCompleteDaily, routes.YouHaveToldUsNewController.summary.url)
+        return303(cacheCompleteDaily, routes.YouHaveToldUsNewController.summary().url)
       }
 
       "new days worked , 5 and incomplete aggregate" in {
         return303(
           cacheTaxCodeStatePension
             .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None)),
-          routes.StatePensionController.showStatePensionForm.url
+          routes.StatePensionController.showStatePensionForm().url
         )
       }
     }

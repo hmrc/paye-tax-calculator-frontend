@@ -50,7 +50,7 @@
 }
 
 @backButtonUrl = @{
-    controllers.routes.YouHaveToldUsNewController.summary.url
+    controllers.routes.YouHaveToldUsNewController.summary().url
 }
 
 @govuk_wrapper(Some(title(userTaxCodeForm, Messages(s"quick_calc.remove.$item"))), beforeContentBlock = beforeContent(backButtonUrl)) {

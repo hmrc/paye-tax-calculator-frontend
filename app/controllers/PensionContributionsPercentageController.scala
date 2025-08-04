@@ -33,14 +33,13 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PensionContributionsPercentageController @Inject() (
-  override val messagesApi:           MessagesApi,
-  cache:                              QuickCalcCache,
-  val controllerComponents:           MessagesControllerComponents,
-  navigator:                          Navigator,
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  navigator: Navigator,
   pensionContributionsPercentageView: PensionContributionsPercentageView,
-  pensionsContributionFormProvider:   PensionContributionFormProvider
-)(implicit val appConfig:             AppConfig,
-  implicit val executionContext:      ExecutionContext)
+  pensionsContributionFormProvider: PensionContributionFormProvider
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -52,21 +51,22 @@ class PensionContributionsPercentageController @Inject() (
 
   def showPensionContributionForm(): Action[AnyContent] =
     salaryRequired(
-      cache, { implicit fromRequestAndSession => agg =>
-        val filledForm = agg.savedPensionContributions.map(_.gaveUsPercentageAmount) match {
-          case Some(false) => form
-          case _ => {
-            agg.savedPensionContributions
-              .map { s =>
-                form.fill(s)
-              }
-              .getOrElse(form)
+      cache,
+      implicit fromRequestAndSession =>
+        agg =>
+          val filledForm = agg.savedPensionContributions.map(_.gaveUsPercentageAmount) match {
+            case Some(false) => form
+            case _ => {
+              agg.savedPensionContributions
+                .map { s =>
+                  form.fill(s)
+                }
+                .getOrElse(form)
+            }
           }
-        }
-        Ok(
-          pensionContributionsPercentageView(filledForm, agg.additionalQuestionItems())
-        )
-      }
+          Ok(
+            pensionContributionsPercentageView(filledForm, agg.additionalQuestionItems())
+          )
     )
 
   def submitPensionContribution(): Action[AnyContent] =
@@ -103,7 +103,7 @@ class PensionContributionsPercentageController @Inject() (
                 .save(updatedAgg)
                 .map(_ =>
                   Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
-                    routes.YouHaveToldUsNewController.summary
+                    routes.YouHaveToldUsNewController.summary()
                   }())
                 )
             }

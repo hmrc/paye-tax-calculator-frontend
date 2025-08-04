@@ -74,9 +74,9 @@
             )
 }
 
-@govuk_wrapper(Some(title(studentLoansForm, Messages("quick_calc.salary.studentLoan.header"))), beforeContentBlock= beforeContent(controllers.routes.YouHaveToldUsNewController.summary.url), showAppBanner = true) {
+@govuk_wrapper(Some(title(studentLoansForm, Messages("quick_calc.salary.studentLoan.header"))), beforeContentBlock= beforeContent(controllers.routes.YouHaveToldUsNewController.summary().url), showAppBanner = true) {
 
-    @formHelper(action= controllers.routes.StudentLoanContributionsController.submitStudentLoansContribution) {
+    @formHelper(action= controllers.routes.StudentLoanContributionsController.submitStudentLoansContribution()) {
 
         @errorSummary(studentLoansForm.errors)
 

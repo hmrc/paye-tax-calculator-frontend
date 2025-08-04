@@ -20,7 +20,7 @@ import java.util.UUID
 import com.google.inject.Inject
 import config.SessionIdFilter
 import org.apache.pekko.stream.Materializer
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.*
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite

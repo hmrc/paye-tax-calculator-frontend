@@ -19,13 +19,16 @@ package forms
 import config.features.FeatureConfigKey
 import models.FeatureSwitchModel
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.*
 
 object FeatureSwitchForm {
 
-  val form: Form[FeatureSwitchModel] = Form(
-    mapping(
-      FeatureConfigKey.enableWelshContent -> boolean
-    )(FeatureSwitchModel.apply)(FeatureSwitchModel.unapply)
-  )
+  private val unapplyFunc: FeatureSwitchModel => Option[Boolean] =
+    model => Some(model.welshTranslationEnabled)
+
+  val form: Form[FeatureSwitchModel] =
+    Form(
+      single(FeatureConfigKey.enableWelshContent -> boolean)
+        .transform[FeatureSwitchModel](FeatureSwitchModel.apply, _.welshTranslationEnabled)
+    )
 }

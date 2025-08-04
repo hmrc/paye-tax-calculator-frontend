@@ -18,7 +18,7 @@ package forms
 
 import models.PostgraduateLoanContributions
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.*
 import play.api.data.format.Formats.booleanFormat
 
 import javax.inject.Inject
@@ -28,6 +28,6 @@ class PostGraduateLoanFormProvider @Inject() () {
   def apply(): Form[PostgraduateLoanContributions] = Form(
     mapping(
       "havePostgraduatePlan" -> optional(of[Boolean])
-    )(PostgraduateLoanContributions.apply)(PostgraduateLoanContributions.unapply)
+    )(PostgraduateLoanContributions.apply)(pg => Some(pg.hasPostgraduatePlan))
   )
 }

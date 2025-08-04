@@ -100,7 +100,7 @@
 }
 
 @backButton = @{
-        s"${prodRoutes.YouHaveToldUsNewController.summary}"
+        s"${prodRoutes.YouHaveToldUsNewController.summary()}"
 }
 
 @disclaimer = {
@@ -127,11 +127,11 @@
         }
 
 
-    @formHelper(action = controllers.routes.YouHaveToldUsNewController.summary) {
+    @formHelper(action = controllers.routes.YouHaveToldUsNewController.summary()) {
         @button("update_answers", Some("update-button"))
     }
     @p{
-        @link(controllers.routes.QuickCalcController.restartQuickCalc.url, "clear_results")
+        @link(controllers.routes.QuickCalcController.restartQuickCalc().url, "clear_results")
     }
 
     @sectionBreakVisible("m")

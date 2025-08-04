@@ -22,7 +22,7 @@
     @defining(errors.map { error =>
         ErrorLink(
             href = Some(s"#${errorFieldName.getOrElse(error.key)}"),
-            content = Text(messages(error.message, error.args:_*)),
+            content = Text(messages(error.message, error.args*)),
             attributes = Map("id" -> s"${errorFieldName.getOrElse(error.key)}-error-link")
         )
     }) { errorLinks =>

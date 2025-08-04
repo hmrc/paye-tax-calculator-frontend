@@ -33,12 +33,12 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Cookie}
-import play.api.test.CSRFTokenHelper._
+import play.api.test.CSRFTokenHelper.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.QuickCalcCache
 import setup.BaseSpec
-import setup.QuickCalcCacheSetup._
+import setup.QuickCalcCacheSetup.*
 import uk.gov.hmrc.http.HeaderNames
 import utils.DefaultTaxCodeProvider
 import views.html.pages.TaxCodeView
@@ -54,7 +54,7 @@ class TaxCodeControllerSpec
     with MockitoSugar
     with CSRFTestHelper {
   val formProvider = new UserTaxCodeFormProvider()
-  val form         = formProvider()
+  val form: Form[UserTaxCode] = formProvider()
   val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
@@ -62,7 +62,7 @@ class TaxCodeControllerSpec
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   def messagesThing(
-    app:  Application,
+    app: Application,
     lang: String = "en"
   ): Messages =
     if (lang == "cy")
@@ -73,14 +73,14 @@ class TaxCodeControllerSpec
   "Show Tax Code Form" should {
 
     def return200(
-      fetchResponse:  Option[QuickCalcAggregateInput],
-      formFilled:     Form[UserTaxCode],
+      fetchResponse: Option[QuickCalcAggregateInput],
+      formFilled: Form[UserTaxCode],
       aggregateInput: QuickCalcAggregateInput,
-      lang:           String = "en"
+      lang: String = "en"
     ) = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -90,19 +90,19 @@ class TaxCodeControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
+        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm().url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
 
         val result = route(application, request).get
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val title   = doc.select(".govuk-heading-xl").text
-        val hint    = doc.select(".govuk-hint").text
+        val title = doc.select(".govuk-heading-xl").text
+        val hint = doc.select(".govuk-hint").text
         val summary = doc.select(".govuk-details__summary-text").text
-        val text1   = doc.select(".govuk-details__text").text
+        val text1 = doc.select(".govuk-details__text").text
         val bullets = doc.select(".govuk-list--bullet")
-        val button  = doc.select(".govuk-button").text
+        val button = doc.select(".govuk-button").text
         val deskpro = doc.select(".govuk-link")
 
         val view = application.injector.instanceOf[TaxCodeView]
@@ -111,13 +111,13 @@ class TaxCodeControllerSpec
 
         title must include(messages("quick_calc.about_tax_code.header"))
         hint  must include(messages("quick_calc.about_tax_code.details.firstInfoPara", "1257L"))
-        summary mustEqual (messages("label.tax-code.new"))
+        summary mustEqual messages("label.tax-code.new")
         text1        must include(messages("quick_calc.about_tax_code.details.start"))
         bullets.html must include(messages("quick_calc.about_tax_code.details.firstBullet_b"))
         bullets.html must include(messages("quick_calc.about_tax_code.details.secondBullet"))
         bullets.html must include(messages("quick_calc.about_tax_code.details.thirdBullet"))
         bullets.html must include(messages("quick_calc.about_tax_code.details.fourthBullet"))
-        button mustEqual (messages("continue"))
+        button mustEqual messages("continue")
         if (lang == "cy")
           deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
         else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
@@ -142,17 +142,17 @@ class TaxCodeControllerSpec
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(None))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
         .build()
 
-      implicit val messages: Messages = messagesThing(application)
+      // implicit val messages: Messages = messagesThing(application)
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm.url)
+        val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm().url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -160,7 +160,7 @@ class TaxCodeControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm.url
+        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm().url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
@@ -172,7 +172,8 @@ class TaxCodeControllerSpec
                     form,
                     cacheTaxCodeStatePensionSalary
                       .map(_.copy(savedTaxCode = None))
-                      .get)
+                      .get
+                   )
 
         }
 
@@ -182,7 +183,8 @@ class TaxCodeControllerSpec
                     cacheTaxCodeStatePensionSalary
                       .map(_.copy(savedTaxCode = None))
                       .get,
-                    "cy")
+                    "cy"
+                   )
 
         }
       }
@@ -191,7 +193,8 @@ class TaxCodeControllerSpec
         "form submitted in english" in {
           return200(cacheSalaryStatePensionTaxCode,
                     form.fill(cacheSalaryStatePensionTaxCode.get.savedTaxCode.get),
-                    cacheSalaryStatePensionTaxCode.get)
+                    cacheSalaryStatePensionTaxCode.get
+                   )
 
         }
 
@@ -199,7 +202,8 @@ class TaxCodeControllerSpec
           return200(cacheSalaryStatePensionTaxCode,
                     form.fill(cacheSalaryStatePensionTaxCode.get.savedTaxCode.get),
                     cacheSalaryStatePensionTaxCode.get,
-                    "cy")
+                    "cy"
+                   )
 
         }
       }
@@ -209,15 +213,15 @@ class TaxCodeControllerSpec
   "Submit Tax Code Form" should {
 
     def return400(
-      errorMsg:       String,
-      taxCode:        String,
+      errorMsg: String,
+      taxCode: String,
       cacheFetchData: Option[QuickCalcAggregateInput] = None,
-      lang:           String = "en"
+      lang: String = "en"
     ) = {
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheFetchData)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(cacheFetchData))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -227,8 +231,8 @@ class TaxCodeControllerSpec
 
         val formData = Map("hasTaxCode" -> "true", "taxCode" -> taxCode)
 
-        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+        val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
@@ -239,7 +243,7 @@ class TaxCodeControllerSpec
 
         val parseHtml = Jsoup.parse(contentAsString(result))
 
-        val errorHeader  = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+        val errorHeader = parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual messages("error.summary.title")
@@ -297,27 +301,27 @@ class TaxCodeControllerSpec
     "return 303" when {
       def test303(
         cacheFetchData: Option[QuickCalcAggregateInput] = None,
-        formData:       Map[String, String]
+        formData: Map[String, String]
       ) = {
         val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheFetchData)
-        when(mockCache.save(any())(any())) thenReturn Future.successful(Done)
+        when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(cacheFetchData))
+        when(mockCache.save(any())(any())).thenReturn(Future.successful(Done))
 
         val application = new GuiceApplicationBuilder()
           .overrides(bind[QuickCalcCache].toInstance(mockCache))
           .build()
-        implicit val messages: Messages = messagesThing(application)
+        // implicit val messages: Messages = messagesThing(application)
         running(application) {
-          val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm.url)
-            .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
+            .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
             .withHeaders(HeaderNames.xSessionId -> "test")
             .withCSRFToken
 
           val result = route(application, request).get
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
+          redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary().url
         }
       }
 

@@ -22,7 +22,7 @@ import forms.TaxResult
 import javax.inject.{Inject, Singleton}
 import models.QuickCalcAggregateInput
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc._
+import play.api.mvc.*
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.calculator.model.ValidationError
 import uk.gov.hmrc.calculator.utils.validation.TaxCodeValidator
@@ -34,14 +34,13 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class YouHaveToldUsNewController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  navigator:                     Navigator,
-  yourHaveToldUsView:            YouHaveToldUsNewView,
-  aggregateConditionsUtil:       AggregateConditionsUtil
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  navigator: Navigator,
+  yourHaveToldUsView: YouHaveToldUsNewView,
+  aggregateConditionsUtil: AggregateConditionsUtil
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -57,7 +56,7 @@ class YouHaveToldUsNewController @Inject() (
       cache,
       implicit request =>
         aggregate =>
-          if (aggregate.allQuestionsAnswered) {
+          if (aggregate.allQuestionsAnswered()) {
             Ok(
               yourHaveToldUsView(
                 aggregate.youHaveToldUsItems(),
@@ -78,12 +77,11 @@ class YouHaveToldUsNewController @Inject() (
     )
 
   private def taxCodeWarnings(
-    aggregateInput:    QuickCalcAggregateInput
-  )(implicit messages: Messages
-  ): List[(String, String)] = {
+    aggregateInput: QuickCalcAggregateInput
+  )(implicit messages: Messages): List[(String, String)] = {
     val payScottishRate = aggregateInput.savedScottishRate.exists(_.payScottishRate.getOrElse(false))
-    val taxCode         = aggregateInput.savedTaxCode.flatMap(_.taxCode).getOrElse("")
-    val result          = Option(TaxCodeValidator.INSTANCE.validateTaxCodeMatchingRate(taxCode, payScottishRate))
+    val taxCode = aggregateInput.savedTaxCode.flatMap(_.taxCode).getOrElse("")
+    val result = Option(TaxCodeValidator.INSTANCE.validateTaxCodeMatchingRate(taxCode, payScottishRate))
     result.map(_.getErrorType) match {
       case Some(ValidationError.ScottishCodeButOtherRate) =>
         List(taxCodeLabel -> Messages("quick_calc.tax_code.scottish_rate.warning"))
@@ -94,9 +92,8 @@ class YouHaveToldUsNewController @Inject() (
   }
 
   private def taxCodeCheck(
-    aggregateInput:    QuickCalcAggregateInput
-  )(implicit messages: Messages
-  ): Map[String, String] = {
+    aggregateInput: QuickCalcAggregateInput
+  )(implicit messages: Messages): Map[String, String] = {
     val finalList = taxCodeWarnings(aggregateInput)
     finalList.toMap
   }

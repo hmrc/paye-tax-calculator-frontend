@@ -20,8 +20,8 @@ import config.AppConfig
 import mocks.MockAppConfig
 import play.api.http.Status
 import play.api.mvc.MessagesControllerComponents
-import play.api.test.CSRFTokenHelper._
-import play.api.test.Helpers._
+import play.api.test.CSRFTokenHelper.*
+import play.api.test.Helpers.*
 import setup.BaseSpec
 import testOnly.views.html.FeatureSwitchView
 
@@ -29,21 +29,21 @@ class FeatureSwitchControllerSpec extends BaseSpec {
 
   override implicit val mockAppConfig: AppConfig = new MockAppConfig(app.configuration)
 
-  implicit val featureSwitch: FeatureSwitchView            = appInjector.instanceOf[FeatureSwitchView]
-  override implicit val mcc:           MessagesControllerComponents = appInjector.instanceOf[MessagesControllerComponents]
+  implicit val featureSwitch: FeatureSwitchView = appInjector.instanceOf[FeatureSwitchView]
+  override implicit val mcc: MessagesControllerComponents = appInjector.instanceOf[MessagesControllerComponents]
 
   private lazy val target = new FeatureSwitchController
 
   "Calling the .featureSwitch action" should {
 
-    lazy val result = target.featureSwitch(request.withCSRFToken)
+    lazy val result = target.featureSwitchView(request.withCSRFToken)
 
     "return 200" in {
-      await(result.map(_.header.status)) mustBe Status.OK
+      await(result.map(_.header.status)).mustBe(Status.OK)
     }
 
     "return HTML" in {
-      contentType(result) mustBe Some("text/html")
+      contentType(result).mustBe(Some("text/html"))
     }
 
     "return charset of utf-8" in {
@@ -56,11 +56,11 @@ class FeatureSwitchControllerSpec extends BaseSpec {
     lazy val result = target.submitFeatureSwitch(request.withCSRFToken)
 
     "return 303" in {
-      await(result.map(_.header.status)) mustBe Status.SEE_OTHER
+      await(result.map(_.header.status)).mustBe(Status.SEE_OTHER)
     }
 
     "redirect the user to the feature switch page" in {
-      redirectLocation(result) mustBe Some(routes.FeatureSwitchController.featureSwitch.url)
+      redirectLocation(result).mustBe(Some(routes.FeatureSwitchController.featureSwitchView.url))
     }
   }
 }
