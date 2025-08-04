@@ -43,8 +43,7 @@ lazy val microservice = Project(appName, file("."))
       "views.ViewUtils._",
       "controllers.routes._",
       "config.AppConfig"
-    ),
-    resolvers += Resolver.jcenterRepo
+    )
   )
   .settings(
     scalaVersion := "3.6.4",
