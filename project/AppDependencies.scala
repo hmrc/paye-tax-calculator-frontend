@@ -21,7 +21,7 @@ object AppDependencies {
   )
 
   private val scalaTestPlusMockitoVersion = "3.2.12.0"
-  private val scalacheckVersion = "1.18.0"
+  private val scalacheckVersion = "1.18.1"
   private val scalamockScalaTestSupportVersion = "7.4.0"
 
   def test(scope: String = "test,it"): Seq[ModuleID] = Seq(

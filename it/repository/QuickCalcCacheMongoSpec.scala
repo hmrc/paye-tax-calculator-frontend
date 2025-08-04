@@ -12,7 +12,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import respository.QuickCalcCacheMongo
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 import org.mongodb.scala.model.Filters
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.*
 
 import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
@@ -38,12 +38,13 @@ class QuickCalcCacheMongoSpec
                                                       None,
                                                       None,
                                                       None,
-                                                      None)
+                                                      None
+                                                     )
   )
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
   private val mockAppConfig = mock[AppConfig]
 
-  protected override val repository = new QuickCalcCacheMongo(
+  protected override val repository: QuickCalcCacheMongo = QuickCalcCacheMongo(
     mongo     = mongoComponent,
     appConfig = mockAppConfig,
     clock     = stubClock
@@ -52,9 +53,9 @@ class QuickCalcCacheMongoSpec
   ".add" - {
     "must set the last updated time on the QuickCalcMongoCache answers and save them" in {
 
-      val expectedResult = quickCalcMongoCache copy (createdAt = instant)
+      val expectedResult = quickCalcMongoCache.copy(createdAt = instant)
 
-      val setResult     = repository.add(quickCalcMongoCache).futureValue
+      val setResult = repository.add(quickCalcMongoCache).futureValue
       val updatedRecord = find(Filters.equal("id", quickCalcMongoCache.id)).futureValue.headOption.value
 
       setResult mustEqual Done
@@ -67,8 +68,8 @@ class QuickCalcCacheMongoSpec
       "must update the lastUpdated time and get the record" in {
         insert(quickCalcMongoCache).futureValue
 
-        val result         = repository.findById(quickCalcMongoCache.id).futureValue
-        val expectedResult = quickCalcMongoCache copy (createdAt = instant)
+        val result = repository.findById(quickCalcMongoCache.id).futureValue
+        val expectedResult = quickCalcMongoCache.copy(createdAt = instant)
 
         result.value mustEqual expectedResult
       }
