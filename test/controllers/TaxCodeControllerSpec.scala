@@ -148,8 +148,6 @@ class TaxCodeControllerSpec
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
         .build()
 
-      // implicit val messages: Messages = messagesThing(application)
-
       running(application) {
 
         val request = FakeRequest(GET, routes.TaxCodeController.showTaxCodeForm().url)
@@ -311,7 +309,6 @@ class TaxCodeControllerSpec
         val application = new GuiceApplicationBuilder()
           .overrides(bind[QuickCalcCache].toInstance(mockCache))
           .build()
-        // implicit val messages: Messages = messagesThing(application)
         running(application) {
           val request = FakeRequest(POST, routes.TaxCodeController.submitTaxCodeForm().url)
             .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
