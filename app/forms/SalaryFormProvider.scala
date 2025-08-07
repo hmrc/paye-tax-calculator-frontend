@@ -21,7 +21,7 @@ import javax.inject.Inject
 import models.Salary
 import play.api.data.Form
 import play.api.data.Forms.{mapping, of, optional}
-import play.api.data.format.Formats._
+import play.api.data.format.Formats.*
 
 class SalaryFormProvider @Inject() () {
 
@@ -33,6 +33,6 @@ class SalaryFormProvider @Inject() () {
       "period"               -> of(SalaryPeriodForm.salaryPeriodFormatter),
       "how-many-a-week"      -> optional(of[BigDecimal]),
       "monthlyAmount"        -> optional(of[BigDecimal])
-    )(Salary.apply)(Salary.unapply)
+    )(Salary.apply)(sal => Some((sal.amount, sal.amountYearly, sal.previousAmountYearly, sal.period, sal.howManyAWeek, sal.monthlyAmount)))
   )
 }

@@ -24,61 +24,61 @@ import play.api.i18n.Lang
 import play.api.mvc.Call
 
 trait AppConfig {
-  val host:                     String
-  val appName:                  String
-  val features:                 Features
-  val betaFeedbackUrl:          String
+  val host: String
+  val appName: String
+  val features: Features
+  val betaFeedbackUrl: String
   val reportAProblemPartialUrl: String
-  val reportAProblemNonJSUrl:   String
-  val checkStatePensionAge:     String
-  val cookies:                  String
-  val privacy:                  String
-  val termsConditions:          String
-  val govukHelp:                String
-  val accessibilityStatement:   String
-  val timeout:                  Int
-  val countdown:                Int
-  val dateOverride:             Option[String]
-  val mongoTtl:                 Int
+  val reportAProblemNonJSUrl: String
+  val checkStatePensionAge: String
+  val cookies: String
+  val privacy: String
+  val termsConditions: String
+  val govukHelp: String
+  val accessibilityStatement: String
+  val timeout: Int
+  val countdown: Int
+  val dateOverride: Option[String]
+  val mongoTtl: Long
   def feedbackUrl(signedInUser: Boolean): String
-  val languageMap:           Map[String, Lang]
+  val languageMap: Map[String, Lang]
   val routeToSwitchLanguage: String => Call
 }
 
 @Singleton
 class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
 
-  lazy val host:    String = config.get[String]("host")
-  lazy val appName: String = config.get[String]("appName")
+  override val host: String = config.get[String]("host")
+  override val appName: String = config.get[String]("appName")
   override val features = new Features()(config)
 
-  lazy val betaFeedbackUrl: String =
+  override val betaFeedbackUrl: String =
     s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
-  lazy val reportAProblemPartialUrl: String =
+  override val reportAProblemPartialUrl: String =
     s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
 
-  lazy val reportAProblemNonJSUrl: String =
+  override val reportAProblemNonJSUrl: String =
     s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
-  private val contactHost:                  String = loadConfig(s"contact-frontend.host")
+  private val contactHost: String = loadConfig(s"contact-frontend.host")
   private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
-  lazy val checkStatePensionAge:            String = config.get[String]("urls.checkStatePensionAge")
+  override val checkStatePensionAge: String = config.get[String]("urls.checkStatePensionAge")
 
   private def loadConfig(key: String): String =
     config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
-  lazy val cookies:                String = host + config.get[String]("urls.footer.cookies")
-  lazy val privacy:                String = host + config.get[String]("urls.footer.privacy")
-  lazy val termsConditions:        String = host + config.get[String]("urls.footer.termsConditions")
-  lazy val govukHelp:              String = config.get[String]("urls.footer.govukHelp")
-  lazy val accessibilityStatement: String = config.get[String]("urls.footer.accessibilityStatement")
-  lazy val timeout:                Int    = config.get[Int]("timeout.timeout")
-  lazy val countdown:              Int    = config.get[Int]("timeout.countdown")
+  override val cookies: String = host + config.get[String]("urls.footer.cookies")
+  override val privacy: String = host + config.get[String]("urls.footer.privacy")
+  override val termsConditions: String = host + config.get[String]("urls.footer.termsConditions")
+  override val govukHelp: String = config.get[String]("urls.footer.govukHelp")
+  override val accessibilityStatement: String = config.get[String]("urls.footer.accessibilityStatement")
+  override val timeout: Int = config.get[Int]("timeout.timeout")
+  override val countdown: Int = config.get[Int]("timeout.countdown")
 
-  lazy val dateOverride: Option[String] = config.getOptional[String]("dateOverride")
+  override val dateOverride: Option[String] = config.getOptional[String]("dateOverride")
 
-  lazy val mongoTtl: Int = config.get[Int]("mongodb.timeToLiveInSeconds")
+  override val mongoTtl: Long = config.get[Long]("mongodb.timeToLiveInSeconds")
 
   override def feedbackUrl(signedInUser: Boolean): String =
     if (signedInUser) {
@@ -92,7 +92,6 @@ class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
     "cymraeg" -> Lang("cy")
   )
 
-  override val routeToSwitchLanguage: String => Call = (lang: String) =>
-    controllers.routes.LanguageController.switchToLanguage(lang)
+  override val routeToSwitchLanguage: String => Call = (lang: String) => controllers.routes.LanguageController.switchToLanguage(lang)
 
 }

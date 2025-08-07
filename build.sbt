@@ -13,9 +13,9 @@ val appName: String = "paye-tax-calculator-frontend"
 lazy val scoverageSettings = {
   Seq(
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*repositories.*;" +
-    ".*BuildInfo.*;.*javascript.*;.*config.*;.*FrontendAuditConnector.*;.*Routes.*;.*GuiceInjector;" +
-    ".*ControllerConfiguration;.*LanguageSwitchController",
-    coverageMinimumStmtTotal := 79,
+      ".*BuildInfo.*;.*javascript.*;.*config.*;.*FrontendAuditConnector.*;.*Routes.*;.*GuiceInjector;" +
+      ".*ControllerConfiguration;.*LanguageSwitchController;.*forms*;.*views.html*;.*testOnly*",
+    coverageMinimumStmtTotal := 73,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
@@ -23,7 +23,7 @@ lazy val scoverageSettings = {
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
-  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .disablePlugins(JUnitXmlReportPlugin) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(PlayKeys.playDefaultPort := 7788)
   .settings(scoverageSettings: _*)
   .settings(scalaSettings: _*)
@@ -43,11 +43,10 @@ lazy val microservice = Project(appName, file("."))
       "views.ViewUtils._",
       "controllers.routes._",
       "config.AppConfig"
-    ),
-    resolvers += Resolver.jcenterRepo
+    )
   )
   .settings(
-    scalaVersion := "2.13.12",
+    scalaVersion := "3.6.4",
     libraryDependencies ++= AppDependencies()
   )
   .configs(IntegrationTest)

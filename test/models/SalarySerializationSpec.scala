@@ -22,6 +22,8 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.libs.json.{Json, Writes}
 
+import scala.reflect.ClassTag
+
 class SalarySerializationSpec extends AnyWordSpecLike with Matchers {
 
   "Salary marshalling" should {
@@ -53,10 +55,10 @@ class SalarySerializationSpec extends AnyWordSpecLike with Matchers {
 
   def jsonOf[T: Writes](t: T): String = Json.stringify(Json.toJson(t))
 
-  def unmarshalAndVerifyType[T](s:     String)(implicit m: Manifest[T]): Assertion = Json.parse(s).as[Salary] shouldBe a[T]
-  def unmarshalAndVerifyTypeDay[T](s:  String)(implicit m: Manifest[T]): Assertion = Json.parse(s).as[Days] shouldBe a[T]
+  def unmarshalAndVerifyType[T](s:     String)(implicit m: ClassTag[T]): Assertion = Json.parse(s).as[Salary] shouldBe a[T]
+  def unmarshalAndVerifyTypeDay[T](s:  String)(implicit m: ClassTag[T]): Assertion = Json.parse(s).as[Days] shouldBe a[T]
 
-  def unmarshalAndVerifyTypeHour[T](s: String)(implicit m: Manifest[T]): Assertion =
+  def unmarshalAndVerifyTypeHour[T](s: String)(implicit m: ClassTag[T]): Assertion =
     Json.parse(s).as[Hours] shouldBe a[T]
 
   def unmarshal(s: String): Salary = Json.parse(s).as[Salary]

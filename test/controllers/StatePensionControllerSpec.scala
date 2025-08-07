@@ -17,7 +17,7 @@
 package controllers
 
 import forms.StatePensionFormProvider
-import models.QuickCalcAggregateInput
+import models.{QuickCalcAggregateInput, StatePension}
 import org.apache.pekko.Done
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -28,37 +28,32 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.Application
+import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Cookie}
-import play.api.test.CSRFTokenHelper._
+import play.api.test.CSRFTokenHelper.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.QuickCalcCache
-import setup.QuickCalcCacheSetup._
+import setup.QuickCalcCacheSetup.*
 import uk.gov.hmrc.http.HeaderNames
 import views.html.pages.StatePensionView
 
 import scala.concurrent.Future
 
-class StatePensionControllerSpec
-    extends PlaySpec
-    with TryValues
-    with ScalaFutures
-    with IntegrationPatience
-    with MockitoSugar
-    with CSRFTestHelper {
+class StatePensionControllerSpec extends PlaySpec with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar with CSRFTestHelper {
 
   val formProvider = new StatePensionFormProvider()
-  val form         = formProvider()
+  val form: Form[StatePension] = formProvider()
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   def messagesThing(
-    app:  Application,
+    app: Application,
     lang: String = "en"
   ): Messages =
     if (lang == "cy")
@@ -71,7 +66,7 @@ class StatePensionControllerSpec
     def return200(lang: String = "en") = {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(cacheSalaryStatePensionTaxCode)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(cacheSalaryStatePensionTaxCode))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -84,25 +79,25 @@ class StatePensionControllerSpec
       implicit val messages: Messages = messagesThing(application, lang)
       running(application) {
 
-        val request = FakeRequest(GET, routes.StatePensionController.showStatePensionForm.url)
+        val request = FakeRequest(GET, routes.StatePensionController.showStatePensionForm().url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
-        val view   = application.injector.instanceOf[StatePensionView]
+        val view = application.injector.instanceOf[StatePensionView]
         val result = route(application, request).value
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val header          = doc.select(".govuk-header").text
-        val betaBanner      = doc.select(".govuk-phase-banner").text
-        val heading         = doc.select(".govuk-fieldset__heading").text
-        val radios          = doc.select(".govuk-radios__item")
-        val details         = doc.select(".govuk-details__summary-text").text()
+        val header = doc.select(".govuk-header").text
+        val betaBanner = doc.select(".govuk-phase-banner").text
+        val heading = doc.select(".govuk-fieldset__heading").text
+        val radios = doc.select(".govuk-radios__item")
+        val details = doc.select(".govuk-details__summary-text").text()
         val detailComponent = doc.select(".govuk-details__text")
-        val checkedRadios   = doc.select(".govuk-radios__input[checked]")
-        checkedRadios.attr("value") mustEqual ("true")
-        val button  = doc.select(".govuk-button").text
+        val checkedRadios = doc.select(".govuk-radios__input[checked]")
+        checkedRadios.attr("value") mustEqual "true"
+        val button = doc.select(".govuk-button").text
         val deskpro = doc.select(".govuk-link")
 
-        status(result) mustEqual (OK)
+        status(result) mustEqual OK
         removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
           view(
             formFilled,
@@ -115,11 +110,11 @@ class StatePensionControllerSpec
         betaBanner must include(messages("feedback.before"))
         betaBanner must include(messages("feedback.link"))
         betaBanner must include(messages("feedback.after"))
-        heading mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.label"))
-        button mustEqual (messages("continue"))
-        radios.get(0).text mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.yes"))
-        radios.get(1).text mustEqual (messages("quick_calc.you_have_told_us.over_state_pension_age.no"))
-        details mustEqual (messages("label.state-pension-details"))
+        heading mustEqual messages("quick_calc.you_have_told_us.over_state_pension_age.label")
+        button mustEqual messages("continue")
+        radios.get(0).text mustEqual messages("quick_calc.you_have_told_us.over_state_pension_age.yes")
+        radios.get(1).text mustEqual messages("quick_calc.you_have_told_us.over_state_pension_age.no")
+        details mustEqual messages("label.state-pension-details")
         detailComponent.text must include(messages("quick_calc.salary.question.state_pension_info"))
         detailComponent.text must include(messages("quick_calc.salary.question.state_pension_url_a"))
         detailComponent.text must include(messages("quick_calc.salary.question.state_pension_url_b"))
@@ -147,8 +142,10 @@ class StatePensionControllerSpec
 
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-        None
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(
+        Future.successful(
+          None
+        )
       )
 
       val application = new GuiceApplicationBuilder()
@@ -161,14 +158,14 @@ class StatePensionControllerSpec
 
         val request = FakeRequest(
           GET,
-          routes.StatePensionController.showStatePensionForm.url
+          routes.StatePensionController.showStatePensionForm().url
         ).withHeaders(HeaderNames.xSessionId -> "test").withCSRFToken
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
+        redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
@@ -180,11 +177,11 @@ class StatePensionControllerSpec
 
     def return400(
       fetchResponse: Option[QuickCalcAggregateInput] = None,
-      lang:          String                          = "en"
+      lang: String = "en"
     ) = {
       val mockCache = mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -196,8 +193,8 @@ class StatePensionControllerSpec
 
         val request = FakeRequest(
           POST,
-          routes.StatePensionController.submitStatePensionForm.url
-        ).withFormUrlEncodedBody(form.data.toSeq: _*)
+          routes.StatePensionController.submitStatePensionForm().url
+        ).withFormUrlEncodedBody(form.data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
@@ -211,7 +208,7 @@ class StatePensionControllerSpec
         val errorHeader =
           parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual messages("error.summary.title")
         errorMessageLink.contains(messages("quick_calc.over_state_pension_age_error")) mustEqual true
@@ -242,16 +239,20 @@ class StatePensionControllerSpec
     "return 303 in English" when {
 
       def test300English(
-        cacheFetchData:       Option[QuickCalcAggregateInput] = None,
+        cacheFetchData: Option[QuickCalcAggregateInput] = None,
         checkStatePensionAge: String
       ): Unit = {
         val mockCache = mock[QuickCalcCache]
 
-        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(
-          cacheFetchData
+        when(mockCache.fetchAndGetEntry()(any())).thenReturn(
+          Future.successful(
+            cacheFetchData
+          )
         )
-        when(mockCache.save(any())(any())) thenReturn Future.successful(
-          Done
+        when(mockCache.save(any())(any())).thenReturn(
+          Future.successful(
+            Done
+          )
         )
 
         val application = new GuiceApplicationBuilder()
@@ -266,8 +267,8 @@ class StatePensionControllerSpec
 
           val request = FakeRequest(
             GET,
-            routes.StatePensionController.showStatePensionForm.url
-          ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+            routes.StatePensionController.showStatePensionForm().url
+          ).withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
             .withHeaders(HeaderNames.xSessionId -> "test")
             .withCSRFToken
 
@@ -277,7 +278,7 @@ class StatePensionControllerSpec
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm.url
+          redirectLocation(result).value mustEqual routes.SalaryController.showSalaryForm().url
           verify(mockCache, times(1)).fetchAndGetEntry()(any())
         }
       }

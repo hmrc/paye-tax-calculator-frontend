@@ -20,7 +20,7 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{ControllerComponents, _}
+import play.api.mvc.{ControllerComponents, *}
 import services.QuickCalcCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
@@ -31,11 +31,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class QuickCalcController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      ControllerComponents
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: ControllerComponents
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends BackendBaseController
     with I18nSupport
     with ActionWithSessionId {
@@ -43,7 +42,7 @@ class QuickCalcController @Inject() (
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   def redirectToSalaryForm(): Action[AnyContent] = validateAcceptWithSessionId().async {
-    Future.successful(Redirect(routes.SalaryController.showSalaryForm))
+    Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
   }
 
   def restartQuickCalc(): Action[AnyContent] = validateAcceptWithSessionId().async { implicit request =>
@@ -52,9 +51,9 @@ class QuickCalcController @Inject() (
     cache.fetchAndGetEntry().flatMap {
       case Some(aggregate) =>
         val updatedAggregate = aggregate.copy(None, None, None, None, None, None, None, None)
-        cache.save(updatedAggregate).map(_ => Redirect(routes.SalaryController.showSalaryForm))
+        cache.save(updatedAggregate).map(_ => Redirect(routes.SalaryController.showSalaryForm()))
       case None =>
-        Future.successful(Redirect(routes.SalaryController.showSalaryForm))
+        Future.successful(Redirect(routes.SalaryController.showSalaryForm()))
     }
   }
 

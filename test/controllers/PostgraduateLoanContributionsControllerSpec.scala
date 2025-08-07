@@ -33,12 +33,12 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Cookie}
-import play.api.test.CSRFTokenHelper._
+import play.api.test.CSRFTokenHelper.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{status, _}
+import play.api.test.Helpers.{status, *}
 import services.QuickCalcCache
 import setup.BaseSpec
-import setup.QuickCalcCacheSetup._
+import setup.QuickCalcCacheSetup.*
 import uk.gov.hmrc.http.HeaderNames
 import views.html.pages.PostGraduatePlanContributionView
 
@@ -61,7 +61,7 @@ class PostgraduateLoanContributionsControllerSpec
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   def messagesThing(
-    app:  Application,
+    app: Application,
     lang: String = "en"
   ): Messages =
     if (lang == "cy")
@@ -74,7 +74,7 @@ class PostgraduateLoanContributionsControllerSpec
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(None)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(None))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -84,7 +84,7 @@ class PostgraduateLoanContributionsControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.PostgraduateController.showPostgraduateForm.url)
+        val request = FakeRequest(GET, routes.PostgraduateController.showPostgraduateForm().url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -92,7 +92,7 @@ class PostgraduateLoanContributionsControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm.url
+        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm().url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
 
@@ -102,12 +102,12 @@ class PostgraduateLoanContributionsControllerSpec
 
       def return200(
         fetchResponse: Option[QuickCalcAggregateInput],
-        lang:          String = "en",
-        isFormFilled:  Boolean = false
+        lang: String = "en",
+        isFormFilled: Boolean = false
       ) = {
         val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-        when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+        when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
 
         val application = new GuiceApplicationBuilder()
           .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -126,7 +126,7 @@ class PostgraduateLoanContributionsControllerSpec
 
           val request = FakeRequest(
             GET,
-            routes.PostgraduateController.showPostgraduateForm.url
+            routes.PostgraduateController.showPostgraduateForm().url
           ).withHeaders(HeaderNames.xSessionId -> "test")
             .withCookies(Cookie("PLAY_LANG", lang))
             .withCSRFToken
@@ -136,23 +136,23 @@ class PostgraduateLoanContributionsControllerSpec
           val view = application.injector.instanceOf[PostGraduatePlanContributionView]
 
           val doc: Document = Jsoup.parse(contentAsString(result))
-          val title         = doc.select(".govuk-heading-xl").text
-          val subheading    = doc.select(".govuk-fieldset__heading").text
+          val title = doc.select(".govuk-heading-xl").text
+          val subheading = doc.select(".govuk-fieldset__heading").text
           val radiosChecked = doc.select(".govuk-radios__input[checked]")
-          val radios        = doc.select(".govuk-radios__item")
-          val button        = doc.select(".govuk-button").text
-          val deskpro       = doc.select(".govuk-link")
+          val radios = doc.select(".govuk-radios__item")
+          val button = doc.select(".govuk-button").text
+          val deskpro = doc.select(".govuk-link")
 
           status(result) mustEqual OK
           title must include(messages("quick_calc.postgraduateLoan.header"))
-          subheading mustEqual (messages("quick_calc.postgraduateLoan.subheading"))
-          radios.get(0).text() mustEqual (messages("quick_calc.over_state_pension_age.yes"))
-          radios.get(1).text() mustEqual (messages("quick_calc.over_state_pension_age.no"))
-          button mustEqual (messages("continue"))
+          subheading mustEqual messages("quick_calc.postgraduateLoan.subheading")
+          radios.get(0).text() mustEqual messages("quick_calc.over_state_pension_age.yes")
+          radios.get(1).text() mustEqual messages("quick_calc.over_state_pension_age.no")
+          button mustEqual messages("continue")
           if (lang == "cy")
             deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
           else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
-          if (isFormFilled) radiosChecked.attr("value") mustEqual ("true")
+          if (isFormFilled) radiosChecked.attr("value") mustEqual "true"
 
           removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
             view(
@@ -198,7 +198,7 @@ class PostgraduateLoanContributionsControllerSpec
     def return303(fetchResponse: Option[QuickCalcAggregateInput]) = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())) thenReturn Future.successful(fetchResponse)
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
 
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
@@ -209,15 +209,15 @@ class PostgraduateLoanContributionsControllerSpec
 
         val formData = Map("havePostGraduatePlan" -> "false")
 
-        val request = FakeRequest(POST, routes.PostgraduateController.submitPostgradLoanForm.url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+        val request = FakeRequest(POST, routes.PostgraduateController.submitPostgradLoanForm().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
         val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary().url
       }
     }
 

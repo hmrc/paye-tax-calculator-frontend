@@ -45,7 +45,7 @@ class LanguageControllerSpec extends BaseSpec {
       }
 
       "have the correct redirect location" in {
-        redirectLocation(result) mustBe Some(controllers.routes.SalaryController.showSalaryForm.url)
+        redirectLocation(result) mustBe Some(controllers.routes.SalaryController.showSalaryForm().url)
       }
     }
 
@@ -62,7 +62,7 @@ class LanguageControllerSpec extends BaseSpec {
       }
 
       "have the correct redirect location" in {
-        redirectLocation(result) mustBe Some(controllers.routes.SalaryController.showSalaryForm.url)
+        redirectLocation(result) mustBe Some(controllers.routes.SalaryController.showSalaryForm().url)
       }
     }
 
@@ -80,7 +80,7 @@ class LanguageControllerSpec extends BaseSpec {
       }
 
       "have the correct redirect location" in {
-        redirectLocation(result) mustBe Some(controllers.routes.SalaryController.showSalaryForm.url)
+        redirectLocation(result) mustBe Some(controllers.routes.SalaryController.showSalaryForm().url)
       }
     }
   }

@@ -23,7 +23,7 @@ import javax.inject.{Inject, Singleton}
 import models.{Days, PayPeriodDetail, QuickCalcAggregateInput, Salary}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc._
+import play.api.mvc.*
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -35,14 +35,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DaysPerWeekController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  navigator:                     Navigator,
-  daysPerWeekView:               DaysAWeekView,
-  salaryInDaysFormProvider:      SalaryInDaysFormProvider
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  navigator: Navigator,
+  daysPerWeekView: DaysAWeekView,
+  salaryInDaysFormProvider: SalaryInDaysFormProvider
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -56,7 +55,7 @@ class DaysPerWeekController @Inject() (
     validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
-      val url   = routes.SalaryController.showSalaryForm.url
+      val url = routes.SalaryController.showSalaryForm().url
       val value = BigDecimal(valueInPence / 100.0)
 
       form
@@ -82,8 +81,7 @@ class DaysPerWeekController @Inject() (
                       Some(monthlyAmount)
                     )
                   ),
-                  savedPeriod =
-                    Some(PayPeriodDetail(value, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
+                  savedPeriod = Some(PayPeriodDetail(value, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
                 )
               )
 
@@ -93,7 +91,7 @@ class DaysPerWeekController @Inject() (
                 .map(_ =>
                   Redirect(
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
-                      routes.StatePensionController.showStatePensionForm
+                      routes.StatePensionController.showStatePensionForm()
                     )()
                   )
                 )
@@ -104,14 +102,15 @@ class DaysPerWeekController @Inject() (
 
   def showDaysAWeek(valueInPence: Int): Action[AnyContent] =
     salaryRequired(
-      cache, { implicit request => agg =>
-        val filledForm = agg.savedPeriod
-          .map { s =>
-            form.fill(Days(s.amount, BigDecimalFormatter.stripZeros(s.howManyAWeek.bigDecimal)))
-          }
-          .getOrElse(form)
-        Ok(daysPerWeekView(filledForm, BigDecimal(valueInPence / 100.0)))
-      }
+      cache,
+      implicit request =>
+        agg =>
+          val filledForm = agg.savedPeriod
+            .map { s =>
+              form.fill(Days(s.amount, BigDecimalFormatter.stripZeros(s.howManyAWeek.bigDecimal)))
+            }
+            .getOrElse(form)
+          Ok(daysPerWeekView(filledForm, BigDecimal(valueInPence / 100.0)))
     )
 
 }

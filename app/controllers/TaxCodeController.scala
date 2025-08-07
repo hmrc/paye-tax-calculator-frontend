@@ -23,7 +23,7 @@ import javax.inject.{Inject, Singleton}
 import models.{QuickCalcAggregateInput, UserTaxCode}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc._
+import play.api.mvc.*
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -35,15 +35,14 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class TaxCodeController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  navigator:                     Navigator,
-  taxCodeView:                   TaxCodeView,
-  userTaxCodeFormProvider:       UserTaxCodeFormProvider,
-  defaultTaxCodeProvider:        DefaultTaxCodeProvider
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  navigator: Navigator,
+  taxCodeView: TaxCodeView,
+  userTaxCodeFormProvider: UserTaxCodeFormProvider,
+  defaultTaxCodeProvider: DefaultTaxCodeProvider
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -58,19 +57,17 @@ class TaxCodeController @Inject() (
 
   def showTaxCodeForm: Action[AnyContent] =
     salaryRequired(
-      cache, { implicit request => agg =>
-        val filledForm = agg.savedTaxCode
-          .map { s =>
-            form.fill(s)
-          }
-          .getOrElse(form)
-        Ok(
-          taxCodeView(filledForm,
-                      agg.youHaveToldUsItems(),
-                      defaultTaxCodeProvider.defaultUkTaxCode,
-                      salaryOverHundredThousand(agg))
-        )
-      }
+      cache,
+      implicit request =>
+        agg =>
+          val filledForm = agg.savedTaxCode
+            .map { s =>
+              form.fill(s)
+            }
+            .getOrElse(form)
+          Ok(
+            taxCodeView(filledForm, agg.youHaveToldUsItems(), defaultTaxCodeProvider.defaultUkTaxCode, salaryOverHundredThousand(agg))
+          )
     )
 
   def submitTaxCodeForm(): Action[AnyContent] =
@@ -86,7 +83,8 @@ class TaxCodeController @Inject() (
                   taxCodeView(formWithErrors,
                               aggregate.youHaveToldUsItems(),
                               defaultTaxCodeProvider.defaultUkTaxCode,
-                              salaryOverHundredThousand(aggregate))
+                              salaryOverHundredThousand(aggregate)
+                             )
                 )
               case None =>
                 BadRequest(
@@ -112,12 +110,12 @@ class TaxCodeController @Inject() (
                 .save(updatedAgg)
                 .map(_ =>
                   if (newTaxCode.taxCode.isEmpty) {
-                    Redirect(routes.YouHaveToldUsNewController.summary)
+                    Redirect(routes.YouHaveToldUsNewController.summary())
                   } else {
                     Redirect(
                       navigator
                         .nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
-                          routes.YouHaveToldUsNewController.summary
+                          routes.YouHaveToldUsNewController.summary()
                         }()
                     )
                   }

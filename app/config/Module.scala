@@ -24,9 +24,9 @@ import java.time.Clock
 class Module extends play.api.inject.Module {
 
   override def bindings(
-    environment:   Environment,
+    environment: Environment,
     configuration: Configuration
-  ): collection.Seq[Binding[_]] =
+  ): collection.Seq[Binding[?]] =
     Seq(
       bind[Clock].toInstance(Clock.systemUTC())
     )

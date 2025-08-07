@@ -28,16 +28,16 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
-import play.api.test.Helpers.{status, _}
+import play.api.test.Helpers.{status, *}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Cookie}
-import play.api.test.CSRFTokenHelper._
+import play.api.test.CSRFTokenHelper.*
 import play.api.test.FakeRequest
 import services.QuickCalcCache
 import setup.BaseSpec
-import setup.QuickCalcCacheSetup._
+import setup.QuickCalcCacheSetup.*
 import uk.gov.hmrc.http.HeaderNames
 import views.html.pages.PensionContributionsPercentageView
 
@@ -53,14 +53,14 @@ class PensionContributionsPercentageControllerSpec
     with CSRFTestHelper {
 
   val formProvider = new PensionContributionFormProvider()
-  val form         = formProvider()
+  val form = formProvider()
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("", "").withCSRFToken
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   def messagesThing(
-    app:  Application,
+    app: Application,
     lang: String = "en"
   ): Messages =
     if (lang == "cy")
@@ -83,7 +83,7 @@ class PensionContributionsPercentageControllerSpec
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.PensionContributionsPercentageController.showPensionContributionForm.url)
+        val request = FakeRequest(GET, routes.PensionContributionsPercentageController.showPensionContributionForm().url)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
@@ -91,7 +91,7 @@ class PensionContributionsPercentageControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm.url
+        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm().url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
       }
     }
@@ -113,7 +113,7 @@ class PensionContributionsPercentageControllerSpec
         running(application) {
 
           val request =
-            FakeRequest(GET, routes.PensionContributionsPercentageController.showPensionContributionForm.url)
+            FakeRequest(GET, routes.PensionContributionsPercentageController.showPensionContributionForm().url)
               .withHeaders(HeaderNames.xSessionId -> "test")
               .withCookies(Cookie("PLAY_LANG", lang))
               .withCSRFToken
@@ -125,11 +125,11 @@ class PensionContributionsPercentageControllerSpec
           val formFilled =
             form.fill(cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.savedPensionContributions.get)
           val doc: Document = Jsoup.parse(contentAsString(result))
-          val title   = doc.select(".govuk-heading-xl").text
-          val para    = doc.select(".govuk-body").text()
-          val label   = doc.select(".govuk-label").text()
-          val hint    = doc.select(".govuk-hint").text()
-          val button  = doc.select(".govuk-button").text
+          val title = doc.select(".govuk-heading-xl").text
+          val para = doc.select(".govuk-body").text()
+          val label = doc.select(".govuk-label").text()
+          val hint = doc.select(".govuk-hint").text()
+          val button = doc.select(".govuk-button").text
           val deskpro = doc.select(".govuk-link")
 
           status(result) mustEqual OK
@@ -143,9 +143,7 @@ class PensionContributionsPercentageControllerSpec
             deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
           else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
           removeCSRFTagValue(contentAsString(result)) mustEqual removeCSRFTagValue(
-            view(formFilled,
-                 cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.additionalQuestionItems()(messages,
-                                                                                                     mockAppConfig))(
+            view(formFilled, cacheSalaryTaxCodeSavedPensionContributionsPercentage.get.additionalQuestionItems()(messages, mockAppConfig))(
               request,
               messagesThing(application, lang)
             ).toString
@@ -168,9 +166,9 @@ class PensionContributionsPercentageControllerSpec
 
     "return 400" when {
       def test400(
-        lang:          String = "en",
+        lang: String = "en",
         fetchResponse: Option[QuickCalcAggregateInput],
-        percentage:    String
+        percentage: String
       ) = {
         val mockCache = MockitoSugar.mock[QuickCalcCache]
 
@@ -184,8 +182,8 @@ class PensionContributionsPercentageControllerSpec
 
           val formData = Map("gaveUsPensionPercentage" -> "true", "monthlyPensionContributions" -> percentage)
 
-          val request = FakeRequest(POST, routes.PensionContributionsPercentageController.submitPensionContribution.url)
-            .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+          val request = FakeRequest(POST, routes.PensionContributionsPercentageController.submitPensionContribution().url)
+            .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
             .withHeaders(HeaderNames.xSessionId -> "test")
             .withCookies(Cookie("PLAY_LANG", lang))
             .withCSRFToken
@@ -196,9 +194,9 @@ class PensionContributionsPercentageControllerSpec
 
           val parseHtml = Jsoup.parse(contentAsString(result))
 
-          val errorHeader      = parseHtml.getElementsByClass("govuk-error-summary__title").text()
+          val errorHeader = parseHtml.getElementsByClass("govuk-error-summary__title").text()
           val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-          val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+          val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
 
           errorHeader mustEqual messages("error.summary.title")
           errorMessageLink.contains(messages("quick_calc.pensionContributionError.invalidFormat")) mustEqual true
@@ -240,15 +238,15 @@ class PensionContributionsPercentageControllerSpec
       running(application) {
         val formData = Map("gaveUsPensionPercentage" -> "true")
 
-        val request = FakeRequest(POST, routes.PensionContributionsPercentageController.submitPensionContribution.url)
-          .withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+        val request = FakeRequest(POST, routes.PensionContributionsPercentageController.submitPensionContribution().url)
+          .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
         val result = route(application, request).get
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary.url
+        redirectLocation(result).get mustEqual routes.YouHaveToldUsNewController.summary().url
       }
     }
   }

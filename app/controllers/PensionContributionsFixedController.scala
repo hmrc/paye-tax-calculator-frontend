@@ -21,7 +21,7 @@ import forms.PensionContributionFormProvider
 import models.{PensionContributions, QuickCalcAggregateInput}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc._
+import play.api.mvc.*
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -33,14 +33,13 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PensionContributionsFixedController @Inject() (
-  override val messagesApi:         MessagesApi,
-  cache:                            QuickCalcCache,
-  val controllerComponents:         MessagesControllerComponents,
-  navigator:                        Navigator,
-  pensionContributionsFixedView:    PensionContributionsFixedView,
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  navigator: Navigator,
+  pensionContributionsFixedView: PensionContributionsFixedView,
   pensionsContributionFormProvider: PensionContributionFormProvider
-)(implicit val appConfig:           AppConfig,
-  implicit val executionContext:    ExecutionContext)
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -52,21 +51,22 @@ class PensionContributionsFixedController @Inject() (
 
   def showPensionContributionForm(): Action[AnyContent] =
     salaryRequired(
-      cache, { implicit fromRequestAndSession => agg =>
-        val filledForm = agg.savedPensionContributions.map(_.gaveUsPercentageAmount) match {
-          case Some(true) => form
-          case _ => {
-            agg.savedPensionContributions
-              .map { s =>
-                form.fill(s)
-              }
-              .getOrElse(form)
+      cache,
+      implicit fromRequestAndSession =>
+        agg =>
+          val filledForm = agg.savedPensionContributions.map(_.gaveUsPercentageAmount) match {
+            case Some(true) => form
+            case _ => {
+              agg.savedPensionContributions
+                .map { s =>
+                  form.fill(s)
+                }
+                .getOrElse(form)
+            }
           }
-        }
-        Ok(
-          pensionContributionsFixedView(filledForm, agg.additionalQuestionItems())
-        )
-      }
+          Ok(
+            pensionContributionsFixedView(filledForm, agg.additionalQuestionItems())
+          )
     )
 
   def submitPensionContribution(): Action[AnyContent] =
@@ -84,9 +84,8 @@ class PensionContributionsFixedController @Inject() (
                 agg.copy(
                   savedPensionContributions = Some(
                     newPensionContributions.copy(
-                      gaveUsPercentageAmount = false,
-                      yearlyContributionAmount =
-                        newPensionContributions.monthlyContributionAmount.map(amount => amount * 12)
+                      gaveUsPercentageAmount   = false,
+                      yearlyContributionAmount = newPensionContributions.monthlyContributionAmount.map(amount => amount * 12)
                     )
                   )
                 )
@@ -97,7 +96,7 @@ class PensionContributionsFixedController @Inject() (
                 .save(updatedAgg)
                 .map(_ =>
                   Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
-                    routes.YouHaveToldUsNewController.summary
+                    routes.YouHaveToldUsNewController.summary()
                   }())
                 )
             }

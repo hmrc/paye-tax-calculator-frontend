@@ -18,7 +18,7 @@
 
 @this(govukInput : GovukInput)
 
-@(form: Form[_],
+@(form: Form[?],
 id: String, name: String,
 hint: String, content: String,
 suffix: String, populateField: Boolean = true)(implicit messages: Messages)
@@ -38,5 +38,5 @@ id = id,
         suffix = Some(PrefixOrSuffix(
             content = Text(suffix)
 )),
-        errorMessage=form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+        errorMessage=form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args*))))
 ))

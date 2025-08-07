@@ -23,7 +23,7 @@ import javax.inject.{Inject, Singleton}
 import models.{QuickCalcAggregateInput, StatePension}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc._
+import play.api.mvc.*
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -35,14 +35,13 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class StatePensionController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  navigator:                     Navigator,
-  statePensionView:              StatePensionView,
-  statePensionFormProvider:      StatePensionFormProvider
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  navigator: Navigator,
+  statePensionView: StatePensionView,
+  statePensionFormProvider: StatePensionFormProvider
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -92,7 +91,7 @@ class StatePensionController @Inject() (
                     navigator.nextPageOrSummaryIfAllQuestionsAnswered(
                       updatedAggregate
                     ) {
-                      routes.YouHaveToldUsNewController.summary
+                      routes.YouHaveToldUsNewController.summary()
                     }()
                   )
                 }
@@ -103,7 +102,7 @@ class StatePensionController @Inject() (
                       .copy(savedIsOverStatePensionAge = Some(userAge))
                   )
                   .map { _ =>
-                    Redirect(routes.YouHaveToldUsNewController.summary)
+                    Redirect(routes.YouHaveToldUsNewController.summary())
                   }
             }
         )

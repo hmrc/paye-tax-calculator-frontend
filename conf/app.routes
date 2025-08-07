@@ -1,9 +1,9 @@
 # microservice specific routes
 
-GET         /                      controllers.QuickCalcController.redirectToSalaryForm
+GET         /                      controllers.QuickCalcController.redirectToSalaryForm()
 
-GET         /your-pay              controllers.SalaryController.showSalaryForm
-POST        /your-pay              controllers.SalaryController.submitSalaryAmount
+GET         /your-pay              controllers.SalaryController.showSalaryForm()
+POST        /your-pay              controllers.SalaryController.submitSalaryAmount()
 
 GET         /hours/:value          controllers.HoursPerWeekController.showHoursAWeek(value: Int)
 POST        /hours/:value          controllers.HoursPerWeekController.submitHoursAWeek(value: Int)
@@ -11,35 +11,35 @@ POST        /hours/:value          controllers.HoursPerWeekController.submitHour
 GET         /days/:value           controllers.DaysPerWeekController.showDaysAWeek(value: Int)
 POST        /days/:value           controllers.DaysPerWeekController.submitDaysAWeek(value: Int)
 
-GET         /state-pension         controllers.StatePensionController.showStatePensionForm
-POST        /state-pension         controllers.StatePensionController.submitStatePensionForm
+GET         /state-pension         controllers.StatePensionController.showStatePensionForm()
+POST        /state-pension         controllers.StatePensionController.submitStatePensionForm()
 
-GET         /scottish-tax          controllers.ScottishRateController.showScottishRateForm
-POST        /scottish-tax          controllers.ScottishRateController.submitScottishRateForm
+GET         /scottish-tax          controllers.ScottishRateController.showScottishRateForm()
+POST        /scottish-tax          controllers.ScottishRateController.submitScottishRateForm()
 
-GET         /tax-code              controllers.TaxCodeController.showTaxCodeForm
-POST        /tax-code              controllers.TaxCodeController.submitTaxCodeForm
+GET         /tax-code              controllers.TaxCodeController.showTaxCodeForm()
+POST        /tax-code              controllers.TaxCodeController.submitTaxCodeForm()
 
 GET         /remove                controllers.RemoveItemController.showRemoveItemForm(option: String)
 POST        /remove                controllers.RemoveItemController.submitRemoveItemForm(option: String)
 
-GET         /amount-contributions-percentage  controllers.PensionContributionsPercentageController.showPensionContributionForm
-POST        /amount-contributions-percentage controllers.PensionContributionsPercentageController.submitPensionContribution
+GET         /amount-contributions-percentage  controllers.PensionContributionsPercentageController.showPensionContributionForm()
+POST        /amount-contributions-percentage controllers.PensionContributionsPercentageController.submitPensionContribution()
 
-GET         /amount-contributions-fixed  controllers.PensionContributionsFixedController.showPensionContributionForm
-POST        /amount-contributions-fixed  controllers.PensionContributionsFixedController.submitPensionContribution
+GET         /amount-contributions-fixed  controllers.PensionContributionsFixedController.showPensionContributionForm()
+POST        /amount-contributions-fixed  controllers.PensionContributionsFixedController.submitPensionContribution()
 
-GET         /student-loans  controllers.StudentLoanContributionsController.showStudentLoansForm
-POST        /student-loans  controllers.StudentLoanContributionsController.submitStudentLoansContribution
+GET         /student-loans  controllers.StudentLoanContributionsController.showStudentLoansForm()
+POST        /student-loans  controllers.StudentLoanContributionsController.submitStudentLoansContribution()
 
-GET         /postgraduate-loans controllers.PostgraduateController.showPostgraduateForm
-POST        /postgraduate-loans controllers.PostgraduateController.submitPostgradLoanForm
+GET         /postgraduate-loans controllers.PostgraduateController.showPostgraduateForm()
+POST        /postgraduate-loans controllers.PostgraduateController.submitPostgradLoanForm()
 
-GET         /your-answers          controllers.YouHaveToldUsNewController.summary
+GET         /your-answers          controllers.YouHaveToldUsNewController.summary()
 
-GET         /your-results          controllers.ShowResultsController.showResult
+GET         /your-results          controllers.ShowResultsController.showResult()
 
-GET         /restart               controllers.QuickCalcController.restartQuickCalc
+GET         /restart               controllers.QuickCalcController.restartQuickCalc()
 
 GET        /language/:lang         controllers.LanguageController.switchToLanguage(lang: String)
 

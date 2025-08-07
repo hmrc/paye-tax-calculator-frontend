@@ -21,14 +21,14 @@ import javax.inject.Inject
 import models.Hours
 import play.api.data.Form
 import play.api.data.Forms.{mapping, of}
-import play.api.data.format.Formats._
+import play.api.data.format.Formats.*
 
 class SalaryInHoursFormProvider @Inject() () {
 
   def apply(): Form[Hours] = Form(
     mapping(
-      a1 = "amount"          -> of[BigDecimal],
+      a1 = "amount" -> of[BigDecimal],
       a2 = "how-many-a-week" -> of(CustomFormatters.hoursValidation)
-    )(Hours.apply)(Hours.unapply)
+    )(Hours.apply)(hrs => Some((hrs.amount, hrs.howManyAWeek)))
   )
 }

@@ -35,15 +35,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SalaryController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  salaryService:                 SalaryService,
-  navigator:                     Navigator,
-  salaryView:                    SalaryView,
-  salaryFormProvider:            SalaryFormProvider
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  salaryService: SalaryService,
+  navigator: Navigator,
+  salaryView: SalaryView,
+  salaryFormProvider: SalaryFormProvider
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId {
@@ -58,7 +57,7 @@ class SalaryController @Inject() (
     cache.fetchAndGetEntry().map {
       case Some(aggregate) =>
         val filledForm = aggregate.savedSalary.map(s => form.fill(s)).getOrElse(form)
-        Ok(salaryView(filledForm)) //Only timeout when there is data in view
+        Ok(salaryView(filledForm)) // Only timeout when there is data in view
       case None =>
         Ok(salaryView(form))
     }

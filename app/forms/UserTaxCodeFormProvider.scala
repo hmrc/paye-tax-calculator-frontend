@@ -16,13 +16,13 @@
 
 package forms
 
-import mappings.CustomFormatters._
+import mappings.CustomFormatters.*
 
 import javax.inject.Inject
 import models.UserTaxCode
 import models.UserTaxCode.{HasTaxCode, TaxCode}
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.*
 
 class UserTaxCodeFormProvider @Inject() () {
 
@@ -30,6 +30,6 @@ class UserTaxCodeFormProvider @Inject() () {
     mapping(
       HasTaxCode -> of(hasTaxCodeBooleanFormatter),
       TaxCode    -> of(taxCodeFormatter)
-    )(UserTaxCode.apply)(UserTaxCode.unapply)
+    )(UserTaxCode.apply)(utc => Some((utc.gaveUsTaxCode, utc.taxCode)))
   )
 }

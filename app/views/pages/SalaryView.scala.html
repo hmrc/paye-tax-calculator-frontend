@@ -83,7 +83,7 @@
 
 @govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = true) {
 
-    @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount) {
+    @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount()) {
 
         @errorSummary(salaryForm.errors)
 
@@ -102,7 +102,7 @@
             value = salaryForm("amount").value,
             classes = "govuk-input--width-10",
             autocomplete = Some("off"),
-            errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+            errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args*))))
         ))
 
             @inputRadio(

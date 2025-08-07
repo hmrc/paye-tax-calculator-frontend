@@ -26,22 +26,22 @@ import play.api.mvc.Call
 class Navigator @Inject() (implicit appConfig: AppConfig) {
 
   def nextPageOrSummaryIfAllQuestionsAnswered(aggregate: QuickCalcAggregateInput)(next: Call)(): Call =
-    if (aggregate.allQuestionsAnswered) {
-      routes.YouHaveToldUsNewController.summary
+    if (aggregate.allQuestionsAnswered()) {
+      routes.YouHaveToldUsNewController.summary()
     } else next
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(): Call =
     nextPageOrSummaryIfAllQuestionsAnswered(agg) {
-      routes.StatePensionController.showStatePensionForm
+      routes.StatePensionController.showStatePensionForm()
     }()
 
   def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Call =
     if (aggregate.savedSalary.isEmpty)
-      routes.SalaryController.showSalaryForm
+      routes.SalaryController.showSalaryForm()
     else if (aggregate.savedIsOverStatePensionAge.isEmpty)
-      routes.StatePensionController.showStatePensionForm
+      routes.StatePensionController.showStatePensionForm()
     else if (aggregate.savedTaxCode.isEmpty)
-      routes.TaxCodeController.showTaxCodeForm
+      routes.TaxCodeController.showTaxCodeForm()
     else
-      routes.SalaryController.showSalaryForm
+      routes.SalaryController.showSalaryForm()
 }

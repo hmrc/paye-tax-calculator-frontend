@@ -35,28 +35,23 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Cookie}
-import play.api.test.CSRFTokenHelper._
+import play.api.test.CSRFTokenHelper.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.QuickCalcCache
 import setup.BaseSpec
-import setup.QuickCalcCacheSetup._
+import setup.QuickCalcCacheSetup.*
 import uk.gov.hmrc.http.HeaderNames
 
 import scala.concurrent.Future
 
-class RemoveItemControllerSpec
-    extends BaseSpec
-    with TryValues
-    with ScalaFutures
-    with IntegrationPatience
-    with CSRFTestHelper {
+class RemoveItemControllerSpec extends BaseSpec with TryValues with ScalaFutures with IntegrationPatience with CSRFTestHelper {
 
-  val taxCodeQueryParam             = "taxcode"
-  val studentLoansQueryParam        = "student-loans"
-  val postgraduateLoansQueryParam   = "postgraduate-loans"
+  val taxCodeQueryParam = "taxcode"
+  val studentLoansQueryParam = "student-loans"
+  val postgraduateLoansQueryParam = "postgraduate-loans"
   val pensionContributionQueryParam = "pension-contributions"
-  val formProvider                  = new RemoveItemFormProvider()
+  val formProvider = new RemoveItemFormProvider()
   val form: Form[Boolean] = formProvider(taxCodeQueryParam)
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
@@ -64,7 +59,7 @@ class RemoveItemControllerSpec
       .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   def messagesThing(
-    app:  Application,
+    app: Application,
     lang: String = "en"
   ): Messages =
     if (lang == "en")
@@ -120,7 +115,7 @@ class RemoveItemControllerSpec
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm.url
+        redirectLocation(result).get mustEqual routes.SalaryController.showSalaryForm().url
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
       }
@@ -132,8 +127,8 @@ class RemoveItemControllerSpec
 
     def return303(
       expectedAggregate: QuickCalcAggregateInput,
-      fetchResponse:     Option[QuickCalcAggregateInput],
-      removeItem:        String
+      fetchResponse: Option[QuickCalcAggregateInput],
+      removeItem: String
     ) = {
       SharedMetricRegistries.clear()
       val mockCache = MockitoSugar.mock[QuickCalcCache]
@@ -151,7 +146,7 @@ class RemoveItemControllerSpec
         val request = FakeRequest(
           POST,
           routes.RemoveItemController.submitRemoveItemForm(removeItem).url
-        ).withFormUrlEncodedBody(form.bind(formData).data.toSeq: _*)
+        ).withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
         val result = route(application, request).get
@@ -174,11 +169,13 @@ class RemoveItemControllerSpec
         return303(
           cacheCompleteYearly.get.copy(savedPensionContributions = None),
           cacheCompleteYearly.map(
-            _.copy(savedPensionContributions = Some(
-              PensionContributions(gaveUsPercentageAmount    = true,
-                                   monthlyContributionAmount = Some(BigDecimal(12)),
-                                   yearlyContributionAmount  = Some(BigDecimal(144)))
-            )
+            _.copy(savedPensionContributions =
+              Some(
+                PensionContributions(gaveUsPercentageAmount    = true,
+                                     monthlyContributionAmount = Some(BigDecimal(12)),
+                                     yearlyContributionAmount  = Some(BigDecimal(144))
+                                    )
+              )
             )
           ),
           pensionContributionQueryParam
@@ -189,9 +186,10 @@ class RemoveItemControllerSpec
         return303(
           cacheCompleteYearly.get.copy(savedStudentLoanContributions = None),
           cacheCompleteYearly.map(
-            _.copy(savedStudentLoanContributions = Some(
-              StudentLoanContributions(studentLoanPlan = Some(PlanOne))
-            )
+            _.copy(savedStudentLoanContributions =
+              Some(
+                StudentLoanContributions(studentLoanPlan = Some(PlanOne))
+              )
             )
           ),
           studentLoansQueryParam
@@ -202,9 +200,10 @@ class RemoveItemControllerSpec
         return303(
           cacheCompleteYearly.get.copy(savedPostGraduateLoanContributions = None),
           cacheCompleteYearly.map(
-            _.copy(savedPostGraduateLoanContributions = Some(
-              PostgraduateLoanContributions(hasPostgraduatePlan = Some(true))
-            )
+            _.copy(savedPostGraduateLoanContributions =
+              Some(
+                PostgraduateLoanContributions(hasPostgraduatePlan = Some(true))
+              )
             )
           ),
           postgraduateLoansQueryParam
@@ -214,7 +213,7 @@ class RemoveItemControllerSpec
 
     def return400(
       fetchResponse: Option[QuickCalcAggregateInput],
-      lang:          String = "en"
+      lang: String = "en"
     ) = {
       SharedMetricRegistries.clear()
       val mockCache = MockitoSugar.mock[QuickCalcCache]
@@ -231,7 +230,7 @@ class RemoveItemControllerSpec
         val request = FakeRequest(
           POST,
           routes.RemoveItemController.submitRemoveItemForm(taxCodeQueryParam).url
-        ).withFormUrlEncodedBody(form.data.toSeq: _*)
+        ).withFormUrlEncodedBody(form.data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
@@ -245,7 +244,7 @@ class RemoveItemControllerSpec
         val errorHeader =
           parseHtml.getElementsByClass("govuk-error-summary__title").text()
         val errorMessageLink = parseHtml.getElementsByClass("govuk-list govuk-error-summary__list").text()
-        val errorMessage     = parseHtml.getElementsByClass("govuk-error-message").text()
+        val errorMessage = parseHtml.getElementsByClass("govuk-error-message").text()
 
         errorHeader mustEqual messages("error.summary.title")
         errorMessageLink.contains(messages("quick_calc.remove_tax_code_error")) mustEqual true
@@ -278,8 +277,8 @@ class RemoveItemControllerSpec
   "Submit removeItemForm in welsh should" when {
     def return200(
       removeItem: String,
-      item:       String
-    ) {
+      item: String
+    ) = {
       SharedMetricRegistries.clear()
 
       val mockCache = MockitoSugar.mock[QuickCalcCache]
@@ -302,10 +301,10 @@ class RemoveItemControllerSpec
         val result = route(application, request).get
         val doc: Document = Jsoup.parse(contentAsString(result))
 
-        val header      = doc.select(".govuk-header").text
-        val betaBanner  = doc.select(".govuk-phase-banner").text
-        val heading     = doc.select(".govuk-fieldset__heading").text
-        val button      = doc.select(".govuk-button").text
+        val header = doc.select(".govuk-header").text
+        val betaBanner = doc.select(".govuk-phase-banner").text
+        val heading = doc.select(".govuk-fieldset__heading").text
+        val button = doc.select(".govuk-button").text
         val deskproLink = doc.select(".govuk-link")
 
         header     must include(messages("quick_calc.header.title"))

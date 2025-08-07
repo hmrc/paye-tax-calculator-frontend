@@ -32,9 +32,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 case class QuickCalcCacheMongo @Inject() (
-  mongo:                     MongoComponent,
-  appConfig:                 AppConfig,
-  clock:                     Clock
+  mongo: MongoComponent,
+  appConfig: AppConfig,
+  clock: Clock
 )(implicit executionContext: ExecutionContext)
     extends PlayMongoRepository[QuickCalcMongoCache](
       collectionName = "quickCalcCache",
@@ -45,12 +45,14 @@ case class QuickCalcCacheMongo @Inject() (
                    IndexOptions()
                      .background(false)
                      .name("createdAt")
-                     .expireAfter(appConfig.mongoTtl, TimeUnit.SECONDS)),
+                     .expireAfter(appConfig.mongoTtl, TimeUnit.SECONDS)
+                  ),
         IndexModel(ascending("id"),
                    IndexOptions()
                      .background(false)
                      .name("id")
-                     .unique(true))
+                     .unique(true)
+                  )
       )
     ) {
 
@@ -58,11 +60,9 @@ case class QuickCalcCacheMongo @Inject() (
 
   def add(quickCalcMongoCache: QuickCalcMongoCache): Future[Done] = {
 
-    val updatedQuickCalcMongoCache = quickCalcMongoCache copy (createdAt = Instant.now(clock))
+    val updatedQuickCalcMongoCache = quickCalcMongoCache.copy(createdAt = Instant.now(clock))
     collection
-      .replaceOne(filter      = byId(updatedQuickCalcMongoCache.id),
-                  replacement = updatedQuickCalcMongoCache,
-                  options     = ReplaceOptions().upsert(true))
+      .replaceOne(filter = byId(updatedQuickCalcMongoCache.id), replacement = updatedQuickCalcMongoCache, options = ReplaceOptions().upsert(true))
       .toFuture()
       .map(_ => Done)
   }

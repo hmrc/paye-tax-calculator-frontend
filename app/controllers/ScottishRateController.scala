@@ -41,8 +41,7 @@ class ScottishRateController @Inject() (
   scottishRateView:              ScottishRateView,
   scottishRateFormProvider:      ScottishRateFormProvider,
   defaultTaxCodeProvider:        DefaultTaxCodeProvider
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
+)(implicit val appConfig:        AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -90,7 +89,7 @@ class ScottishRateController @Inject() (
                 )
             updatedAggregate
               .map(cache.save)
-              .map(_ => Redirect(routes.YouHaveToldUsNewController.summary))
+              .map(_ => Redirect(routes.YouHaveToldUsNewController.summary()))
           }
         )
     }

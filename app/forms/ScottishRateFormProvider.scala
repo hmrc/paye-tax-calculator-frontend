@@ -19,14 +19,14 @@ package forms
 import javax.inject.Inject
 import models.ScottishRate
 import play.api.data.Form
-import play.api.data.Forms._
-import play.api.data.format.Formats._
+import play.api.data.Forms.*
+import play.api.data.format.Formats.*
 
 class ScottishRateFormProvider @Inject() () {
 
   def apply(): Form[ScottishRate] = Form(
     mapping(
       "payScottishRate" -> optional(of[Boolean])
-    )(ScottishRate.apply)(ScottishRate.unapply)
+    )(ScottishRate.apply)(sr => Some(sr.payScottishRate))
   )
 }

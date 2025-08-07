@@ -33,14 +33,13 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class RemoveItemController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  navigator:                     Navigator,
-  removeItemView:                RemoveItemView,
-  removeTaxCodeFormProvider:     RemoveItemFormProvider
-)(implicit val app:              AppConfig,
-  implicit val executionContext: ExecutionContext)
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  navigator: Navigator,
+  removeItemView: RemoveItemView,
+  removeTaxCodeFormProvider: RemoveItemFormProvider
+)(implicit val app: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -73,34 +72,33 @@ class RemoveItemController @Inject() (
                 BadRequest(removeItemView(formWithErrors, Nil, option))
             },
           removeItemBoolean =>
-            cache.fetchAndGetEntry().flatMap {
-              case Some(aggregate) =>
-                val updatedAggregate = if (removeItemBoolean) {
-                  if (option == "taxcode") {
-                    aggregate
-                      .copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
-                  } else if (option == "student-loans") {
-                    aggregate
-                      .copy(savedStudentLoanContributions = None)
-                  } else if (option == "postgraduate-loans") {
-                    aggregate
-                      .copy(savedPostGraduateLoanContributions = None)
-                  } else {
-                    aggregate
-                      .copy(savedPensionContributions = None)
-                  }
+            cache.fetchAndGetEntry().flatMap { case Some(aggregate) =>
+              val updatedAggregate = if (removeItemBoolean) {
+                if (option == "taxcode") {
+                  aggregate
+                    .copy(savedTaxCode = aggregate.savedTaxCode.map(_.copy(taxCode = None, gaveUsTaxCode = false)))
+                } else if (option == "student-loans") {
+                  aggregate
+                    .copy(savedStudentLoanContributions = None)
+                } else if (option == "postgraduate-loans") {
+                  aggregate
+                    .copy(savedPostGraduateLoanContributions = None)
                 } else {
                   aggregate
+                    .copy(savedPensionContributions = None)
                 }
-                cache.save(updatedAggregate).map { _ =>
-                  Redirect(
-                    navigator.nextPageOrSummaryIfAllQuestionsAnswered(
-                      updatedAggregate
-                    ) {
-                      routes.YouHaveToldUsNewController.summary
-                    }()
-                  )
-                }
+              } else {
+                aggregate
+              }
+              cache.save(updatedAggregate).map { _ =>
+                Redirect(
+                  navigator.nextPageOrSummaryIfAllQuestionsAnswered(
+                    updatedAggregate
+                  ) {
+                    routes.YouHaveToldUsNewController.summary()
+                  }()
+                )
+              }
             }
         )
     }

@@ -22,7 +22,7 @@ import javax.inject.Inject
 import models.Days
 import play.api.data.Form
 import play.api.data.Forms.{mapping, of}
-import play.api.data.format.Formats._
+import play.api.data.format.Formats.*
 
 class SalaryInDaysFormProvider @Inject() () {
 
@@ -30,6 +30,6 @@ class SalaryInDaysFormProvider @Inject() () {
     mapping(
       "amount"          -> of[BigDecimal],
       "how-many-a-week" -> of(CustomFormatters.dayValidation)
-    )(Days.apply)(Days.unapply)
+    )(Days.apply)(days => Some((days.amount, days.howManyAWeek)))
   )
 }

@@ -34,14 +34,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class StudentLoanContributionsController @Inject() (
-  override val messagesApi:      MessagesApi,
-  cache:                         QuickCalcCache,
-  val controllerComponents:      MessagesControllerComponents,
-  navigator:                     Navigator,
-  studentLoansView:              StudentLoansContributionView,
-  studentLoansFormProvider:      StudentLoansFormProvider
-)(implicit val appConfig:        AppConfig,
-  implicit val executionContext: ExecutionContext)
+  override val messagesApi: MessagesApi,
+  cache: QuickCalcCache,
+  val controllerComponents: MessagesControllerComponents,
+  navigator: Navigator,
+  studentLoansView: StudentLoansContributionView,
+  studentLoansFormProvider: StudentLoansFormProvider
+)(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with ActionWithSessionId
@@ -92,7 +91,7 @@ class StudentLoanContributionsController @Inject() (
               .save(updatedAgg)
               .map(_ =>
                 Redirect(navigator.nextPageOrSummaryIfAllQuestionsAnswered(updatedAgg) {
-                  routes.YouHaveToldUsNewController.summary
+                  routes.YouHaveToldUsNewController.summary()
                 }())
               )
           )

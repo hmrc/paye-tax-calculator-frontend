@@ -175,7 +175,7 @@ else if(item.label == "about_pensions_contributions" && !pensionContributionsExi
             } else if(!givenPensionPercentage && item.label == "about_pensions_contributions"){
             Seq(
                 ActionItem(
-                href = controllers.routes.PensionContributionsFixedController.showPensionContributionForm.url,
+                href = controllers.routes.PensionContributionsFixedController.showPensionContributionForm().url,
                 content = Text(Messages("quick_calc.you_have_told_us.edit")),
                 visuallyHiddenText = Some(Messages(s"quick_calc.you_have_told_us.additional_questions.${item.label}.label")),
                 attributes = Map("id" -> s"change-${item.label}-link")
@@ -215,7 +215,7 @@ s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warning
 }
 
 @backButtonUrl = @{
-        controllers.routes.StatePensionController.showStatePensionForm.url
+        controllers.routes.StatePensionController.showStatePensionForm().url
 }
 
 @govukTemplate(Some(titleNoForm(Messages("quick_calc.you_have_told_us.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
@@ -236,7 +236,7 @@ s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warning
 
     @govukSummaryList(SummaryList(rows = additionalQuestionRows))
 
-    @formHelper(action = routes.ShowResultsController.showResult) {
+    @formHelper(action = routes.ShowResultsController.showResult()) {
         @button("calculate_take_home_pay", Some("button-get-results"))
     }
 }
