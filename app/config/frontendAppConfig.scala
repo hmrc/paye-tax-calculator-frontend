@@ -27,7 +27,7 @@ trait AppConfig {
   val host: String
   val appName: String
   val features: Features
-  val betaFeedbackUrl: String
+  def betaFeedbackUrl: String
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
   val checkStatePensionAge: String
@@ -52,8 +52,16 @@ class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
   override val appName: String = config.get[String]("appName")
   override val features = new Features()(config)
 
-  override val betaFeedbackUrl: String =
+  private def loadConfig(key: String): String =
+    config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+
+  private val contactHost: String = loadConfig(s"contact-frontend.host")
+  private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
+
+  override def betaFeedbackUrl: String = {
+    println(s"contactHost = $contactHost")
     s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  }
 
   override val reportAProblemPartialUrl: String =
     s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
@@ -61,12 +69,7 @@ class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
   override val reportAProblemNonJSUrl: String =
     s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
-  private val contactHost: String = loadConfig(s"contact-frontend.host")
-  private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
   override val checkStatePensionAge: String = config.get[String]("urls.checkStatePensionAge")
-
-  private def loadConfig(key: String): String =
-    config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
   override val cookies: String = host + config.get[String]("urls.footer.cookies")
   override val privacy: String = host + config.get[String]("urls.footer.privacy")

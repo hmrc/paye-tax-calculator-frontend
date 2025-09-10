@@ -19,24 +19,24 @@ package forms
 import play.api.libs.json.{JsString, Json}
 import setup.BaseSpec
 
-class StudentLoanPlanSpec extends BaseSpec{
+class StudentLoanPlanSpec extends BaseSpec {
 
-    "StudentLoanPlan.PlanOne" should {
+  "StudentLoanPlan.PlanOne" should {
 
-      "serialize to the correct JSON" in {
-        Json.toJson(PlanOne) mustBe Json.obj(StudentLoanPlan.id -> PlanOne.value)
-      }
-
-      "serialize to the correct JSON when using submissionWrites" in {
-        Json.toJson(PlanOne)(PlanOne.submissionWrites) mustBe JsString(PlanOne.value)
-      }
-
-      "deserialize from the correct JSON" in {
-        Json.obj(StudentLoanPlan.id -> PlanOne.value).as[StudentLoanPlan] mustBe PlanOne
-      }
+    "serialize to the correct JSON" in {
+      Json.toJson(PlanOne) mustBe Json.obj(StudentLoanPlan.id -> PlanOne.value)
     }
 
-   "StudentLoanPlan.PlanTwo" should {
+    "serialize to the correct JSON when using submissionWrites" in {
+      Json.toJson(PlanOne)(PlanOne.submissionWrites) mustBe JsString(PlanOne.value)
+    }
+
+    "deserialize from the correct JSON" in {
+      Json.obj(StudentLoanPlan.id -> PlanOne.value).as[StudentLoanPlan] mustBe PlanOne
+    }
+  }
+
+  "StudentLoanPlan.PlanTwo" should {
 
     "serialize to the correct JSON" in {
       Json.toJson(PlanTwo) mustBe Json.obj(StudentLoanPlan.id -> PlanTwo.value)
@@ -49,9 +49,9 @@ class StudentLoanPlanSpec extends BaseSpec{
     "deserialize from the correct JSON" in {
       Json.obj(StudentLoanPlan.id -> PlanTwo.value).as[StudentLoanPlan] mustBe PlanTwo
     }
-   }
+  }
 
-   "StudentLoanPlan.PlanFour" should {
+  "StudentLoanPlan.PlanFour" should {
 
     "serialize to the correct JSON" in {
       Json.toJson(PlanFour) mustBe Json.obj(StudentLoanPlan.id -> PlanFour.value)
@@ -64,9 +64,9 @@ class StudentLoanPlanSpec extends BaseSpec{
     "deserialize from the correct JSON" in {
       Json.obj(StudentLoanPlan.id -> PlanFour.value).as[StudentLoanPlan] mustBe PlanFour
     }
-   }
+  }
 
-   "StudentLoanPlan.NoneOfThese" should {
+  "StudentLoanPlan.NoneOfThese" should {
 
     "serialize to the correct JSON" in {
       Json.toJson(NoneOfThese) mustBe Json.obj(StudentLoanPlan.id -> NoneOfThese.value)
@@ -79,6 +79,6 @@ class StudentLoanPlanSpec extends BaseSpec{
     "deserialize from the correct JSON" in {
       Json.obj(StudentLoanPlan.id -> NoneOfThese.value).as[StudentLoanPlan] mustBe NoneOfThese
     }
-   }
+  }
 
 }

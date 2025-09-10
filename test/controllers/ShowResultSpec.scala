@@ -22,7 +22,7 @@ import models.{QuickCalcAggregateInput, Salary, StudentLoanContributions}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, contains}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, TryValues}
 import org.scalatest.concurrent.IntegrationPatience
@@ -110,6 +110,8 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         val sidebarHeader = doc.select(".govuk-grid-column-one-third > .govuk-heading-s").text
         val sidebarBullets = doc.select(".govuk-list--bullet").get(0).text()
         val warningText = doc.select(".govuk-warning-text").text()
+        val feedbackLink = doc.select(".govuk-link").attr("href")
+
         val listValues = doc
           .select(".govuk-summary-list")
           .iterator()
@@ -175,7 +177,9 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
 
         if (taxableIncome.isDefined)
           taxableIncome mustEqual fetchTaxableIncome
-
+          
+        feedbackLink  mustNot include("null")
+        feedbackLink mustBe("http://localhost:9250/contact/beta-feedback-unauthenticated?service=PayeTaxCalculator")
       }
     }
 
