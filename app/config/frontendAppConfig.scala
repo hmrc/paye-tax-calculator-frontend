@@ -59,7 +59,6 @@ class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
   private val contactFormServiceIdentifier: String = "PayeTaxCalculator"
 
   override def betaFeedbackUrl: String = {
-    println(s"contactHost = $contactHost")
     s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
   }
 

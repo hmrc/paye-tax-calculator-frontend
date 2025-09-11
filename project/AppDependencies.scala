@@ -4,7 +4,7 @@ import sbt.*
 
 object AppDependencies {
 
-  private val bootstrapPlay30Version = "9.18.0"
+  private val bootstrapPlay30Version = "10.1.0"
   private val taxYearVersion = "6.0.0"
   private val taxKalcVersion = "2.15.0"
   private val hmrcFrontend = "12.8.0"
