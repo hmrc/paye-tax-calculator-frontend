@@ -9,7 +9,12 @@
 
 ## Run the application locally
 
-To run the application execute
+To run the application
+## Start this service in service manager
+```sm2 -start CONTACT_FRONTEND```
+
+
+## Execute the service
 
 ```
 sbt run
