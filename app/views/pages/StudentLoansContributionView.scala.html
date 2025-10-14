@@ -38,7 +38,7 @@
 @(studentLoansForm: Form[StudentLoanContributions])(implicit request: RequestHeader, messages: Messages)
 
 @studentLoansLabels = @{
-        Seq("plan1", "plan2","plan4", "noneOfThese")
+        Seq("plan1", "plan2","plan4", "plan5", "noneOfThese")
 }
 
 @radioFieldStudentLoan = @{
@@ -64,6 +64,12 @@
                     label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.plan4.label")))),
                     value = Some(StudentLoanPlanForm.planFour),
                     checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.planFour)
+                ),
+                RadioItem(
+                content = Text(Messages(s"quick_calc.salary.studentLoan.plan5.text")),
+                label = Some(Label(content = Text(Messages(s"quick_calc.salary.studentLoan.plan5.label")))),
+                value = Some(StudentLoanPlanForm.planFive),
+                checked = radioFieldStudentLoan.value.contains(StudentLoanPlanForm.planFive)
                 ),
                 RadioItem(
                     content = Text(Messages(s"quick_calc.salary.studentLoan.noneOfThese.text")),

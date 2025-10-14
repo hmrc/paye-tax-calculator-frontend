@@ -38,6 +38,7 @@ object StudentLoanPlan {
     case PlanOne.value     => PlanOne
     case PlanTwo.value     => PlanTwo
     case PlanFour.value    => PlanFour
+    case PlanFive.value    => PlanFive
     case NoneOfThese.value => NoneOfThese
   }
 
@@ -75,6 +76,18 @@ object PlanFour extends StudentLoanPlan {
   }
 
   val submissionWrites: Writes[PlanFour.type] = Writes { _ =>
+    JsString(value)
+  }
+}
+
+object PlanFive extends StudentLoanPlan {
+  override val value: String = "plan five"
+
+  implicit val writes: Writes[PlanFive.type] = Writes { _ =>
+    Json.obj("studentLoanPlan" -> value)
+  }
+
+  val submissionWrites: Writes[PlanFive.type] = Writes { _ =>
     JsString(value)
   }
 }

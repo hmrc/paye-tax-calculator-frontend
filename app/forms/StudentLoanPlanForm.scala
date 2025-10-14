@@ -25,6 +25,7 @@ object StudentLoanPlanForm {
   val planOne:     String = "plan one"
   val planTwo:     String = "plan two"
   val planFour:    String = "plan four"
+  val planFive:    String = "plan five"
   val noneOfThese: String = "none of these"
 
   val studentLoanPlanFormatter: Formatter[Option[StudentLoanPlan]] = new Formatter[Option[StudentLoanPlan]] {
@@ -37,6 +38,7 @@ object StudentLoanPlanForm {
         case Some(`planOne`)     => Right(Some(PlanOne))
         case Some(`planTwo`)     => Right(Some(PlanTwo))
         case Some(`planFour`)    => Right(Some(PlanFour))
+        case Some(`planFive`)    => Right(Some(PlanFive))
         case Some(`noneOfThese`) => Right(Some(NoneOfThese))
         case None                => Right(None) // Return Right(None) for unrecognized input
       }
@@ -49,6 +51,7 @@ object StudentLoanPlanForm {
         case Some(PlanOne)     => planOne
         case Some(PlanTwo)     => planTwo
         case Some(PlanFour)    => planFour
+        case Some(PlanFive)    => planFive 
         case Some(NoneOfThese) => noneOfThese
       }
       Map(key -> stringValue)

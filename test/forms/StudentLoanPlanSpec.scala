@@ -66,6 +66,21 @@ class StudentLoanPlanSpec extends BaseSpec {
     }
   }
 
+  "StudentLoanPlan.PlanFive" should {
+
+    "serialize to the correct JSON" in {
+      Json.toJson(PlanFive) mustBe Json.obj(StudentLoanPlan.id -> PlanFive.value)
+    }
+
+    "serialize to the correct JSON when using submissionWrites" in {
+      Json.toJson(PlanFive)(PlanFive.submissionWrites) mustBe JsString(PlanFive.value)
+    }
+
+    "deserialize from the correct JSON" in {
+      Json.obj(StudentLoanPlan.id -> PlanFive.value).as[StudentLoanPlan] mustBe PlanFive
+    }
+  }
+
   "StudentLoanPlan.NoneOfThese" should {
 
     "serialize to the correct JSON" in {

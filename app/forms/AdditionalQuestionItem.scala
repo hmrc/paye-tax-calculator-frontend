@@ -127,6 +127,7 @@ object AdditionalQuestionItem {
               case Some(PlanOne)     => Messages("quick_calc.salary.studentLoan.plan1.text")
               case Some(PlanTwo)     => Messages("quick_calc.salary.studentLoan.plan2.text")
               case Some(PlanFour)    => Messages("quick_calc.salary.studentLoan.plan4.text")
+              case Some(PlanFive)    => Messages("quick_calc.salary.studentLoan.plan5.text")
               case Some(NoneOfThese) => Messages("not_provided")
               case _                 => Messages("not_provided")
             }

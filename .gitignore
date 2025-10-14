@@ -39,3 +39,4 @@ app-2.11/
 src/
 test-2.11/
 test/resources/
+.metals
