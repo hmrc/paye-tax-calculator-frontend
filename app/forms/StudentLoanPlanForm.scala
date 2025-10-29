@@ -22,16 +22,16 @@ import play.api.data.format.Formatter
 object StudentLoanPlanForm {
 
   val studentLoanPlan = "studentLoanPlan"
-  val planOne:     String = "plan one"
-  val planTwo:     String = "plan two"
-  val planFour:    String = "plan four"
-  val planFive:    String = "plan five"
+  val planOne: String = "plan one"
+  val planTwo: String = "plan two"
+  val planFour: String = "plan four"
+  val planFive: String = "plan five"
   val noneOfThese: String = "none of these"
 
   val studentLoanPlanFormatter: Formatter[Option[StudentLoanPlan]] = new Formatter[Option[StudentLoanPlan]] {
 
     override def bind(
-      key:  String,
+      key: String,
       data: Map[String, String]
     ): Either[Seq[FormError], Option[StudentLoanPlan]] =
       data.get(key) match {
@@ -40,18 +40,18 @@ object StudentLoanPlanForm {
         case Some(`planFour`)    => Right(Some(PlanFour))
         case Some(`planFive`)    => Right(Some(PlanFive))
         case Some(`noneOfThese`) => Right(Some(NoneOfThese))
-        case None                => Right(None) // Return Right(None) for unrecognized input
+        case _                   => Right(None) // Return Right(None) for unrecognized input
       }
 
     override def unbind(
-      key:   String,
+      key: String,
       value: Option[StudentLoanPlan]
     ): Map[String, String] = {
       val stringValue = value match {
         case Some(PlanOne)     => planOne
         case Some(PlanTwo)     => planTwo
         case Some(PlanFour)    => planFour
-        case Some(PlanFive)    => planFive 
+        case Some(PlanFive)    => planFive
         case Some(NoneOfThese) => noneOfThese
       }
       Map(key -> stringValue)

@@ -16,6 +16,7 @@
 
 package controllers
 
+import forms.PlanFive
 import models.{QuickCalcAggregateInput, ScottishRate}
 import org.apache.pekko.Done
 import org.jsoup.Jsoup
@@ -98,6 +99,44 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
           .getElementsByClass("govuk-summary-list__value")
           .get(0)
           .text() mustBe expectedScottishAnswerYes
+      }
+    }
+
+    "return aggregate data of : Earning £50,000 Yearly Salary, NOT (Over State Pension), no Tax code and student plan type 5" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any()))
+        .thenReturn(Future.successful(createStudentLoanTestData(testSalaryForStudentLoanPlan5(50000), PlanFive)))
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.YouHaveToldUsNewController.summary().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustBe OK
+
+        val responseBody = contentAsString(result)
+        val parseHtml = Jsoup.parse(responseBody)
+
+        val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
+        actualTable.size() mustBe 7
+
+        actualTable
+          .get(0)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe "£50,000 a year"
+        actualTable.get(1).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
+        actualTable
+          .get(5)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe "Plan 5"
       }
     }
 

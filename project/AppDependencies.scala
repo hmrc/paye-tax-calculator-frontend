@@ -6,7 +6,7 @@ object AppDependencies {
 
   private val bootstrapPlay30Version = "10.2.0"
   private val taxYearVersion = "6.0.0"
-  private val taxKalcVersion = "2.15.0"
+  private val taxKalcVersion = "2.15.1"
   private val hmrcFrontend = "12.17.0"
   private val mongoVersion = "2.9.0"
 
