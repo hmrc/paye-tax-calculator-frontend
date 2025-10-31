@@ -17,7 +17,7 @@
 package controllers
 
 import config.features.Features
-import forms.{PlanFour, PlanTwo, TaxResult, Yearly}
+import forms.{PlanFive, PlanFour, PlanTwo, TaxResult, Yearly}
 import models.{QuickCalcAggregateInput, Salary, StudentLoanContributions}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -177,9 +177,9 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
 
         if (taxableIncome.isDefined)
           taxableIncome mustEqual fetchTaxableIncome
-          
-        feedbackLink  mustNot include("null")
-        feedbackLink mustBe("http://localhost:9250/contact/beta-feedback-unauthenticated?service=PayeTaxCalculator")
+
+        feedbackLink mustNot include("null")
+        feedbackLink mustBe "http://localhost:9250/contact/beta-feedback-unauthenticated?service=PayeTaxCalculator"
       }
     }
 
@@ -459,28 +459,17 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
           .withHeaders(HeaderNames.xSessionId -> "test")
           .withCSRFToken
 
-        val hasStudentLoan =
-          fetchResponse.flatMap(_.savedStudentLoanContributions.flatMap(_.studentLoanPlan)).getOrElse(false)
-
         val result = route(application, request).get
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val listValues = doc
-          .select(".govuk-summary-list")
-          .iterator()
-          .asScala
-          .toList
-          .head
-          .select(".govuk-summary-list__value")
-          .text()
 
-        def getCalculation(str: String): Option[String] = {
-          val words = str.trim.split("\\s+").filter(_.nonEmpty)
-          if (words.length >= 3) Some(words(2)) else None
-        }
-        if (hasStudentLoan != false) {
-          val loanContribution = getCalculation(listValues)
-          loanContribution mustEqual contributions
-        }
+        val rows = doc.select(".govuk-summary-list__row").asScala
+
+        val loanRow: Option[String] = rows
+          .find(row => row.select(".govuk-summary-list__key").text().trim.equalsIgnoreCase("Student loan"))
+          .map(row => row.select(".govuk-summary-list__value").text().trim)
+
+        loanRow mustEqual contributions
+
       }
     }
 
@@ -526,6 +515,58 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
             ),
             Some("£5,152.00")
           )
+        }
+
+        "Student has opted for plan 5" when {
+
+          "Annual salary is £21,199.92" in {
+            studentLoanCalc(
+              createStudentLoanTestData(testSalaryForStudentLoanPlan5(25133.32), PlanFive),
+              None
+            )
+          }
+
+          "Annual salary is £21,200.04" in {
+            studentLoanCalc(
+              createStudentLoanTestData(testSalaryForStudentLoanPlan5(25133.40), PlanFive),
+              Some("£12.00")
+            )
+          }
+
+          "Annual salary is £25,134.60" in {
+            studentLoanCalc(
+              createStudentLoanTestData(testSalaryForStudentLoanPlan5(25134.6), PlanFive),
+              Some("£12.00")
+            )
+          }
+
+          "Annual salary is £25,533.36" in {
+            studentLoanCalc(
+              createStudentLoanTestData(testSalaryForStudentLoanPlan5(25533.36), PlanFive),
+              Some("£48.00")
+            )
+          }
+
+          "Annual salary is £30,999.96" in {
+            studentLoanCalc(
+              createStudentLoanTestData(testSalaryForStudentLoanPlan5(30999.96), PlanFive),
+              Some("£540.00")
+            )
+          }
+
+          "Annual salary is £57,266.64" in {
+            studentLoanCalc(
+              createStudentLoanTestData(testSalaryForStudentLoanPlan5(57266.64), PlanFive),
+              Some("£2,904.00")
+            )
+          }
+
+          "Annual salary is £101,133.36" in {
+            studentLoanCalc(
+              createStudentLoanTestData(testSalaryForStudentLoanPlan5(101133.36), PlanFive),
+              Some("£6,852.00")
+            )
+          }
         }
       }
 

@@ -4,11 +4,11 @@ import sbt.*
 
 object AppDependencies {
 
-  private val bootstrapPlay30Version = "10.2.0"
+  private val bootstrapPlay30Version = "10.3.0"
   private val taxYearVersion = "6.0.0"
-  private val taxKalcVersion = "2.15.0"
-  private val hmrcFrontend = "12.17.0"
-  private val mongoVersion = "2.9.0"
+  private val taxKalcVersion = "2.15.1"
+  private val hmrcFrontend = "12.19.0"
+  private val mongoVersion = "2.10.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
@@ -21,8 +21,8 @@ object AppDependencies {
   )
 
   private val scalaTestPlusMockitoVersion = "3.2.12.0"
-  private val scalacheckVersion = "1.18.1"
-  private val scalamockScalaTestSupportVersion = "7.4.0"
+  private val scalacheckVersion = "1.19.0"
+  private val scalamockScalaTestSupportVersion = "7.5.0"
 
   def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-test-play-30"  % bootstrapPlay30Version           % scope,

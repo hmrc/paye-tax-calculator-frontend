@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
 import utils.GetCurrentTaxYear.getTaxYear
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import scala.math.BigDecimal.RoundingMode
 
 object TaxResult {
@@ -56,7 +56,7 @@ object TaxResult {
 
   def taxCalculation(
     quickCalcAggregateInput: QuickCalcAggregateInput,
-    defaultTaxCodeProvider:  DefaultTaxCodeProvider
+    defaultTaxCodeProvider: DefaultTaxCodeProvider
   ): CalculatorResponse =
     new Calculator(
       extractTaxCode(quickCalcAggregateInput, defaultTaxCodeProvider),
@@ -81,8 +81,8 @@ object TaxResult {
     ).run()
 
   def convertWagesToYearly(
-    wages:             BigDecimal,
-    period:            SalaryPeriod,
+    wages: BigDecimal,
+    period: SalaryPeriod,
     hoursOrDaysWorked: Option[BigDecimal] = None
   ): BigDecimal = {
 
@@ -111,7 +111,8 @@ object TaxResult {
   ): Option[PensionContribution] =
     (quickCalcAggregateInput.savedPensionContributions.map(_.gaveUsPercentageAmount),
      quickCalcAggregateInput.savedPensionContributions
-       .flatMap(_.monthlyContributionAmount)) match {
+       .flatMap(_.monthlyContributionAmount)
+    ) match {
       case (Some(true), Some(amount)) => Some(new PensionContribution(PensionMethod.PERCENTAGE, amount.toDouble))
       case (Some(false), Some(amount)) =>
         Some(new PensionContribution(PensionMethod.MONTHLY_AMOUNT_IN_POUNDS, amount.toDouble))
@@ -121,16 +122,18 @@ object TaxResult {
   private def extractStudentLoanContributions(
     quickCalcAggregateInput: QuickCalcAggregateInput
   ): Option[StudentLoanPlans] =
-    (quickCalcAggregateInput.savedStudentLoanContributions.map(_.studentLoanPlan.getOrElse("")) match {
+    quickCalcAggregateInput.savedStudentLoanContributions.map(_.studentLoanPlan.getOrElse("")) match {
       case Some(PlanOne) =>
-        Some(new StudentLoanPlans(true, false, false, extractPostGradLoan(quickCalcAggregateInput)))
+        Some(new StudentLoanPlans(true, false, false, extractPostGradLoan(quickCalcAggregateInput), false))
       case Some(PlanTwo) =>
-        Some(new StudentLoanPlans(false, true, false, extractPostGradLoan(quickCalcAggregateInput)))
+        Some(new StudentLoanPlans(false, true, false, extractPostGradLoan(quickCalcAggregateInput), false))
       case Some(PlanFour) =>
-        Some(new StudentLoanPlans(false, false, true, extractPostGradLoan(quickCalcAggregateInput)))
-      case _ => Some(new StudentLoanPlans(false, false, false, extractPostGradLoan(quickCalcAggregateInput)))
+        Some(new StudentLoanPlans(false, false, true, extractPostGradLoan(quickCalcAggregateInput), false))
+      case Some(PlanFive) =>
+        Some(new StudentLoanPlans(false, false, false, extractPostGradLoan(quickCalcAggregateInput), true))
+      case _ => Some(new StudentLoanPlans(false, false, false, extractPostGradLoan(quickCalcAggregateInput), false))
 
-    })
+    }
 
   private def extractPostGradLoan(quickCalcAggregateInput: QuickCalcAggregateInput): Boolean =
     quickCalcAggregateInput.savedPostGraduateLoanContributions match {
@@ -152,7 +155,7 @@ object TaxResult {
 
   def taxCodeCheck(
     quickCalcAggregateInput: QuickCalcAggregateInput,
-    defaultTaxCodeProvider:  DefaultTaxCodeProvider
+    defaultTaxCodeProvider: DefaultTaxCodeProvider
   ): String =
     if (quickCalcAggregateInput.savedScottishRate.exists(_.payScottishRate.getOrElse(false))) {
       defaultTaxCodeProvider.defaultScottishTaxCode
@@ -162,7 +165,7 @@ object TaxResult {
 
   def extractTaxCode(
     quickCalcAggregateInput: QuickCalcAggregateInput,
-    defaultTaxCodeProvider:  DefaultTaxCodeProvider
+    defaultTaxCodeProvider: DefaultTaxCodeProvider
   ): String = {
     val taxCode = quickCalcAggregateInput.savedTaxCode match {
       case Some(s) =>
@@ -211,11 +214,10 @@ object TaxResult {
       case _ => throw new BadRequestException(s"Invalid PayPeriod")
     }
 
-  /**
-    * This function is called "extractHours" because in "buildTaxCalc" function, the last parameter is called "hoursIn".
-    * "hoursIn" does not only means hours but can also mean days.
-    * buildTaxCalc will use the number returned to calculate the weekly gross pay from Daily or Hourly via those case classes.
-    **/
+  /** This function is called "extractHours" because in "buildTaxCalc" function, the last parameter is called "hoursIn". "hoursIn" does not only means
+    * hours but can also mean days. buildTaxCalc will use the number returned to calculate the weekly gross pay from Daily or Hourly via those case
+    * classes.
+    */
   def extractHours(quickCalcAggregateInput: QuickCalcAggregateInput): Option[BigDecimal] =
     quickCalcAggregateInput.savedSalary match {
       case Some(s) =>
@@ -230,8 +232,8 @@ object TaxResult {
   def moneyFormatter(value2: BigDecimal): String = {
     val value: BigDecimal = BigDecimal(value2.toDouble).setScale(2, RoundingMode.HALF_UP)
     val formatter = java.text.NumberFormat.getInstance
-    val money     = """(.*)\.(\d)""".r
-    val outValue  = formatter.format(value)
+    val money = """(.*)\.(\d)""".r
+    val outValue = formatter.format(value)
 
     outValue match {
       case money(_, _) => {
@@ -243,7 +245,7 @@ object TaxResult {
 
   def moneyFormatterResult(value2: BigDecimal): String = {
     val roundedValue = value2.setScale(2, RoundingMode.HALF_UP)
-    val formatter    = java.text.NumberFormat.getInstance
+    val formatter = java.text.NumberFormat.getInstance
     formatter.setMaximumFractionDigits(2)
     formatter.setMinimumFractionDigits(2)
     val formattedValue = formatter.format(roundedValue)
@@ -251,10 +253,9 @@ object TaxResult {
   }
 
   def kCodeLabel(
-    key:               String,
-    payScottishRate:   Boolean
-  )(implicit messages: Messages
-  ): String =
+    key: String,
+    payScottishRate: Boolean
+  )(implicit messages: Messages): String =
     key match {
       case str if str.startsWith("K") && !payScottishRate  => Messages("quick_calc.result.k_code.new", str.take(1))
       case str if str.startsWith("CK") && !payScottishRate => Messages("quick_calc.result.k_code.new", str.take(2))

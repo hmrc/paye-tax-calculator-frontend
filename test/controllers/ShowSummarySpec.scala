@@ -16,6 +16,7 @@
 
 package controllers
 
+import forms.{PlanFive, PlanFour, PlanTwo}
 import models.{QuickCalcAggregateInput, ScottishRate}
 import org.apache.pekko.Done
 import org.jsoup.Jsoup
@@ -32,7 +33,7 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Cookie}
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, FakeRequest as application}
 import play.api.test.Helpers.*
 import services.QuickCalcCache
 import setup.QuickCalcCacheSetup.*
@@ -98,6 +99,44 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
           .getElementsByClass("govuk-summary-list__value")
           .get(0)
           .text() mustBe expectedScottishAnswerYes
+      }
+    }
+
+    "return aggregate data of : Earning £50,000 Yearly Salary, NOT (Over State Pension), no Tax code and student plan type 5" in {
+      val mockCache = mock[QuickCalcCache]
+
+      when(mockCache.fetchAndGetEntry()(any()))
+        .thenReturn(Future.successful(createStudentLoanTestData(testSalaryForStudentLoanPlan5(50000), PlanFive)))
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.YouHaveToldUsNewController.summary().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+
+        val result = route(application, request).value
+
+        status(result) mustBe OK
+
+        val responseBody = contentAsString(result)
+        val parseHtml = Jsoup.parse(responseBody)
+
+        val actualTable = parseHtml.getElementsByClass("govuk-summary-list__row")
+        actualTable.size() mustBe 7
+
+        actualTable
+          .get(0)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe "£50,000 a year"
+        actualTable.get(1).getElementsByClass("govuk-summary-list__value").get(0).text() mustBe expectedStatePensionNO
+        actualTable
+          .get(5)
+          .getElementsByClass("govuk-summary-list__value")
+          .get(0)
+          .text() mustBe "Plan 5"
       }
     }
 
@@ -262,63 +301,86 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
       }
     }
 
-    "return 200 when the form with values populated have correct welsh translation" in {
-      val mockCache = MockitoSugar.mock[QuickCalcCache]
+    "return 200 with correct  welsh translation" when {
 
-      val expectedAggregate: QuickCalcAggregateInput = cacheCompleteYearly.get.copy(savedScottishRate = None)
+      def checkWelshTranslation(inputAggregate: Option[QuickCalcAggregateInput], planTypeText: String) = {
+        val mockCache = MockitoSugar.mock[QuickCalcCache]
 
-      when(mockCache.fetchAndGetEntry()(any())).thenReturn(
-        Future.successful(
-          cacheCompleteYearly
-            .map(
-              _.copy(savedScottishRate = Some(ScottishRate(payScottishRate = Some(true))))
-            )
+        val expectedAggregate: QuickCalcAggregateInput = inputAggregate.get.copy(savedScottishRate = None)
+
+        when(mockCache.fetchAndGetEntry()(any())).thenReturn(
+          Future.successful(
+            inputAggregate
+              .map(
+                _.copy(savedScottishRate = Some(ScottishRate(payScottishRate = Some(true))))
+              )
+          )
         )
-      )
 
-      when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())).thenReturn(Future.successful(Done))
+        when(mockCache.save(ArgumentMatchers.eq(expectedAggregate))(any())).thenReturn(Future.successful(Done))
 
-      val application = new GuiceApplicationBuilder()
-        .overrides(bind[QuickCalcCache].toInstance(mockCache))
-        .build()
+        val application = new GuiceApplicationBuilder()
+          .overrides(bind[QuickCalcCache].toInstance(mockCache))
+          .build()
 
-      implicit val messages: Messages = messagesThing(application, "cy")
+        implicit val messages: Messages = messagesThing(application, "cy")
 
-      running(application) {
+        running(application) {
 
-        val request = FakeRequest(GET, routes.YouHaveToldUsNewController.summary().url)
-          .withHeaders(HeaderNames.xSessionId -> "test")
-          .withCookies(Cookie("PLAY_LANG", "cy"))
-          .withCSRFToken
+          val request = FakeRequest(GET, routes.YouHaveToldUsNewController.summary().url)
+            .withHeaders(HeaderNames.xSessionId -> "test")
+            .withCookies(Cookie("PLAY_LANG", "cy"))
+            .withCSRFToken
 
-        val result = route(application, request).get
-        val doc: Document = Jsoup.parse(contentAsString(result))
+          val result = route(application, request).get
+          val doc: Document = Jsoup.parse(contentAsString(result))
 
-        val rows = doc.select(".govuk-summary-list__row").iterator().asScala.toList
-        rows(3).select(".govuk-summary-list__value").text() must include(
-          messages("quick_calc.you_have_told_us.scottish_rate.yes")
-        )
-        rows(3).select(".govuk-summary-list__value").text() must include(
-          messages("quick_calc.scottish_rate.payScottishRate.warning")
-        )
-        rows(4).select(".govuk-summary-list__value").text() must include(messages("label.a_month.value"))
-        rows(5).select(".govuk-summary-list__value").text() mustEqual messages(
-          "quick_calc.salary.studentLoan.plan1.text"
-        )
-        rows(6).select(".govuk-summary-list__value").text() mustEqual messages("yes")
+          val rows = doc.select(".govuk-summary-list__row").iterator().asScala.toList
+          rows(3).select(".govuk-summary-list__value").text() must include(
+            messages("quick_calc.you_have_told_us.scottish_rate.yes")
+          )
+          rows(3).select(".govuk-summary-list__value").text() must include(
+            messages("quick_calc.scottish_rate.payScottishRate.warning")
+          )
+          rows(4).select(".govuk-summary-list__value").text() must include(messages("label.a_month.value"))
+          rows(5).select(".govuk-summary-list__value").text() mustEqual messages(planTypeText)
+          rows(6).select(".govuk-summary-list__value").text() mustEqual messages("yes")
 
-        def redirectUrl(row: Element) = row.select(".govuk-link").attr("href")
+          def redirectUrl(row: Element) = row.select(".govuk-link").attr("href")
 
-        redirectUrl(rows.head) mustEqual routes.SalaryController.showSalaryForm().toString
-        redirectUrl(rows(1)) mustEqual routes.StatePensionController.showStatePensionForm().toString
-        redirectUrl(rows(2)) mustEqual routes.TaxCodeController.showTaxCodeForm().toString
-        redirectUrl(rows(3)) mustEqual routes.ScottishRateController.showScottishRateForm().toString
-        redirectUrl(rows(4)) mustEqual routes.PensionContributionsPercentageController.showPensionContributionForm().toString
-        redirectUrl(rows(5)) mustEqual routes.StudentLoanContributionsController.showStudentLoansForm().toString
-        redirectUrl(rows(6)) mustEqual routes.PostgraduateController.showPostgraduateForm().toString
+          redirectUrl(rows.head) mustEqual routes.SalaryController.showSalaryForm().toString
+          redirectUrl(rows(1)) mustEqual routes.StatePensionController.showStatePensionForm().toString
+          redirectUrl(rows(2)) mustEqual routes.TaxCodeController.showTaxCodeForm().toString
+          redirectUrl(rows(3)) mustEqual routes.ScottishRateController.showScottishRateForm().toString
+          redirectUrl(rows(4)) mustEqual routes.PensionContributionsPercentageController.showPensionContributionForm().toString
+          redirectUrl(rows(5)) mustEqual routes.StudentLoanContributionsController.showStudentLoansForm().toString
+          redirectUrl(rows(6)) mustEqual routes.PostgraduateController.showPostgraduateForm().toString
 
-        status(result) mustEqual OK
+          status(result) mustEqual OK
+        }
       }
+
+      "plan type is 1" in {
+        checkWelshTranslation(cacheCompleteYearly, "quick_calc.salary.studentLoan.plan1.text")
+      }
+
+      "plan type is 2" in {
+        checkWelshTranslation(cacheCompleteYearly.map(_.copy(savedStudentLoanContributions = studentLoanContributions(PlanTwo))),
+                              "quick_calc.salary.studentLoan.plan2.text"
+                             )
+      }
+
+      "plan type is 4" in {
+        checkWelshTranslation(cacheCompleteYearly.map(_.copy(savedStudentLoanContributions = studentLoanContributions(PlanFour))),
+                              "quick_calc.salary.studentLoan.plan4.text"
+                             )
+      }
+      "plan type is 5" in {
+        checkWelshTranslation(cacheCompleteYearly.map(_.copy(savedStudentLoanContributions = studentLoanContributions(PlanFive))),
+                              "quick_calc.salary.studentLoan.plan5.text"
+                             )
+      }
+
     }
 
   }
