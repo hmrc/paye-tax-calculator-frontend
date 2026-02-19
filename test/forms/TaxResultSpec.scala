@@ -32,21 +32,21 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
 
     "return tax code that a user has provided" in {
       val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
-      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = true, Some("K452"))), None, None, None, None)
+      val input = QuickCalcAggregateInput(None, None, None, None, Some(UserTaxCode(gaveUsTaxCode = true, Some("K452"))), None, None, None, None)
 
       extractTaxCode(input, defaultTaxCodeProvider) mustBe "K452"
     }
 
     "return the default UK tax code for 2022-23 if the user does not provide one" taggedAs Tag("2022") in {
       val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
-      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None, None, None, None)
+      val input = QuickCalcAggregateInput(None, None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None, None, None, None)
 
       extractTaxCode(input, defaultTaxCodeProvider) mustBe "1257L"
     }
 
     "return the default UK tax code for 2023-24 if the user does not provide one" taggedAs Tag("2023") in {
       val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
-      val input = QuickCalcAggregateInput(None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None, None, None, None)
+      val input = QuickCalcAggregateInput(None, None, None, None, Some(UserTaxCode(gaveUsTaxCode = false, None)), None, None, None, None)
 
       extractTaxCode(input, defaultTaxCodeProvider) mustBe "1257L"
     }
@@ -55,7 +55,7 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
       "2023"
     ) in {
       val defaultTaxCodeProvider: DefaultTaxCodeProvider = new DefaultTaxCodeProvider(mockAppConfig)
-      val input = QuickCalcAggregateInput(None, None, None, None, None, None, None, None)
+      val input = QuickCalcAggregateInput(None, None, None, None, None, None, None, None, None)
 
       extractTaxCode(input, defaultTaxCodeProvider) mustBe "1257L"
     }
@@ -64,16 +64,16 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
   "Extracting OverStatePensionAge answer from user response" should {
 
     "return true if the response is user is over state pension StatePensionView" in {
-      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(true)), None, None, None, None, None)) mustBe true
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(true)), None, None, None, None, None, None)) mustBe true
     }
 
     "return false if the response is user is not over state pension StatePensionView" in {
-      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(false)), None, None, None, None, None)) mustBe false
+      extractOverStatePensionAge(QuickCalcAggregateInput(None, None, Some(StatePension(false)), None, None, None, None, None, None)) mustBe false
     }
 
     """return an error with message with "No answer has been provided for the question: Are you over state pension StatePensionView?" if no response""" in {
       val thrown = intercept[Exception] {
-        extractOverStatePensionAge(QuickCalcAggregateInput(None, None, None, None, None, None, None, None))
+        extractOverStatePensionAge(QuickCalcAggregateInput(None, None, None, None, None, None, None, None, None))
       }
       thrown.getMessage mustBe "No answer has been provided for the question: Are you over state pension age?"
     }
@@ -83,31 +83,31 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
 
     "return if response provided is the Yearly Salary: £20000" in {
       extractSalary(
-        QuickCalcAggregateInput(Some(Salary(20000, Some(20000), None, Yearly, None, None)), None, None, None, None, None, None, None)
+        QuickCalcAggregateInput(Some(Salary(20000, Some(20000), None, Yearly, None, None)), None, None, None, None, None, None, None, None)
       ) mustBe 20000
     }
 
     "return if response provided is the Monthly Salary: £2000" in {
       extractSalary(
-        QuickCalcAggregateInput(Some(Salary(2000, Some(2000), Some(300), Monthly, None, None)), None, None, None, None, None, None, None)
+        QuickCalcAggregateInput(Some(Salary(2000, Some(2000), Some(300), Monthly, None, None)), None, None, None, None, None, None, None, None)
       ) mustBe 2000
     }
 
     "return if response provided is the Weekly Salary: £200" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(200, None, None, Weekly, None, None)), None, None, None, None, None, None, None)) mustBe 200
+      extractSalary(QuickCalcAggregateInput(Some(Salary(200, None, None, Weekly, None, None)), None, None, None, None, None, None, None, None)) mustBe 200
     }
 
     "return if response provided is the Daily Salary: £20" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(20, None, None, Daily, None, None)), None, None, None, None, None, None, None)) mustBe 20
+      extractSalary(QuickCalcAggregateInput(Some(Salary(20, None, None, Daily, None, None)), None, None, None, None, None, None, None, None)) mustBe 20
     }
 
     "return if response provided is the Hourly Salary: £2 in pence" in {
-      extractSalary(QuickCalcAggregateInput(Some(Salary(2, None, None, Hourly, None, None)), None, None, None, None, None, None, None)) mustBe 2
+      extractSalary(QuickCalcAggregateInput(Some(Salary(2, None, None, Hourly, None, None)), None, None, None, None, None, None, None, None)) mustBe 2
     }
 
     """return an error with message "No Salary has been provided" if no response""" in {
       val thrown = intercept[Exception] {
-        extractSalary(QuickCalcAggregateInput(None, None, None, None, None, None, None, None))
+        extractSalary(QuickCalcAggregateInput(None, None, None, None, None, None, None, None, None))
       }
       thrown.getMessage mustBe "No Salary has been provided."
     }
@@ -116,28 +116,28 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
   "Extracting Pay Period from user response" should {
 
     "return  if response provided is Yearly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Yearly, None, None)), None, None, None, None, None, None, None)) mustBe PayPeriod.YEARLY
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Yearly, None, None)), None, None, None, None, None, None, None, None)) mustBe PayPeriod.YEARLY
     }
 
     "return if response provided is Monthly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Monthly, None, None)), None, None, None, None, None, None, None)) mustBe PayPeriod.MONTHLY
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Monthly, None, None)), None, None, None, None, None, None, None, None)) mustBe PayPeriod.MONTHLY
     }
 
     "return if response provided is Weekly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Weekly, None, None)), None, None, None, None, None, None, None)) mustBe PayPeriod.WEEKLY
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Weekly, None, None)), None, None, None, None, None, None, None, None)) mustBe PayPeriod.WEEKLY
     }
 
     "return empty string if response is Daily" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Daily, None, None)), None, None, None, None, None, None, None)) mustBe PayPeriod.DAILY
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Daily, None, None)), None, None, None, None, None, None, None, None)) mustBe PayPeriod.DAILY
     }
 
     "return empty string if response is Hourly" in {
-      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Hourly, None, None)), None, None, None, None, None, None, None)) mustBe PayPeriod.HOURLY
+      extractPayPeriod(QuickCalcAggregateInput(Some(Salary(0, None, None, Hourly, None, None)), None, None, None, None, None, None, None, None)) mustBe PayPeriod.HOURLY
     }
 
     "return empty string if response is Every 4 weeks" in {
       extractPayPeriod(
-        QuickCalcAggregateInput(Some(Salary(0, None, None, FourWeekly, None, None)), None, None, None, None, None, None, None)
+        QuickCalcAggregateInput(Some(Salary(0, None, None, FourWeekly, None, None)), None, None, None, None, None, None, None, None)
       ) mustBe PayPeriod.FOUR_WEEKLY
     }
   }
@@ -145,23 +145,23 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
   "Extracting Hours from user response" should {
 
     "return if response is hours in Daily" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(40, None, None, Daily, Some(4.0), None)), None, None, None, None, None, None, None)) mustBe Some(
+      extractHours(QuickCalcAggregateInput(Some(Salary(40, None, None, Daily, Some(4.0), None)), None, None, None, None, None, None, None, None)) mustBe Some(
         4.0
       )
     }
 
     "return if response is hours in Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(20, None, None, Hourly, Some(10.0), None)), None, None, None, None, None, None, None)) mustBe Some(
+      extractHours(QuickCalcAggregateInput(Some(Salary(20, None, None, Hourly, Some(10.0), None)), None, None, None, None, None, None, None, None)) mustBe Some(
         10.0
       )
     }
 
     "return if response is not Daily or Hourly" in {
-      extractHours(QuickCalcAggregateInput(Some(Salary(-1, None, None, Hourly, None, None)), None, None, None, None, None, None, None)) mustBe None
+      extractHours(QuickCalcAggregateInput(Some(Salary(-1, None, None, Hourly, None, None)), None, None, None, None, None, None, None, None)) mustBe None
     }
 
     "return None if no salary present" in {
-      extractHours(QuickCalcAggregateInput(None, None, None, None, None, None, None, None)) mustBe None
+      extractHours(QuickCalcAggregateInput(None, None, None, None, None, None, None, None, None)) mustBe None
     }
   }
 

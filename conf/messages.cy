@@ -231,6 +231,11 @@ quick_calc.over_state_pension_age.yes=Iawn
 quick_calc.over_state_pension_age.no=Na
 quick_calc.over_state_pension_age_error=Dewiswch ‘Iawn’ os ydych dros oedran Pensiwn y Wladwriaeth
 
+quick_calc.scottish_resident.header= A ydych yn byw yn yr Alban?
+quick_calc.scottish_resident.yes=Iawn
+quick_calc.scottish_resident.no=Na
+quick_calc.scottish_resident_error=Select yes if you live in Scotland
+
 quick_calc.remove.student-loans= A ydych yn siŵr eich bod am dynnu’ch benthyciad myfyriwr?
 quick_calc.remove.postgraduate-loans= A ydych yn siŵr eich bod am dynnu’ch benthyciad ôl-raddedig?
 

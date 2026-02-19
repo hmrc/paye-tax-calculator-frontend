@@ -26,6 +26,7 @@ case class QuickCalcAggregateInput(
   savedSalary:                        Option[Salary],
   savedPeriod:                        Option[PayPeriodDetail],
   savedIsOverStatePensionAge:         Option[StatePension],
+  savedIsScottishResident:            Option[ScottishResident],
   savedTaxCode:                       Option[UserTaxCode],
   savedScottishRate:                  Option[ScottishRate],
   savedPensionContributions:          Option[PensionContributions],
@@ -70,6 +71,6 @@ case class QuickCalcAggregateInput(
 }
 
 object QuickCalcAggregateInput {
-  def newInstance:     QuickCalcAggregateInput          = QuickCalcAggregateInput(None, None, None, None, None, None, None, None)
+  def newInstance:     QuickCalcAggregateInput          = QuickCalcAggregateInput(None, None, None, None, None, None, None, None, None)
   implicit val format: OFormat[QuickCalcAggregateInput] = Json.format[QuickCalcAggregateInput]
 }

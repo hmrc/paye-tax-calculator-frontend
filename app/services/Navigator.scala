@@ -30,6 +30,16 @@ class Navigator @Inject() (implicit appConfig: AppConfig) {
       routes.YouHaveToldUsNewController.summary()
     } else next
 
+  def nextPageBasedOnWFP(aggregate: QuickCalcAggregateInput)(next: Call)(): Call =
+    if (aggregate.allQuestionsAnswered()) {
+      if(aggregate.savedSalary.exists(_.amountYearly > Some(35000)) && aggregate.savedIsOverStatePensionAge.exists(_.overStatePensionAge == true)){
+        routes.ScotlandResidentController.showScottishResidentForm()
+      }
+      else 
+        routes.YouHaveToldUsNewController.summary()
+    }
+    else next
+
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(): Call =
     nextPageOrSummaryIfAllQuestionsAnswered(agg) {
       routes.StatePensionController.showStatePensionForm()

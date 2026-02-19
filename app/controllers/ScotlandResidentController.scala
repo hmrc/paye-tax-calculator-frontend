@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,30 +17,29 @@
 package controllers
 
 import config.AppConfig
-import forms.StatePensionFormProvider
-
-import javax.inject.{Inject, Singleton}
-import models.{QuickCalcAggregateInput, StatePension}
+import forms.LiveInScotlandFormProvider
+import models.{QuickCalcAggregateInput, ScottishResident}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.*
+import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponents}
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 import utils.{ActionWithSessionId, SalaryRequired}
-import views.html.pages.StatePensionView
+import views.html.pages.ScottishResidentView
+import uk.gov.hmrc.play.http.HeaderCarrierConverter.fromRequestAndSession
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class StatePensionController @Inject() (
+class ScotlandResidentController @Inject() (
   override val messagesApi: MessagesApi,
   cache: QuickCalcCache,
   val controllerComponents: MessagesControllerComponents,
   navigator: Navigator,
-  statePensionView: StatePensionView,
-  statePensionFormProvider: StatePensionFormProvider
+  scottishResidentView: ScottishResidentView,
+  liveInScotlandFormProvider: LiveInScotlandFormProvider
 )(implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -49,22 +48,24 @@ class StatePensionController @Inject() (
 
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
-  val form: Form[StatePension] = statePensionFormProvider()
+  val form: Form[ScottishResident] = liveInScotlandFormProvider()
 
-  def showStatePensionForm(): Action[AnyContent] =
-    salaryRequired(cache, showStatePensionFormTestable)
+  def showScottishResidentForm(): Action[AnyContent] =
+    salaryRequired(cache, showScottishResidentFormTestable)
 
-  private[controllers] def showStatePensionFormTestable: ShowForm = { implicit request => agg =>
-    val filledForm = agg.savedIsOverStatePensionAge
-      .map { s =>
-        form.fill(s)
-      }
-      .getOrElse(form)
 
-    Ok(statePensionView(filledForm, agg.youHaveToldUsItems()))
+  private[controllers] def showScottishResidentFormTestable: ShowForm = {
+    implicit request =>
+      agg =>
+        val filledForm = agg.savedIsScottishResident
+          .map { s =>
+            form.fill(s)
+          }
+          .getOrElse(form)
+        Ok(scottishResidentView(filledForm, agg.youHaveToldUsItems()))
   }
 
-  def submitStatePensionForm(): Action[AnyContent] =
+  def submitScottishResidentForm(): Action[AnyContent] =
     validateAcceptWithSessionId().async { implicit request =>
       implicit val hc: HeaderCarrier = fromRequestAndSession(request, request.session)
 
@@ -75,37 +76,39 @@ class StatePensionController @Inject() (
             cache.fetchAndGetEntry().map {
               case Some(aggregate) =>
                 BadRequest(
-                  statePensionView(formWithErrors, aggregate.youHaveToldUsItems())
+                  scottishResidentView(formWithErrors, aggregate.youHaveToldUsItems())
                 )
               case None =>
-                BadRequest(statePensionView(formWithErrors, Nil))
+                BadRequest(scottishResidentView(formWithErrors, Nil))
             },
-          userAge =>
+          resident =>
             cache.fetchAndGetEntry().flatMap {
               case Some(aggregate) =>
                 val updatedAggregate = {
-                  aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
+                  aggregate.copy(savedIsScottishResident = Some(resident))
                 }
                 cache.save(updatedAggregate).map { _ =>
-                  Redirect(
-                    navigator.nextPageBasedOnWFP(
-                      updatedAggregate
-                    ) {
-                      routes.YouHaveToldUsNewController.summary()
-                    }()
+                  if(aggregate.savedIsScottishResident.exists(_.isScottishResident == true)) {
+                    Redirect(
+                      routes.ScottishWinterFuelPaymentsController.showScottishWinterFuelPayments()
+                    )
+                  }
+                  else Redirect(
+                    routes.WinterFuelPaymentsController.showWinterFuelPayments()
                   )
+                    
                 }
               case None =>
                 cache
-                  .save(
-                    QuickCalcAggregateInput.newInstance
-                      .copy(savedIsOverStatePensionAge = Some(userAge))
-                  )
-                  .map { _ =>
-                    Redirect(routes.ScotlandResidentController.showScottishResidentForm())
-                  }
+                .save(QuickCalcAggregateInput.newInstance
+                .copy(savedIsScottishResident = Some(resident))
+                )
+                .map { _ =>
+                  Redirect(routes.YouHaveToldUsNewController.summary())
+                }
             }
         )
-    }
 
+
+    }
 }

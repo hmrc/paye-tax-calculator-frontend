@@ -38,6 +38,7 @@ class QuickCalcCacheMongoSpec
                                                       None,
                                                       None,
                                                       None,
+                                                      None,
                                                       None
                                                      )
   )

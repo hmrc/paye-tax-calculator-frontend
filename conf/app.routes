@@ -14,6 +14,13 @@ POST        /days/:value           controllers.DaysPerWeekController.submitDaysA
 GET         /state-pension         controllers.StatePensionController.showStatePensionForm()
 POST        /state-pension         controllers.StatePensionController.submitStatePensionForm()
 
+GET         /scottish-resident     controllers.ScotlandResidentController.showScottishResidentForm()
+POST        /scottish-resident     controllers.ScotlandResidentController.submitScottishResidentForm()
+
+GET         /winter-fuel-payment   controllers.WinterFuelPaymentsController.showWinterFuelPayments()
+
+GET         /scottish-winter-fuel-payment controllers.ScottishWinterFuelPaymentsController.showScottishWinterFuelPayments()
+
 GET         /scottish-tax          controllers.ScottishRateController.showScottishRateForm()
 POST        /scottish-tax          controllers.ScottishRateController.submitScottishRateForm()
 

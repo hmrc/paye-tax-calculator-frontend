@@ -92,6 +92,8 @@ object QuickCalcCacheSetup {
   val cacheTestScottishNO: Option[ScottishRate] = Some(ScottishRate(payScottishRate = Some(false)))
   val cacheTestScottishYES: Option[ScottishRate] = Some(ScottishRate(payScottishRate = Some(true)))
   val cacheTestStatePensionYES: Option[StatePension] = Some(StatePension(true))
+  val cacheTestIsScottishResidnetNo: Option[ScottishResident] = Some(ScottishResident(false))
+  val cacheTestIsScottishResidnetYes: Option[ScottishResident] = Some(ScottishResident(true))
   val cacheTestStatusPensionNO: Option[StatePension] = Some(StatePension(false))
   val cacheTestYearlySalary: Option[Salary] = Some(Salary(20000, None, None, Yearly, None, None))
   def testSalaryForStudentLoanPlan5(amountSalary: BigDecimal): Salary =
@@ -174,6 +176,27 @@ object QuickCalcCacheSetup {
       savedTaxCode               = cacheTestTaxCode,
       savedIsOverStatePensionAge = cacheTestStatePensionYES,
       savedScottishRate          = cacheTestScottishNO
+    )
+  )
+  
+  val cacheScottishResident: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary                = cacheTestYearlySalary,
+      savedTaxCode               = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedIsScottishResident    = cacheTestIsScottishResidnetNo,
+      savedScottishRate          = cacheTestScottishNO
+      
+    )
+  )
+  val cacheScottishResidentTest: Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary = cacheTestYearlySalary,
+      savedTaxCode = cacheTestTaxCode,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedIsScottishResident = cacheTestIsScottishResidnetNo,
+      savedScottishRate = cacheTestScottishNO
+
     )
   )
 
