@@ -146,6 +146,29 @@ object CustomFormatters {
     ): Map[String, String] = Map(key -> value.toString)
   }
 
+  def scottishResidenceValidation: Formatter[Boolean] = new Formatter[Boolean] {
+
+    override def bind(
+                       key: String,
+                       data: Map[String, String]
+                     ): Either[Seq[FormError], Boolean] =
+      Right(data.getOrElse(key, "")).flatMap {
+        case "true" => Right(true)
+        case "false" => Right(false)
+        case _ =>
+          Left(
+            Seq(
+              FormError(key, "quick_calc.scottish_resident_error")
+            )
+          )
+      }
+
+    override def unbind(
+                         key: String,
+                         value: Boolean
+                       ): Map[String, String] = Map(key -> value.toString)
+  }
+
   def postGraduateLoanValidation: Formatter[Boolean] = new Formatter[Boolean] {
 
     override def bind(
