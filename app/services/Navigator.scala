@@ -41,7 +41,7 @@ class Navigator @Inject() (implicit appConfig: AppConfig) {
     else next
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(): Call =
-    nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+    nextPageBasedOnWFP(agg) {
       routes.StatePensionController.showStatePensionForm()
     }()
 
