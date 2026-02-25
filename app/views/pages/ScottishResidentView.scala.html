@@ -33,9 +33,6 @@
 
 @(scottishResidentForm: Form[ScottishResident], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: RequestHeader, messages: Messages)
 
-@labels = @{
-    List("a_year","a_month","every_4_weeks","a_week","a_day","an_hour")
-}
 
 @radioFieldScottishResident = @{
 scottishResidentForm("isScottishResident")

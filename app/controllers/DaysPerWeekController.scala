@@ -90,7 +90,7 @@ class DaysPerWeekController @Inject() (
                 .save(agg)
                 .map(_ =>
                   Redirect(
-                    navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
+                    navigator.nextPageBasedOnWFP(agg)(
                       routes.StatePensionController.showStatePensionForm()
                     )()
                   )

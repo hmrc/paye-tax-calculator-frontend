@@ -136,7 +136,7 @@ class ScotlandResidentControllerSpec extends PlaySpec with TryValues with ScalaF
       }
     }
 
-    "return 303 and redirect to State pension page, with empty list of aggregate data" in {
+    "return 303 and redirect to Salary page, with empty list of aggregate data" in {
 
       val mockCache = mock[QuickCalcCache]
 
