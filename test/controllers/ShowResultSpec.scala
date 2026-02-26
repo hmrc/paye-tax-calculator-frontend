@@ -57,27 +57,27 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
   }
 
   def messagesThing(
-    app: Application,
-    lang: String = "en"
-  ): Messages =
+                     app: Application,
+                     lang: String = "en"
+                   ): Messages =
     if (lang == "cy")
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest.withCookies(Cookie("PLAY_LANG", "cy")))
     else
       app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
-  val disableBeforeDate: LocalDate = LocalDate.of(2025, 4, 6)
+  val disableBeforeDate: LocalDate = LocalDate.of(2026, 4, 6)
   val currentDate: LocalDate = LocalDate.now()
 
   "Show Result Page" should {
 
     def return200(
-      fetchResponse: Option[QuickCalcAggregateInput],
-      yearlyEstimateAmount: String,
-      monthlyEstimateAmount: String,
-      weeklyEstimateAmount: String,
-      lang: String = "en",
-      taxableIncome: Option[String] = None
-    ) = {
+                   fetchResponse: Option[QuickCalcAggregateInput],
+                   yearlyEstimateAmount: String,
+                   monthlyEstimateAmount: String,
+                   weeklyEstimateAmount: String,
+                   lang: String = "en",
+                   taxableIncome: Option[String] = None
+                 ) = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
@@ -125,6 +125,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
           val words = str.trim.split("\\s+").filter(_.nonEmpty)
           if (words.length >= 3) Some(words(2)) else None
         }
+
         val fetchTaxableIncome = getCalculation(listValues)
 
         val isOverStatePension =
@@ -140,25 +141,25 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
 
         status(result) mustEqual OK
         title must include(messages("quick_calc.result.you_take_home"))
-        tab   must include(messages("quick_calc.result.tabLabels.yearly"))
-        tab   must include(messages("quick_calc.result.tabLabels.monthly"))
-        tab   must include(messages("quick_calc.result.tabLabels.weekly"))
+        tab must include(messages("quick_calc.result.tabLabels.yearly"))
+        tab must include(messages("quick_calc.result.tabLabels.monthly"))
+        tab must include(messages("quick_calc.result.tabLabels.weekly"))
         selectedTab mustEqual messages("quick_calc.result.tabLabels.yearly")
         panelTitle must include(s"$yearlyEstimateAmount ${messages("quick_calc.salary.yearly.label")}")
         panelTitle must include(s"$monthlyEstimateAmount ${messages("quick_calc.salary.monthly.label")}")
         panelTitle must include(s"$weeklyEstimateAmount ${messages("quick_calc.salary.weekly.label")}")
-        list1      must include(messages("quick_calc.result.gross.income"))
-        list1      must include(messages("quick_calc.result.personal_allowance"))
-        list1      must include(messages("quick_calc.result.taxable_income"))
-        list1      must include(messages("quick_calc.result.your_national_insurance"))
-        list1      must include(messages("quick_calc.result.take_home_pay"))
-        para       must include(messages("quick_calc.result.info.new"))
-        para       must include(messages("clear_results"))
+        list1 must include(messages("quick_calc.result.gross.income"))
+        list1 must include(messages("quick_calc.result.personal_allowance"))
+        list1 must include(messages("quick_calc.result.taxable_income"))
+        list1 must include(messages("quick_calc.result.your_national_insurance"))
+        list1 must include(messages("quick_calc.result.take_home_pay"))
+        para must include(messages("quick_calc.result.info.new"))
+        para must include(messages("clear_results"))
         button mustEqual messages("update_answers")
         sidebarHeader mustEqual messages("quick_calc.result.sidebar.header")
         sidebarBullets must include(messages("quick_calc.result.sidebar.one_job"))
         if (isOverStatePension)
-          sidebarBullets    must include(messages("quick_calc.result.sidebar.over_state_pension_age"))
+          sidebarBullets must include(messages("quick_calc.result.sidebar.over_state_pension_age"))
         else sidebarBullets must include(messages("quick_calc.result.sidebar.not_over_state_pension_age_b"))
         if (isOverThreshold && hasTaxCode)
           warningText must include(messages("quick_calc.result.disclaimer.reducedPersonal_allowance_a.new"))
@@ -190,70 +191,63 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         " form is in English" in {
 
           return200(
-            fetchResponse         = cacheTaxCodeStatePensionSalary,
-            yearlyEstimateAmount  = "£18,501.80",
+            fetchResponse = cacheTaxCodeStatePensionSalary,
+            yearlyEstimateAmount = "£18,501.80",
             monthlyEstimateAmount = "£1,541.82",
-            weeklyEstimateAmount  = "£355.81"
+            weeklyEstimateAmount = "£355.81"
           )
         }
 
         "form is in Welsh" in {
 
           return200(
-            fetchResponse         = cacheTaxCodeStatePensionSalary,
-            yearlyEstimateAmount  = "£18,501.80",
+            fetchResponse = cacheTaxCodeStatePensionSalary,
+            yearlyEstimateAmount = "£18,501.80",
             monthlyEstimateAmount = "£1,541.82",
-            weeklyEstimateAmount  = "£355.81",
-            lang                  = "cy"
+            weeklyEstimateAmount = "£355.81",
+            lang = "cy"
           )
         }
       }
 
-      if (currentDate.isBefore(disableBeforeDate)) {
-        "The income has scottish tax code" when {
+      "The income has scottish tax code" when {
 
-          " form is in English" in {
-
+        if (currentDate.isBefore(disableBeforeDate)) {
+          "form is in English" in {
             return200(
-              fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
-              yearlyEstimateAmount  = "£18,538.86",
-              monthlyEstimateAmount = "£1,544.91",
-              weeklyEstimateAmount  = "£356.52"
+              fetchResponse = cacheTaxCodeStatePensionScottishSalary,
+              yearlyEstimateAmount = "£18,544.07",
+              monthlyEstimateAmount = "£1,545.34",
+              weeklyEstimateAmount = "£356.62"
             )
           }
 
           "form is in Welsh" in {
-
             return200(
-              fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
-              yearlyEstimateAmount  = "£18,538.86",
-              monthlyEstimateAmount = "£1,544.91",
-              weeklyEstimateAmount  = "£356.52",
-              lang                  = "cy"
+              fetchResponse = cacheTaxCodeStatePensionScottishSalary,
+              yearlyEstimateAmount = "£18,544.07",
+              monthlyEstimateAmount = "£1,545.34",
+              weeklyEstimateAmount = "£356.62",
+              lang = "cy"
             )
           }
-        }
-      } else {
-        "The income has scottish tax code" when {
-
-          " form is in English" in {
-
+        } else {
+          "form is in English" in {
             return200(
-              fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
-              yearlyEstimateAmount  = "£18,544.07",
-              monthlyEstimateAmount = "£1,545.34",
-              weeklyEstimateAmount  = "£356.62"
+              fetchResponse = cacheTaxCodeStatePensionScottishSalary,
+              yearlyEstimateAmount = "£18,555.47",
+              monthlyEstimateAmount = "£1,546.29",
+              weeklyEstimateAmount = "£356.84"
             )
           }
 
           "form is in Welsh" in {
-
             return200(
-              fetchResponse         = cacheTaxCodeStatePensionScottishSalary,
-              yearlyEstimateAmount  = "£18,544.07",
-              monthlyEstimateAmount = "£1,545.34",
-              weeklyEstimateAmount  = "£356.62",
-              lang                  = "cy"
+              fetchResponse = cacheTaxCodeStatePensionScottishSalary,
+              yearlyEstimateAmount = "£18,555.47",
+              monthlyEstimateAmount = "£1,546.29",
+              weeklyEstimateAmount = "£356.84",
+              lang = "cy"
             )
           }
         }
@@ -264,21 +258,21 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
       " form is in English" in {
 
         return200(
-          fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100k,
-          yearlyEstimateAmount  = "£62,761",
+          fetchResponse = cacheTaxCodeStatePensionSalaryLessThan100k,
+          yearlyEstimateAmount = "£62,761",
           monthlyEstimateAmount = "£5,230.08",
-          weeklyEstimateAmount  = "£1,206.94"
+          weeklyEstimateAmount = "£1,206.94"
         )
       }
 
       "form is in Welsh" in {
 
         return200(
-          fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100k,
-          yearlyEstimateAmount  = "£62,761",
+          fetchResponse = cacheTaxCodeStatePensionSalaryLessThan100k,
+          yearlyEstimateAmount = "£62,761",
           monthlyEstimateAmount = "£5,230.08",
-          weeklyEstimateAmount  = "£1,206.94",
-          lang                  = "cy"
+          weeklyEstimateAmount = "£1,206.94",
+          lang = "cy"
         )
       }
 
@@ -288,48 +282,42 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
 
       if (currentDate.isBefore(disableBeforeDate)) {
         "form is in English" in {
-
           return200(
-            fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
-            yearlyEstimateAmount  = "£59,915.14",
-            monthlyEstimateAmount = "£4,992.93",
-            weeklyEstimateAmount  = "£1,152.22"
+            fetchResponse = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+            yearlyEstimateAmount = "£59,929.65",
+            monthlyEstimateAmount = "£4,994.14",
+            weeklyEstimateAmount = "£1,152.49"
           )
         }
-
         "form is in Welsh" in {
-
           return200(
-            fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
-            yearlyEstimateAmount  = "£59,915.14",
-            monthlyEstimateAmount = "£4,992.93",
-            weeklyEstimateAmount  = "£1,152.22",
-            lang                  = "cy"
+            fetchResponse = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+            yearlyEstimateAmount = "£59,929.65",
+            monthlyEstimateAmount = "£4,994.14",
+            weeklyEstimateAmount = "£1,152.49",
+            lang = "cy"
           )
         }
       } else {
         "form is in English" in {
-
           return200(
-            fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
-            yearlyEstimateAmount  = "£59,929.13",
-            monthlyEstimateAmount = "£4,994.09",
-            weeklyEstimateAmount  = "£1,152.48"
+            fetchResponse = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+            yearlyEstimateAmount = "£59,961.40",
+            monthlyEstimateAmount = "£4,996.78",
+            weeklyEstimateAmount = "£1,153.11"
           )
         }
 
         "form is in Welsh" in {
-
           return200(
-            fetchResponse         = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
-            yearlyEstimateAmount  = "£59,929.13",
-            monthlyEstimateAmount = "£4,994.09",
-            weeklyEstimateAmount  = "£1,152.48",
-            lang                  = "cy"
+            fetchResponse = cacheTaxCodeStatePensionSalaryLessThan100kWithScottishTax,
+            yearlyEstimateAmount = "£59,961.40",
+            monthlyEstimateAmount = "£4,996.78",
+            weeklyEstimateAmount = "£1,153.11",
+            lang = "cy"
           )
         }
       }
-
     }
 
     "return 200, with estimated income tax when user's income is more than 100k and is not over state pension" when {
@@ -349,26 +337,25 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
     "return 200, with estimated income tax when user's income is more than £125141 and has scottish tax code" when {
 
       if (currentDate.isBefore(disableBeforeDate)) {
-        " form is in English" in {
-
-          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,308.79", "£7,109.07", "£1,640.56")
+        "form is in English" in {
+          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,323.30", "£7,110.27", "£1,640.83")
         }
 
         "form is in Welsh" in {
-
-          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,308.79", "£7,109.07", "£1,640.56", "cy")
+          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,323.30", "£7,110.27", "£1,640.83", "cy")
         }
+
       } else {
-        " form is in English" in {
-
-          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,322.66", "£7,110.22", "£1,640.82")
+        "form is in English" in {
+          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,355.05", "£7,112.92", "£1,641.45")
         }
 
         "form is in Welsh" in {
-
-          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,322.66", "£7,110.22", "£1,640.82", "cy")
+          return200(cacheTaxCodeStatePensionSalaryMoreThan125k, "£85,355.05", "£7,112.92", "£1,641.45", "cy")
         }
+
       }
+
 
     }
 
@@ -389,10 +376,10 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
       " form is in English" in {
 
         return200(
-          fetchResponse         = cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCodeWithPension,
-          yearlyEstimateAmount  = "£38,506.34",
+          fetchResponse = cacheTaxCodeStatePensionSalaryMoreThan100kNoTaxCodeWithPension,
+          yearlyEstimateAmount = "£38,506.34",
           monthlyEstimateAmount = "£3,208.86",
-          weeklyEstimateAmount  = "£740.50"
+          weeklyEstimateAmount = "£740.50"
         )
       }
 
@@ -406,14 +393,14 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
 
       "person is paid under personal allowance" in {
         return200(cacheTaxCodeStatePensionSalary.map(
-                    _.copy(savedSalary = Some(Salary(7000, None, None, Yearly, None, None)))
-                  ),
-                  "£7,000",
-                  "£583.33",
-                  "£134.62",
-                  "en",
-                  Some("£0.00")
-                 )
+          _.copy(savedSalary = Some(Salary(7000, None, None, Yearly, None, None)))
+        ),
+          "£7,000",
+          "£583.33",
+          "£134.62",
+          "en",
+          Some("£0.00")
+        )
       }
 
       "person is paid equal to the personal allowance" in {
@@ -439,9 +426,9 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
     }
 
     def studentLoanCalc(
-      fetchResponse: Option[QuickCalcAggregateInput],
-      contributions: Option[String] = None
-    ) = {
+                         fetchResponse: Option[QuickCalcAggregateInput],
+                         contributions: Option[String] = None
+                       ) = {
       val mockCache = MockitoSugar.mock[QuickCalcCache]
 
       when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
@@ -474,29 +461,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
     }
 
     "return 200, with correct student loan contribution having annual salary of 20k" when {
-
       if (currentDate.isBefore(disableBeforeDate)) {
-        "Student has opted for plan 1" in {
-          studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,850.00"))
-        }
-        "Student has opted for plan 2" in {
-          studentLoanCalc(
-            cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
-              _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
-            ),
-            Some("£5,643.00")
-          )
-        }
-        "Student has opted for plan 4" in {
-          studentLoanCalc(
-            cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
-              _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
-            ),
-            Some("£5,274.00")
-          )
-        }
-
-      } else {
         "Student has opted for plan 1" in {
           studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,754.00"))
         }
@@ -516,60 +481,77 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
             Some("£5,152.00")
           )
         }
-
-        "Student has opted for plan 5" when {
-
-          "Annual salary is £21,199.92" in {
-            studentLoanCalc(
-              createStudentLoanTestData(testSalaryForStudentLoanPlan5(25133.32), PlanFive),
-              None
-            )
-          }
-
-          "Annual salary is £21,200.04" in {
-            studentLoanCalc(
-              createStudentLoanTestData(testSalaryForStudentLoanPlan5(25133.40), PlanFive),
-              Some("£12.00")
-            )
-          }
-
-          "Annual salary is £25,134.60" in {
-            studentLoanCalc(
-              createStudentLoanTestData(testSalaryForStudentLoanPlan5(25134.6), PlanFive),
-              Some("£12.00")
-            )
-          }
-
-          "Annual salary is £25,533.36" in {
-            studentLoanCalc(
-              createStudentLoanTestData(testSalaryForStudentLoanPlan5(25533.36), PlanFive),
-              Some("£48.00")
-            )
-          }
-
-          "Annual salary is £30,999.96" in {
-            studentLoanCalc(
-              createStudentLoanTestData(testSalaryForStudentLoanPlan5(30999.96), PlanFive),
-              Some("£540.00")
-            )
-          }
-
-          "Annual salary is £57,266.64" in {
-            studentLoanCalc(
-              createStudentLoanTestData(testSalaryForStudentLoanPlan5(57266.64), PlanFive),
-              Some("£2,904.00")
-            )
-          }
-
-          "Annual salary is £101,133.36" in {
-            studentLoanCalc(
-              createStudentLoanTestData(testSalaryForStudentLoanPlan5(101133.36), PlanFive),
-              Some("£6,852.00")
-            )
-          }
+      } else {
+        "Student has opted for plan 1" in {
+          studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,679.00"))
+        }
+        "Student has opted for plan 2" in {
+          studentLoanCalc(
+            cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+              _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
+            ),
+            Some("£5,455.00")
+          )
+        }
+        "Student has opted for plan 4" in {
+          studentLoanCalc(
+            cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
+              _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
+            ),
+            Some("£5,058.00")
+          )
         }
       }
+    }
+    "Student has opted for plan 5" when {
+      "Annual salary is £21,199.92" in {
+        studentLoanCalc(
+          createStudentLoanTestData(testSalaryForStudentLoanPlan5(25133.32), PlanFive),
+          None
+        )
+      }
 
+      "Annual salary is £21,200.04" in {
+        studentLoanCalc(
+          createStudentLoanTestData(testSalaryForStudentLoanPlan5(25133.40), PlanFive),
+          Some("£12.00")
+        )
+      }
+
+      "Annual salary is £25,134.60" in {
+        studentLoanCalc(
+          createStudentLoanTestData(testSalaryForStudentLoanPlan5(25134.6), PlanFive),
+          Some("£12.00")
+        )
+      }
+
+      "Annual salary is £25,533.36" in {
+        studentLoanCalc(
+          createStudentLoanTestData(testSalaryForStudentLoanPlan5(25533.36), PlanFive),
+          Some("£48.00")
+        )
+      }
+
+      "Annual salary is £30,999.96" in {
+        studentLoanCalc(
+          createStudentLoanTestData(testSalaryForStudentLoanPlan5(30999.96), PlanFive),
+          Some("£540.00")
+        )
+      }
+
+      "Annual salary is £57,266.64" in {
+        studentLoanCalc(
+          createStudentLoanTestData(testSalaryForStudentLoanPlan5(57266.64), PlanFive),
+          Some("£2,904.00")
+        )
+      }
+
+      "Annual salary is £101,133.36" in {
+        studentLoanCalc(
+          createStudentLoanTestData(testSalaryForStudentLoanPlan5(101133.36), PlanFive),
+          Some("£6,852.00")
+        )
+      }
     }
   }
 }
