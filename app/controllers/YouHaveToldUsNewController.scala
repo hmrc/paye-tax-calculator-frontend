@@ -69,7 +69,8 @@ class YouHaveToldUsNewController @Inject() (
                 aggregateConditionsUtil.givenPostGradLoanContribution(aggregate),
                 aggregateConditionsUtil.isPensionWarning(aggregate),
                 aggregateConditionsUtil.roundedMonthlySalary(aggregate),
-                aggregateConditionsUtil.isScottishRateDefined(aggregate)
+                aggregateConditionsUtil.isScottishRateDefined(aggregate),
+                aggregateConditionsUtil.isScottishResidentDefined(aggregate)
               )
             )
           } else

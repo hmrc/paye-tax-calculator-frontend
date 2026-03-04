@@ -284,6 +284,26 @@ quick_calc.pensionContributionsFixed.input.heading =Swm mewn punnoedd
 quick_calc.pensionContributionsFixed.link =Gallwch roi gwybod i ni beth yw’r swm fel canran o’ch incwm os bydd yn well gennych wneud hynny.
 quick_calc.pensionContributionsFixed.warning =Mae’n rhaid i’ch cyfraniadau pensiwn misol fod yn llai na £{0} (eich incwm misol gros)
 
+
+#######################################################
+## Scottish winter fuel payment
+#######################################################
+quick_calc.scottish_wfp_heading = Taliad Gwresogi Gaeaf i Bobl o Oedran Pensiwn
+quick_calc.scottish_wfp_subheading1 = Os cawsoch eich geni cyn 22 Medi 1959, gallech gael rhwng £101.70 a £305.10 i’ch helpu i dalu’ch biliau gwresogi ar gyfer gaeaf 2025 i 2026.
+quick_calc.scottish_wfp_subheading2 = Gelwir hyn yn ‘Taliad Gwresogi Gaeaf i Bobl o Oedran Pensiwn’.
+quick_calc.scottish_wfp_subheading3 = Oherwydd bod eich incwm dros £35,000, bydd angen i CThEF gymryd eich Taliad Gaeaf yn ôl.
+quick_calc.scottish_wfp_subheading4 = Ar gyfer taliad nodweddiadol o £200, bydd y didyniad tua £17 y mis.
+quick_calc.wfp_warning = Ni fydd hyn yn ymddangos ar y dudalen ganlyniadau.
+
+#######################################################
+## winter fuel payment
+#######################################################
+quick_calc.wfp_heading = Taliad Tanwydd Gaeaf
+quick_calc.wfp_subheading1 = Os cawsoch eich geni cyn 22 Medi 1959, gallech gael rhwng £100 a £300 i’ch helpu i dalu’ch biliau gwresogi ar gyfer gaeaf 2025 i 2026.
+quick_calc.wfp_subheading2 = Gelwir hyn yn ‘Taliad Tanwydd Gaeaf’.
+quick_calc.wfp_subheading3 = Oherwydd bod eich incwm dros £35,000, bydd angen i CThEF gymryd eich Taliad Gaeaf yn ôl.
+quick_calc.wfp_subheading4 = Ar gyfer taliad nodweddiadol o £200, bydd y didyniad tua £17 y mis.
+
 #######################################################
 ## Beta Banner
 #######################################################

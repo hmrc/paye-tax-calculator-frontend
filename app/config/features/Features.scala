@@ -24,5 +24,6 @@ import javax.inject.{Inject, Singleton}
 class Features @Inject() (implicit config: Configuration) {
 
   val welshTranslationFeature = new Feature(FeatureConfigKey.enableWelshContent)
+  val winterFuelPaymentFeature = new Feature(FeatureConfigKey.enableWFP)
 
 }

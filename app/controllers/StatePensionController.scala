@@ -87,13 +87,24 @@ class StatePensionController @Inject() (
                   aggregate.copy(savedIsOverStatePensionAge = Some(userAge))
                 }
                 cache.save(updatedAggregate).map { _ =>
-                  Redirect(
-                    navigator.nextPageBasedOnWFP(
-                      updatedAggregate
-                    ) {
-                      routes.YouHaveToldUsNewController.summary()
-                    }()
-                  )
+                  if(appConfig.features.winterFuelPaymentFeature()) {
+                    Redirect(
+                      navigator.nextPageBasedOnWFP(
+                        updatedAggregate
+                      ) {
+                        routes.YouHaveToldUsNewController.summary()
+                      }()
+                    )
+                  }
+                  else
+                    Redirect(
+                      navigator.nextPageOrSummaryIfAllQuestionsAnswered(
+                        updatedAggregate
+                      ) {
+                        routes.YouHaveToldUsNewController.summary()
+                      }()
+                    )
+
                 }
               case None =>
                 cache
@@ -102,7 +113,10 @@ class StatePensionController @Inject() (
                       .copy(savedIsOverStatePensionAge = Some(userAge))
                   )
                   .map { _ =>
-                    Redirect(routes.ScotlandResidentController.showScottishResidentForm())
+                    if(appConfig.features.winterFuelPaymentFeature())
+                      Redirect(routes.ScotlandResidentController.showScottishResidentForm())
+                    else
+                      Redirect(routes.YouHaveToldUsNewController.summary())
                   }
             }
         )

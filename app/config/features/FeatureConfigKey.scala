@@ -19,5 +19,6 @@ package config.features
 object FeatureConfigKey {
 
   val enableWelshContent: String = "features.welshTranslation"
+  val enableWFP: String = "features.enableWinterFuelPayment"
 
 }
