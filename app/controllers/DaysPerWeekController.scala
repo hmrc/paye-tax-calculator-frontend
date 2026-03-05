@@ -89,11 +89,18 @@ class DaysPerWeekController @Inject() (
               cache
                 .save(agg)
                 .map(_ =>
-                  Redirect(
-                    navigator.nextPageBasedOnWFP(agg)(
-                      routes.StatePensionController.showStatePensionForm()
-                    )()
-                  )
+                  if(appConfig.features.winterFuelPaymentFeature()) 
+                    Redirect(
+                      navigator.nextPageBasedOnWFP(agg)(
+                        routes.StatePensionController.showStatePensionForm()
+                      )()
+                    )
+                  else
+                    Redirect(
+                      navigator.nextPageOrSummaryIfAllQuestionsAnswered(agg)(
+                        routes.StatePensionController.showStatePensionForm()
+                      )()
+                    )
                 )
             }
           }

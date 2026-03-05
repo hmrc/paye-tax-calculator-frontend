@@ -88,7 +88,7 @@ class ScotlandResidentController @Inject() (
                   aggregate.copy(savedIsScottishResident = Some(resident))
                 }
                 cache.save(updatedAggregate).map { _ =>
-                  if(aggregate.savedIsScottishResident.exists(_.isScottishResident == true)) {
+                  if(updatedAggregate.savedIsScottishResident.exists(_.isScottishResident == true)) {
                     Redirect(
                       routes.ScottishWinterFuelPaymentsController.showScottishWinterFuelPayments()
                     )

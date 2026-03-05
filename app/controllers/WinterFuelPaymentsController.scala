@@ -23,13 +23,14 @@ import play.api.mvc.{Action, AnyContent, BodyParser, MessagesControllerComponent
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.ActionWithSessionId
-
+import views.html.pages.WinterFuelPaymentView
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class WinterFuelPaymentsController @Inject() (
                                                override val messagesApi: MessagesApi,
                                                cache: QuickCalcCache,
+                                               winterFuelPaymentView: WinterFuelPaymentView, 
                                                val controllerComponents: MessagesControllerComponents,
                                                navigator: Navigator)
                                              (implicit val appConfig: AppConfig, val executionContext: ExecutionContext)
@@ -40,7 +41,7 @@ class WinterFuelPaymentsController @Inject() (
   implicit val parser: BodyParser[AnyContent] = parse.anyContent
 
   def showWinterFuelPayments(): Action[AnyContent] = Action { implicit request =>
-    Ok(Json.toJson(""))
+    Ok(winterFuelPaymentView())
   }
 
 }

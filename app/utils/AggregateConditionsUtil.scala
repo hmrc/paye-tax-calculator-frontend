@@ -34,6 +34,9 @@ class AggregateConditionsUtil @Inject() {
 
   def isPensionContributionsDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).isDefined
+  
+  def isScottishResidentDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
+    aggregateInput.savedIsScottishResident.exists(_.isScottishResident)
 
   def givenPensionContributionPercentage(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedPensionContributions.exists(_.gaveUsPercentageAmount)

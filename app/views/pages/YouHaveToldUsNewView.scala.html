@@ -32,10 +32,11 @@
         button: components.button,
         govukSummaryList: GovukSummaryList,
         beforeContent: components.beforeContent,
-        notification: components.notification
+        notification: components.notification,
+        appConfig: config.AppConfig
 )
 
-@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean, pensionWarning: Boolean, roundedMonthlySalary: String, scottishDefined: Boolean)(implicit request: RequestHeader, messages: Messages)
+@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean, pensionWarning: Boolean, roundedMonthlySalary: String, scottishDefined: Boolean, scottishResidentCheck: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @rows = @{
     items.map { item =>
@@ -215,7 +216,18 @@ s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warning
 }
 
 @backButtonUrl = @{
-        controllers.routes.StatePensionController.showStatePensionForm().url
+
+if(appConfig.features.winterFuelPaymentFeature()){
+    if(scottishResidentCheck == true){
+        controllers.routes.ScottishWinterFuelPaymentsController.showScottishWinterFuelPayments().url
+    }
+    else {
+        controllers.routes.WinterFuelPaymentsController.showWinterFuelPayments().url
+    }
+}
+else {
+    controllers.routes.StatePensionController.showStatePensionForm().url
+}
 }
 
 @govukTemplate(Some(titleNoForm(Messages("quick_calc.you_have_told_us.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {

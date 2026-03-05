@@ -41,9 +41,14 @@ class Navigator @Inject() (implicit appConfig: AppConfig) {
     else next
 
   def tryGetShowStatePension(agg: QuickCalcAggregateInput)(): Call =
-    nextPageBasedOnWFP(agg) {
-      routes.StatePensionController.showStatePensionForm()
-    }()
+    if(appConfig.features.winterFuelPaymentFeature())
+      nextPageBasedOnWFP(agg) {
+        routes.StatePensionController.showStatePensionForm()
+      }()
+    else
+      nextPageOrSummaryIfAllQuestionsAnswered(agg) {
+        routes.StatePensionController.showStatePensionForm()
+      }()
 
   def redirectToNotYetDonePage(aggregate: QuickCalcAggregateInput): Call =
     if (aggregate.savedSalary.isEmpty)

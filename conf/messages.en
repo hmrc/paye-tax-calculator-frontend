@@ -285,6 +285,26 @@ quick_calc.pensionContributionsFixed.link = You can tell us this as a percentage
 quick_calc.pensionContributionsFixed.warning = Your monthly pension contributions must be less than £{0} (your monthly gross income)
 
 #######################################################
+## Scottish winter fuel payment
+#######################################################
+quick_calc.scottish_wfp_heading = Pension Age Winter Heating Payment
+quick_calc.scottish_wfp_subheading1 = If you were born before 22 September 1959 you could get between £101.70 and £305.10 to help you pay your heating bills for winter 2025 to 2026.
+quick_calc.scottish_wfp_subheading2 = This is known as a ‘Pension Age Winter Heating Payment’.
+quick_calc.scottish_wfp_subheading3 = As your income is over £35,000, HMRC will need to take back your Winter Payment.
+quick_calc.scottish_wfp_subheading4 = For a typical payment of £200, the deduction will be approximately £17 per month.
+quick_calc.wfp_warning = We will not show this on the results page.
+
+#######################################################
+## winter fuel payment
+#######################################################
+quick_calc.wfp_heading = Winter fuel payment
+quick_calc.wfp_subheading1 = If you were born before 22 September 1959 you could get between £100 and £300 to help you pay your heating bills for winter 2025 to 2026.
+quick_calc.wfp_subheading2 = This is known as a 'Winter Fuel Payment'.
+quick_calc.wfp_subheading3 = As your income is over £35,000, HMRC will need to take back your Winter Payment.
+quick_calc.wfp_subheading4 = For a typical payment of £200, the deduction will be approximately £17 per month.
+
+
+#######################################################
 ## Beta Banner
 #######################################################
 feedback.before = This is a new service - your

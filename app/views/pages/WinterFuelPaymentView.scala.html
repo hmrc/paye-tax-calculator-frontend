@@ -1,0 +1,57 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.api.i18n._
+@import controllers.routes
+@import config.AppConfig
+
+@this(
+govukTemplate: templates.GovukLayoutWrapper,
+h1: components.h1,
+h2: components.h2,
+warningText: components.warning,
+govukBackLink: GovukBackLink,
+formHelper: FormWithCSRF,
+button: components.button,
+govukSummaryList: GovukSummaryList,
+beforeContent: components.beforeContent,
+notification: components.notification,
+govukWarningText : GovukWarningText
+)
+
+@()(implicit request: RequestHeader, messages: Messages)
+
+@backButtonUrl = @{
+controllers.routes.ScotlandResidentController.showScottishResidentForm().url
+}
+
+@govukTemplate(Some(titleNoForm(Messages("quick_calc.wfp_heading"))), beforeContentBlock = beforeContent(backButtonUrl)) {
+
+@h2("quick_calc.wfp_heading","govuk-heading-xl")
+<p class="govuk-body">@messages("quick_calc.wfp_subheading1")</p>
+<p class="govuk-body">@messages("quick_calc.wfp_subheading2")</p>
+<p class="govuk-body">@messages("quick_calc.wfp_subheading3")</p>
+<p class="govuk-body">@messages("quick_calc.wfp_subheading4")</p>
+
+@govukWarningText(WarningText(
+   iconFallbackText = Some("Warning"),
+   content = Text(Messages("quick_calc.wfp_warning"))
+))
+
+@formHelper(action = routes.YouHaveToldUsNewController.summary()) {
+@button("continue", Some("button-get-results"))
+}
+}
