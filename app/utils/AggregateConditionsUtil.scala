@@ -53,6 +53,8 @@ class AggregateConditionsUtil @Inject() {
     moneyFormatter(monthlySalary.setScale(2, BigDecimal.RoundingMode.HALF_UP))
   }
 
+  def yearlyWFPSalary(aggregateInput: QuickCalcAggregateInput): Boolean = aggregateInput.savedSalary.exists(_.amountYearly > Some(35000))
+
   def isPensionWarning(aggregateInput: QuickCalcAggregateInput): Boolean = {
     val monthlyContributions: BigDecimal =
       aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).getOrElse(BigDecimal(0))
