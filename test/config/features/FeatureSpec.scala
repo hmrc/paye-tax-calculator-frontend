@@ -28,17 +28,21 @@ class FeatureSpec extends BaseSpec with GuiceOneAppPerSuite with BeforeAndAfterE
   override def beforeEach(): Unit = {
     super.beforeEach()
     features.welshTranslationFeature(true)
+    features.winterFuelPaymentFeature(true)
   }
 
   "The new screen content feature" should {
 
     "return its current state" in {
       features.welshTranslationFeature() mustBe true
+      features.winterFuelPaymentFeature() mustBe true
     }
 
     "switch to a new state" in {
       features.welshTranslationFeature(false)
       features.welshTranslationFeature() mustBe false
+      features.winterFuelPaymentFeature(false)
+      features.winterFuelPaymentFeature() mustBe false
     }
   }
 
