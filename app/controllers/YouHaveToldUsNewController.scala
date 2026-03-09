@@ -70,7 +70,8 @@ class YouHaveToldUsNewController @Inject() (
                 aggregateConditionsUtil.isPensionWarning(aggregate),
                 aggregateConditionsUtil.roundedMonthlySalary(aggregate),
                 aggregateConditionsUtil.isScottishRateDefined(aggregate),
-                aggregateConditionsUtil.isScottishResidentDefined(aggregate)
+                aggregateConditionsUtil.isScottishResidentDefined(aggregate),
+                aggregateConditionsUtil.yearlyWFPSalary(aggregate)
               )
             )
           } else
