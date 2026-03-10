@@ -43,6 +43,7 @@ trait AppConfig {
   def feedbackUrl(signedInUser: Boolean): String
   val languageMap: Map[String, Lang]
   val routeToSwitchLanguage: String => Call
+  val enableFutureDate: Boolean
 }
 
 @Singleton
@@ -51,6 +52,7 @@ class FrontendAppConfig @Inject() (config: Configuration) extends AppConfig {
   override val host: String = config.get[String]("host")
   override val appName: String = config.get[String]("appName")
   override val features = new Features()(config)
+  override val enableFutureDate: Boolean = config.get[Boolean]("enableFutureDate")
 
   private def loadConfig(key: String): String =
     config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))

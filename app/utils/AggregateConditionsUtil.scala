@@ -23,7 +23,8 @@ import uk.gov.hmrc.calculator.utils.validation.PensionValidator
 import uk.gov.hmrc.calculator.utils.validation.PensionValidator.PensionError
 import utils.GetCurrentTaxYear.getTaxYear
 
-import scala.jdk.CollectionConverters._
+import java.time.{LocalDate, ZoneId}
+import scala.jdk.CollectionConverters.*
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -34,7 +35,7 @@ class AggregateConditionsUtil @Inject() {
 
   def isPensionContributionsDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).isDefined
-  
+
   def isScottishResidentDefined(aggregateInput: QuickCalcAggregateInput): Boolean =
     aggregateInput.savedIsScottishResident.exists(_.isScottishResident)
 
@@ -55,14 +56,12 @@ class AggregateConditionsUtil @Inject() {
 
   def yearlyWFPSalary(aggregateInput: QuickCalcAggregateInput): Boolean = aggregateInput.savedSalary.exists(_.amountYearly > Some(35000))
 
-  def isPensionWarning(aggregateInput: QuickCalcAggregateInput): Boolean = {
+  def isPensionWarning(aggregateInput: QuickCalcAggregateInput, enableFutureDate: Boolean = false): Boolean = {
     val monthlyContributions: BigDecimal =
       aggregateInput.savedPensionContributions.flatMap(_.monthlyContributionAmount).getOrElse(BigDecimal(0))
     val monthlySalary: BigDecimal = aggregateInput.savedSalary.flatMap(_.monthlyAmount).getOrElse(BigDecimal(0))
     val listOfPensionError = PensionValidator.INSTANCE
-      .isValidMonthlyPension(monthlyContributions.toDouble,
-                             monthlySalary.toDouble,
-                             TaxResult.extractTaxYear(getTaxYear))
+      .isValidMonthlyPension(monthlyContributions.toDouble, monthlySalary.toDouble, TaxResult.extractTaxYear(getTaxYear(enableFutureDate)))
       .asScala
       .toList
     listOfPensionError.contains(PensionError.ABOVE_WAGE)
@@ -72,7 +71,7 @@ class AggregateConditionsUtil @Inject() {
     aggregateInput.savedSalary.exists { salary =>
       salary.period match {
         case fourWeekly: FourWeekly.type => true
-        case _ => false
+        case _                           => false
       }
     }
 

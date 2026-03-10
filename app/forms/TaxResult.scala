@@ -27,6 +27,7 @@ import uk.gov.hmrc.http.BadRequestException
 import utils.DefaultTaxCodeProvider
 import utils.GetCurrentTaxYear.getTaxYear
 
+import java.time.{LocalDate, ZoneId}
 import scala.jdk.CollectionConverters.*
 import scala.math.BigDecimal.RoundingMode
 
@@ -56,9 +57,10 @@ object TaxResult {
 
   def taxCalculation(
     quickCalcAggregateInput: QuickCalcAggregateInput,
-    defaultTaxCodeProvider: DefaultTaxCodeProvider
+    defaultTaxCodeProvider: DefaultTaxCodeProvider,
+    enableFutureDate: Boolean = false
   ): CalculatorResponse =
-    new Calculator(
+     new Calculator(
       extractTaxCode(quickCalcAggregateInput, defaultTaxCodeProvider),
       extractUserPaysScottishTax(quickCalcAggregateInput),
       quickCalcAggregateInput.savedTaxCode.exists(_.gaveUsTaxCode),
@@ -69,7 +71,7 @@ object TaxResult {
         case Some(number) => number.toDouble
         case None         => null
       },
-      extractTaxYear(getTaxYear),
+      extractTaxYear(getTaxYear(enableFutureDate)),
       extractPensionContributions(quickCalcAggregateInput) match {
         case Some(pensionContribution) => pensionContribution
         case None                      => null

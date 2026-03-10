@@ -22,18 +22,30 @@ import java.time.{LocalDate, ZoneId}
 
 object GetCurrentTaxYear {
 
-  def getCurrentTaxYear: String = {
+  def getCurrentTaxYear(enableFutureDate: Boolean = false): String = {
     val currentDate = LocalDate.now(ZoneId.of("Europe/London"))
     val taxYear = TaxYear(currentDate.getYear)
     if (currentDate.isBefore(taxYear.starts)) {
       val previousTaxYear = taxYear.previous
-      s"${previousTaxYear.startYear}/${taxYear.startYear.toString.takeRight(2)}"
+      if (enableFutureDate) {
+        s"${taxYear.startYear}/${(taxYear.startYear + 1).toString.takeRight(2)}"
+      } else {
+        s"${previousTaxYear.startYear}/${taxYear.startYear.toString.takeRight(2)}"
+      }
     } else {
       s"${taxYear.startYear}/${(taxYear.startYear + 1).toString.takeRight(2)}"
     }
+
   }
 
-  def getTaxYear: Int =
-    TaxYear.current.currentYear
+  def getTaxYear(enableFutureDate: Boolean = false): Int = {
+    val currentDate = LocalDate.now(ZoneId.of("Europe/London"))
+    val taxYear = TaxYear(currentDate.getYear)
+   if (enableFutureDate && currentDate.isBefore(taxYear.starts)) {
+     TaxYear.current.currentYear + 1
+    } else {
+      TaxYear.current.currentYear
+    }
+  }
 
 }

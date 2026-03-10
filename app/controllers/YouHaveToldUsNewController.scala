@@ -67,7 +67,7 @@ class YouHaveToldUsNewController @Inject() (
                 aggregateConditionsUtil.givenPensionContributionPercentage(aggregate),
                 aggregateConditionsUtil.givenStudentLoanContribution(aggregate),
                 aggregateConditionsUtil.givenPostGradLoanContribution(aggregate),
-                aggregateConditionsUtil.isPensionWarning(aggregate),
+                aggregateConditionsUtil.isPensionWarning(aggregate, appConfig.enableFutureDate),
                 aggregateConditionsUtil.roundedMonthlySalary(aggregate),
                 aggregateConditionsUtil.isScottishRateDefined(aggregate),
                 aggregateConditionsUtil.isScottishResidentDefined(aggregate),
