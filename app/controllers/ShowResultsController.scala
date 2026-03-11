@@ -35,6 +35,7 @@ import utils.{ActionWithSessionId, AggregateConditionsUtil, DefaultTaxCodeProvid
 import views.html.components.linkNewTab
 import views.html.pages.ResultView
 
+import java.time.{LocalDate, ZoneId}
 import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters.*
 import scala.concurrent.ExecutionContext
@@ -66,7 +67,7 @@ class ShowResultsController @Inject() (
     aggregateInput: QuickCalcAggregateInput,
     defaultTaxCodeProvider: DefaultTaxCodeProvider
   ): CalculatorResponse =
-    TaxResult.taxCalculation(aggregateInput, defaultTaxCodeProvider)
+    TaxResult.taxCalculation(aggregateInput, defaultTaxCodeProvider, appConfig.enableFutureDate)
 
   private def getClarifications(
     aggregateInput: QuickCalcAggregateInput,
@@ -208,11 +209,11 @@ class ShowResultsController @Inject() (
             try {
               Ok(
                 resultView(
-                  TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider),
+                  TaxResult.taxCalculation(aggregate, defaultTaxCodeProvider, appConfig.enableFutureDate),
                   defaultTaxCodeProvider.startOfCurrentTaxYear,
                   isScottish,
                   over100KDisclaimerCheck(aggregate),
-                  getCurrentTaxYear,
+                  getCurrentTaxYear(appConfig.enableFutureDate),
                   sideBarBullets(aggregate),
                   aggregateConditions.isPensionContributionsDefined(aggregate),
                   aggregateConditions.isFourWeekly(aggregate),

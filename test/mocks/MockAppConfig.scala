@@ -39,6 +39,7 @@ class MockAppConfig(val runModeConfiguration: Configuration) extends AppConfig {
   override val countdown: Int = 120
   override val dateOverride: Option[String] = None
   override val mongoTtl: Long = 3600
+  override val enableFutureDate: Boolean = false
 
   override def feedbackUrl(signedInUser: Boolean): String =
     "/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
