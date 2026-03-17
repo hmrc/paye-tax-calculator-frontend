@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * Copyright 2020 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package controllers
 
 import forms.SalaryInHoursFormProvider
@@ -272,7 +256,8 @@ class HoursPerWeekControllerSpec extends PlaySpec with TryValues with ScalaFutur
 
     def return303(
       fetchResponse: Option[QuickCalcAggregateInput],
-      redirectUrl: String
+      redirectUrl: String,
+      lang: String = "en"
     ) = {
       val mockCache = mock[QuickCalcCache]
 
@@ -282,13 +267,14 @@ class HoursPerWeekControllerSpec extends PlaySpec with TryValues with ScalaFutur
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
         .build()
-      implicit val messages: Messages = messagesForApp(application)
+      implicit val messages: Messages = messagesForApp(application, lang)
       running(application) {
         val formData = Map("amount" -> "1", "how-many-a-week" -> "40.5")
 
         val request = FakeRequest(POST, routes.HoursPerWeekController.submitHoursAWeek(1).url)
           .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
           .withHeaders(HeaderNames.xSessionId -> "test-salary")
+          .withCookies(Cookie("PLAY_LANG", lang))
           .withCSRFToken
 
         val result = route(application, request).value
@@ -310,6 +296,15 @@ class HoursPerWeekControllerSpec extends PlaySpec with TryValues with ScalaFutur
           cacheTaxCodeStatePension
             .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None)),
           routes.StatePensionController.showStatePensionForm().url
+        )
+      }
+
+      "New Hours worked, 40.5 and incomplete aggregate, redirect show state pension page in welsh" in {
+        return303(
+          cacheTaxCodeStatePension
+            .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None)),
+          routes.StatePensionController.showStatePensionForm().url,
+          lang = "cy"
         )
       }
     }
