@@ -80,7 +80,7 @@ class HoursPerWeekController @Inject() (
                         )
                 ),
                 savedPeriod = Some(
-                  PayPeriodDetail(value, hours.howManyAWeek, Messages("quick_calc.salary.hourly.label"), url)
+                  PayPeriodDetail(value, hours.howManyAWeek, Messages("an hour"), url)
                 )
               )
             )

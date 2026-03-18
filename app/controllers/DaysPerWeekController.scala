@@ -81,7 +81,7 @@ class DaysPerWeekController @Inject() (
                       Some(monthlyAmount)
                     )
                   ),
-                  savedPeriod = Some(PayPeriodDetail(value, days.howManyAWeek, Messages("quick_calc.salary.daily.label"), url))
+                  savedPeriod = Some(PayPeriodDetail(value, days.howManyAWeek, Messages("a day"), url))
                 )
               )
 

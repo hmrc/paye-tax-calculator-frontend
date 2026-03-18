@@ -310,7 +310,8 @@ class DaysPerWeekControllerSpec extends PlaySpec with TryValues with ScalaFuture
 
       def return303(
         fetchResponse: Option[QuickCalcAggregateInput],
-        redirectUrl: String
+        redirectUrl: String,
+        lang: String = "en"
       ) = {
         val mockCache = mock[QuickCalcCache]
 
@@ -320,14 +321,17 @@ class DaysPerWeekControllerSpec extends PlaySpec with TryValues with ScalaFuture
         val application = new GuiceApplicationBuilder()
           .overrides(bind[QuickCalcCache].toInstance(mockCache))
           .build()
-        implicit val messages: Messages = messagesForApp(application)
+        implicit val messages: Messages = messagesForApp(application, lang)
         running(application) {
           val formData = Map("amount" -> "1", "how-many-a-week" -> "5")
 
           val request = FakeRequest(POST, routes.DaysPerWeekController.submitDaysAWeek(1).url)
             .withFormUrlEncodedBody(form.bind(formData).data.toSeq*)
             .withHeaders(HeaderNames.xSessionId -> "test-salary")
+            .withCookies(Cookie("PLAY_LANG", lang))
             .withCSRFToken
+          
+          println("Print language="+lang)
 
           val result = route(application, request).value
 
@@ -346,6 +350,15 @@ class DaysPerWeekControllerSpec extends PlaySpec with TryValues with ScalaFuture
           cacheTaxCodeStatePension
             .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None)),
           routes.StatePensionController.showStatePensionForm().url
+        )
+      }
+
+      "new days worked, 5 and incomplete aggregate in welsh" in {
+        return303(
+          cacheTaxCodeStatePension
+            .map(_.copy(savedIsOverStatePensionAge = None, savedTaxCode = None, savedScottishRate = None)),
+          routes.StatePensionController.showStatePensionForm().url,
+          lang = "cy"
         )
       }
     }
