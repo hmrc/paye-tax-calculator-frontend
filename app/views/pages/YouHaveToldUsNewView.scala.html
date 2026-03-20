@@ -36,7 +36,7 @@
         appConfig: config.AppConfig
 )
 
-@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean, pensionWarning: Boolean, roundedMonthlySalary: String, scottishDefined: Boolean, scottishResidentCheck: Boolean, yearlyWFPSalary: Boolean)(implicit request: RequestHeader, messages: Messages)
+@(items: List[YouHaveToldUsItem], additionalQuestionItem: List[AdditionalQuestionItem], warningMessages: Map[String, String],   taxCodeExists: Boolean, pensionContributionsExists: Boolean, givenPensionPercentage: Boolean, studentLoansDefined: Boolean, postGradLoansDefined: Boolean, pensionWarning: Boolean, roundedMonthlySalary: String, scottishDefined: Boolean, scottishResidentCheck: Boolean, yearlyWFPSalary: Boolean, isAbovePensionAge: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @rows = @{
     items.map { item =>
@@ -218,10 +218,10 @@ s"""${item.value} ${if(warningMessages.contains(item.label)) warningText(warning
 @backButtonUrl = @{
 
 if(appConfig.features.winterFuelPaymentFeature()){
-    if(scottishResidentCheck && yearlyWFPSalary){
+    if(scottishResidentCheck && yearlyWFPSalary && isAbovePensionAge){
         controllers.routes.ScottishWinterFuelPaymentsController.showScottishWinterFuelPayments().url
     }
-    else if (!scottishResidentCheck && yearlyWFPSalary){
+    else if (!scottishResidentCheck && yearlyWFPSalary && isAbovePensionAge){
         controllers.routes.WinterFuelPaymentsController.showWinterFuelPayments().url
     }
     else{
