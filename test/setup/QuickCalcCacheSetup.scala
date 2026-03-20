@@ -97,7 +97,7 @@ object QuickCalcCacheSetup {
   val cacheTestStatusPensionNO: Option[StatePension] = Some(StatePension(false))
   val cacheTestYearlySalary: Option[Salary] = Some(Salary(20000, None, None, Yearly, None, None))
   def testSalaryForStudentLoanPlan5(amountSalary: BigDecimal): Salary =
-    Salary(amount = amountSalary, amountYearly = None, previousAmountYearly = None, period = Yearly, howManyAWeek = None, monthlyAmount = None)
+    Salary(amount = amountSalary, amountYearly = Some(amountSalary), previousAmountYearly = None, period = Yearly, howManyAWeek = None, monthlyAmount = None)
 
   val cacheTestYearlySalaryLessThan100k: Option[Salary] = Some(Salary(90000, None, None, Yearly, None, None))
   val cacheTestFourWeeklySalary: Option[Salary] = Some(Salary(20000, None, None, FourWeekly, None, None))
@@ -234,6 +234,26 @@ object QuickCalcCacheSetup {
       savedTaxCode                  = cacheDefaultTestTaxCode,
       savedIsOverStatePensionAge    = cacheTestStatusPensionNO,
       savedScottishRate             = cacheTestScottishNO,
+      savedStudentLoanContributions = studentLoanContributions(studentLoanPlan)
+    )
+  )
+
+  def createStudentLoanTestDataWithPensionAndIsScottish(salary: Salary, studentLoanPlan: StudentLoanPlan): Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary = Some(salary),
+      savedTaxCode = cacheTestTaxCodeScottish,
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedScottishRate = cacheTestScottishYES,
+      savedStudentLoanContributions = studentLoanContributions(studentLoanPlan),
+      savedIsScottishResident = cacheTestIsScottishResidnetYes
+    )
+  )
+
+  def createStudentLoanTestDataWithPensionAndNotScottish(salary: Salary, studentLoanPlan: StudentLoanPlan): Option[QuickCalcAggregateInput] = Some(
+    QuickCalcAggregateInput.newInstance.copy(
+      savedSalary = Some(salary),
+      savedIsOverStatePensionAge = cacheTestStatePensionYES,
+      savedScottishRate = cacheTestScottishNO,
       savedStudentLoanContributions = studentLoanContributions(studentLoanPlan)
     )
   )

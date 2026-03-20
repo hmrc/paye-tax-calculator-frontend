@@ -71,7 +71,8 @@ class YouHaveToldUsNewController @Inject() (
                 aggregateConditionsUtil.roundedMonthlySalary(aggregate),
                 aggregateConditionsUtil.isScottishRateDefined(aggregate),
                 aggregateConditionsUtil.isScottishResidentDefined(aggregate),
-                aggregateConditionsUtil.yearlyWFPSalary(aggregate)
+                aggregateConditionsUtil.yearlyWFPSalary(aggregate),
+                aggregateConditionsUtil.isAbovePensionAge(aggregate)
               )
             )
           } else

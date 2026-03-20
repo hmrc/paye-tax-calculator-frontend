@@ -55,6 +55,9 @@ class AggregateConditionsUtil @Inject() {
   }
 
   def yearlyWFPSalary(aggregateInput: QuickCalcAggregateInput): Boolean = aggregateInput.savedSalary.exists(_.amountYearly > Some(35000))
+  
+  def isAbovePensionAge(aggregateInput: QuickCalcAggregateInput): Boolean = 
+    aggregateInput.savedIsOverStatePensionAge.exists(_.overStatePensionAge)
 
   def isPensionWarning(aggregateInput: QuickCalcAggregateInput, enableFutureDate: Boolean = false): Boolean = {
     val monthlyContributions: BigDecimal =
