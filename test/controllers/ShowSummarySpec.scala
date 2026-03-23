@@ -150,6 +150,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         .thenReturn(Future.successful(createStudentLoanTestDataWithPensionAndIsScottish(testSalaryForStudentLoanPlan5(50000), PlanFive)))
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .configure("features.enableWinterFuelPayment" -> true)
         .build()
 
       running(application) {
@@ -158,9 +159,6 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
           .withCSRFToken
 
         val result = route(application, request).value
-
-
-
         status(result) mustBe OK
 
         val responseBody = contentAsString(result)
@@ -193,6 +191,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         .thenReturn(Future.successful(createStudentLoanTestDataWithPensionAndNotScottish(testSalaryForStudentLoanPlan5(50000), PlanFive)))
       val application = new GuiceApplicationBuilder()
         .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .configure("features.enableWinterFuelPayment" -> true)
         .build()
 
       running(application) {
