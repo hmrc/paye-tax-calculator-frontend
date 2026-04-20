@@ -132,6 +132,8 @@ quick_calc.result.tabLabels.weekly=Bob wythnos
 quick_calc.result.tabLabels.fourWeekly=Bob 4 wythnos
 quick_calc.result.info.new=Nid yw’n cyfrifiad yn rhoi ystyriaeth i unrhyw ddidyniadau eraill y gallai’ch cyflogwr eu gwneud cyn iddo eich talu. Ni fyddwn yn cadw cofnod o’ch data am resymau diogelwch.
 
+quick_calc.whichRepaymentPlan=Dewch o hyd i ba
+quick_calc.whichRepaymentPlan.link=gynllun ad-dalu sydd gennych (yn agor tab newydd)
 
 quick_calc.result.23_24.disclaimer.yearly=O ganlyniad, bydd eich cyflog clir gwirioneddol, yn is na’r amcangyfrif a ddangosir.
 quick_calc.result.23_24.disclaimer.monthly=O ganlyniad, bydd eich cyflog clir ar gyfer unrhyw fis o 6 Ebrill 2023 i 6 Ionawr 2024 yn is na’r amcangyfrif a ddangosir.
