@@ -103,6 +103,7 @@ class StudentLoanContributionsControllerSpec
         val radios = doc.select(".govuk-radios__item")
         val button = doc.select(".govuk-button").text
         val deskpro = doc.select(".govuk-link")
+        val repaymentLink = doc.select(".govuk-body")
         val checkedRadios = doc.select(".govuk-radios__input[checked]").attr("value")
         checkedRadios mustEqual "plan one"
 
@@ -118,6 +119,8 @@ class StudentLoanContributionsControllerSpec
         radios.get(3).text mustEqual messages("quick_calc.salary.studentLoan.plan5.text")
         radios.get(4).text mustEqual messages("quick_calc.salary.studentLoan.noneOfThese.text")
         button mustEqual messages("continue")
+        repaymentLink.text() must include(messages("quick_calc.whichRepaymentPlan"))
+        deskpro.text() must include(messages("quick_calc.whichRepaymentPlan.link"))
         if (lang == "cy")
           deskpro.text()    must include("A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)")
         else deskpro.text() must include("Is this page not working properly? (opens in new tab)")
