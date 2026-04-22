@@ -6,6 +6,18 @@ $(document).ready(function() {
     numberInputs();
 
     // =====================================================
+    // Update personal allowance in sidebar when tabs change
+    // =====================================================
+    var $allowanceSpan = $('#js-personal-allowance');
+    if ($allowanceSpan.length) {
+        $('.govuk-tabs__tab').on('click', function() {
+            var period = $(this).attr('href').replace('#', '').toLowerCase().replace(/_/g, '-');
+            var value = $allowanceSpan.attr('data-' + period);
+            if (value) $allowanceSpan.text(value);
+        });
+    }
+
+    // =====================================================
     // Back link mimics browser back functionality
     // =====================================================
 

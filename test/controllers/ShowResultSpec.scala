@@ -17,17 +17,16 @@
 package controllers
 
 import config.features.Features
-import forms.{PlanFive, PlanFour, PlanTwo, TaxResult, Yearly}
+import forms.*
 import models.{QuickCalcAggregateInput, Salary, StudentLoanContributions}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.mockito.ArgumentMatchers.{any, contains}
-import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, TryValues}
 import org.scalatest.concurrent.IntegrationPatience
+import org.scalatest.{BeforeAndAfterEach, TryValues}
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{Application, Configuration}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -35,14 +34,15 @@ import play.api.mvc.{AnyContentAsEmpty, Cookie}
 import play.api.test.CSRFTokenHelper.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{status, *}
+import play.api.{Application, Configuration}
 import services.QuickCalcCache
 import setup.BaseSpec
 import setup.QuickCalcCacheSetup.*
 import uk.gov.hmrc.http.HeaderNames
 
 import java.time.LocalDate
-import scala.jdk.CollectionConverters.*
 import scala.concurrent.Future
+import scala.jdk.CollectionConverters.*
 
 class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience with CSRFTestHelper with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
@@ -503,6 +503,77 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         }
       }
     }
+    "load results.js on the results page" in {
+      val mockCache = MockitoSugar.mock[QuickCalcCache]
+      when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(cacheTaxCodeStatePensionSalary))
+      val application = new GuiceApplicationBuilder()
+        .overrides(bind[QuickCalcCache].toInstance(mockCache))
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+          .withHeaders(HeaderNames.xSessionId -> "test")
+          .withCSRFToken
+        val result  = route(application, request).get
+        val doc     = Jsoup.parse(contentAsString(result))
+        val scripts = doc.select("script[src]").asScala.map(_.attr("src"))
+        scripts.exists(_.contains("results.js")) mustBe true
+      }
+    }
+
+    "render personal allowance sidebar span with all period data attributes" when {
+
+      def personalAllowanceSpan(fetchResponse: Option[QuickCalcAggregateInput]) = {
+        val mockCache = MockitoSugar.mock[QuickCalcCache]
+        when(mockCache.fetchAndGetEntry()(any())).thenReturn(Future.successful(fetchResponse))
+        val application = new GuiceApplicationBuilder()
+          .overrides(bind[QuickCalcCache].toInstance(mockCache))
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.ShowResultsController.showResult().url)
+            .withHeaders(HeaderNames.xSessionId -> "test")
+            .withCSRFToken
+          val result = route(application, request).get
+          Jsoup.parse(contentAsString(result)).select("#js-personal-allowance").first()
+        }
+      }
+
+      "salary is yearly — initial value matches data-yearly" in {
+        val span = personalAllowanceSpan(cacheTaxCodeStatePensionSalary)
+        span must not be null
+        span.attr("data-yearly")     must not be empty
+        span.attr("data-monthly")    must not be empty
+        span.attr("data-four-weekly") must not be empty
+        span.attr("data-weekly")     must not be empty
+        span.text() mustEqual span.attr("data-yearly")
+      }
+
+      "salary is monthly — initial value matches data-monthly" in {
+        val cache = cacheTaxCodeStatePensionSalary.map(
+          _.copy(savedSalary = Some(Salary(2000, None, None, Monthly, None, None)))
+        )
+        val span = personalAllowanceSpan(cache)
+        span must not be null
+        span.text() mustEqual span.attr("data-yearly")
+      }
+
+      "salary is four-weekly — initial value matches data-four-weekly" in {
+        val span = personalAllowanceSpan(cacheTaxCodeStatePensionSalaryFourWeekly)
+        span must not be null
+        span.text() mustEqual span.attr("data-yearly")
+      }
+
+      "salary is weekly — initial value matches data-weekly" in {
+        val cache = cacheTaxCodeStatePensionSalary.map(
+          _.copy(savedSalary = Some(Salary(500, None, None, Weekly, None, None)))
+        )
+        val span = personalAllowanceSpan(cache)
+        span must not be null
+        span.text() mustEqual span.attr("data-yearly")
+      }
+    }
+
     "Student has opted for plan 5" when {
       "Annual salary is £21,199.92" in {
         studentLoanCalc(

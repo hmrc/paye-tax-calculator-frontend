@@ -27,7 +27,7 @@ import play.api.mvc.*
 import play.twirl.api.Html
 import services.{Navigator, QuickCalcCache}
 import uk.gov.hmrc.calculator.exception.InvalidPensionException
-import uk.gov.hmrc.calculator.model.CalculatorResponse
+import uk.gov.hmrc.calculator.model.{CalculatorResponse, CalculatorResponsePayPeriod, PayPeriod}
 import uk.gov.hmrc.calculator.utils.clarification.Clarification
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.GetCurrentTaxYear.getCurrentTaxYear
@@ -68,6 +68,22 @@ class ShowResultsController @Inject() (
     defaultTaxCodeProvider: DefaultTaxCodeProvider
   ): CalculatorResponse =
     TaxResult.taxCalculation(aggregateInput, defaultTaxCodeProvider, appConfig.enableFutureDate)
+  
+  
+  private def getResponseByPeriod(
+    aggregateInput: QuickCalcAggregateInput
+  ): CalculatorResponsePayPeriod = {
+    val response = getTaxCalculation(aggregateInput, defaultTaxCodeProvider)
+    TaxResult.extractPayPeriod(aggregateInput) match {
+      case PayPeriod.HOURLY      => response.getWeekly
+      case PayPeriod.DAILY       => response.getWeekly
+      case PayPeriod.WEEKLY      => response.getWeekly
+      case PayPeriod.FOUR_WEEKLY => response.getFourWeekly
+      case PayPeriod.MONTHLY     => response.getMonthly
+      case PayPeriod.YEARLY      => response.getYearly
+    }
+  }
+
 
   private def getClarifications(
     aggregateInput: QuickCalcAggregateInput,
@@ -78,11 +94,22 @@ class ShowResultsController @Inject() (
   def sideBarBullets(aggregateInput: QuickCalcAggregateInput)(implicit messages: Messages): Seq[Option[Html]] = {
     val listOfClarifications = getClarifications(aggregateInput, defaultTaxCodeProvider)
 
+    val response            = getTaxCalculation(aggregateInput, defaultTaxCodeProvider)
+    val yearlyAllowance     = moneyFormatter(response.getYearly.getTaxFree)
+    val monthlyAllowance    = moneyFormatter(response.getMonthly.getTaxFree)
+    val fourWeeklyAllowance = moneyFormatter(response.getFourWeekly.getTaxFree)
+    val weeklyAllowance     = moneyFormatter(response.getWeekly.getTaxFree)
+    val initialAllowance    = yearlyAllowance
+
     val keyValuePair: Map[Clarification, Option[Html]] = Map(
       Clarification.NO_TAX_CODE_SUPPLIED -> Some(
         Html(
           Messages("quick_calc.result.sidebar.personal_allowance",
-                   moneyFormatter(getTaxCalculation(aggregateInput, defaultTaxCodeProvider).getYearly.getTaxFree)
+                   s"""<span id="js-personal-allowance"
+                       |  data-yearly="$yearlyAllowance"
+                       |  data-monthly="$monthlyAllowance"
+                       |  data-four-weekly="$fourWeeklyAllowance"
+                       |  data-weekly="$weeklyAllowance">$initialAllowance</span>""".stripMargin
                   )
         )
       ),
