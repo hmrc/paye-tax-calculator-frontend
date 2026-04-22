@@ -133,7 +133,7 @@ quick_calc.result.tabLabels.fourWeekly = 4 weekly
 quick_calc.result.info.new=Our calculation does not account for any other deductions your employer might make before they pay you. We will not keep a record of your data for security reasons.
 
 quick_calc.whichRepaymentPlan=Find out which
-quick_calc.whichRepaymentPlan.link=repayment plan you're on (opens in a new tab)
+quick_calc.whichRepaymentPlan.link=repayment plan you''re on (opens in a new tab)
 
 
 quick_calc.result.23_24.disclaimer.yearly=As a result, your actual take-home pay will be less than the estimate shown.
