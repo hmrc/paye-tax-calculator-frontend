@@ -247,12 +247,17 @@ object TaxResult {
   }
 
   def moneyFormatterResult(value2: BigDecimal): String = {
-    val roundedValue = value2.setScale(2, RoundingMode.HALF_UP)
+    val normalized = value2.bigDecimal.stripTrailingZeros()
     val formatter = java.text.NumberFormat.getInstance
-    formatter.setMaximumFractionDigits(2)
-    formatter.setMinimumFractionDigits(2)
-    val formattedValue = formatter.format(roundedValue)
-    formattedValue
+    if (normalized.scale <= 0) {
+      formatter.setMinimumFractionDigits(0)
+      formatter.setMaximumFractionDigits(0)
+      formatter.format(normalized)
+    } else {
+      formatter.setMinimumFractionDigits(2)
+      formatter.setMaximumFractionDigits(2)
+      formatter.format(value2.bigDecimal.setScale(2, RoundingMode.HALF_UP))
+    }
   }
 
   def kCodeLabel(
