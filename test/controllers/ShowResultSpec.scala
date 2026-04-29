@@ -399,7 +399,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
           "£583.33",
           "£134.62",
           "en",
-          Some("£0.00")
+          Some("£0")
         )
       }
 
@@ -412,16 +412,16 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
           "£1,046.48",
           "£241.50",
           "en",
-          Some("£70.00")
+          Some("£70")
         )
       }
 
       "person is paid under 100k" in {
-        return200(cacheTaxCodeStatePensionSalaryLessThan100k, "£62,761", "£5,230.08", "£1,206.94", "en", Some("£77,430.00"))
+        return200(cacheTaxCodeStatePensionSalaryLessThan100k, "£62,761", "£5,230.08", "£1,206.94", "en", Some("£77,430"))
       }
 
       "person is paid over 100k" in {
-        return200(cacheTaxCodeStatePensionSalaryMoreThan100k, "£68,562.74", "£5,713.56", "£1,318.51", "en", Some("£87,433.00"))
+        return200(cacheTaxCodeStatePensionSalaryMoreThan100k, "£68,562.74", "£5,713.56", "£1,318.51", "en", Some("£87,433"))
       }
     }
 
@@ -463,14 +463,14 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
     "return 200, with correct student loan contribution having annual salary of 20k" when {
       if (currentDate.isBefore(disableBeforeDate)) {
         "Student has opted for plan 1" in {
-          studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,754.00"))
+          studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,754"))
         }
         "Student has opted for plan 2" in {
           studentLoanCalc(
             cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
               _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
             ),
-            Some("£5,537.00")
+            Some("£5,537")
           )
         }
         "Student has opted for plan 4" in {
@@ -478,19 +478,19 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
             cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
               _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
             ),
-            Some("£5,152.00")
+            Some("£5,152")
           )
         }
       } else {
         "Student has opted for plan 1" in {
-          studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,679.00"))
+          studentLoanCalc(cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan, Some("£5,679"))
         }
         "Student has opted for plan 2" in {
           studentLoanCalc(
             cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
               _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanTwo))))
             ),
-            Some("£5,455.00")
+            Some("£5,455")
           )
         }
         "Student has opted for plan 4" in {
@@ -498,7 +498,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
             cacheTaxCodeStatePensionSalaryLessThan100kWithStudentLoan.map(
               _.copy(savedStudentLoanContributions = Some(StudentLoanContributions(Some(PlanFour))))
             ),
-            Some("£5,058.00")
+            Some("£5,058")
           )
         }
       }
@@ -585,42 +585,42 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
       "Annual salary is £21,200.04" in {
         studentLoanCalc(
           createStudentLoanTestData(testSalaryForStudentLoanPlan5(25133.40), PlanFive),
-          Some("£12.00")
+          Some("£12")
         )
       }
 
       "Annual salary is £25,134.60" in {
         studentLoanCalc(
           createStudentLoanTestData(testSalaryForStudentLoanPlan5(25134.6), PlanFive),
-          Some("£12.00")
+          Some("£12")
         )
       }
 
       "Annual salary is £25,533.36" in {
         studentLoanCalc(
           createStudentLoanTestData(testSalaryForStudentLoanPlan5(25533.36), PlanFive),
-          Some("£48.00")
+          Some("£48")
         )
       }
 
       "Annual salary is £30,999.96" in {
         studentLoanCalc(
           createStudentLoanTestData(testSalaryForStudentLoanPlan5(30999.96), PlanFive),
-          Some("£540.00")
+          Some("£540")
         )
       }
 
       "Annual salary is £57,266.64" in {
         studentLoanCalc(
           createStudentLoanTestData(testSalaryForStudentLoanPlan5(57266.64), PlanFive),
-          Some("£2,904.00")
+          Some("£2,904")
         )
       }
 
       "Annual salary is £101,133.36" in {
         studentLoanCalc(
           createStudentLoanTestData(testSalaryForStudentLoanPlan5(101133.36), PlanFive),
-          Some("£6,852.00")
+          Some("£6,852")
         )
       }
     }

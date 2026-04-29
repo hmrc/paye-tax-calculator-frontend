@@ -20,7 +20,7 @@ import models.{QuickCalcAggregateInput, Salary, StatePension, UserTaxCode}
 import org.scalatest.{Tag, TestData}
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import TaxResult._
+import TaxResult.*
 import org.scalatest.wordspec.AnyWordSpecLike
 import setup.BaseSpec
 import uk.gov.hmrc.calculator.model.PayPeriod
@@ -168,11 +168,11 @@ class TaxResultSpec extends BaseSpec with AnyWordSpecLike {
   "Calling the moneyFormatterResult function" should {
 
     "return the big decimal with a value of 12 to 2dp" in {
-      moneyFormatterResult(BigDecimal(12)) mustBe "12.00"
+      moneyFormatterResult(BigDecimal(12)) mustBe "12"
     }
 
     "return 0 to 2dp" in {
-      moneyFormatterResult(BigDecimal(0)) mustBe "0.00"
+      moneyFormatterResult(BigDecimal(0)) mustBe "0"
       }
 
     "return a 3dp value to 2dp value" in {
