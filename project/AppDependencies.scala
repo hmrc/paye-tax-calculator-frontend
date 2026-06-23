@@ -6,8 +6,8 @@ object AppDependencies {
 
   private val bootstrapPlay30Version = "10.7.0"
   private val taxYearVersion = "6.0.0"
-  private val taxKalcVersion = "2.16.0"
-  private val hmrcFrontend = "12.32.0"
+  private val taxKalcVersion = "2.16.1"
+  private val hmrcFrontend = "12.32.1"
   private val mongoVersion = "2.12.0"
 
   val compile: Seq[ModuleID] = Seq(
