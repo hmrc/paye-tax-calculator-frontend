@@ -42,5 +42,29 @@ class UserTaxCodeSpec extends BaseSpec with AnyWordSpecLike {
       hasError mustBe true
       errorMessageKey mustBe form.errors.head.message
     }
+
+    Seq(
+      "0TABC",
+      "BRABC",
+      "D0ABC",
+      "D1ABC",
+      "C0TABC",
+      "CBRABC",
+      "CD0ABC",
+      "CD1ABC",
+      "S0TABC",
+      "SBRABC",
+      "SD0ABC",
+      "SD1ABC",
+      "SD2ABC",
+      "SD3ABC"
+    ).foreach { taxCode =>
+      s"return an error when standalone tax code $taxCode has an invalid suffix" in {
+        val form = userTaxCodeForm.bind(Map("hasTaxCode" -> "true", "taxCode" -> taxCode))
+
+        form.hasErrors mustBe true
+        form.errors.head.message must startWith("quick_calc.about_tax_code.wrong_tax_code")
+      }
+    }
   }
 }
