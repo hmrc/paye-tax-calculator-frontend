@@ -41,7 +41,7 @@ object GetCurrentTaxYear {
   def getTaxYear(enableFutureDate: Boolean = false): Int = {
     val currentDate = LocalDate.now(ZoneId.of("Europe/London"))
     val taxYear = TaxYear(currentDate.getYear)
-   if (enableFutureDate && currentDate.isBefore(taxYear.starts)) {
+    if (enableFutureDate && currentDate.isBefore(taxYear.starts)) {
      TaxYear.current.currentYear + 1
     } else {
       TaxYear.current.currentYear

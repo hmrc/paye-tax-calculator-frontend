@@ -70,7 +70,7 @@ class ScottishWinterFuelPaymentsControllerSpec extends PlaySpec with TryValues w
         val view = application.injector.instanceOf[WinterFuelPaymentView]
         val result = route(application, request).value
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val header = doc.select(".govuk-header").text
+        val header = doc.select(".govuk-service-navigation").text
         val betaBanner = doc.select(".govuk-phase-banner").text
         val heading = doc.select(".govuk-heading-xl").text
         val content = doc.select(".govuk-body").text
@@ -80,9 +80,9 @@ class ScottishWinterFuelPaymentsControllerSpec extends PlaySpec with TryValues w
 
         status(result) mustEqual OK
         header must include(messages("quick_calc.header.title"))
-        betaBanner must include(messages("feedback.before"))
-        betaBanner must include(messages("feedback.link"))
-        betaBanner must include(messages("feedback.after"))
+        betaBanner must include(messages("phase.banner.before"))
+        betaBanner must include(messages("phase.banner.link"))
+        betaBanner must include(messages("phase.banner.after"))
         heading mustEqual messages("quick_calc.scottish_wfp_heading")
         button mustEqual messages("continue")
         warningText must include(messages("quick_calc.wfp_warning"))

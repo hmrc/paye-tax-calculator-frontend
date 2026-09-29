@@ -25,7 +25,6 @@
         link: components.linkNewTab,
         inputRadio: components.inputRadio,
         button: components.button,
-        beforeContent: components.beforeContent,
         appConfig: config.AppConfig,
         details: components.details,
         features: config.features.Features
@@ -56,7 +55,7 @@ scottishResidentForm("isScottishResident")
     controllers.routes.StatePensionController.showStatePensionForm().url
 }
 
-@govuk_wrapper(Some(title(scottishResidentForm, Messages("quick_calc.scottish_resident.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
+@govuk_wrapper(Some(title(scottishResidentForm, Messages("quick_calc.scottish_resident.header"))), backLinkUrl = Some(backButtonUrl)) {
 
     @formHelper(action = controllers.routes.ScotlandResidentController.submitScottishResidentForm()) {
 

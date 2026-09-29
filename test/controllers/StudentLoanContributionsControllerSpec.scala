@@ -96,7 +96,7 @@ class StudentLoanContributionsControllerSpec
 
         val view = application.injector.instanceOf[StudentLoansContributionView]
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val header = doc.select(".govuk-header").text
+        val header = doc.select(".govuk-service-navigation").text
         val betaBanner = doc.select(".govuk-phase-banner").text
         val heading = doc.select(".govuk-heading-xl").text
         val subHeading = doc.select(".govuk-fieldset__legend").text
@@ -108,9 +108,9 @@ class StudentLoanContributionsControllerSpec
         checkedRadios mustEqual "plan one"
 
         header     must include(messages("quick_calc.header.title"))
-        betaBanner must include(messages("feedback.before"))
-        betaBanner must include(messages("feedback.link"))
-        betaBanner must include(messages("feedback.after"))
+        betaBanner must include(messages("phase.banner.before"))
+        betaBanner must include(messages("phase.banner.link"))
+        betaBanner must include(messages("phase.banner.after"))
         heading mustEqual messages("quick_calc.salary.studentLoan.header")
         subHeading mustEqual messages("quick_calc.salary.studentLoan.subheading")
         radios.get(0).text mustEqual messages("quick_calc.salary.studentLoan.plan1.text")

@@ -322,7 +322,7 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
 
         val result = route(application, request).get
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val header = doc.select(".govuk-header").text
+        val header = doc.select(".govuk-service-navigation").text
         val betaBanner = doc.select(".govuk-phase-banner").text
         val heading = doc.select(".govuk-heading-xl").text
         val subHeading = doc.select(".govuk-heading-l").text
@@ -377,9 +377,9 @@ class ShowSummarySpec extends PlaySpec with TryValues with ScalaFutures with Int
         )
 
         header     must include(messages("quick_calc.header.title"))
-        betaBanner must include(messages("feedback.before"))
-        betaBanner must include(messages("feedback.link"))
-        betaBanner must include(messages("feedback.after"))
+        betaBanner must include(messages("phase.banner.before"))
+        betaBanner must include(messages("phase.banner.link"))
+        betaBanner must include(messages("phase.banner.after"))
         heading mustEqual messages("quick_calc.you_have_told_us.header")
         subHeading must include(messages("quick_calc.you_have_told_us.subheading"))
         button mustEqual messages("calculate_take_home_pay")

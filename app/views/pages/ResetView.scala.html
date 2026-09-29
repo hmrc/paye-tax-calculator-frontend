@@ -16,19 +16,17 @@
 
 @import play.api.i18n._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
-@import views.html.components.beforeContent
 
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
         h1: components.h1,
-        button: components.button,
-        beforeContent: components.beforeContent
+        button: components.button
 )
 
 @()(implicit request: RequestHeader, messages: Messages)
 
-@govuk_wrapper(Some(titleNoForm(Messages("reset.h1"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = false, timeout = false) {
+@govuk_wrapper(Some(titleNoForm(Messages("reset.h1"))), backLinkUrl = Some("https://www.gov.uk/estimate-income-tax"), showAppBanner = false, timeout = false) {
 
     @h1("reset.h1")
 

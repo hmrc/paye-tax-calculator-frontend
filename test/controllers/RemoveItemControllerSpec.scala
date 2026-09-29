@@ -301,16 +301,16 @@ class RemoveItemControllerSpec extends BaseSpec with TryValues with ScalaFutures
         val result = route(application, request).get
         val doc: Document = Jsoup.parse(contentAsString(result))
 
-        val header = doc.select(".govuk-header").text
+        val header = doc.select(".govuk-service-navigation").text
         val betaBanner = doc.select(".govuk-phase-banner").text
         val heading = doc.select(".govuk-fieldset__heading").text
         val button = doc.select(".govuk-button").text
         val deskproLink = doc.select(".govuk-link")
 
         header     must include(messages("quick_calc.header.title"))
-        betaBanner must include(messages("feedback.before"))
-        betaBanner must include(messages("feedback.link"))
-        betaBanner must include(messages("feedback.after"))
+        betaBanner must include(messages("phase.banner.before"))
+        betaBanner must include(messages("phase.banner.link"))
+        betaBanner must include(messages("phase.banner.after"))
         heading mustEqual (messages(s"quick_calc.remove.$item"))
 
         button mustEqual (messages("continue"))

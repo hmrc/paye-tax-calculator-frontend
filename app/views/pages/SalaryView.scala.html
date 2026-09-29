@@ -16,20 +16,18 @@
 
 @import play.api.i18n._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
-@import views.html.components.beforeContent
 @import forms.SalaryPeriodForm
 
 @this(
         govuk_wrapper: templates.GovukLayoutWrapper,
         formHelper: FormWithCSRF,
-        hmrcCurrencyInput: HmrcCurrencyInput,
+        govukInput: GovukInput,
         h2: components.h2,
         errorSummary: components.errorSummary,
         inputNumber: components.inputNumber,
         p: components.p,
         inputRadio: components.inputRadio,
         button: components.button,
-        beforeContent: components.beforeContent,
         label: components.label,
         features: config.features.Features
 )
@@ -81,7 +79,7 @@
     )
 }
 
-@govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), beforeContentBlock = beforeContent("https://www.gov.uk/estimate-income-tax"), showAppBanner = true) {
+@govuk_wrapper(Some(title(salaryForm, Messages("quick_calc.salary.header"))), backLinkUrl = Some("https://www.gov.uk/estimate-income-tax"), showAppBanner = true) {
 
     @formHelper(action = controllers.routes.SalaryController.submitSalaryAmount()) {
 
@@ -91,19 +89,20 @@
 
             @label(messages("quick_calc.salary.grossAmount.label"))
 
-        @hmrcCurrencyInput(CurrencyInput(
-            id = "amount",
-            name = "amount",
-            hint = Some(Hint(content = Text(Messages("hint.salary")))),
-            label = Label(
-                content = Text(messages("label.incomeAmount.visuallyHidden")),
-                classes = "govuk-visually-hidden"
-            ),
-            value = salaryForm("amount").value,
-            classes = "govuk-input--width-10",
-            autocomplete = Some("off"),
-            errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args*))))
-        ))
+            @govukInput(Input(
+                id = "amount",
+                name = "amount",
+                prefix = Some(PrefixOrSuffix(content = Text("£"))),
+                hint = Some(Hint(content = Text(Messages("hint.salary")))),
+                label = Label(
+                    content = Text(messages("label.incomeAmount.visuallyHidden")),
+                    classes = "govuk-visually-hidden"
+                ),
+                value = salaryForm("amount").value,
+                classes = "govuk-input--width-10",
+                autocomplete = Some("off"),
+                errorMessage = salaryForm("amount").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args*))))
+            ))
 
             @inputRadio(
                 legendAsHeading = true,

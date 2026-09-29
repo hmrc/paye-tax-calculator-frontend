@@ -4,11 +4,11 @@ import sbt.*
 
 object AppDependencies {
 
-  private val bootstrapPlay30Version = "10.7.0"
+  private val bootstrapPlay30Version = "10.8.0"
   private val taxYearVersion = "6.0.0"
   private val taxKalcVersion = "2.16.1"
-  private val hmrcFrontend = "12.32.1"
-  private val mongoVersion = "2.12.0"
+  private val hmrcFrontend = "13.15.0"
+  private val mongoVersion = "2.14.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
@@ -20,13 +20,15 @@ object AppDependencies {
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"         % mongoVersion
   )
 
-  private val scalaTestPlusMockitoVersion = "3.2.12.0"
-  private val scalacheckVersion = "1.19.0"
-  private val scalamockScalaTestSupportVersion = "7.5.5"
+  private val scalaTestVersion = "3.2.20"
+  private val scalaTestPlusMockitoVersion = "3.2.20.0"
+  private val scalacheckVersion = "1.20.0"
+  private val scalamockScalaTestSupportVersion = "7.5.0"
 
   def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-test-play-30"  % bootstrapPlay30Version           % scope,
-    "org.scalatestplus" %% "mockito-4-5"             % scalaTestPlusMockitoVersion      % scope,
+    "org.scalatest"     %% "scalatest"               % scalaTestVersion                 % scope,
+    "org.scalatestplus" %% "mockito-5-23"            % scalaTestPlusMockitoVersion      % scope,
     "org.scalacheck"    %% "scalacheck"              % scalacheckVersion                % scope,
     "org.scalamock"     %% "scalamock"               % scalamockScalaTestSupportVersion % scope,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30" % mongoVersion                     % scope
