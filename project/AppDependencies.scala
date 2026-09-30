@@ -23,7 +23,7 @@ object AppDependencies {
   private val scalaTestVersion = "3.2.20"
   private val scalaTestPlusMockitoVersion = "3.2.20.0"
   private val scalacheckVersion = "1.20.0"
-  private val scalamockScalaTestSupportVersion = "7.5.0"
+  private val scalamockScalaTestSupportVersion = "7.5.5"
 
   def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-test-play-30"  % bootstrapPlay30Version           % scope,
