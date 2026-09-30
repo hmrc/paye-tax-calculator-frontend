@@ -19,7 +19,6 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
-@import views.components.FooterLinks
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcScripts
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
 @import views.html.helper.CSPNonce
@@ -29,6 +28,7 @@
     hmrcStandardPage: HmrcStandardPage,
     standardBetaBanner: StandardBetaBanner,
     appConfig: config.AppConfig,
+    features: config.features.Features,
     hmrcScripts: HmrcScripts,
     hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
     hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
@@ -110,7 +110,7 @@
       ),
       serviceName = Some(messages("quick_calc.header.title")),
       pageTitle = pageTitle,
-      isWelshTranslationAvailable = true,
+      isWelshTranslationAvailable = features.welshTranslationFeature(),
       backLink = backLinkUrl.map(url => BackLink(href = url, content = Text(Messages("back")), attributes = Map("id" -> "back-button"))),
       templateOverrides = TemplateOverrides(
         additionalScriptsBlock = Some(hmrcScripts(scriptsBlock = Some(scriptElement))),
