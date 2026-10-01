@@ -25,7 +25,6 @@
         link: components.linkNewTab,
         inputRadio: components.inputRadio,
         button: components.button,
-        beforeContent: components.beforeContent,
         appConfig: config.AppConfig,
         details: components.details,
         features: config.features.Features
@@ -59,7 +58,7 @@
     s"${youHaveToldUsItems.flatMap((y: YouHaveToldUsItem) => if(labels.contains(y.label)) y.url else "").mkString}"
 }
 
-@govuk_wrapper(Some(title(overStatePensionAgeForm, Messages("quick_calc.over_state_pension_age.header"))), beforeContentBlock = beforeContent(backButtonUrl)) {
+@govuk_wrapper(Some(title(overStatePensionAgeForm, Messages("quick_calc.over_state_pension_age.header"))), backLinkUrl = Some(backButtonUrl)) {
 
     @formHelper(action = controllers.routes.StatePensionController.submitStatePensionForm()) {
 

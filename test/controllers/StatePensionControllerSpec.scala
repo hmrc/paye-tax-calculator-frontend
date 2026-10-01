@@ -86,7 +86,7 @@ class StatePensionControllerSpec extends PlaySpec with TryValues with ScalaFutur
         val view = application.injector.instanceOf[StatePensionView]
         val result = route(application, request).value
         val doc: Document = Jsoup.parse(contentAsString(result))
-        val header = doc.select(".govuk-header").text
+        val header = doc.select(".govuk-service-navigation").text
         val betaBanner = doc.select(".govuk-phase-banner").text
         val heading = doc.select(".govuk-fieldset__heading").text
         val radios = doc.select(".govuk-radios__item")
@@ -107,9 +107,9 @@ class StatePensionControllerSpec extends PlaySpec with TryValues with ScalaFutur
         verify(mockCache, times(1)).fetchAndGetEntry()(any())
 
         header     must include(messages("quick_calc.header.title"))
-        betaBanner must include(messages("feedback.before"))
-        betaBanner must include(messages("feedback.link"))
-        betaBanner must include(messages("feedback.after"))
+        betaBanner must include(messages("phase.banner.before"))
+        betaBanner must include(messages("phase.banner.link"))
+        betaBanner must include(messages("phase.banner.after"))
         heading mustEqual messages("quick_calc.you_have_told_us.over_state_pension_age.label")
         button mustEqual messages("continue")
         radios.get(0).text mustEqual messages("quick_calc.you_have_told_us.over_state_pension_age.yes")

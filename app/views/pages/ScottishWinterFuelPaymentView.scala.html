@@ -27,7 +27,6 @@ govukBackLink: GovukBackLink,
 formHelper: FormWithCSRF,
 button: components.button,
 govukSummaryList: GovukSummaryList,
-beforeContent: components.beforeContent,
 notification: components.notification,
 govukWarningText : GovukWarningText
 )
@@ -38,7 +37,7 @@ govukWarningText : GovukWarningText
 controllers.routes.ScotlandResidentController.showScottishResidentForm().url
 }
 
-@govukTemplate(Some(titleNoForm(Messages("quick_calc.scottish_wfp_heading"))), beforeContentBlock = beforeContent(backButtonUrl)) {
+@govukTemplate(Some(titleNoForm(Messages("quick_calc.scottish_wfp_heading"))), backLinkUrl = Some(backButtonUrl)) {
 
 @h2("quick_calc.scottish_wfp_heading","govuk-heading-xl")
 <p class="govuk-body">@messages("quick_calc.scottish_wfp_subheading1")</p>

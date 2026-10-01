@@ -23,8 +23,7 @@
        errorSummary: components.errorSummary,
        inputRadio: components.inputRadio,
        h1: components.h1,
-       button: components.button,
-       beforeContent: components.beforeContent
+       button: components.button
 )
 
 @(userTaxCodeForm: Form[Boolean], additionalQuestionItems: List[AdditionalQuestionItem], item: String)(implicit request: RequestHeader, messages: Messages)
@@ -53,7 +52,7 @@
     controllers.routes.YouHaveToldUsNewController.summary().url
 }
 
-@govuk_wrapper(Some(title(userTaxCodeForm, Messages(s"quick_calc.remove.$item"))), beforeContentBlock = beforeContent(backButtonUrl)) {
+@govuk_wrapper(Some(title(userTaxCodeForm, Messages(s"quick_calc.remove.$item"))), backLinkUrl = Some(backButtonUrl)) {
 
     @formHelper(action = controllers.routes.RemoveItemController.submitRemoveItemForm(item)) {
 

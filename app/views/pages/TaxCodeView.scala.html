@@ -32,7 +32,6 @@
         details: components.details,
         bullets: components.bullets,
         features: config.features.Features,
-        beforeContent: components.beforeContent,
         hintText: components.hintText
 )
 
@@ -46,7 +45,7 @@
         Messages("quick_calc.about_tax_code.header.new")
 }
 
-@govUkWrapper(Some(title(userTaxCodeForm, headerText)), beforeContentBlock = beforeContent(backButtonUrl)) {
+@govUkWrapper(Some(title(userTaxCodeForm, headerText)), backLinkUrl = Some(backButtonUrl)) {
 
     @formHelper(action = routes.TaxCodeController.submitTaxCodeForm()) {
         @errorSummary(userTaxCodeForm.errors)

@@ -110,7 +110,7 @@ class ShowResultSpec extends BaseSpec with TryValues with IntegrationPatience wi
         val sidebarHeader = doc.select(".govuk-grid-column-one-third > .govuk-heading-s").text
         val sidebarBullets = doc.select(".govuk-list--bullet").get(0).text()
         val warningText = doc.select(".govuk-warning-text").text()
-        val feedbackLink = doc.select(".govuk-link").attr("href")
+        val feedbackLink = doc.select(".govuk-phase-banner .govuk-link").attr("href")
 
         val listValues = doc
           .select(".govuk-summary-list")

@@ -24,7 +24,6 @@
      link: components.linkNewTab,
      inputRadio: components.inputRadio,
      button: components.button,
-     beforeContent: components.beforeContent,
      appConfig: config.AppConfig,
      details: components.details,
      features: config.features.Features,
@@ -53,7 +52,7 @@ Seq(
    )
 }
 
-@govuk_wrapper(Some(title(postGradForm, Messages("quick_calc.postgraduateLoan.header"))), beforeContentBlock = beforeContent(controllers.routes.YouHaveToldUsNewController.summary().url)) {
+@govuk_wrapper(Some(title(postGradForm, Messages("quick_calc.postgraduateLoan.header"))), backLinkUrl = Some(controllers.routes.YouHaveToldUsNewController.summary().url)) {
 
 @formHelper(action = controllers.routes.PostgraduateController.submitPostgradLoanForm()) {
 

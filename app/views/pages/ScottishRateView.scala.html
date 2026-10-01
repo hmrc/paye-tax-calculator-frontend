@@ -28,8 +28,7 @@
         govukDetails: GovukDetails,
         details: components.details,
         appConfig: config.AppConfig,
-        features: config.features.Features,
-        beforeContent: components.beforeContent
+        features: config.features.Features
 )
 
 @(scottishRateForm: Form[ScottishRate], youHaveToldUsItems: List[YouHaveToldUsItem])(implicit request: RequestHeader, messages: Messages)
@@ -58,7 +57,7 @@
         controllers.routes.YouHaveToldUsNewController.summary().url
 }
 
-@govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income"))), beforeContentBlock = beforeContent(backButtonUrl)) {
+@govuk_wrapper(Some(title(scottishRateForm, Messages("quick_calc.salary.question.scottish_income"))), backLinkUrl = Some(backButtonUrl)) {
 
     @formHelper(action = controllers.routes.ScottishRateController.submitScottishRateForm()) {
 

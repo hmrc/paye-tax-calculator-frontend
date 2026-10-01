@@ -15,39 +15,30 @@
  *@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
-@import views.components.FooterLinks
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcScripts
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
 @import views.html.helper.CSPNonce
 
 
 @this(
-      hmrcStandardFooter: HmrcStandardFooter,
-      govukTemplate: GovukTemplate,
-      govukLayout: GovukLayout,
-      hmrcLanguageSelect: HmrcLanguageSelect,
-      siteHeader: components.siteHeader,
-      link: components.link,
-      appConfig: config.AppConfig,
-      footerLinks: FooterLinks,
-      hmrcScripts: HmrcScripts,
-      hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
-      timeoutDialog: HmrcTimeoutDialog,
-      hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
-      features: config.features.Features,
+    hmrcStandardPage: HmrcStandardPage,
+    standardBetaBanner: StandardBetaBanner,
+    appConfig: config.AppConfig,
+    features: config.features.Features,
+    hmrcScripts: HmrcScripts,
+    hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
+    hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
 )
 @(
       pageTitle: Option[String] = None,
+      backLinkUrl: Option[String] = None,
       timeout: Boolean = true,
       js: Option[Html] = None,
-      signedInUser: Boolean = true,
       showDeskproLink: Boolean = true,
-      mainClass: Option[String] = None,
-      mainDataAttributes: Option[Html] = None,
-      bodyClassess: Option[String] = None,
-      beforeContentBlock: Html = Html(""),
       showAppBanner: Boolean = false
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
   @head = {
@@ -108,12 +99,22 @@
   }
   }
 
-  @govukLayout(
+
+  @hmrcStandardPage(
+    HmrcStandardPageParams(
+      serviceURLs = ServiceURLs(
+        serviceUrl = Some(controllers.routes.QuickCalcController.redirectToSalaryForm().url)
+      ),
+      banners = Banners(
+        phaseBanner = Some(standardBetaBanner(url = appConfig.betaFeedbackUrl))
+      ),
+      serviceName = Some(messages("quick_calc.header.title")),
       pageTitle = pageTitle,
-      headBlock = Some(head),
-      scriptsBlock = Some(hmrcScripts(scriptsBlock = Some(scriptElement))),
-      beforeContentBlock = Some(beforeContentBlock),
-      headerBlock = Some(siteHeader()),
-      footerItems = footerLinks.items,
-      bodyEndBlock = None
+      isWelshTranslationAvailable = features.welshTranslationFeature(),
+      backLink = backLinkUrl.map(url => BackLink(href = url, content = Text(Messages("back")), attributes = Map("id" -> "back-button"))),
+      templateOverrides = TemplateOverrides(
+        additionalScriptsBlock = Some(hmrcScripts(scriptsBlock = Some(scriptElement))),
+        additionalHeadBlock = Some(head)
+      )
+    )
   )(content)

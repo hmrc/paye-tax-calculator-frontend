@@ -23,13 +23,12 @@
         p: components.p,
         inputNumber: components.inputNumber,
         inputHidden: components.inputHidden,
-        button: components.button,
-        beforeContent: components.beforeContent
+        button: components.button
 )
 
 @(hoursForm: Form[Hours], value: BigDecimal)(implicit request: RequestHeader, messages: Messages)
 
-@govuk_wrapper(Some(title(hoursForm, Messages("quick_calc.salary.question.hours_a_week"))), beforeContentBlock = beforeContent("/estimate-paye-take-home-pay/your-pay")) {
+@govuk_wrapper(Some(title(hoursForm, Messages("quick_calc.salary.question.hours_a_week"))), backLinkUrl = Some("/estimate-paye-take-home-pay/your-pay")) {
 
     @formHelper(action = controllers.routes.HoursPerWeekController.submitHoursAWeek((value * 100.0).toInt)) {
         @errorSummary(hoursForm.errors)
